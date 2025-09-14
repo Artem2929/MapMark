@@ -1,24 +1,24 @@
 {
   "header": {
-    "listings": "Listings",
-    "about": "About"
+    "listings": "Оголошення",
+    "about": "Опис"
   },
   "search": {
-    "placeholder": "Search location...",
-    "button": "Search"
+    "placeholder": "Пошук місця...",
+    "button": "Пошук"
   },
   "pages": {
     "home": {
-      "title": "Home Page",
-      "welcome": "Welcome to MapMark!"
+      "title": "Головна сторінка",
+      "welcome": "Ласкаво просимо до MapMark!"
     },
     "listings": {
-      "title": "Listings",
-      "description": "Here will be listings"
+      "title": "Оголошення",
+      "description": "Тут будуть оголошення"
     },
     "about": {
-      "title": "About",
-      "description": "Information about the project"
+      "title": "Опис",
+      "description": "Інформація про проект"
     }
   },
   "about": {

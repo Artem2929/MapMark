@@ -1,0 +1,24 @@
+{
+  "header": {
+    "listings": "Listados",
+    "about": "Acerca de"
+  },
+  "search": {
+    "placeholder": "Buscar ubicación...",
+    "button": "Buscar"
+  },
+  "pages": {
+    "home": {
+      "title": "Página de inicio",
+      "welcome": "¡Bienvenido a MapMark!"
+    },
+    "listings": {
+      "title": "Listados",
+      "description": "Aquí estarán los listados"
+    },
+    "about": {
+      "title": "Acerca de",
+      "description": "Información sobre el proyecto"
+    }
+  }
+}

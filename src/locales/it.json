@@ -1,0 +1,24 @@
+{
+  "header": {
+    "listings": "Annunci",
+    "about": "Chi siamo"
+  },
+  "search": {
+    "placeholder": "Cerca posizione...",
+    "button": "Cerca"
+  },
+  "pages": {
+    "home": {
+      "title": "Pagina iniziale",
+      "welcome": "Benvenuto su MapMark!"
+    },
+    "listings": {
+      "title": "Annunci",
+      "description": "Qui ci saranno gli annunci"
+    },
+    "about": {
+      "title": "Chi siamo",
+      "description": "Informazioni sul progetto"
+    }
+  }
+}

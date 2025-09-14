@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./Header.css";
 
-const Header = () => {
+const Header = ({ onSearch }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { t, i18n } = useTranslation();
   const langDropdownRef = useRef(null);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -44,12 +47,36 @@ const Header = () => {
     setIsLangOpen(false);
   };
 
+  const handleSearch = () => {
+    if (searchQuery && onSearch) {
+      onSearch(searchQuery);
+      setSearchQuery('');
+    }
+  };
+
   return (
     <header className="header">
       <div className="header-container">
         <Link to="/" className="header-logo">
           MapMark
         </Link>
+        
+        {/* Search Bar - only on home page */}
+        {isHomePage && (
+          <div className="search-container">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t('search.placeholder')}
+              className="search-input"
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+            />
+            <button onClick={handleSearch} className="search-btn">
+              {t('search.button')}
+            </button>
+          </div>
+        )}
         
         {/* Desktop Navigation */}
         <nav className="header-nav desktop-nav">

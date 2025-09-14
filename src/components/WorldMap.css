@@ -1,0 +1,261 @@
+/* Neutral background to prevent color flash */
+.leaflet-container {
+  background: #f8f9fa !important;
+}
+
+/* Ensure tiles cover the entire visible area */
+.leaflet-tile-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Optimized map container */
+.world-map-container {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  transform: translateZ(0) !important;
+  will-change: transform !important;
+}
+
+.world-map-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+
+/* Move zoom controls below header */
+.leaflet-top.leaflet-left {
+  top: 80px !important;
+  left: 20px !important;
+}
+
+/* Epic zoom controls with glassmorphism */
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37) !important;
+  backdrop-filter: blur(20px) !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  overflow: hidden !important;
+}
+
+.leaflet-control-zoom a {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px) !important;
+  border: none !important;
+  color: #1d1d1f !important;
+  font-weight: 700 !important;
+  font-size: 20px !important;
+  width: 50px !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.leaflet-control-zoom a::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent) !important;
+  transition: left 0.5s !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #007aff !important;
+  transform: scale(1.05) !important;
+}
+
+.leaflet-control-zoom a:hover::before {
+  left: 100% !important;
+}
+
+.leaflet-control-zoom a:active {
+  transform: scale(0.95) !important;
+}
+
+.leaflet-control-zoom a:first-child {
+  border-radius: 20px 20px 0 0 !important;
+}
+
+.leaflet-control-zoom a:last-child {
+  border-radius: 0 0 20px 20px !important;
+}
+
+/* Epic attribution with neon glow */
+.leaflet-control-attribution {
+  background: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(20px) !important;
+  border-radius: 15px !important;
+  font-size: 11px !important;
+  margin: 15px !important;
+  padding: 8px 12px !important;
+  border: 1px solid rgba(0, 255, 255, 0.3) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2) !important;
+  color: #00ffff !important;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5) !important;
+}
+
+/* Custom marker styling */
+.leaflet-marker-icon {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)) !important;
+  transition: filter 0.2s ease !important;
+}
+
+.leaflet-marker-icon:hover {
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4)) brightness(1.1) !important;
+}
+
+/* Premium Apple-style popup */
+.leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  overflow: hidden !important;
+  min-width: 200px !important;
+  animation: popupAppear 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+@keyframes popupAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.leaflet-popup-content {
+  margin: 20px 24px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
+  color: #1d1d1f !important;
+  font-size: 15px !important;
+  line-height: 1.47 !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.leaflet-popup-content strong {
+  color: #1d1d1f !important;
+  font-weight: 700 !important;
+  font-size: 17px !important;
+  display: block !important;
+  margin-bottom: 12px !important;
+  letter-spacing: -0.02em !important;
+}
+
+.leaflet-popup-content br + br {
+  display: none !important;
+}
+
+.leaflet-popup-content br {
+  margin-bottom: 4px !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: none !important;
+}
+
+.leaflet-popup-close-button {
+  color: #1d1d1f !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  padding: 0 !important;
+  transition: all 0.2s ease !important;
+  border-radius: 50% !important;
+  width: 24px !important;
+  height: 24px !important;
+  line-height: 24px !important;
+  text-align: center !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+  right: 12px !important;
+  top: 12px !important;
+  border: none !important;
+  text-decoration: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-indent: -9999px !important;
+}
+
+.leaflet-popup-close-button:hover {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+.leaflet-popup-close-button::before {
+  content: '×' !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  text-indent: 0 !important;
+}
+
+/* Fast zoom transitions */
+.leaflet-zoom-animated {
+  transition: transform 0.1s ease !important;
+}
+
+/* Fast tile loading */
+.leaflet-tile {
+  border: none !important;
+  filter: contrast(1.1) saturate(1.2) !important;
+  image-rendering: optimizeSpeed !important;
+  image-rendering: -webkit-optimize-contrast !important;
+}
+
+.leaflet-tile-container {
+  will-change: transform !important;
+}
+
+.leaflet-zoom-anim .leaflet-tile {
+  transition: none !important;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .leaflet-top.leaflet-left {
+    top: 70px !important;
+    left: 10px !important;
+  }
+  
+  .leaflet-control-zoom a {
+    width: 45px !important;
+    height: 45px !important;
+    line-height: 45px !important;
+    font-size: 18px !important;
+  }
+  
+  .world-map-container::before {
+    animation-duration: 10s !important;
+  }
+}
