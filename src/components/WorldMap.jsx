@@ -27,7 +27,7 @@ const MapClickHandler = ({ onMapClick }) => {
   return null;
 };
 
-const WorldMap = ({ searchQuery }) => {
+const WorldMap = ({ searchQuery, onMapReady }) => {
   const { t } = useTranslation();
   const [markers, setMarkers] = useState([]);
   const [map, setMap] = useState(null);
@@ -39,6 +39,24 @@ const WorldMap = ({ searchQuery }) => {
     setReviews(prev => [...prev, reviewData]);
     console.log('Review submitted:', reviewData);
   };
+
+  const flyToCountry = (coords) => {
+    console.log('flyToCountry called with:', coords, 'map:', map);
+    if (map && coords && coords.length === 2) {
+      console.log('Flying to:', [coords[0], coords[1]]);
+      map.flyTo([coords[0], coords[1]], 6, {
+        duration: 1.5
+      });
+    }
+  };
+
+  // Pass map instance to parent
+  React.useEffect(() => {
+    console.log('Setting map instance:', map);
+    if (onMapReady && map) {
+      onMapReady(map);
+    }
+  }, [map, onMapReady]);
 
   const handleMapClick = (latlng) => {
     const newMarker = {
@@ -95,7 +113,13 @@ const WorldMap = ({ searchQuery }) => {
         maxBounds={[[-90, -180], [90, 180]]}
         maxBoundsViscosity={1.0}
         style={{ height: '100%', width: '100%' }}
-        ref={setMap}
+        whenReady={(mapEvent) => {
+          console.log('Map ready:', mapEvent.target);
+          setMap(mapEvent.target);
+          if (onMapReady) {
+            onMapReady(mapEvent.target);
+          }
+        }}
       >
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"

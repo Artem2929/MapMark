@@ -86,14 +86,54 @@
       "button": "Start Exploring"
     }
   },
-  "about": {
+  "aboutPage": {
     "ua": {
       "title": "Про нас",
-      "description": "Ласкаво просимо до нашого додатку – платформи, яка допомагає вам відкривати та ділитися найкращими локаціями, які ви відвідали. Ми прагнемо створити спільноту активних мандрівників і дослідників, де кожен може залишити реальні відгуки та корисні поради для інших користувачів. Наш додаток дозволяє: Позначати улюблені місця та відстежувати, де ви вже були; Ділитися власними враженнями та рейтингами локацій; Рекомендити готелі, ресторани, кафе, транспортні послуги та інші сервіси; Допомагати іншим користувачам відкривати приховані або маловідомі місця. Ми віримо, що кожна поїздка стає цікавішою, коли досвід спільноти допомагає приймати рішення. Наша мета – зробити подорожі легшими, безпечнішими та надихаючими для кожного."
+      "description": "Ласкаво просимо до нашого додатку – платформи, яка допомагає вам відкривати та ділитися найкращими локаціями, які ви відвідали. Ми прагнемо створити спільноту активних мандрівників і дослідників, де кожен може залишити реальні відгуки та корисні поради для інших користувачів. Наш додаток дозволяє: позначати улюблені місця та відстежувати, де ви вже були; ділитися власними враженнями та рейтингами локацій; рекомендувати готелі, ресторани, кафе, транспортні послуги та інші сервіси; допомагати іншим користувачам відкривати приховані або маловідомі місця. Ми віримо, що кожна поїздка стає цікавішою, коли досвід спільноти допомагає приймати рішення. Наша мета – зробити подорожі легшими, безпечнішими та надихаючими для кожного."
     },
     "en": {
       "title": "About Us",
-      "description": "Welcome to our app – a platform designed to help you discover and share the best locations you've visited. We aim to build a community of active travelers and explorers where everyone can leave authentic reviews and helpful tips for others. Our app allows you to: Mark your favorite places and track where you've been; Share your personal experiences and location ratings; Recommend hotels, restaurants, cafes, transport services, and other amenities; Help other users discover hidden or lesser-known spots. We believe every trip becomes more enjoyable when community experience guides your choices. Our goal is to make travel easier, safer, and more inspiring for everyone."
+      "description": "Welcome to our app – a platform designed to help you discover and share the best locations you've visited. We aim to build a community of active travelers and explorers where everyone can leave authentic reviews and helpful tips for others. Our app allows you to: mark your favorite places and track where you've been; share your personal experiences and location ratings; recommend hotels, restaurants, cafes, transport services, and other amenities; help other users discover hidden or lesser-known spots. We believe every trip becomes more enjoyable when community experience guides your choices. Our goal is to make travel easier, safer, and more inspiring for everyone."
+    },
+    "es": {
+      "title": "Sobre Nosotros",
+      "description": "Bienvenido a nuestra aplicación: una plataforma diseñada para ayudarte a descubrir y compartir los mejores lugares que has visitado. Nuestro objetivo es construir una comunidad de viajeros activos y exploradores donde todos puedan dejar reseñas auténticas y consejos útiles para otros. Nuestra aplicación te permite: marcar tus lugares favoritos y rastrear dónde has estado; compartir tus experiencias personales y calificaciones de ubicaciones; recomendar hoteles, restaurantes, cafés, servicios de transporte y otras comodidades; ayudar a otros usuarios a descubrir lugares ocultos o menos conocidos. Creemos que cada viaje se vuelve más agradable cuando la experiencia de la comunidad guía tus decisiones. Nuestro objetivo es hacer que viajar sea más fácil, seguro e inspirador para todos."
+    },
+    "fr": {
+      "title": "À Propos de Nous",
+      "description": "Bienvenue dans notre application – une plateforme conçue pour vous aider à découvrir et partager les meilleurs endroits que vous avez visités. Nous visons à construire une communauté de voyageurs actifs et d'explorateurs où chacun peut laisser des avis authentiques et des conseils utiles pour les autres. Notre application vous permet de : marquer vos endroits préférés et suivre où vous avez été ; partager vos expériences personnelles et évaluations de lieux ; recommander des hôtels, restaurants, cafés, services de transport et autres commodités ; aider d'autres utilisateurs à découvrir des endroits cachés ou moins connus. Nous croyons que chaque voyage devient plus agréable quand l'expérience communautaire guide vos choix. Notre objectif est de rendre les voyages plus faciles, sûrs et inspirants pour tous."
+    },
+    "de": {
+      "title": "Über Uns",
+      "description": "Willkommen in unserer App – einer Plattform, die Ihnen hilft, die besten Orte zu entdecken und zu teilen, die Sie besucht haben. Wir möchten eine Gemeinschaft aktiver Reisender und Entdecker aufbauen, in der jeder authentische Bewertungen und hilfreiche Tipps für andere hinterlassen kann. Unsere App ermöglicht es Ihnen: Ihre Lieblingsorte zu markieren und zu verfolgen, wo Sie waren; Ihre persönlichen Erfahrungen und Ortsbewertungen zu teilen; Hotels, Restaurants, Cafés, Transportdienste und andere Annehmlichkeiten zu empfehlen; anderen Benutzern zu helfen, versteckte oder weniger bekannte Orte zu entdecken. Wir glauben, dass jede Reise angenehmer wird, wenn Gemeinschaftserfahrung Ihre Entscheidungen leitet. Unser Ziel ist es, das Reisen für alle einfacher, sicherer und inspirierender zu machen."
+    },
+    "it": {
+      "title": "Chi Siamo",
+      "description": "Benvenuti nella nostra app – una piattaforma progettata per aiutarti a scoprire e condividere i migliori luoghi che hai visitato. Miriamo a costruire una comunità di viaggiatori attivi ed esploratori dove ognuno può lasciare recensioni autentiche e consigli utili per gli altri. La nostra app ti permette di: segnare i tuoi luoghi preferiti e tracciare dove sei stato; condividere le tue esperienze personali e valutazioni dei luoghi; raccomandare hotel, ristoranti, caffè, servizi di trasporto e altre comodità; aiutare altri utenti a scoprire luoghi nascosti o meno conosciuti. Crediamo che ogni viaggio diventi più piacevole quando l'esperienza della comunità guida le tue scelte. Il nostro obiettivo è rendere i viaggi più facili, sicuri e ispiranti per tutti."
+    },
+    "pt": {
+      "title": "Sobre Nós",
+      "description": "Bem-vindos ao nosso aplicativo – uma plataforma projetada para ajudá-lo a descobrir e compartilhar os melhores lugares que você visitou. Nosso objetivo é construir uma comunidade de viajantes ativos e exploradores onde todos possam deixar avaliações autênticas e dicas úteis para outros. Nosso aplicativo permite: marcar seus lugares favoritos e rastrear onde você esteve; compartilhar suas experiências pessoais e avaliações de locais; recomendar hotéis, restaurantes, cafés, serviços de transporte e outras comodidades; ajudar outros usuários a descobrir lugares ocultos ou menos conhecidos. Acreditamos que cada viagem se torna mais agradável quando a experiência da comunidade orienta suas escolhas. Nosso objetivo é tornar as viagens mais fáceis, seguras e inspiradoras para todos."
+    },
+    "ru": {
+      "title": "О Нас",
+      "description": "Добро пожаловать в наше приложение – платформу, созданную для того, чтобы помочь вам открывать и делиться лучшими местами, которые вы посетили. Мы стремимся создать сообщество активных путешественников и исследователей, где каждый может оставлять подлинные отзывы и полезные советы для других. Наше приложение позволяет: отмечать ваши любимые места и отслеживать, где вы были; делиться личным опытом и оценками мест; рекомендовать отели, рестораны, кафе, транспортные услуги и другие удобства; помогать другим пользователям открывать скрытые или малоизвестные места. Мы верим, что каждое путешествие становится приятнее, когда опыт сообщества направляет ваши решения. Наша цель – сделать путешествия проще, безопаснее и вдохновляющими для всех."
+    },
+    "ja": {
+      "title": "私たちについて",
+      "description": "私たちのアプリへようこそ – あなたが訪れた最高の場所を発見し、共有するために設計されたプラットフォームです。私たちは、誰もが他の人のために本物のレビューや役立つヒントを残すことができる、アクティブな旅行者と探検家のコミュニティを構築することを目指しています。私たちのアプリでは：お気に入りの場所をマークし、どこに行ったかを追跡する；個人的な体験と場所の評価を共有する；ホテル、レストラン、カフェ、交通サービス、その他のアメニティを推薦する；他のユーザーが隠れた場所や知られていない場所を発見するのを助ける。コミュニティの経験があなたの選択を導くとき、すべての旅行がより楽しくなると信じています。私たちの目標は、すべての人にとって旅行をより簡単で、安全で、インスピレーションに満ちたものにすることです。"
+    },
+    "zh-CN": {
+      "title": "关于我们",
+      "description": "欢迎使用我们的应用程序——一个旨在帮助您发现和分享您访问过的最佳地点的平台。我们的目标是建立一个活跃的旅行者和探险家社区，每个人都可以为他人留下真实的评论和有用的提示。我们的应用程序允许您：标记您最喜欢的地方并跟踪您去过的地方；分享您的个人经历和地点评级；推荐酒店、餐厅、咖啡馆、交通服务和其他便利设施；帮助其他用户发现隐藏或鲜为人知的地方。我们相信，当社区经验指导您的选择时，每次旅行都会变得更加愉快。我们的目标是让每个人的旅行更轻松、更安全、更有启发性。"
+    },
+    "ar": {
+      "title": "معلومات عنا",
+      "description": "مرحباً بكم في تطبيقنا – منصة مصممة لمساعدتكم في اكتشاف ومشاركة أفضل الأماكن التي زرتموها. نهدف إلى بناء مجتمع من المسافرين النشطين والمستكشفين حيث يمكن للجميع ترك مراجعات أصيلة ونصائح مفيدة للآخرين. يتيح لكم تطبيقنا: وضع علامة على أماكنكم المفضلة وتتبع أين كنتم؛ مشاركة تجاربكم الشخصية وتقييمات الأماكن؛ التوصية بالفنادق والمطاعم والمقاهي وخدمات النقل والمرافق الأخرى؛ مساعدة المستخدمين الآخرين في اكتشاف الأماكن المخفية أو الأقل شهرة. نؤمن أن كل رحلة تصبح أكثر متعة عندما تقود تجربة المجتمع اختياراتكم. هدفنا هو جعل السفر أسهل وأكثر أماناً وإلهاماً للجميع."
+    },
+    "hi": {
+      "title": "हमारे बारे में",
+      "description": "हमारे ऐप में आपका स्वागत है – एक प्लेटफ़ॉर्म जो आपको उन बेहतरीन स्थानों की खोज और साझाकरण में मदद करने के लिए डिज़ाइन किया गया है जहाँ आप गए हैं। हमारा लक्ष्य सक्रिय यात्रियों और खोजकर्ताओं का एक समुदाय बनाना है जहाँ हर कोई दूसरों के लिए प्रामाणिक समीक्षाएँ और उपयोगी सुझाव छोड़ सकता है। हमारा ऐप आपको अनुमति देता है: अपने पसंदीदा स्थानों को चिह्नित करना और ट्रैक करना कि आप कहाँ गए हैं; अपने व्यक्तिगत अनुभव और स्थान रेटिंग साझा करना; होटल, रेस्तराँ, कैफे, परिवहन सेवाओं और अन्य सुविधाओं की सिफारिश करना; अन्य उपयोगकर्ताओं को छुपे हुए या कम ज्ञात स्थानों की खोज में मदद करना। हम मानते हैं कि जब समुदाय का अनुभव आपकी पसंद का मार्गदर्शन करता है तो हर यात्रा अधिक आनंददायक हो जाती है। हमारा लक्ष्य सभी के लिए यात्रा को आसान, सुरक्षित और प्रेरणादायक बनाना है।"
     }
   },
   "pages": {

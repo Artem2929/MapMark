@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./Header.css";
 
-const Header = ({ onSearch }) => {
+const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -87,6 +87,17 @@ const Header = ({ onSearch }) => {
             {t('header.about')}
           </Link>
           
+          {/* Countries Toggle - only on home page */}
+          {isHomePage && (
+            <button 
+              className="header-link countries-btn"
+              onClick={() => setIsCountriesVisible && setIsCountriesVisible(!isCountriesVisible)}
+            >
+              Countries
+              <span className={`arrow ${isCountriesVisible ? 'up' : 'down'}`}>▼</span>
+            </button>
+          )}
+          
           {/* Language Dropdown */}
           <div className="lang-dropdown" ref={langDropdownRef}>
             <button 
@@ -96,19 +107,17 @@ const Header = ({ onSearch }) => {
               {currentLang.name}
               <span className={`arrow ${isLangOpen ? 'up' : 'down'}`}>▼</span>
             </button>
-            {isLangOpen && (
-              <div className="lang-menu">
-                {languages.map(lang => (
-                  <button
-                    key={lang.code}
-                    className={`lang-option ${i18n.language === lang.code ? 'active' : ''}`}
-                    onClick={() => changeLang(lang.code)}
-                  >
-                    {lang.name}
-                  </button>
-                ))}
-              </div>
-            )}
+            <div className={`lang-menu ${isLangOpen ? 'open' : ''}`}>
+              {languages.map(lang => (
+                <button
+                  key={lang.code}
+                  className={`lang-option ${i18n.language === lang.code ? 'active' : ''}`}
+                  onClick={() => changeLang(lang.code)}
+                >
+                  {lang.name}
+                </button>
+              ))}
+            </div>
           </div>
         </nav>
 
