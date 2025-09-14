@@ -7,6 +7,31 @@
     "placeholder": "Ort suchen...",
     "button": "Suchen"
   },
+  "footer": {
+    "description": "Entdecken und teilen Sie die besten Orte, die Sie besucht haben, mit unserer Gemeinschaft von Reisenden und Entdeckern aus aller Welt.",
+    "explore": {
+      "title": "Erkunden",
+      "discover": "Orte Entdecken"
+    },
+    "support": {
+      "title": "Support",
+      "help": "Hilfezentrum",
+      "faq": "Häufige Fragen",
+      "contact": "Kontakt",
+      "feedback": "Feedback"
+    },
+    "legal": {
+      "title": "Rechtliches",
+      "privacy": "Datenschutzrichtlinie",
+      "terms": "Nutzungsbedingungen",
+      "cookies": "Cookie-Richtlinie"
+    },
+    "badges": {
+      "secure": "Sicher",
+      "trusted": "Vertrauenswürdig"
+    },
+    "rights": "Alle Rechte vorbehalten."
+  },
   "pages": {
     "home": {
       "title": "Startseite",

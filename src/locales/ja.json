@@ -1,0 +1,50 @@
+{
+  "header": {
+    "home": "ホーム",
+    "listings": "リスティング",
+    "about": "私たちについて"
+  },
+  "search": {
+    "placeholder": "場所を検索...",
+    "button": "検索"
+  },
+  "footer": {
+    "description": "世界中の旅行者や探検家のコミュニティと、あなたが訪れた最高の場所を発見し、共有しましょう。",
+    "explore": {
+      "title": "探索",
+      "discover": "場所を発見"
+    },
+    "support": {
+      "title": "サポート",
+      "help": "ヘルプセンター",
+      "faq": "よくある質問",
+      "contact": "お問い合わせ",
+      "feedback": "フィードバック"
+    },
+    "legal": {
+      "title": "法的情報",
+      "privacy": "プライバシーポリシー",
+      "terms": "利用規約",
+      "cookies": "クッキーポリシー"
+    },
+    "badges": {
+      "secure": "安全",
+      "trusted": "信頼できる"
+    },
+    "rights": "全著作権所有。"
+  },
+  "pages": {
+    "home": {
+      "title": "ホームページ",
+      "welcome": "MapMarkへようこそ！"
+    },
+    "listings": {
+      "title": "リスティング",
+      "description": "ここにリスティングが表示されます"
+    },
+    "about": {
+      "title": "私たちについて",
+      "description": "プロジェクトについての情報"
+    }
+  }
+}

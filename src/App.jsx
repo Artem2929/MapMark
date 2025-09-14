@@ -1,28 +1,29 @@
 import './App.css'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import Header from '../components/Header.jsx'
+import Footer from '../components/Footer.jsx'
 import WorldMap from './components/WorldMap.jsx'
 
-function App() {
+const AppContent = () => {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const [searchQuery, setSearchQuery] = useState('');
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-    // Reset after a short delay to allow WorldMap to process
     setTimeout(() => setSearchQuery(''), 100);
   };
 
   return (
-    <BrowserRouter>
-      <div style={{minHeight: '100vh', backgroundColor: '#f9f9f9'}}>
-        <Header onSearch={handleSearch} />
-        <main style={{paddingTop: '64px'}}>
-          <Routes>
-            <Route path="/" element={<WorldMap searchQuery={searchQuery} />} />
+    <div style={{minHeight: '100vh', backgroundColor: '#f9f9f9', display: 'flex', flexDirection: 'column'}}>
+      <Header onSearch={handleSearch} />
+      <main style={{paddingTop: '64px', flex: 1}}>
+        <Routes>
+          <Route path="/" element={<WorldMap searchQuery={searchQuery} />} />
             <Route path="/ads" element={
               <div style={{maxWidth: '1200px', margin: '0 auto', padding: '40px 20px'}}>
                 <h1 style={{fontSize: '32px', fontWeight: 'bold', color: '#333'}}>{t('pages.listings.title')}</h1>
@@ -37,9 +38,17 @@ function App() {
             } />
           </Routes>
         </main>
+        <Footer />
       </div>
+  );
+};
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
-  )
+  );
 }
 
 export default App

@@ -7,6 +7,11 @@ import fr from './locales/fr.json';
 import de from './locales/de.json';
 import it from './locales/it.json';
 import pt from './locales/pt.json';
+import ru from './locales/ru.json';
+import ja from './locales/ja.json';
+import zhCN from './locales/zh-CN.json';
+import ar from './locales/ar.json';
+import hi from './locales/hi.json';
 
 i18n
   .use(initReactI18next)
@@ -19,11 +24,11 @@ i18n
       de: { translation: de },
       it: { translation: it },
       pt: { translation: pt },
-      ru: { translation: en },
-      ja: { translation: en },
-      'zh-CN': { translation: en },
-      ar: { translation: en },
-      hi: { translation: en }
+      ru: { translation: ru },
+      ja: { translation: ja },
+      'zh-CN': { translation: zhCN },
+      ar: { translation: ar },
+      hi: { translation: hi }
     },
     lng: 'en',
     fallbackLng: 'en',

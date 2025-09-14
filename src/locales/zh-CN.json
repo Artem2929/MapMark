@@ -1,0 +1,50 @@
+{
+  "header": {
+    "home": "首页",
+    "listings": "列表",
+    "about": "关于我们"
+  },
+  "search": {
+    "placeholder": "搜索位置...",
+    "button": "搜索"
+  },
+  "footer": {
+    "description": "与我们来自世界各地的旅行者和探险家社区一起发现和分享您访问过的最佳地点。",
+    "explore": {
+      "title": "探索",
+      "discover": "发现地点"
+    },
+    "support": {
+      "title": "支持",
+      "help": "帮助中心",
+      "faq": "常见问题",
+      "contact": "联系我们",
+      "feedback": "反馈"
+    },
+    "legal": {
+      "title": "法律信息",
+      "privacy": "隐私政策",
+      "terms": "服务条款",
+      "cookies": "Cookie政策"
+    },
+    "badges": {
+      "secure": "安全",
+      "trusted": "可信赖"
+    },
+    "rights": "版权所有。"
+  },
+  "pages": {
+    "home": {
+      "title": "主页",
+      "welcome": "欢迎来到MapMark！"
+    },
+    "listings": {
+      "title": "列表",
+      "description": "这里将显示列表"
+    },
+    "about": {
+      "title": "关于我们",
+      "description": "项目信息"
+    }
+  }
+}

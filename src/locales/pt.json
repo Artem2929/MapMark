@@ -7,6 +7,31 @@
     "placeholder": "Pesquisar localização...",
     "button": "Pesquisar"
   },
+  "footer": {
+    "description": "Descubra e compartilhe os melhores lugares que você visitou com nossa comunidade de viajantes e exploradores de todo o mundo.",
+    "explore": {
+      "title": "Explorar",
+      "discover": "Descobrir Lugares"
+    },
+    "support": {
+      "title": "Suporte",
+      "help": "Central de Ajuda",
+      "faq": "Perguntas Frequentes",
+      "contact": "Entre em Contato",
+      "feedback": "Feedback"
+    },
+    "legal": {
+      "title": "Legal",
+      "privacy": "Política de Privacidade",
+      "terms": "Termos de Serviço",
+      "cookies": "Política de Cookies"
+    },
+    "badges": {
+      "secure": "Seguro",
+      "trusted": "Confiável"
+    },
+    "rights": "Todos os direitos reservados."
+  },
   "pages": {
     "home": {
       "title": "Página inicial",

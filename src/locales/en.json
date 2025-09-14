@@ -1,11 +1,37 @@
 {
   "header": {
+    "home": "Home",
     "listings": "Listings",
     "about": "About"
   },
   "search": {
     "placeholder": "Search location...",
     "button": "Search"
+  },
+  "footer": {
+    "description": "Discover and share the best locations you've visited with our community of travelers and explorers worldwide.",
+    "explore": {
+      "title": "Explore",
+      "discover": "Discover Places"
+    },
+    "support": {
+      "title": "Support",
+      "help": "Help Center",
+      "faq": "FAQ",
+      "contact": "Contact Us",
+      "feedback": "Feedback"
+    },
+    "legal": {
+      "title": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "cookies": "Cookie Policy"
+    },
+    "badges": {
+      "secure": "Secure",
+      "trusted": "Trusted"
+    },
+    "rights": "All rights reserved."
   },
   "pages": {
     "home": {
