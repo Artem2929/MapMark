@@ -2,6 +2,7 @@ import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Header from '../components/Header.jsx'
+import WorldMap from './components/WorldMap.jsx'
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -11,14 +12,9 @@ function App() {
     <BrowserRouter>
       <div style={{minHeight: '100vh', backgroundColor: '#f9f9f9'}}>
         <Header />
-        <main style={{paddingTop: '60px'}}>
+        <main style={{paddingTop: '64px'}}>
           <Routes>
-            <Route path="/" element={
-              <div style={{maxWidth: '1200px', margin: '0 auto', padding: '40px 20px'}}>
-                <h1 style={{fontSize: '32px', fontWeight: 'bold', color: '#333'}}>{t('pages.home.title')}</h1>
-                <p style={{marginTop: '16px', color: '#666'}}>{t('pages.home.welcome')}</p>
-              </div>
-            } />
+            <Route path="/" element={<WorldMap />} />
             <Route path="/ads" element={
               <div style={{maxWidth: '1200px', margin: '0 auto', padding: '40px 20px'}}>
                 <h1 style={{fontSize: '32px', fontWeight: 'bold', color: '#333'}}>{t('pages.listings.title')}</h1>
