@@ -34,10 +34,20 @@ const WorldMap = ({ searchQuery, onMapReady }) => {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [expandedPopup, setExpandedPopup] = useState(null);
 
   const handleReviewSubmit = (reviewData) => {
-    setReviews(prev => [...prev, reviewData]);
-    console.log('Review submitted:', reviewData);
+    const newReview = {
+      ...reviewData,
+      id: Date.now(),
+      timestamp: new Date().toISOString(),
+      markerId: selectedMarker.id
+    };
+    setReviews(prev => [...prev, newReview]);
+    setShowReviewForm(false);
+    setSelectedMarker(null);
+    setExpandedPopup(selectedMarker.id); // Автоматично розкриваємо popup
+    console.log('Review submitted:', newReview);
   };
 
   const flyToCountry = (coords) => {
@@ -132,42 +142,103 @@ const WorldMap = ({ searchQuery, onMapReady }) => {
         {markers.map((marker) => (
           <Marker key={marker.id} position={marker.position}>
             <Popup>
-              <div className="popup-content">
+              <div 
+                className={`popup-content ${expandedPopup === marker.id ? 'expanded' : ''}`}
+                style={expandedPopup === marker.id ? {
+                  maxHeight: 'none',
+                  overflow: 'visible'
+                } : {}}
+              >
                 <strong>{marker.name}</strong>
                 <br />
                 {t('popup.coordinates').replace('{lat}', marker.position[0].toFixed(4)).replace('{lng}', marker.position[1].toFixed(4))}
                 <br />
                 
-                {/* Display reviews */}
-                {reviews.filter(review => review.markerId === marker.id).map((review, index) => (
-                  <div key={index} className="review-item">
-                    <div className="review-rating">
-                      {'★'.repeat(Math.floor(review.rating))}{'☆'.repeat(5 - Math.floor(review.rating))}
-                      <span className="rating-number">({review.rating})</span>
-                    </div>
-                    <p className="review-text">{review.text}</p>
-                    {review.photo && (
-                      <img 
-                        src={URL.createObjectURL(review.photo)} 
-                        alt="Review photo" 
-                        className="review-photo"
-                      />
-                    )}
-                    <div className="review-date">
-                      {new Date(review.timestamp).toLocaleDateString()}
-                    </div>
-                  </div>
-                ))}
+                {!expandedPopup || expandedPopup !== marker.id ? (
+                  <>
+                    <button 
+                      className="review-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setSelectedMarker(marker);
+                        setShowReviewForm(true);
+                      }}
+                    >
+                      {t('popup.addReview')}
+                    </button>
+                    <button 
+                      className="expand-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setExpandedPopup(marker.id);
+                      }}
+                    >
+                      Show more
+                    </button>
+                  </>
+                ) : null}
                 
-                <button 
-                  className="review-btn"
-                  onClick={() => {
-                    setSelectedMarker(marker);
-                    setShowReviewForm(true);
-                  }}
-                >
-                  {t('popup.addReview')}
-                </button>
+                {expandedPopup === marker.id && (
+                  <>
+                    {/* Display reviews */}
+                    {(() => {
+                      const markerReviews = reviews.filter(review => review.markerId === marker.id);
+                      console.log('Marker ID:', marker.id, 'Reviews:', reviews, 'Filtered:', markerReviews);
+                      return markerReviews.length > 0 ? (
+                      <div className="reviews-section">
+                        <h4>Reviews ({markerReviews.length})</h4>
+                        {markerReviews.map((review, index) => (
+                          <div key={review.id || index} className="review-item">
+                            <div className="review-rating">
+                              {'★'.repeat(Math.floor(review.rating))}{'☆'.repeat(5 - Math.floor(review.rating))}
+                              <span className="rating-number">({review.rating})</span>
+                            </div>
+                            <p className="review-text">{review.text}</p>
+                            {review.photo && (
+                              <img 
+                                src={URL.createObjectURL(review.photo)} 
+                                alt="Review photo" 
+                                className="review-photo"
+                              />
+                            )}
+                            <div className="review-date">
+                              {new Date(review.timestamp).toLocaleDateString()}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="no-reviews">
+                        <p>No reviews yet</p>
+                      </div>
+                    );
+                    })()}
+                    
+                    <button 
+                      className="review-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setSelectedMarker(marker);
+                        setShowReviewForm(true);
+                      }}
+                    >
+                      {t('popup.addReview')}
+                    </button>
+                    <button 
+                      className="expand-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setExpandedPopup(null);
+                      }}
+                    >
+                      Show less
+                    </button>
+                  </>
+                )}
               </div>
             </Popup>
           </Marker>
