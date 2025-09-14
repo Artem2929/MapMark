@@ -15,7 +15,7 @@
 }
 
 .country-flags.visible {
-  max-height: 200px;
+  max-height: 300px;
   opacity: 1;
 }
 
@@ -51,7 +51,7 @@
   gap: 8px;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 12px 20px;
+  padding: 40px 20px 40px 20px;
   flex-wrap: wrap;
 }
 
@@ -76,6 +76,38 @@
 .flag-item:active {
   background: rgba(0, 0, 0, 0.12);
   transform: scale(0.95);
+}
+
+.flag-item[data-tooltip] {
+  position: relative;
+}
+
+.flag-item[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.flag-item[data-tooltip]:hover::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  pointer-events: none;
 }
 
 .flag-emoji {

@@ -76,7 +76,38 @@ const CountryFlags = ({ onCountryClick, isVisible }) => {
     { name: 'United Kingdom', flag: '🇬🇧', coords: [55.3781, -3.4360] },
     { name: 'United States', flag: '🇺🇸', coords: [39.8283, -98.5795] },
     { name: 'Venezuela', flag: '🇻🇪', coords: [6.4238, -66.5897] },
-    { name: 'Vietnam', flag: '🇻🇳', coords: [14.0583, 108.2772] }
+    { name: 'Vietnam', flag: '🇻🇳', coords: [14.0583, 108.2772] },
+    { name: 'South Sudan', flag: '🇸🇸', coords: [6.8770, 31.3070] },
+    { name: 'Sudan', flag: '🇸🇩', coords: [12.8628, 30.2176] },
+    { name: 'Libya', flag: '🇱🇾', coords: [26.3351, 17.2283] },
+    { name: 'Tunisia', flag: '🇹🇳', coords: [33.8869, 9.5375] },
+    { name: 'Jordan', flag: '🇯🇴', coords: [30.5852, 36.2384] },
+    { name: 'Lebanon', flag: '🇱🇧', coords: [33.8547, 35.8623] },
+    { name: 'Syria', flag: '🇸🇾', coords: [34.8021, 38.9968] },
+    { name: 'Yemen', flag: '🇾🇪', coords: [15.5527, 48.5164] },
+    { name: 'Oman', flag: '🇴🇲', coords: [21.4735, 55.9754] },
+    { name: 'Qatar', flag: '🇶🇦', coords: [25.3548, 51.1839] },
+    { name: 'Kuwait', flag: '🇰🇼', coords: [29.3117, 47.4818] },
+    { name: 'Bahrain', flag: '🇧🇭', coords: [25.9304, 50.6378] },
+    { name: 'Cyprus', flag: '🇨🇾', coords: [35.1264, 33.4299] },
+    { name: 'Malta', flag: '🇲🇹', coords: [35.9375, 14.3754] },
+    { name: 'Luxembourg', flag: '🇱🇺', coords: [49.8153, 6.1296] },
+    { name: 'Monaco', flag: '🇲🇨', coords: [43.7384, 7.4246] },
+    { name: 'Andorra', flag: '🇦🇩', coords: [42.5063, 1.5218] },
+    { name: 'San Marino', flag: '🇸🇲', coords: [43.9424, 12.4578] },
+    { name: 'Vatican City', flag: '🇻🇦', coords: [41.9029, 12.4534] },
+    { name: 'Liechtenstein', flag: '🇱🇮', coords: [47.1660, 9.5554] },
+    { name: 'Mongolia', flag: '🇲🇳', coords: [46.8625, 103.8467] },
+    { name: 'North Korea', flag: '🇰🇵', coords: [40.3399, 127.5101] },
+    { name: 'Myanmar', flag: '🇲🇲', coords: [21.9162, 95.9560] },
+    { name: 'Laos', flag: '🇱🇦', coords: [19.8563, 102.4955] },
+    { name: 'Cambodia', flag: '🇰🇭', coords: [12.5657, 104.9910] },
+    { name: 'Brunei', flag: '🇧🇳', coords: [4.5353, 114.7277] },
+    { name: 'Maldives', flag: '🇲🇻', coords: [3.2028, 73.2207] },
+    { name: 'Sri Lanka', flag: '🇱🇰', coords: [7.8731, 80.7718] },
+    { name: 'Nepal', flag: '🇳🇵', coords: [28.3949, 84.1240] },
+    { name: 'Bhutan', flag: '🇧🇹', coords: [27.5142, 90.4336] },
+    { name: 'Uzbekistan', flag: '🇺🇿', coords: [41.3775, 64.5853] }
   ];
 
   return (
@@ -90,7 +121,7 @@ const CountryFlags = ({ onCountryClick, isVisible }) => {
               console.log('Flag clicked:', country.name, country.coords);
               onCountryClick(country.coords);
             }}
-            title={country.name}
+            data-tooltip={country.name}
           >
             <span className="flag-emoji">{country.flag}</span>
           </div>
