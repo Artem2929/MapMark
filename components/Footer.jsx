@@ -56,12 +56,8 @@ const Footer = () => {
         <div className="footer-bottom">
           <div className="footer-bottom-content">
             <p className="footer-copyright">
-              © 2024 MapMark. {t('footer.rights')}
+              © 2025 MapMark. {t('footer.rights')}
             </p>
-            <div className="footer-badges">
-              <span className="badge">{t('footer.badges.secure')}</span>
-              <span className="badge">{t('footer.badges.trusted')}</span>
-            </div>
           </div>
         </div>
       </div>

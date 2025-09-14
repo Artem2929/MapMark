@@ -32,6 +32,23 @@
     },
     "rights": "Todos os direitos reservados."
   },
+  "review": {
+    "title": "Compartilhe sua Experiência",
+    "subtitle": "Ajude outros a descobrir este lugar incrível",
+    "yourReview": "Sua Avaliação",
+    "placeholder": "O que tornou este lugar especial? Compartilhe detalhes sobre sua visita, a atmosfera, acessibilidade ou dicas para futuros visitantes...",
+    "rating": "Classificação",
+    "outOfStars": "de 5 estrelas",
+    "addPhoto": "Adicionar Foto (Opcional)",
+    "choosePhoto": "Escolher Foto",
+    "cancel": "Cancelar",
+    "publish": "Publicar Avaliação"
+  },
+  "popup": {
+    "addReview": "Adicionar Avaliação",
+    "location": "Localização",
+    "coordinates": "Lat: {lat}, Lng: {lng}"
+  },
   "pages": {
     "home": {
       "title": "Página inicial",

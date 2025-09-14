@@ -33,6 +33,23 @@
     },
     "rights": "版权所有。"
   },
+  "review": {
+    "title": "分享您的体验",
+    "subtitle": "帮助他人发现这个精彩的地方",
+    "yourReview": "您的评价",
+    "placeholder": "是什么让这个地方特别？分享您的访问、氛围、无障碍设施或给未来游客的建议...",
+    "rating": "评分",
+    "outOfStars": "/5星",
+    "addPhoto": "添加照片（可选）",
+    "choosePhoto": "选择照片",
+    "cancel": "取消",
+    "publish": "发布评价"
+  },
+  "popup": {
+    "addReview": "添加评价",
+    "location": "位置",
+    "coordinates": "纬度: {lat}, 经度: {lng}"
+  },
   "pages": {
     "home": {
       "title": "主页",

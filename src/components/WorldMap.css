@@ -11,7 +11,7 @@
 
 /* Optimized map container */
 .world-map-container {
-  height: calc(100vh - 240px);
+  height: calc(100vh - 64px);
   width: 100%;
   overflow: hidden;
   position: relative;
@@ -218,6 +218,72 @@
   font-size: 16px !important;
   font-weight: 400 !important;
   text-indent: 0 !important;
+}
+
+/* Review button in popup */
+.review-btn {
+  background: rgba(0, 0, 0, 0.04) !important;
+  color: #1d1d1f !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  margin-top: 12px !important;
+  width: 100% !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
+}
+
+.review-btn:hover {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Review display in popup */
+.review-item {
+  background: rgba(0, 0, 0, 0.02) !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  margin: 8px 0 !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+.review-rating {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-bottom: 8px !important;
+  font-size: 14px !important;
+  color: #ffb800 !important;
+}
+
+.rating-number {
+  color: #6b7280 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.review-text {
+  font-size: 13px !important;
+  color: #4b5563 !important;
+  line-height: 1.4 !important;
+  margin: 0 0 8px 0 !important;
+}
+
+.review-photo {
+  width: 100% !important;
+  max-width: 200px !important;
+  height: auto !important;
+  border-radius: 8px !important;
+  margin: 8px 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.review-date {
+  font-size: 11px !important;
+  color: #9ca3af !important;
+  font-weight: 500 !important;
 }
 
 /* Fast zoom transitions */

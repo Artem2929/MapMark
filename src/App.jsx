@@ -19,7 +19,7 @@ const AppContent = () => {
   };
 
   return (
-    <div style={{minHeight: '100vh', backgroundColor: '#f9f9f9', display: 'flex', flexDirection: 'column'}}>
+    <div style={{height: '100vh', backgroundColor: '#f9f9f9', display: 'flex', flexDirection: 'column', overflow: 'hidden'}}>
       <Header onSearch={handleSearch} />
       <main style={{paddingTop: '64px', flex: 1}}>
         <Routes>
@@ -38,7 +38,7 @@ const AppContent = () => {
             } />
           </Routes>
         </main>
-        <Footer />
+        {!isHomePage && <Footer />}
       </div>
   );
 };

@@ -33,6 +33,23 @@
     },
     "rights": "全著作権所有。"
   },
+  "review": {
+    "title": "あなたの体験をシェア",
+    "subtitle": "他の人がこの素晴らしい場所を発見できるように手助けしてください",
+    "yourReview": "あなたのレビュー",
+    "placeholder": "この場所の何が特別でしたか？訪問、雰囲気、アクセシビリティ、または将来の訪問者へのヒントなどの詳細をシェアしてください...",
+    "rating": "評価",
+    "outOfStars": "/5つ星",
+    "addPhoto": "写真を追加（オプション）",
+    "choosePhoto": "写真を選択",
+    "cancel": "キャンセル",
+    "publish": "レビューを公開"
+  },
+  "popup": {
+    "addReview": "レビューを追加",
+    "location": "位置",
+    "coordinates": "緯度: {lat}, 経度: {lng}"
+  },
   "pages": {
     "home": {
       "title": "ホームページ",

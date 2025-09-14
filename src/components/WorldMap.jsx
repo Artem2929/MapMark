@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { useTranslation } from 'react-i18next';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './WorldMap.css';
+import ReviewForm from './ReviewForm';
 
 // Fix for default markers
 delete L.Icon.Default.prototype._getIconUrl;
@@ -26,14 +28,23 @@ const MapClickHandler = ({ onMapClick }) => {
 };
 
 const WorldMap = ({ searchQuery }) => {
+  const { t } = useTranslation();
   const [markers, setMarkers] = useState([]);
   const [map, setMap] = useState(null);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [selectedMarker, setSelectedMarker] = useState(null);
+  const [reviews, setReviews] = useState([]);
+
+  const handleReviewSubmit = (reviewData) => {
+    setReviews(prev => [...prev, reviewData]);
+    console.log('Review submitted:', reviewData);
+  };
 
   const handleMapClick = (latlng) => {
     const newMarker = {
       id: Date.now(),
       position: [latlng.lat, latlng.lng],
-      name: `Location 1`
+      name: t('popup.location') + ' 1'
     };
     setMarkers([newMarker]);
   };
@@ -97,17 +108,58 @@ const WorldMap = ({ searchQuery }) => {
         {markers.map((marker) => (
           <Marker key={marker.id} position={marker.position}>
             <Popup>
-              <div>
+              <div className="popup-content">
                 <strong>{marker.name}</strong>
                 <br />
-                Lat: {marker.position[0].toFixed(4)}
+                {t('popup.coordinates').replace('{lat}', marker.position[0].toFixed(4)).replace('{lng}', marker.position[1].toFixed(4))}
                 <br />
-                Lng: {marker.position[1].toFixed(4)}
+                
+                {/* Display reviews */}
+                {reviews.filter(review => review.markerId === marker.id).map((review, index) => (
+                  <div key={index} className="review-item">
+                    <div className="review-rating">
+                      {'★'.repeat(Math.floor(review.rating))}{'☆'.repeat(5 - Math.floor(review.rating))}
+                      <span className="rating-number">({review.rating})</span>
+                    </div>
+                    <p className="review-text">{review.text}</p>
+                    {review.photo && (
+                      <img 
+                        src={URL.createObjectURL(review.photo)} 
+                        alt="Review photo" 
+                        className="review-photo"
+                      />
+                    )}
+                    <div className="review-date">
+                      {new Date(review.timestamp).toLocaleDateString()}
+                    </div>
+                  </div>
+                ))}
+                
+                <button 
+                  className="review-btn"
+                  onClick={() => {
+                    setSelectedMarker(marker);
+                    setShowReviewForm(true);
+                  }}
+                >
+                  {t('popup.addReview')}
+                </button>
               </div>
             </Popup>
           </Marker>
         ))}
       </MapContainer>
+      
+      {showReviewForm && selectedMarker && (
+        <ReviewForm
+          marker={selectedMarker}
+          onClose={() => {
+            setShowReviewForm(false);
+            setSelectedMarker(null);
+          }}
+          onSubmit={handleReviewSubmit}
+        />
+      )}
     </div>
   );
 };
