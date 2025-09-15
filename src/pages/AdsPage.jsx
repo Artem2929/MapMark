@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import CreateAdForm from '../components/CreateAdForm';
+import CreateAdForm from '../components/forms/CreateAdForm';
 import './AdsPage.css';
 
 const AdsPage = () => {
