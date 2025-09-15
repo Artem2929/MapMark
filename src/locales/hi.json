@@ -63,5 +63,35 @@
       "title": "हमारे बारे में",
       "description": "परियोजना के बारे में जानकारी"
     }
+  },
+  "ads": {
+    "title": "विज्ञापन",
+    "description": "यहाँ आप आवास से लेकर सेवाओं तक सब कुछ पा सकते हैं। तेज़ खोज के लिए स्मार्ट फिल्टर का उपयोग करें!",
+    "createAd": "विज्ञापन बनाएं",
+    "createAdTitle": "नया विज्ञापन",
+    "categories": {
+      "housing": "आवास किराया",
+      "cars": "कार किराया",
+      "restaurants": "रेस्तरां",
+      "hotels": "होटल",
+      "events": "कार्यक्रम",
+      "tourism": "पर्यटन",
+      "services": "सेवाएं",
+      "other": "अन्य"
+    },
+    "form": {
+      "country": "देश",
+      "selectCountry": "देश चुनें",
+      "city": "शहर",
+      "cityPlaceholder": "शहर दर्ज करें",
+      "location": "स्थान",
+      "locationPlaceholder": "वस्तु की स्थिति का वर्णन करें",
+      "category": "श्रेणी",
+      "selectCategory": "श्रेणी चुनें",
+      "dateRange": "तारीख सीमा",
+      "photos": "स्थान की तस्वीरें",
+      "cancel": "रद्द करें",
+      "publish": "प्रकाशित करें"
+    }
   }
 }

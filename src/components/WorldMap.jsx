@@ -5,6 +5,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './WorldMap.css';
 import ReviewForm from './ReviewForm';
+import ReviewsPanel from './ReviewsPanel';
 
 // Fix for default markers
 delete L.Icon.Default.prototype._getIconUrl;
@@ -35,6 +36,8 @@ const WorldMap = ({ searchQuery, onMapReady }) => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [expandedPopup, setExpandedPopup] = useState(null);
+  const [showReviewsPanel, setShowReviewsPanel] = useState(false);
+  const [selectedMarkerForReviews, setSelectedMarkerForReviews] = useState(null);
 
   const handleReviewSubmit = (reviewData) => {
     const newReview = {
@@ -151,11 +154,12 @@ const WorldMap = ({ searchQuery, onMapReady }) => {
               >
                 <strong>{marker.name}</strong>
                 <br />
-                {t('popup.coordinates').replace('{lat}', marker.position[0].toFixed(4)).replace('{lng}', marker.position[1].toFixed(4))}
-                <br />
+                <div style={{marginBottom: '12px'}}>
+                  {t('popup.coordinates').replace('{lat}', marker.position[0].toFixed(4)).replace('{lng}', marker.position[1].toFixed(4))}
+                </div>
                 
                 {!expandedPopup || expandedPopup !== marker.id ? (
-                  <>
+                  <div style={{marginTop: '12px', marginBottom: '16px'}}>
                     <button 
                       className="review-btn"
                       onClick={(e) => {
@@ -172,73 +176,15 @@ const WorldMap = ({ searchQuery, onMapReady }) => {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        setExpandedPopup(marker.id);
+                        setSelectedMarkerForReviews(marker);
+                        setShowReviewsPanel(true);
                       }}
                     >
                       Show more
                     </button>
-                  </>
+                  </div>
                 ) : null}
-                
-                {expandedPopup === marker.id && (
-                  <>
-                    {/* Display reviews */}
-                    {(() => {
-                      const markerReviews = reviews.filter(review => review.markerId === marker.id);
-                      console.log('Marker ID:', marker.id, 'Reviews:', reviews, 'Filtered:', markerReviews);
-                      return markerReviews.length > 0 ? (
-                      <div className="reviews-section">
-                        <h4>Reviews ({markerReviews.length})</h4>
-                        {markerReviews.map((review, index) => (
-                          <div key={review.id || index} className="review-item">
-                            <div className="review-rating">
-                              {'★'.repeat(Math.floor(review.rating))}{'☆'.repeat(5 - Math.floor(review.rating))}
-                              <span className="rating-number">({review.rating})</span>
-                            </div>
-                            <p className="review-text">{review.text}</p>
-                            {review.photo && (
-                              <img 
-                                src={URL.createObjectURL(review.photo)} 
-                                alt="Review photo" 
-                                className="review-photo"
-                              />
-                            )}
-                            <div className="review-date">
-                              {new Date(review.timestamp).toLocaleDateString()}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="no-reviews">
-                        <p>No reviews yet</p>
-                      </div>
-                    );
-                    })()}
-                    
-                    <button 
-                      className="review-btn"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setSelectedMarker(marker);
-                        setShowReviewForm(true);
-                      }}
-                    >
-                      {t('popup.addReview')}
-                    </button>
-                    <button 
-                      className="expand-btn"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setExpandedPopup(null);
-                      }}
-                    >
-                      Show less
-                    </button>
-                  </>
-                )}
+
               </div>
             </Popup>
           </Marker>
@@ -255,6 +201,20 @@ const WorldMap = ({ searchQuery, onMapReady }) => {
           onSubmit={handleReviewSubmit}
         />
       )}
+      
+      <ReviewsPanel
+        marker={selectedMarkerForReviews}
+        reviews={reviews}
+        isVisible={showReviewsPanel}
+        onClose={() => {
+          setShowReviewsPanel(false);
+          setSelectedMarkerForReviews(null);
+        }}
+        onAddReview={() => {
+          setSelectedMarker(selectedMarkerForReviews);
+          setShowReviewForm(true);
+        }}
+      />
     </div>
   );
 };

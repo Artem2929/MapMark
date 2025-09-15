@@ -149,5 +149,35 @@
       "title": "About",
       "description": "Information about the project"
     }
+  },
+  "ads": {
+    "title": "Advertisements",
+    "description": "Here you can find everything you need - from housing to services. Use smart filters for quick search!",
+    "createAd": "Create Ad",
+    "createAdTitle": "New Advertisement",
+    "categories": {
+      "housing": "Housing Rental",
+      "cars": "Car Rental",
+      "restaurants": "Restaurants",
+      "hotels": "Hotels",
+      "events": "Events",
+      "tourism": "Tourism",
+      "services": "Services",
+      "other": "Other"
+    },
+    "form": {
+      "country": "Country",
+      "selectCountry": "Select country",
+      "city": "City",
+      "cityPlaceholder": "Enter city",
+      "location": "Location",
+      "locationPlaceholder": "Describe where the object is located",
+      "category": "Category",
+      "selectCategory": "Select category",
+      "dateRange": "Date Range",
+      "photos": "Location Photos",
+      "cancel": "Cancel",
+      "publish": "Publish"
+    }
   }
 }

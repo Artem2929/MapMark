@@ -62,5 +62,35 @@
       "title": "Chi siamo",
       "description": "Informazioni sul progetto"
     }
+  },
+  "ads": {
+    "title": "Annunci",
+    "description": "Qui puoi trovare tutto ciò di cui hai bisogno - dagli alloggi ai servizi. Usa filtri intelligenti per una ricerca veloce!",
+    "createAd": "Crea Annuncio",
+    "createAdTitle": "Nuovo Annuncio",
+    "categories": {
+      "housing": "Affitto Alloggi",
+      "cars": "Noleggio Auto",
+      "restaurants": "Ristoranti",
+      "hotels": "Hotel",
+      "events": "Eventi",
+      "tourism": "Turismo",
+      "services": "Servizi",
+      "other": "Altro"
+    },
+    "form": {
+      "country": "Paese",
+      "selectCountry": "Seleziona paese",
+      "city": "Città",
+      "cityPlaceholder": "Inserisci la città",
+      "location": "Posizione",
+      "locationPlaceholder": "Descrivi dove si trova l'oggetto",
+      "category": "Categoria",
+      "selectCategory": "Seleziona categoria",
+      "dateRange": "Periodo",
+      "photos": "Foto della Posizione",
+      "cancel": "Annulla",
+      "publish": "Pubblica"
+    }
   }
 }

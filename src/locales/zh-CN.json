@@ -63,5 +63,35 @@
       "title": "关于我们",
       "description": "项目信息"
     }
+  },
+  "ads": {
+    "title": "广告",
+    "description": "在这里您可以找到所需的一切 - 从住房到服务。使用智能过滤器快速搜索！",
+    "createAd": "创建广告",
+    "createAdTitle": "新广告",
+    "categories": {
+      "housing": "房屋租赁",
+      "cars": "汽车租赁",
+      "restaurants": "餐厅",
+      "hotels": "酒店",
+      "events": "活动",
+      "tourism": "旅游",
+      "services": "服务",
+      "other": "其他"
+    },
+    "form": {
+      "country": "国家",
+      "selectCountry": "选择国家",
+      "city": "城市",
+      "cityPlaceholder": "输入城市",
+      "location": "位置",
+      "locationPlaceholder": "描述对象的位置",
+      "category": "类别",
+      "selectCategory": "选择类别",
+      "dateRange": "日期范围",
+      "photos": "位置照片",
+      "cancel": "取消",
+      "publish": "发布"
+    }
   }
 }

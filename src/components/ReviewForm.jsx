@@ -42,6 +42,7 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
   return (
     <div className="review-form-overlay">
       <div className="review-form">
+        <div className="drag-handle"></div>
         <div className="review-form-header">
           <div className="header-content">
             <div className="header-icon">📍</div>

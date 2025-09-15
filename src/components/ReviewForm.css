@@ -7,7 +7,7 @@
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(20px);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   z-index: 10000;
   animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -19,27 +19,63 @@
 }
 
 .review-form {
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(40px) saturate(180%);
-  border-radius: 24px;
-  padding: 32px;
-  width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
+  background: #ffffff;
+  border-radius: 16px 16px 0 0;
+  padding: 24px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 80vh;
   overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 32px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  border: none;
+  animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  margin: 0;
+}
+
+.sidebar-form {
+  position: fixed;
+  top: 64px;
+  right: 0;
+  bottom: 0;
+  width: 400px;
+  max-width: 90vw;
+  height: calc(100vh - 64px);
+  max-height: none;
+  border-radius: 0;
+  animation: slideInRight 0.3s ease;
+  overflow-y: auto;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.drag-handle {
+  width: 40px;
+  height: 4px;
+  background: #d1d5db;
+  border-radius: 2px;
+  margin: 8px auto 16px auto;
+  cursor: grab;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
 }
 
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.95);
+    transform: translateY(100%);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 

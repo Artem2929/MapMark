@@ -62,5 +62,35 @@
       "title": "Über uns",
       "description": "Informationen über das Projekt"
     }
+  },
+  "ads": {
+    "title": "Anzeigen",
+    "description": "Hier finden Sie alles was Sie brauchen - von Wohnungen bis zu Dienstleistungen. Nutzen Sie intelligente Filter für schnelle Suche!",
+    "createAd": "Anzeige Erstellen",
+    "createAdTitle": "Neue Anzeige",
+    "categories": {
+      "housing": "Wohnungsvermietung",
+      "cars": "Autovermietung",
+      "restaurants": "Restaurants",
+      "hotels": "Hotels",
+      "events": "Veranstaltungen",
+      "tourism": "Tourismus",
+      "services": "Dienstleistungen",
+      "other": "Andere"
+    },
+    "form": {
+      "country": "Land",
+      "selectCountry": "Land auswählen",
+      "city": "Stadt",
+      "cityPlaceholder": "Stadt eingeben",
+      "location": "Standort",
+      "locationPlaceholder": "Beschreiben Sie wo sich das Objekt befindet",
+      "category": "Kategorie",
+      "selectCategory": "Kategorie auswählen",
+      "dateRange": "Zeitraum",
+      "photos": "Standort Fotos",
+      "cancel": "Abbrechen",
+      "publish": "Veröffentlichen"
+    }
   }
 }

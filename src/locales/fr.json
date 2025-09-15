@@ -62,5 +62,35 @@
       "title": "À propos",
       "description": "Informations sur le projet"
     }
+  },
+  "ads": {
+    "title": "Annonces",
+    "description": "Ici vous pouvez trouver tout ce dont vous avez besoin - du logement aux services. Utilisez des filtres intelligents pour une recherche rapide!",
+    "createAd": "Créer Annonce",
+    "createAdTitle": "Nouvelle Annonce",
+    "categories": {
+      "housing": "Location de Logement",
+      "cars": "Location de Voiture",
+      "restaurants": "Restaurants",
+      "hotels": "Hôtels",
+      "events": "Événements",
+      "tourism": "Tourisme",
+      "services": "Services",
+      "other": "Autre"
+    },
+    "form": {
+      "country": "Pays",
+      "selectCountry": "Sélectionner le pays",
+      "city": "Ville",
+      "cityPlaceholder": "Entrez la ville",
+      "location": "Emplacement",
+      "locationPlaceholder": "Décrivez où se trouve l'objet",
+      "category": "Catégorie",
+      "selectCategory": "Sélectionner la catégorie",
+      "dateRange": "Période",
+      "photos": "Photos de l'Emplacement",
+      "cancel": "Annuler",
+      "publish": "Publier"
+    }
   }
 }

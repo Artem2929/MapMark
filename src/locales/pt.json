@@ -62,5 +62,35 @@
       "title": "Sobre nós",
       "description": "Informações sobre o projeto"
     }
+  },
+  "ads": {
+    "title": "Anúncios",
+    "description": "Aqui você pode encontrar tudo o que precisa - desde habitação até serviços. Use filtros inteligentes para busca rápida!",
+    "createAd": "Criar Anúncio",
+    "createAdTitle": "Novo Anúncio",
+    "categories": {
+      "housing": "Aluguel de Habitação",
+      "cars": "Aluguel de Carros",
+      "restaurants": "Restaurantes",
+      "hotels": "Hotéis",
+      "events": "Eventos",
+      "tourism": "Turismo",
+      "services": "Serviços",
+      "other": "Outro"
+    },
+    "form": {
+      "country": "País",
+      "selectCountry": "Selecionar país",
+      "city": "Cidade",
+      "cityPlaceholder": "Digite a cidade",
+      "location": "Localização",
+      "locationPlaceholder": "Descreva onde o objeto está localizado",
+      "category": "Categoria",
+      "selectCategory": "Selecionar categoria",
+      "dateRange": "Período",
+      "photos": "Fotos da Localização",
+      "cancel": "Cancelar",
+      "publish": "Publicar"
+    }
   }
 }

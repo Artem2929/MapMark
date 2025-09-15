@@ -63,5 +63,35 @@
       "title": "私たちについて",
       "description": "プロジェクトについての情報"
     }
+  },
+  "ads": {
+    "title": "広告",
+    "description": "ここで住宅からサービスまで、必要なものをすべて見つけることができます。スマートフィルターで素早く検索！",
+    "createAd": "広告を作成",
+    "createAdTitle": "新しい広告",
+    "categories": {
+      "housing": "住宅レンタル",
+      "cars": "レンタカー",
+      "restaurants": "レストラン",
+      "hotels": "ホテル",
+      "events": "イベント",
+      "tourism": "観光",
+      "services": "サービス",
+      "other": "その他"
+    },
+    "form": {
+      "country": "国",
+      "selectCountry": "国を選択",
+      "city": "都市",
+      "cityPlaceholder": "都市を入力",
+      "location": "位置",
+      "locationPlaceholder": "オブジェクトの位置を説明",
+      "category": "カテゴリー",
+      "selectCategory": "カテゴリーを選択",
+      "dateRange": "期間",
+      "photos": "位置の写真",
+      "cancel": "キャンセル",
+      "publish": "公開"
+    }
   }
 }

@@ -63,5 +63,35 @@
       "title": "معلومات عنا",
       "description": "معلومات حول المشروع"
     }
+  },
+  "ads": {
+    "title": "الإعلانات",
+    "description": "هنا يمكنك العثور على كل ما تحتاجه - من السكن إلى الخدمات. استخدم المرشحات الذكية للبحث السريع!",
+    "createAd": "إنشاء إعلان",
+    "createAdTitle": "إعلان جديد",
+    "categories": {
+      "housing": "إيجار المساكن",
+      "cars": "إيجار السيارات",
+      "restaurants": "المطاعم",
+      "hotels": "الفنادق",
+      "events": "الفعاليات",
+      "tourism": "السياحة",
+      "services": "الخدمات",
+      "other": "أخرى"
+    },
+    "form": {
+      "country": "البلد",
+      "selectCountry": "اختر البلد",
+      "city": "المدينة",
+      "cityPlaceholder": "أدخل المدينة",
+      "location": "الموقع",
+      "locationPlaceholder": "وصف موقع الكائن",
+      "category": "الفئة",
+      "selectCategory": "اختر الفئة",
+      "dateRange": "نطاق التاريخ",
+      "photos": "صور الموقع",
+      "cancel": "إلغاء",
+      "publish": "نشر"
+    }
   }
 }
