@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './WorldMap.css';
-import ReviewForm from './ReviewForm';
-import ReviewsPanel from './ReviewsPanel';
+import ReviewForm from '../forms/ReviewForm';
+import ReviewsPanel from '../ui/ReviewsPanel';
 
 // Fix for default markers
 delete L.Icon.Default.prototype._getIconUrl;
