@@ -183,6 +183,8 @@
   },
   "filter": {
     "quickFilter": "Quick Filter",
+    "country": "Country",
+    "category": "Category",
     "clear": "Clear"
   }
 }

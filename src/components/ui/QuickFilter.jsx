@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import countriesData from '../../data/countries.json';
+import CustomSelect from './CustomSelect';
 import './QuickFilter.css';
 
 const QuickFilter = ({ onFilterChange }) => {
@@ -43,7 +44,7 @@ const QuickFilter = ({ onFilterChange }) => {
   return (
     <div className={`quick-filter ${isExpanded ? 'expanded' : 'collapsed'}`}>
       <div className="filter-toggle" onClick={() => setIsExpanded(!isExpanded)}>
-        <span className="filter-icon">🔍</span>
+        <span className="filter-icon">⚡</span>
         <span className="filter-text">{t('filter.quickFilter')}</span>
         <span className={`arrow ${isExpanded ? 'up' : 'down'}`}>▼</span>
       </div>
@@ -52,30 +53,22 @@ const QuickFilter = ({ onFilterChange }) => {
         <div className="filter-content">
           <div className="filter-group">
             <label>{t('ads.form.country')}</label>
-            <select
+            <CustomSelect
+              options={countries}
               value={filters.country}
-              onChange={(e) => handleFilterChange('country', e.target.value)}
-            >
-              <option value="">{t('ads.form.selectCountry')}</option>
-              {countries.map(country => (
-                <option key={country.code} value={country.code}>
-                  {country.name_en}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => handleFilterChange('country', value)}
+              placeholder={t('ads.form.selectCountry')}
+            />
           </div>
 
           <div className="filter-group">
             <label>{t('ads.form.category')}</label>
-            <select
+            <CustomSelect
+              options={categories.map(cat => ({ code: cat.id, name_en: cat.name }))}
               value={filters.category}
-              onChange={(e) => handleFilterChange('category', e.target.value)}
-            >
-              <option value="">{t('ads.form.selectCategory')}</option>
-              {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
-              ))}
-            </select>
+              onChange={(value) => handleFilterChange('category', value)}
+              placeholder={t('ads.form.selectCategory')}
+            />
           </div>
 
           <div className="filter-actions">

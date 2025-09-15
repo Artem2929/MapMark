@@ -1,6 +1,6 @@
 {
   "header": {
-    "listings": "Listados",
+    "listings": "Anuncios",
     "about": "Acerca de",
     "countries": "Países"
   },
@@ -8,90 +8,31 @@
     "placeholder": "Buscar ubicación...",
     "button": "Buscar"
   },
-  "footer": {
-    "description": "Descubre y comparte los mejores lugares que has visitado con nuestra comunidad de viajeros y exploradores de todo el mundo.",
-    "explore": {
-      "title": "Explorar",
-      "discover": "Descubrir Lugares"
-    },
-    "support": {
-      "title": "Soporte",
-      "help": "Centro de Ayuda",
-      "faq": "Preguntas Frecuentes",
-      "contact": "Contáctanos",
-      "feedback": "Comentarios"
-    },
-    "legal": {
-      "title": "Legal",
-      "privacy": "Política de Privacidad",
-      "terms": "Términos de Servicio",
-      "cookies": "Política de Cookies"
-    },
-    "badges": {
-      "secure": "Seguro",
-      "trusted": "Confiable"
-    },
-    "rights": "Todos los derechos reservados."
-  },
-  "review": {
-    "title": "Comparte tu Experiencia",
-    "subtitle": "Ayuda a otros a descubrir este lugar increíble",
-    "yourReview": "Tu Reseña",
-    "placeholder": "¿Qué hizo especial este lugar? Comparte detalles sobre tu visita, el ambiente, la accesibilidad o consejos para futuros visitantes...",
-    "rating": "Calificación",
-    "outOfStars": "de 5 estrellas",
-    "addPhoto": "Agregar Foto (Opcional)",
-    "choosePhoto": "Elegir Foto",
-    "cancel": "Cancelar",
-    "publish": "Publicar Reseña"
-  },
-  "popup": {
-    "addReview": "Agregar Reseña",
-    "location": "Ubicación",
-    "coordinates": "Lat: {lat}, Lng: {lng}"
-  },
-  "pages": {
-    "home": {
-      "title": "Página de inicio",
-      "welcome": "¡Bienvenido a MapMark!"
-    },
-    "listings": {
-      "title": "Listados",
-      "description": "Aquí estarán los listados"
-    },
-    "about": {
-      "title": "Acerca de",
-      "description": "Información sobre el proyecto"
-    }
-  },
   "ads": {
-    "title": "Anuncios",
-    "description": "Aquí puedes encontrar todo lo que necesitas - desde vivienda hasta servicios. ¡Usa filtros inteligentes para búsqueda rápida!",
-    "createAd": "Crear Anuncio",
-    "createAdTitle": "Nuevo Anuncio",
+    "form": {
+      "title": "Título",
+      "description": "Descripción",
+      "country": "País",
+      "selectCountry": "Seleccionar país",
+      "category": "Categoría",
+      "selectCategory": "Seleccionar categoría",
+      "publish": "Publicar"
+    },
     "categories": {
-      "housing": "Alquiler de Vivienda",
-      "cars": "Alquiler de Coches",
+      "housing": "Vivienda",
+      "cars": "Coches",
       "restaurants": "Restaurantes",
       "hotels": "Hoteles",
       "events": "Eventos",
       "tourism": "Turismo",
       "services": "Servicios",
       "other": "Otro"
-    },
-    "form": {
-      "country": "País",
-      "selectCountry": "Seleccionar país",
-      "city": "Ciudad",
-      "cityPlaceholder": "Ingresa la ciudad",
-      "location": "Ubicación",
-      "locationPlaceholder": "Describe dónde se encuentra el objeto",
-      "category": "Categoría",
-      "selectCategory": "Seleccionar categoría",
-      "dateRange": "Rango de Fechas",
-      "photos": "Fotos de Ubicación",
-      "cancel": "Cancelar",
-      "publish": "Publicar"
     }
+  },
+  "filter": {
+    "quickFilter": "Filtro Rápido",
+    "country": "País",
+    "category": "Categoría",
+    "clear": "Limpiar"
   }
 }

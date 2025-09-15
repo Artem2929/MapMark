@@ -8,90 +8,31 @@
     "placeholder": "Rechercher un lieu...",
     "button": "Rechercher"
   },
-  "footer": {
-    "description": "Découvrez et partagez les meilleurs endroits que vous avez visités avec notre communauté de voyageurs et explorateurs du monde entier.",
-    "explore": {
-      "title": "Explorer",
-      "discover": "Découvrir des Lieux"
-    },
-    "support": {
-      "title": "Support",
-      "help": "Centre d'Aide",
-      "faq": "FAQ",
-      "contact": "Nous Contacter",
-      "feedback": "Commentaires"
-    },
-    "legal": {
-      "title": "Légal",
-      "privacy": "Politique de Confidentialité",
-      "terms": "Conditions d'Utilisation",
-      "cookies": "Politique des Cookies"
-    },
-    "badges": {
-      "secure": "Sécurisé",
-      "trusted": "Fiable"
-    },
-    "rights": "Tous droits réservés."
-  },
-  "review": {
-    "title": "Partagez votre Expérience",
-    "subtitle": "Aidez les autres à découvrir ce lieu incroyable",
-    "yourReview": "Votre Avis",
-    "placeholder": "Qu'est-ce qui a rendu cet endroit spécial ? Partagez des détails sur votre visite, l'atmosphère, l'accessibilité ou des conseils pour les futurs visiteurs...",
-    "rating": "Note",
-    "outOfStars": "sur 5 étoiles",
-    "addPhoto": "Ajouter une Photo (Optionnel)",
-    "choosePhoto": "Choisir une Photo",
-    "cancel": "Annuler",
-    "publish": "Publier l'Avis"
-  },
-  "popup": {
-    "addReview": "Ajouter un Avis",
-    "location": "Emplacement",
-    "coordinates": "Lat: {lat}, Lng: {lng}"
-  },
-  "pages": {
-    "home": {
-      "title": "Page d'accueil",
-      "welcome": "Bienvenue sur MapMark!"
-    },
-    "listings": {
-      "title": "Annonces",
-      "description": "Ici seront les annonces"
-    },
-    "about": {
-      "title": "À propos",
-      "description": "Informations sur le projet"
-    }
-  },
   "ads": {
-    "title": "Annonces",
-    "description": "Ici vous pouvez trouver tout ce dont vous avez besoin - du logement aux services. Utilisez des filtres intelligents pour une recherche rapide!",
-    "createAd": "Créer Annonce",
-    "createAdTitle": "Nouvelle Annonce",
+    "form": {
+      "title": "Titre",
+      "description": "Description",
+      "country": "Pays",
+      "selectCountry": "Sélectionner un pays",
+      "category": "Catégorie",
+      "selectCategory": "Sélectionner une catégorie",
+      "publish": "Publier"
+    },
     "categories": {
-      "housing": "Location de Logement",
-      "cars": "Location de Voiture",
+      "housing": "Logement",
+      "cars": "Voitures",
       "restaurants": "Restaurants",
       "hotels": "Hôtels",
       "events": "Événements",
       "tourism": "Tourisme",
       "services": "Services",
       "other": "Autre"
-    },
-    "form": {
-      "country": "Pays",
-      "selectCountry": "Sélectionner le pays",
-      "city": "Ville",
-      "cityPlaceholder": "Entrez la ville",
-      "location": "Emplacement",
-      "locationPlaceholder": "Décrivez où se trouve l'objet",
-      "category": "Catégorie",
-      "selectCategory": "Sélectionner la catégorie",
-      "dateRange": "Période",
-      "photos": "Photos de l'Emplacement",
-      "cancel": "Annuler",
-      "publish": "Publier"
     }
+  },
+  "filter": {
+    "quickFilter": "Filtre Rapide",
+    "country": "Pays",
+    "category": "Catégorie",
+    "clear": "Effacer"
   }
 }

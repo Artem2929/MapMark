@@ -8,90 +8,31 @@
     "placeholder": "Cerca posizione...",
     "button": "Cerca"
   },
-  "footer": {
-    "description": "Scopri e condividi i migliori luoghi che hai visitato con la nostra comunità di viaggiatori ed esploratori di tutto il mondo.",
-    "explore": {
-      "title": "Esplora",
-      "discover": "Scopri Luoghi"
-    },
-    "support": {
-      "title": "Supporto",
-      "help": "Centro Assistenza",
-      "faq": "Domande Frequenti",
-      "contact": "Contattaci",
-      "feedback": "Feedback"
-    },
-    "legal": {
-      "title": "Legale",
-      "privacy": "Informativa sulla Privacy",
-      "terms": "Termini di Servizio",
-      "cookies": "Politica sui Cookie"
-    },
-    "badges": {
-      "secure": "Sicuro",
-      "trusted": "Affidabile"
-    },
-    "rights": "Tutti i diritti riservati."
-  },
-  "review": {
-    "title": "Condividi la tua Esperienza",
-    "subtitle": "Aiuta gli altri a scoprire questo posto incredibile",
-    "yourReview": "La tua Recensione",
-    "placeholder": "Cosa ha reso speciale questo posto? Condividi dettagli sulla tua visita, l'atmosfera, l'accessibilità o consigli per i futuri visitatori...",
-    "rating": "Valutazione",
-    "outOfStars": "su 5 stelle",
-    "addPhoto": "Aggiungi Foto (Opzionale)",
-    "choosePhoto": "Scegli Foto",
-    "cancel": "Annulla",
-    "publish": "Pubblica Recensione"
-  },
-  "popup": {
-    "addReview": "Aggiungi Recensione",
-    "location": "Posizione",
-    "coordinates": "Lat: {lat}, Lng: {lng}"
-  },
-  "pages": {
-    "home": {
-      "title": "Pagina iniziale",
-      "welcome": "Benvenuto su MapMark!"
-    },
-    "listings": {
-      "title": "Annunci",
-      "description": "Qui ci saranno gli annunci"
-    },
-    "about": {
-      "title": "Chi siamo",
-      "description": "Informazioni sul progetto"
-    }
-  },
   "ads": {
-    "title": "Annunci",
-    "description": "Qui puoi trovare tutto ciò di cui hai bisogno - dagli alloggi ai servizi. Usa filtri intelligenti per una ricerca veloce!",
-    "createAd": "Crea Annuncio",
-    "createAdTitle": "Nuovo Annuncio",
+    "form": {
+      "title": "Titolo",
+      "description": "Descrizione",
+      "country": "Paese",
+      "selectCountry": "Seleziona paese",
+      "category": "Categoria",
+      "selectCategory": "Seleziona categoria",
+      "publish": "Pubblica"
+    },
     "categories": {
-      "housing": "Affitto Alloggi",
-      "cars": "Noleggio Auto",
+      "housing": "Abitazioni",
+      "cars": "Auto",
       "restaurants": "Ristoranti",
       "hotels": "Hotel",
       "events": "Eventi",
       "tourism": "Turismo",
       "services": "Servizi",
       "other": "Altro"
-    },
-    "form": {
-      "country": "Paese",
-      "selectCountry": "Seleziona paese",
-      "city": "Città",
-      "cityPlaceholder": "Inserisci la città",
-      "location": "Posizione",
-      "locationPlaceholder": "Descrivi dove si trova l'oggetto",
-      "category": "Categoria",
-      "selectCategory": "Seleziona categoria",
-      "dateRange": "Periodo",
-      "photos": "Foto della Posizione",
-      "cancel": "Annulla",
-      "publish": "Pubblica"
     }
+  },
+  "filter": {
+    "quickFilter": "Filtro Rapido",
+    "country": "Paese",
+    "category": "Categoria",
+    "clear": "Cancella"
   }
 }

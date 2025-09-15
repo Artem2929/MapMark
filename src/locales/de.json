@@ -8,90 +8,31 @@
     "placeholder": "Ort suchen...",
     "button": "Suchen"
   },
-  "footer": {
-    "description": "Entdecken und teilen Sie die besten Orte, die Sie besucht haben, mit unserer Gemeinschaft von Reisenden und Entdeckern aus aller Welt.",
-    "explore": {
-      "title": "Erkunden",
-      "discover": "Orte Entdecken"
-    },
-    "support": {
-      "title": "Support",
-      "help": "Hilfezentrum",
-      "faq": "Häufige Fragen",
-      "contact": "Kontakt",
-      "feedback": "Feedback"
-    },
-    "legal": {
-      "title": "Rechtliches",
-      "privacy": "Datenschutzrichtlinie",
-      "terms": "Nutzungsbedingungen",
-      "cookies": "Cookie-Richtlinie"
-    },
-    "badges": {
-      "secure": "Sicher",
-      "trusted": "Vertrauenswürdig"
-    },
-    "rights": "Alle Rechte vorbehalten."
-  },
-  "review": {
-    "title": "Teilen Sie Ihre Erfahrung",
-    "subtitle": "Helfen Sie anderen, diesen erstaunlichen Ort zu entdecken",
-    "yourReview": "Ihre Bewertung",
-    "placeholder": "Was machte diesen Ort besonders? Teilen Sie Details über Ihren Besuch, die Atmosphäre, Zugänglichkeit oder Tipps für zukünftige Besucher...",
-    "rating": "Bewertung",
-    "outOfStars": "von 5 Sternen",
-    "addPhoto": "Foto hinzufügen (Optional)",
-    "choosePhoto": "Foto auswählen",
-    "cancel": "Abbrechen",
-    "publish": "Bewertung veröffentlichen"
-  },
-  "popup": {
-    "addReview": "Bewertung hinzufügen",
-    "location": "Standort",
-    "coordinates": "Lat: {lat}, Lng: {lng}"
-  },
-  "pages": {
-    "home": {
-      "title": "Startseite",
-      "welcome": "Willkommen bei MapMark!"
-    },
-    "listings": {
-      "title": "Anzeigen",
-      "description": "Hier werden die Anzeigen sein"
-    },
-    "about": {
-      "title": "Über uns",
-      "description": "Informationen über das Projekt"
-    }
-  },
   "ads": {
-    "title": "Anzeigen",
-    "description": "Hier finden Sie alles was Sie brauchen - von Wohnungen bis zu Dienstleistungen. Nutzen Sie intelligente Filter für schnelle Suche!",
-    "createAd": "Anzeige Erstellen",
-    "createAdTitle": "Neue Anzeige",
+    "form": {
+      "title": "Titel",
+      "description": "Beschreibung",
+      "country": "Land",
+      "selectCountry": "Land auswählen",
+      "category": "Kategorie",
+      "selectCategory": "Kategorie auswählen",
+      "publish": "Veröffentlichen"
+    },
     "categories": {
-      "housing": "Wohnungsvermietung",
-      "cars": "Autovermietung",
+      "housing": "Wohnen",
+      "cars": "Autos",
       "restaurants": "Restaurants",
       "hotels": "Hotels",
       "events": "Veranstaltungen",
       "tourism": "Tourismus",
       "services": "Dienstleistungen",
       "other": "Andere"
-    },
-    "form": {
-      "country": "Land",
-      "selectCountry": "Land auswählen",
-      "city": "Stadt",
-      "cityPlaceholder": "Stadt eingeben",
-      "location": "Standort",
-      "locationPlaceholder": "Beschreiben Sie wo sich das Objekt befindet",
-      "category": "Kategorie",
-      "selectCategory": "Kategorie auswählen",
-      "dateRange": "Zeitraum",
-      "photos": "Standort Fotos",
-      "cancel": "Abbrechen",
-      "publish": "Veröffentlichen"
     }
+  },
+  "filter": {
+    "quickFilter": "Schnellfilter",
+    "country": "Land",
+    "category": "Kategorie",
+    "clear": "Löschen"
   }
 }

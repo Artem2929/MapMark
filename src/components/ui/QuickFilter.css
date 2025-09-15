@@ -2,108 +2,203 @@
   position: fixed;
   top: 80px;
   right: 20px;
-  background-color: #ffffff;
-  border: 1px solid #e1e5e9;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(8px);
-  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 24px;
   z-index: 500;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 200px;
+  overflow: hidden;
 }
 
 .quick-filter.collapsed {
-  width: 140px;
+  width: 160px;
 }
 
 .quick-filter.expanded {
-  width: 280px;
+  width: 320px;
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.quick-filter:hover {
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.18),
+    0 6px 16px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .filter-toggle {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 12px;
+  padding: 16px 20px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  border-radius: 20px;
-  background: rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.filter-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.6s ease;
+}
+
+.filter-toggle:hover::before {
+  left: 100%;
 }
 
 .filter-toggle:hover {
-  background: rgba(0, 0, 0, 0.08);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
 }
 
 .filter-icon {
   font-size: 16px;
+  color: #3b82f6;
 }
 
 .filter-text {
-  font-size: 14px;
-  font-weight: 400;
-  color: #1d1d1f;
+  font-size: 15px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   flex: 1;
+  letter-spacing: -0.02em;
 }
 
 .arrow {
-  font-size: 10px;
-  transition: transform 0.2s ease;
+  font-size: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #64748b;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
 .arrow.up {
-  transform: rotate(180deg);
+  transform: rotate(180deg) scale(1.1);
+  color: #3b82f6;
 }
 
 .filter-content {
-  padding: 16px;
-  border-top: 1px solid #e1e5e9;
-  animation: slideDown 0.3s ease;
+  padding: 20px 24px 24px 24px;
+  border-top: 1px solid rgba(226, 232, 240, 0.6);
+  animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.filter-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.3) 50%, transparent 100%);
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    filter: blur(4px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    filter: blur(0);
   }
 }
 
 .filter-group {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  position: relative;
 }
 
 .filter-group label {
   display: block;
   font-size: 12px;
   font-weight: 600;
-  color: #1d1d1f;
-  margin-bottom: 6px;
+  color: #475569;
+  margin-bottom: 8px;
+  letter-spacing: 0.01em;
+  position: relative;
 }
 
 .filter-group select {
   width: 100%;
-  padding: 8px 32px 8px 16px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
+  padding: 14px 40px 14px 18px;
+  border: 2px solid transparent;
+  border-radius: 16px;
   font-size: 14px;
-  background: rgba(0, 0, 0, 0.04);
-  color: #1d1d1f;
-  transition: all 0.2s ease;
+  font-weight: 500;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  color: #1e293b;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   appearance: none;
-  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 12px;
+  background-image: 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%),
+    url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%233b82f6" stroke-width="2"><polyline points="6,9 12,15 18,9"></polyline></svg>');
+  background-repeat: no-repeat, no-repeat;
+  background-position: 0 0, right 14px center;
+  background-size: 100% 100%, 16px;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  position: relative;
 }
 
 .filter-group select:focus {
   outline: none;
-  background: rgba(0, 0, 0, 0.08);
-  border-color: #007aff;
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(248, 250, 252, 1) 100%);
+  box-shadow: 
+    0 0 0 4px rgba(59, 130, 246, 0.1),
+    0 4px 16px rgba(59, 130, 246, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.filter-group select:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.filter-group select {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.filter-group select::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filter-group select::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.filter-group select::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #3b82f6 0%, #9333ea 100%);
+  border-radius: 3px;
+}
+
+.filter-group select::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
 }
 
 

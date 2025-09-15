@@ -133,6 +133,8 @@
   },
   "filter": {
     "quickFilter": "Швидкий фільтр",
+    "country": "Країна",
+    "category": "Категорія",
     "clear": "Очистити"
   },
   "about": {
