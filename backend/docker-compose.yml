@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  mongodb:
+    build:
+      context: ./mongodb
+      dockerfile: Dockerfile
+    container_name: mapmark-mongodb-dev
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: mapmark
+    volumes:
+      - ./mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - mapmark-network
+    develop:
+      watch:
+        - action: rebuild
+          path: ./mongodb
+          ignore:
+            - .git/
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: mapmark-server-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DB_URL: mongodb://admin:password@mongodb:27017/mapmark?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - mapmark-network
+    develop:
+      watch:
+        - action: rebuild
+          path: ./server
+          ignore:
+            - node_modules/
+            - .git/
+
+networks:
+  mapmark-network:
+    driver: bridge
