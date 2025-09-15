@@ -2,7 +2,8 @@
   "header": {
     "home": "होम",
     "listings": "सूचियाँ",
-    "about": "हमारे बारे में"
+    "about": "हमारे बारे में",
+    "countries": "देश"
   },
   "search": {
     "placeholder": "स्थान खोजें...",

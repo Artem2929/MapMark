@@ -1,7 +1,8 @@
 {
   "header": {
     "listings": "Anzeigen",
-    "about": "Über uns"
+    "about": "Über uns",
+    "countries": "Länder"
   },
   "search": {
     "placeholder": "Ort suchen...",

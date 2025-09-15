@@ -2,7 +2,8 @@
   "header": {
     "home": "Главная",
     "listings": "Объявления",
-    "about": "О нас"
+    "about": "О нас",
+    "countries": "Страны"
   },
   "search": {
     "placeholder": "Поиск места...",

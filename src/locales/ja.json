@@ -2,7 +2,8 @@
   "header": {
     "home": "ホーム",
     "listings": "リスティング",
-    "about": "私たちについて"
+    "about": "私たちについて",
+    "countries": "国々"
   },
   "search": {
     "placeholder": "場所を検索...",

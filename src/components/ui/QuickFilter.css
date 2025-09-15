@@ -1,0 +1,145 @@
+.quick-filter {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e1e5e9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  z-index: 500;
+  transition: all 0.3s ease;
+  min-width: 200px;
+}
+
+.quick-filter.collapsed {
+  width: 140px;
+}
+
+.quick-filter.expanded {
+  width: 280px;
+}
+
+.filter-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.filter-toggle:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.filter-icon {
+  font-size: 16px;
+}
+
+.filter-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #1d1d1f;
+  flex: 1;
+}
+
+.arrow {
+  font-size: 10px;
+  transition: transform 0.2s ease;
+}
+
+.arrow.up {
+  transform: rotate(180deg);
+}
+
+.filter-content {
+  padding: 16px;
+  border-top: 1px solid #e1e5e9;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filter-group {
+  margin-bottom: 16px;
+}
+
+.filter-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-bottom: 6px;
+}
+
+.filter-group select {
+  width: 100%;
+  padding: 8px 32px 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.04);
+  color: #1d1d1f;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+
+.filter-group select:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.08);
+  border-color: #007aff;
+}
+
+
+
+.filter-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.clear-btn {
+  background: #007aff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-btn:hover {
+  background: #0056cc;
+}
+
+@media (max-width: 768px) {
+  .quick-filter {
+    right: 10px;
+    top: 70px;
+  }
+  
+  .quick-filter.collapsed {
+    width: 120px;
+  }
+  
+  .quick-filter.expanded {
+    width: 260px;
+  }
+}

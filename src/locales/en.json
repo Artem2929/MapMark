@@ -2,7 +2,8 @@
   "header": {
     "home": "Home",
     "listings": "Listings",
-    "about": "About"
+    "about": "About",
+    "countries": "Countries"
   },
   "search": {
     "placeholder": "Search location...",
@@ -179,5 +180,9 @@
       "cancel": "Cancel",
       "publish": "Publish"
     }
+  },
+  "filter": {
+    "quickFilter": "Quick Filter",
+    "clear": "Clear"
   }
 }

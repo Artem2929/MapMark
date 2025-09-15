@@ -6,6 +6,7 @@ import Header from './components/layout/Header.jsx'
 import Footer from './components/layout/Footer.jsx'
 import WorldMap from './components/map/WorldMap.jsx'
 import CountryFlags from './components/ui/CountryFlags.jsx'
+import QuickFilter from './components/ui/QuickFilter.jsx'
 import AdsPage from './pages/AdsPage.jsx'
 
 const AppContent = () => {
@@ -14,12 +15,39 @@ const AppContent = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [mapInstance, setMapInstance] = useState(null);
   const [isCountriesVisible, setIsCountriesVisible] = useState(false);
+  const [mapFilters, setMapFilters] = useState({ country: '', category: '' });
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
   const handleSearch = (query) => {
     setSearchQuery(query);
     setTimeout(() => setSearchQuery(''), 100);
+  };
+
+  const handleFilterChange = (filters) => {
+    setMapFilters(filters);
+    if (filters.country && mapInstance) {
+      // Знаходимо країну та летимо до неї
+      searchCountryAndFly(filters.country);
+    }
+  };
+
+  const searchCountryAndFly = async (countryCode) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&country=${countryCode}&limit=1`
+      );
+      const data = await response.json();
+      
+      if (data && data.length > 0 && mapInstance) {
+        const { lat, lon } = data[0];
+        mapInstance.flyTo([parseFloat(lat), parseFloat(lon)], 6, {
+          duration: 1.5
+        });
+      }
+    } catch (error) {
+      console.error('Country search error:', error);
+    }
   };
 
   return (
@@ -41,9 +69,12 @@ const AppContent = () => {
           }
         }} 
       />}
+      {isHomePage && <QuickFilter 
+        onFilterChange={handleFilterChange}
+      />}
       <main style={{paddingTop: '64px', flex: 1}}>
         <Routes>
-          <Route path="/" element={<WorldMap searchQuery={searchQuery} onMapReady={setMapInstance} />} />
+          <Route path="/" element={<WorldMap searchQuery={searchQuery} onMapReady={setMapInstance} filters={mapFilters} />} />
             <Route path="/ads" element={<AdsPage />} />
             <Route path="/about" element={
               <div style={{maxWidth: '1200px', margin: '0 auto', padding: '104px 20px 40px 20px'}}>

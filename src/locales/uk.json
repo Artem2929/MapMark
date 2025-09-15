@@ -2,7 +2,8 @@
   "header": {
     "home": "Головна",
     "listings": "Оголошення",
-    "about": "Опис"
+    "about": "Опис",
+    "countries": "Країни"
   },
   "search": {
     "placeholder": "Пошук місця...",
@@ -129,6 +130,10 @@
       "cancel": "Скасувати",
       "publish": "Опублікувати"
     }
+  },
+  "filter": {
+    "quickFilter": "Швидкий фільтр",
+    "clear": "Очистити"
   },
   "about": {
     "ua": {

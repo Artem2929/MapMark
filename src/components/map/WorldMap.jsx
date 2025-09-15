@@ -28,7 +28,7 @@ const MapClickHandler = ({ onMapClick }) => {
   return null;
 };
 
-const WorldMap = ({ searchQuery, onMapReady }) => {
+const WorldMap = ({ searchQuery, onMapReady, filters }) => {
   const { t } = useTranslation();
   const [markers, setMarkers] = useState([]);
   const [map, setMap] = useState(null);
@@ -114,6 +114,14 @@ const WorldMap = ({ searchQuery, onMapReady }) => {
       searchLocation(searchQuery);
     }
   }, [searchQuery]);
+
+  // Effect to handle filters
+  React.useEffect(() => {
+    if (filters && filters.country) {
+      console.log('Filtering by country:', filters.country);
+      // Фільтруємо маркери по країні якщо потрібно
+    }
+  }, [filters]);
 
   return (
     <div className="world-map-container">

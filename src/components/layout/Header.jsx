@@ -93,7 +93,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible }) => {
               className="header-link countries-btn"
               onClick={() => setIsCountriesVisible && setIsCountriesVisible(!isCountriesVisible)}
             >
-              Countries
+              {t('header.countries')}
               <span className={`arrow ${isCountriesVisible ? 'up' : 'down'}`}>▼</span>
             </button>
           )}

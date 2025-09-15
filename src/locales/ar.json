@@ -2,7 +2,8 @@
   "header": {
     "home": "الرئيسية",
     "listings": "القوائم",
-    "about": "معلومات عنا"
+    "about": "معلومات عنا",
+    "countries": "البلدان"
   },
   "search": {
     "placeholder": "البحث عن موقع...",

@@ -1,7 +1,8 @@
 {
   "header": {
     "listings": "Annunci",
-    "about": "Chi siamo"
+    "about": "Chi siamo",
+    "countries": "Paesi"
   },
   "search": {
     "placeholder": "Cerca posizione...",

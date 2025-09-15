@@ -2,7 +2,8 @@
   "header": {
     "home": "首页",
     "listings": "列表",
-    "about": "关于我们"
+    "about": "关于我们",
+    "countries": "国家"
   },
   "search": {
     "placeholder": "搜索位置...",
