@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import CustomSelect from '../ui/CustomSelect';
 import './CreateAdForm.css';
 
 const CreateAdForm = ({ onClose, onSubmit }) => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
     country: '',
-    city: '',
     location: '',
     category: '',
     dateFrom: '',
@@ -15,8 +15,18 @@ const CreateAdForm = ({ onClose, onSubmit }) => {
   });
 
   const countries = [
-    'Ukraine', 'United States', 'Germany', 'France', 'Spain', 'Italy', 
-    'United Kingdom', 'Poland', 'Canada', 'Australia', 'Japan', 'China'
+    { code: 'UA', name_en: 'Ukraine' },
+    { code: 'US', name_en: 'United States' },
+    { code: 'DE', name_en: 'Germany' },
+    { code: 'FR', name_en: 'France' },
+    { code: 'ES', name_en: 'Spain' },
+    { code: 'IT', name_en: 'Italy' },
+    { code: 'GB', name_en: 'United Kingdom' },
+    { code: 'PL', name_en: 'Poland' },
+    { code: 'CA', name_en: 'Canada' },
+    { code: 'AU', name_en: 'Australia' },
+    { code: 'JP', name_en: 'Japan' },
+    { code: 'CN', name_en: 'China' }
   ];
 
   const categories = [
@@ -56,7 +66,7 @@ const CreateAdForm = ({ onClose, onSubmit }) => {
     
     // Get coordinates for the location
     try {
-      const query = `${formData.location}, ${formData.city}, ${formData.country}`;
+      const query = `${formData.location}, ${formData.country}`;
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
       );
@@ -91,26 +101,11 @@ const CreateAdForm = ({ onClose, onSubmit }) => {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>{t('ads.form.country')}</label>
-            <select
+            <CustomSelect
+              options={countries}
               value={formData.country}
-              onChange={(e) => handleInputChange('country', e.target.value)}
-              required
-            >
-              <option value="">{t('ads.form.selectCountry')}</option>
-              {countries.map(country => (
-                <option key={country} value={country}>{country}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>{t('ads.form.city')}</label>
-            <input
-              type="text"
-              value={formData.city}
-              onChange={(e) => handleInputChange('city', e.target.value)}
-              placeholder={t('ads.form.cityPlaceholder')}
-              required
+              onChange={(value) => handleInputChange('country', value)}
+              placeholder={t('ads.form.selectCountry')}
             />
           </div>
 
@@ -127,27 +122,23 @@ const CreateAdForm = ({ onClose, onSubmit }) => {
 
           <div className="form-group">
             <label>{t('ads.form.category')}</label>
-            <select
+            <CustomSelect
+              options={categories.map(cat => ({ code: cat.id, name_en: cat.name }))}
               value={formData.category}
-              onChange={(e) => handleInputChange('category', e.target.value)}
-              required
-            >
-              <option value="">{t('ads.form.selectCategory')}</option>
-              {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
-              ))}
-            </select>
+              onChange={(value) => handleInputChange('category', value)}
+              placeholder={t('ads.form.selectCategory')}
+            />
           </div>
 
           <div className="form-group">
             <label>{t('ads.form.dateRange')}</label>
-            <div className="date-range">
+            <div className="date-inputs">
               <input
                 type="date"
                 value={formData.dateFrom}
                 onChange={(e) => handleInputChange('dateFrom', e.target.value)}
               />
-              <span>-</span>
+              <span>to</span>
               <input
                 type="date"
                 value={formData.dateTo}
@@ -158,13 +149,17 @@ const CreateAdForm = ({ onClose, onSubmit }) => {
 
           <div className="form-group">
             <label>{t('ads.form.photos')} ({formData.photos.length}/3)</label>
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handlePhotoUpload}
-              disabled={formData.photos.length >= 3}
-            />
+            <label className="file-input-btn">
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                disabled={formData.photos.length >= 3}
+                style={{ display: 'none' }}
+              />
+              Choose Files
+            </label>
             <div className="photo-preview">
               {formData.photos.map((photo, index) => (
                 <div key={index} className="photo-item">

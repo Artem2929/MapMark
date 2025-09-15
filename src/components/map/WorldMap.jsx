@@ -47,9 +47,17 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
       markerId: selectedMarker.id
     };
     setReviews(prev => [...prev, newReview]);
+    
+    // Update marker to show it has reviews
+    setMarkers(prev => prev.map(marker => 
+      marker.id === selectedMarker.id 
+        ? { ...marker, hasReviews: true }
+        : marker
+    ));
+    
     setShowReviewForm(false);
     setSelectedMarker(null);
-    setExpandedPopup(selectedMarker.id); // Автоматично розкриваємо popup
+    setExpandedPopup(selectedMarker.id);
     console.log('Review submitted:', newReview);
   };
 
@@ -75,9 +83,10 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
     const newMarker = {
       id: Date.now(),
       position: [latlng.lat, latlng.lng],
-      name: t('popup.location') + ' 1'
+      name: t('popup.location') + ' ' + (markers.length + 1),
+      hasReviews: false
     };
-    setMarkers([newMarker]);
+    setMarkers(prev => [...prev, newMarker]);
   };
 
   const searchLocation = async (query) => {
@@ -94,9 +103,10 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
         const newMarker = {
           id: Date.now(),
           position: [parseFloat(lat), parseFloat(lon)],
-          name: display_name
+          name: display_name,
+          hasReviews: false
         };
-        setMarkers([newMarker]);
+        setMarkers(prev => [...prev, newMarker]);
         
         // Fly to location
         if (map) {
@@ -150,9 +160,36 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
         />
         <MapClickHandler onMapClick={handleMapClick} />
         
-        {markers.map((marker) => (
-          <Marker key={marker.id} position={marker.position}>
-            <Popup>
+        {markers.map((marker) => {
+          const markerReviews = reviews.filter(review => review.markerId === marker.id);
+          const hasReviews = markerReviews.length > 0;
+          
+          // Create custom icon for markers with reviews
+          const markerProps = {
+            key: marker.id,
+            position: marker.position
+          };
+          
+          if (hasReviews) {
+            markerProps.icon = L.divIcon({
+              html: `
+                <div class="review-badge">
+                  <div class="badge-circle">
+                    <div class="badge-icon">📝</div>
+                  </div>
+                  <div class="badge-count">${markerReviews.length}</div>
+                  <div class="badge-glow"></div>
+                </div>
+              `,
+              className: 'game-flag-icon',
+              iconSize: [28, 36],
+              iconAnchor: [3, 36]
+            });
+          }
+          
+          return (
+            <Marker {...markerProps}>
+              <Popup>
               <div 
                 className={`popup-content ${expandedPopup === marker.id ? 'expanded' : ''}`}
                 style={expandedPopup === marker.id ? {
@@ -165,6 +202,12 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
                 <div style={{marginBottom: '12px'}}>
                   {t('popup.coordinates').replace('{lat}', marker.position[0].toFixed(4)).replace('{lng}', marker.position[1].toFixed(4))}
                 </div>
+                
+                {hasReviews && (
+                  <div style={{marginBottom: '12px', color: '#007aff', fontSize: '14px'}}>
+                    📝 {markerReviews.length} review{markerReviews.length !== 1 ? 's' : ''}
+                  </div>
+                )}
                 
                 {!expandedPopup || expandedPopup !== marker.id ? (
                   <div style={{marginTop: '12px', marginBottom: '16px'}}>
@@ -194,9 +237,10 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
                 ) : null}
 
               </div>
-            </Popup>
-          </Marker>
-        ))}
+              </Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
       
       {showReviewForm && selectedMarker && (

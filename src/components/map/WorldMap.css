@@ -417,3 +417,138 @@
   margin: 0;
   font-size: 12px;
 }
+
+.game-flag-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.review-badge {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  animation: badgePulse 3s ease-in-out infinite;
+}
+
+.badge-circle {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #007aff 0%, #0056cc 100%);
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  box-shadow: 
+    0 4px 12px rgba(0, 122, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.badge-circle::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+  animation: badgeShine 4s ease-in-out infinite;
+}
+
+.badge-icon {
+  font-size: 14px;
+  color: white;
+  z-index: 2;
+}
+
+.badge-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(255, 71, 87, 0.4);
+  animation: countBounce 2s ease-in-out infinite;
+}
+
+.badge-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 122, 255, 0.4) 0%, transparent 70%);
+  animation: badgeGlow 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes badgeShine {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes countBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes badgeGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
+}
+
+.review-badge:hover {
+  animation-duration: 1.5s;
+}
+
+.review-badge:hover .badge-circle {
+  background: linear-gradient(135deg, #0056cc 0%, #003d99 100%);
+  box-shadow: 
+    0 6px 16px rgba(0, 122, 255, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.review-badge:hover .badge-count {
+  animation-duration: 1s;
+  background: linear-gradient(135deg, #ff6b7a 0%, #ff4757 100%);
+}
+
+.review-badge:hover .badge-glow {
+  opacity: 0.8;
+  animation-duration: 1s;
+}

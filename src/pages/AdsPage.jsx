@@ -2,20 +2,19 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CreateAdForm from '../components/forms/CreateAdForm';
 import Footer from '../components/layout/Footer.jsx';
+import CustomSelect from '../components/ui/CustomSelect';
 import './AdsPage.css';
 
 const AdsPage = () => {
   const { t } = useTranslation();
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [filters, setFilters] = useState({
+    country: '',
     location: '',
-    radius: 10,
     category: '',
     dateFrom: '',
     dateTo: '',
-    priceMin: '',
-    priceMax: '',
-    currency: 'UAH',
     rating: 0,
     hasPhotos: false,
     hasVideo: false
@@ -38,14 +37,11 @@ const AdsPage = () => {
 
   const resetFilters = () => {
     setFilters({
+      country: '',
       location: '',
-      radius: 10,
       category: '',
       dateFrom: '',
       dateTo: '',
-      priceMin: '',
-      priceMax: '',
-      currency: 'UAH',
       rating: 0,
       hasPhotos: false,
       hasVideo: false
@@ -53,8 +49,21 @@ const AdsPage = () => {
   };
 
   const activeFiltersCount = Object.values(filters).filter(value => 
-    value !== '' && value !== 0 && value !== false && value !== 10
+    value !== '' && value !== 0 && value !== false
   ).length;
+
+  const countries = [
+    { code: 'UA', name_en: 'Ukraine' },
+    { code: 'US', name_en: 'United States' },
+    { code: 'GB', name_en: 'United Kingdom' },
+    { code: 'DE', name_en: 'Germany' },
+    { code: 'FR', name_en: 'France' },
+    { code: 'IT', name_en: 'Italy' },
+    { code: 'ES', name_en: 'Spain' },
+    { code: 'PL', name_en: 'Poland' },
+    { code: 'CA', name_en: 'Canada' },
+    { code: 'AU', name_en: 'Australia' }
+  ];
 
   return (
     <div className="ads-page">
@@ -72,104 +81,68 @@ const AdsPage = () => {
       <div className="ads-content">
         <div className="filters-sidebar">
           <div className="filters-header">
-            <h3>🔍 Filters</h3>
-            {activeFiltersCount > 0 && (
-              <div className="active-filters-badge">
-                {activeFiltersCount} active
-              </div>
-            )}
+            <h3>Фільтр</h3>
             <button className="reset-filters" onClick={resetFilters}>
               Reset all
             </button>
           </div>
 
+          {/* Country Filter */}
+          <div className="filter-group">
+            <label>Country</label>
+            <CustomSelect
+              options={countries}
+              value={filters.country}
+              onChange={(value) => handleFilterChange('country', value)}
+              placeholder="Select country"
+            />
+          </div>
+
           {/* Location Filter */}
           <div className="filter-group">
-            <label>📍 Location</label>
+            <label>Location</label>
             <input
               type="text"
-              placeholder="City, country or address"
+              placeholder="Enter location"
               value={filters.location}
               onChange={(e) => handleFilterChange('location', e.target.value)}
             />
-            <div className="radius-selector">
-              <label>Radius: {filters.radius} km</label>
-              <input
-                type="range"
-                min="1"
-                max="100"
-                value={filters.radius}
-                onChange={(e) => handleFilterChange('radius', e.target.value)}
-              />
-            </div>
           </div>
 
           {/* Category Filter */}
           <div className="filter-group">
-            <label>🏷️ Category</label>
-            <div className="category-grid">
-              {categories.map(cat => (
-                <button
-                  key={cat.id}
-                  className={`category-btn ${filters.category === cat.id ? 'active' : ''}`}
-                  onClick={() => handleFilterChange('category', cat.id)}
-                >
-                  <span className="category-icon">{cat.icon}</span>
-                  <span className="category-name">{cat.name}</span>
-                </button>
-              ))}
-            </div>
+            <label>Category</label>
+            <CustomSelect
+              options={categories.map(cat => ({ code: cat.id, name_en: cat.name }))}
+              value={filters.category}
+              onChange={(value) => handleFilterChange('category', value)}
+              placeholder="Select category"
+            />
           </div>
 
-          {/* Date Filter */}
+          {/* Date Range Filter */}
           <div className="filter-group">
-            <label>📅 Date Range</label>
+            <label>Date Range</label>
             <div className="date-inputs">
               <input
                 type="date"
+                placeholder="From"
                 value={filters.dateFrom}
                 onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
               />
               <span>to</span>
               <input
                 type="date"
+                placeholder="To"
                 value={filters.dateTo}
                 onChange={(e) => handleFilterChange('dateTo', e.target.value)}
               />
             </div>
           </div>
 
-          {/* Price Filter */}
-          <div className="filter-group">
-            <label>💰 Price Range</label>
-            <div className="price-inputs">
-              <input
-                type="number"
-                placeholder="Min"
-                value={filters.priceMin}
-                onChange={(e) => handleFilterChange('priceMin', e.target.value)}
-              />
-              <span>-</span>
-              <input
-                type="number"
-                placeholder="Max"
-                value={filters.priceMax}
-                onChange={(e) => handleFilterChange('priceMax', e.target.value)}
-              />
-              <select
-                value={filters.currency}
-                onChange={(e) => handleFilterChange('currency', e.target.value)}
-              >
-                <option value="UAH">UAH</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-              </select>
-            </div>
-          </div>
-
           {/* Rating Filter */}
           <div className="filter-group">
-            <label>⭐ Minimum Rating</label>
+            <label>Rating</label>
             <div className="rating-selector">
               {[1, 2, 3, 4, 5].map(star => (
                 <button
@@ -185,7 +158,7 @@ const AdsPage = () => {
 
           {/* Media Filter */}
           <div className="filter-group">
-            <label>📸 Media</label>
+            <label>Media</label>
             <div className="checkbox-group">
               <label className="checkbox-label">
                 <input
@@ -223,7 +196,7 @@ const AdsPage = () => {
 
           <div className="ads-grid">
             {/* Sample ads - replace with real data */}
-            {[1, 2, 3, 4, 5, 6].map(id => (
+            {[1,  6].map(id => (
               <div key={id} className="ad-card">
                 <div className="ad-image">
                   <div className="placeholder-image">📷</div>
