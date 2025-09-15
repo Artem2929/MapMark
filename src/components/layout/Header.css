@@ -85,7 +85,7 @@
 
 .header-nav {
   display: flex;
-  gap: 32px;
+  gap: 16px;
 }
 
 .header-link {

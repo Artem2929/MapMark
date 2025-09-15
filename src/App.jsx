@@ -8,6 +8,12 @@ import WorldMap from './components/map/WorldMap.jsx'
 import CountryFlags from './components/ui/CountryFlags.jsx'
 import QuickFilter from './components/ui/QuickFilter.jsx'
 import AdsPage from './pages/AdsPage.jsx'
+import CookiePolicy from './pages/CookiePolicy.jsx'
+import TermsOfService from './pages/TermsOfService.jsx'
+import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
+import HelpCenter from './pages/HelpCenter.jsx'
+import ContactUs from './pages/ContactUs.jsx'
+import DiscoverPlaces from './pages/DiscoverPlaces.jsx'
 
 const AppContent = () => {
   const { t, i18n } = useTranslation();
@@ -72,7 +78,7 @@ const AppContent = () => {
       {isHomePage && <QuickFilter 
         onFilterChange={handleFilterChange}
       />}
-      <main style={{paddingTop: '64px', flex: 1}}>
+      <main style={{paddingTop: '64px', flex: 1, overflow: isHomePage ? 'hidden' : 'auto'}}>
         <Routes>
           <Route path="/" element={<WorldMap searchQuery={searchQuery} onMapReady={setMapInstance} filters={mapFilters} />} />
             <Route path="/ads" element={<AdsPage />} />
@@ -82,9 +88,14 @@ const AppContent = () => {
                 <p style={{marginTop: '16px', color: '#666', lineHeight: '1.6'}}>{t(`aboutPage.${currentLang}.description`)}</p>
               </div>
             } />
+            <Route path="/cookie-policy" element={<CookiePolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/help-center" element={<HelpCenter />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/discover-places" element={<DiscoverPlaces />} />
           </Routes>
         </main>
-        {!isHomePage && <Footer />}
       </div>
   );
 };

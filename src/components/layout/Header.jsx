@@ -80,6 +80,9 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible }) => {
         
         {/* Desktop Navigation */}
         <nav className="header-nav desktop-nav">
+          <Link to="/discover-places" className="header-link">
+            {t('header.discover')}
+          </Link>
           <Link to="/ads" className="header-link">
             {t('header.listings')}
           </Link>
@@ -132,6 +135,13 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible }) => {
 
       {/* Mobile Navigation */}
       <nav className={`mobile-nav ${isMenuOpen ? 'open' : ''}`}>
+        <Link 
+          to="/discover-places" 
+          className="mobile-link"
+          onClick={() => setIsMenuOpen(false)}
+        >
+          {t('header.discover')}
+        </Link>
         <Link 
           to="/ads" 
           className="mobile-link"

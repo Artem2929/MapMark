@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CreateAdForm from '../components/forms/CreateAdForm';
+import Footer from '../components/layout/Footer.jsx';
 import './AdsPage.css';
 
 const AdsPage = () => {
@@ -257,6 +258,7 @@ const AdsPage = () => {
           }}
         />
       )}
+      <Footer />
     </div>
   );
 };

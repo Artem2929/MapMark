@@ -1,6 +1,7 @@
 {
   "header": {
     "home": "Home",
+    "discover": "Discover Places",
     "listings": "Listings",
     "about": "About",
     "countries": "Countries"
@@ -186,5 +187,386 @@
     "country": "Country",
     "category": "Category",
     "clear": "Clear"
+  },
+  "cookiePolicy": {
+    "title": "Cookie Policy",
+    "subtitle": "Learn how MapMark uses cookies to enhance your experience",
+    "lastUpdated": "Last updated",
+    "date": "January 2025",
+    "whatAreCookies": {
+      "title": "What Are Cookies?",
+      "description": "Cookies are small text files that are stored on your device when you visit our website. They help us provide you with a better experience by remembering your preferences and improving our services."
+    },
+    "howWeUseCookies": {
+      "title": "How We Use Cookies",
+      "description": "We use different types of cookies to enhance your experience on MapMark:"
+    },
+    "cookieTypes": {
+      "essential": {
+        "title": "Essential Cookies",
+        "description": "These cookies are necessary for the website to function properly and cannot be disabled.",
+        "examples": {
+          "authentication": "User authentication and login sessions",
+          "security": "Security and fraud prevention",
+          "preferences": "Basic website functionality and preferences"
+        }
+      },
+      "functional": {
+        "title": "Functional Cookies",
+        "description": "These cookies enhance your experience by remembering your choices and preferences.",
+        "examples": {
+          "language": "Language and region preferences",
+          "location": "Location settings for map display",
+          "mapSettings": "Map view preferences and zoom levels"
+        }
+      },
+      "analytics": {
+        "title": "Analytics Cookies",
+        "description": "These cookies help us understand how visitors use our website so we can improve it.",
+        "examples": {
+          "usage": "Website usage statistics and popular features",
+          "performance": "Page load times and performance metrics",
+          "errors": "Error tracking and debugging information"
+        }
+      }
+    },
+    "thirdParty": {
+      "title": "Third-Party Cookies",
+      "description": "We may use third-party services that set their own cookies:",
+      "services": {
+        "maps": {
+          "title": "Map Services (Leaflet/OpenStreetMap)",
+          "description": "Used to display interactive maps and location data"
+        },
+        "analytics": {
+          "title": "Analytics Services",
+          "description": "Help us understand user behavior and improve our services"
+        }
+      }
+    },
+    "manageCookies": {
+      "title": "Managing Your Cookies",
+      "description": "You can control and manage cookies in several ways:",
+      "browserSettings": "Browser Settings:",
+      "browsers": {
+        "chrome": "Settings > Privacy and security > Cookies and other site data",
+        "firefox": "Settings > Privacy & Security > Cookies and Site Data",
+        "safari": "Preferences > Privacy > Manage Website Data",
+        "edge": "Settings > Cookies and site permissions > Cookies and site data"
+      }
+    },
+    "consent": {
+      "title": "Cookie Consent",
+      "description": "By using MapMark, you consent to our use of cookies as described in this policy. We may ask for your explicit consent for certain types of cookies.",
+      "withdrawal": "You can withdraw your consent at any time by adjusting your browser settings or contacting us directly."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "description": "If you have any questions about our Cookie Policy, please contact us:",
+      "email": "Email",
+      "address": "Address",
+      "addressText": "MapMark Privacy Team, 123 Travel Street, Explorer City, EC 12345"
+    },
+    "changes": {
+      "title": "Changes to This Policy",
+      "description": "We may update this Cookie Policy from time to time. Any changes will be posted on this page with an updated revision date. We encourage you to review this policy periodically."
+    }
+  },
+  "termsOfService": {
+    "title": "Terms of Service",
+    "subtitle": "Please read these terms carefully before using MapMark",
+    "lastUpdated": "Last updated",
+    "date": "January 2025",
+    "acceptance": {
+      "title": "Acceptance of Terms",
+      "description": "By accessing and using MapMark, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service."
+    },
+    "services": {
+      "title": "Description of Service",
+      "description": "MapMark is a platform that allows users to discover, share, and review locations worldwide. Our services include:",
+      "features": {
+        "map": "Interactive world map with location markers",
+        "reviews": "User-generated reviews and ratings for locations",
+        "community": "Community-driven recommendations and experiences",
+        "recommendations": "Personalized location suggestions based on preferences"
+      }
+    },
+    "userAccount": {
+      "title": "User Accounts",
+      "description": "To access certain features of MapMark, you may be required to create an account. You are responsible for maintaining the confidentiality of your account information.",
+      "responsibilities": {
+        "title": "Your Responsibilities:",
+        "accurate": "Provide accurate and complete information when creating your account",
+        "security": "Maintain the security of your password and account",
+        "activities": "Accept responsibility for all activities that occur under your account"
+      }
+    },
+    "userContent": {
+      "title": "User Content",
+      "description": "You retain ownership of any content you submit, post or display on MapMark. By submitting content, you grant us a worldwide, non-exclusive license to use, display, and distribute your content on our platform.",
+      "prohibited": {
+        "title": "Prohibited Content:",
+        "illegal": "Content that is illegal, harmful, or violates any laws",
+        "harmful": "Harassment, hate speech, or discriminatory content",
+        "spam": "Spam, misleading information, or fraudulent content",
+        "copyright": "Content that infringes on intellectual property rights"
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "description": "Your privacy is important to us. Please review our Privacy Policy, which also governs your use of the Service, to understand our practices."
+    },
+    "termination": {
+      "title": "Termination",
+      "description": "We may terminate or suspend your account and bar access to the service immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever including breach of the Terms."
+    },
+    "limitation": {
+      "title": "Limitation of Liability",
+      "description": "In no event shall MapMark, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
+    },
+    "changes": {
+      "title": "Changes to Terms",
+      "description": "We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days notice prior to any new terms taking effect."
+    },
+    "contact": {
+      "title": "Contact Information",
+      "description": "If you have any questions about these Terms of Service, please contact us:",
+      "email": "Email",
+      "address": "Address",
+      "addressText": "MapMark Legal Team, 123 Travel Street, Explorer City, EC 12345"
+    }
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "subtitle": "Your privacy is important to us. Learn how we protect your data.",
+    "lastUpdated": "Last updated",
+    "date": "January 2025",
+    "introduction": {
+      "title": "Introduction",
+      "description": "MapMark is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service."
+    },
+    "dataCollection": {
+      "title": "Information We Collect",
+      "description": "We collect information you provide directly to us and information we obtain automatically when you use our services:",
+      "types": {
+        "personal": {
+          "title": "Personal Information",
+          "items": {
+            "name": "Name and contact information",
+            "email": "Email address for account creation",
+            "location": "Location data when you share reviews"
+          }
+        },
+        "usage": {
+          "title": "Usage Information",
+          "items": {
+            "interactions": "How you interact with our service",
+            "preferences": "Your preferences and settings",
+            "device": "Device information and IP address"
+          }
+        }
+      }
+    },
+    "dataUsage": {
+      "title": "How We Use Your Information",
+      "description": "We use the information we collect for various purposes:",
+      "purposes": {
+        "service": "To provide, maintain, and improve our services",
+        "personalization": "To personalize your experience and recommendations",
+        "communication": "To communicate with you about updates and features",
+        "improvement": "To analyze usage patterns and improve our platform"
+      }
+    },
+    "dataSharing": {
+      "title": "Information Sharing",
+      "description": "We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except in the following circumstances:",
+      "exceptions": {
+        "title": "We may share information when:",
+        "legal": "Required by law or to respond to legal process",
+        "safety": "Necessary to protect the safety of users or the public",
+        "business": "In connection with a merger, acquisition, or sale of assets"
+      }
+    },
+    "dataSecurity": {
+      "title": "Data Security",
+      "description": "We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction:",
+      "measures": {
+        "title": "Security Measures:",
+        "encryption": "Data encryption in transit and at rest",
+        "access": "Limited access controls and authentication",
+        "monitoring": "Regular security monitoring and updates"
+      }
+    },
+    "userRights": {
+      "title": "Your Rights",
+      "description": "You have certain rights regarding your personal information:",
+      "rights": {
+        "access": "Access and review your personal information",
+        "correction": "Request correction of inaccurate information",
+        "deletion": "Request deletion of your personal information",
+        "portability": "Request a copy of your data in a portable format"
+      }
+    },
+    "cookies": {
+      "title": "Cookies and Tracking",
+      "description": "We use cookies and similar technologies to enhance your experience. Please see our Cookie Policy for detailed information about our use of cookies."
+    },
+    "changes": {
+      "title": "Changes to This Policy",
+      "description": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the revision date."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "description": "If you have any questions about this Privacy Policy, please contact us:",
+      "email": "Email",
+      "address": "Address",
+      "addressText": "MapMark Privacy Team, 123 Travel Street, Explorer City, EC 12345"
+    }
+  },
+  "helpCenter": {
+    "title": "Help Center",
+    "subtitle": "Everything you need to know about using MapMark",
+    "gettingStarted": {
+      "title": "Getting Started",
+      "description": "MapMark is designed to help you discover and share amazing places around the world. Here's how to get started:",
+      "steps": {
+        "explore": {
+          "title": "Explore the Map",
+          "description": "Use the interactive world map to browse locations. Zoom in and out, drag to move around, and discover places that interest you."
+        },
+        "click": {
+          "title": "Click on Locations",
+          "description": "Click on any location marker to see details, existing reviews, and ratings from other travelers."
+        },
+        "review": {
+          "title": "Share Your Experience",
+          "description": "Add your own reviews and ratings to help other travelers discover great places and avoid disappointing ones."
+        }
+      }
+    },
+    "features": {
+      "title": "Key Features",
+      "map": {
+        "title": "Interactive World Map",
+        "description": "Explore locations worldwide with our easy-to-use interactive map interface."
+      },
+      "reviews": {
+        "title": "Real User Reviews",
+        "description": "Read authentic reviews and ratings from travelers who have actually visited these places."
+      },
+      "filters": {
+        "title": "Smart Filters",
+        "description": "Filter locations by country, category, or use the quick filter to find exactly what you're looking for."
+      },
+      "languages": {
+        "title": "Multiple Languages",
+        "description": "Access MapMark in 12 different languages to make your experience more comfortable."
+      }
+    },
+    "howToUse": {
+      "title": "How to Use MapMark",
+      "addReview": {
+        "title": "Adding a Review",
+        "steps": {
+          "find": "Find the location you want to review on the map",
+          "click": "Click on the location marker to open the details popup",
+          "write": "Click 'Add Review' and write your honest experience",
+          "rate": "Give a star rating from 1 to 5 stars",
+          "publish": "Click 'Publish Review' to share with the community"
+        }
+      },
+      "navigation": {
+        "title": "Map Navigation",
+        "zoom": "Use mouse wheel or +/- buttons to zoom in and out",
+        "drag": "Click and drag to move around the map",
+        "search": "Use the search bar to find specific locations",
+        "filters": "Apply filters to show only certain types of places"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": {
+        "account": {
+          "question": "Do I need an account to use MapMark?",
+          "answer": "You can browse locations and read reviews without an account. However, to add your own reviews and save favorite places, you'll need to create a free account."
+        },
+        "reviews": {
+          "question": "How do I write a good review?",
+          "answer": "Be honest and specific about your experience. Include details about what made the place special, accessibility, best times to visit, and any tips for future visitors."
+        },
+        "languages": {
+          "question": "Can I change the language?",
+          "answer": "Yes! MapMark supports 12 languages. You can change the language using the language selector in the header."
+        },
+        "mobile": {
+          "question": "Does MapMark work on mobile devices?",
+          "answer": "Absolutely! MapMark is fully responsive and works great on smartphones and tablets. You can access all features on any device."
+        }
+      }
+    },
+    "contact": {
+      "title": "Need More Help?",
+      "description": "If you can't find the answer to your question, don't hesitate to contact our support team:",
+      "email": "Email",
+      "response": "Response Time",
+      "responseTime": "We typically respond within 24 hours"
+    }
+  },
+  "contactUs": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with our team",
+    "description": "Have a question, suggestion, or need help with MapMark? We'd love to hear from you! Our team is here to assist you with any inquiries about our platform, features, or your travel experiences.",
+    "email": "Email",
+    "response": "Response Time",
+    "responseTime": "We typically respond within 24 hours"
+  },
+  "discoverPlaces": {
+    "title": "Discover Amazing Places",
+    "subtitle": "Explore the world through authentic reviews and recommendations from fellow travelers",
+    "featured": {
+      "title": "Featured Categories",
+      "description": "Find the perfect places for your next adventure based on what you love most:"
+    },
+    "categories": {
+      "nature": {
+        "title": "Natural Wonders",
+        "description": "Breathtaking landscapes, national parks, beaches, and outdoor adventures"
+      },
+      "culture": {
+        "title": "Cultural Heritage",
+        "description": "Museums, historical sites, art galleries, and cultural landmarks"
+      },
+      "food": {
+        "title": "Food & Dining",
+        "description": "Local restaurants, street food, cafes, and culinary experiences"
+      },
+      "adventure": {
+        "title": "Adventure & Sports",
+        "description": "Hiking trails, water sports, extreme activities, and outdoor challenges"
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "steps": {
+        "browse": {
+          "title": "Browse Places",
+          "description": "Explore our interactive map or browse by categories to find interesting locations"
+        },
+        "read": {
+          "title": "Read Reviews",
+          "description": "Get insights from real travelers who have visited these places before"
+        },
+        "plan": {
+          "title": "Plan Your Visit",
+          "description": "Use the information and tips to plan your perfect trip"
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Explore?",
+      "description": "Start discovering amazing places around the world with MapMark today!",
+      "exploreMap": "Explore Map",
+      "viewListings": "View All Listings"
+    }
   }
 }
