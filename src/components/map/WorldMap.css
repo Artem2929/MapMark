@@ -17,6 +17,7 @@
   position: relative;
   transform: translateZ(0) !important;
   will-change: transform !important;
+  cursor: grab;
 }
 
 .world-map-container::before {
@@ -146,11 +147,16 @@
 /* REMOVED DUPLICATE - using compact version below */
 
 .leaflet-popup-content strong {
-  color: #202124 !important;
-  font-weight: 500 !important;
-  font-size: 16px !important;
+  background: linear-gradient(135deg, #1d1d1f 0%, #4a4a4a 100%) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  font-weight: 700 !important;
+  font-size: 18px !important;
   display: block !important;
-  margin-bottom: 8px !important;
+  margin-bottom: 12px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
+  letter-spacing: -0.02em !important;
 }
 
 .leaflet-popup-content br + br {
@@ -162,36 +168,66 @@
 }
 
 .leaflet-popup-tip {
-  background: rgba(255, 255, 255, 0.98) !important;
-  backdrop-filter: blur(40px) saturate(180%) !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%) !important;
+  backdrop-filter: blur(60px) saturate(200%) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  box-shadow: none !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
 }
 
 .leaflet-popup-close-button {
-  color: #1d1d1f !important;
+  color: #8e8e93 !important;
   font-size: 16px !important;
   font-weight: 400 !important;
   padding: 0 !important;
-  transition: all 0.2s ease !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   border-radius: 50% !important;
-  width: 24px !important;
-  height: 24px !important;
-  line-height: 24px !important;
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
   text-align: center !important;
-  background: rgba(0, 0, 0, 0.04) !important;
-  right: 12px !important;
-  top: 12px !important;
-  border: none !important;
+  background: rgba(0, 0, 0, 0.03) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  right: 16px !important;
+  top: 16px !important;
   text-decoration: none !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   text-indent: -9999px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.leaflet-popup-close-button::before {
+  content: '×' !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  text-indent: 0 !important;
+  z-index: 2 !important;
+  position: relative !important;
+}
+
+.leaflet-popup-close-button::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent) !important;
+  transition: left 0.5s !important;
 }
 
 .leaflet-popup-close-button:hover {
-  background: rgba(0, 0, 0, 0.08) !important;
+  background: rgba(255, 59, 48, 0.1) !important;
+  border-color: rgba(255, 59, 48, 0.2) !important;
+  color: #ff3b30 !important;
+  transform: scale(1.05) !important;
+}
+
+.leaflet-popup-close-button:hover::after {
+  left: 100% !important;
 }
 
 .leaflet-popup-close-button::before {
@@ -203,25 +239,43 @@
 
 /* REMOVED DUPLICATE - using compact version below */
 
-/* Leaflet popup improvements */
+/* Leaflet popup improvements - 2025 Style */
 .leaflet-popup-content-wrapper {
-  border-radius: 12px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
-  border: none !important;
-  min-width: 200px !important;
-  max-width: 250px !important;
-  max-height: 160px !important;
-  overflow: hidden !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%) !important;
+  backdrop-filter: blur(60px) saturate(200%) !important;
+  border-radius: 20px !important;
+  box-shadow: 
+    0 16px 32px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  min-width: 260px !important;
+  max-width: 320px !important;
+  max-height: 180px !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+.leaflet-popup-content-wrapper::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.5), transparent) !important;
+  animation: shimmer 3s ease-in-out infinite !important;
 }
 
 .leaflet-popup-content {
   margin: 0 !important;
-  padding: 12px !important;
-  max-height: 140px !important;
-  overflow: hidden !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  padding: 18px !important;
+  max-height: 160px !important;
+  overflow: visible !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
   line-height: 1.4 !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
+  position: relative !important;
 }
 
 .leaflet-popup-tip {
@@ -243,35 +297,117 @@
 }
 
 .expand-btn {
-  background: #007aff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 12px;
-  cursor: pointer;
-  margin: 12px 0 4px 4px;
-  transition: all 0.2s ease;
+  background: linear-gradient(135deg, #34c759 0%, #30d158 50%, #28a745 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: inline-block !important;
+  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
+  flex: 1 !important;
+}
+
+.expand-btn::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+  transition: left 0.5s !important;
 }
 
 .expand-btn:hover {
-  background: #0056cc;
+  background: linear-gradient(135deg, #28a745 0%, #34c759 50%, #1e7e34 100%) !important;
+  box-shadow: 0 8px 24px rgba(52, 199, 89, 0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+}
+
+.expand-btn:hover::before {
+  left: 100% !important;
+}
+
+/* Стилізований бейдж відгуків */
+.reviews-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 152, 0, 0.1) 100%) !important;
+  border: 1px solid rgba(255, 193, 7, 0.2) !important;
+  border-radius: 12px !important;
+  padding: 6px 12px !important;
+  margin: 8px 0 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #1d1d1f !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.reviews-icon {
+  font-size: 14px !important;
+  filter: drop-shadow(0 1px 2px rgba(255, 193, 7, 0.3)) !important;
+}
+
+.reviews-count {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  font-weight: 700 !important;
+}
+
+.reviews-text {
+  color: #6b7280 !important;
+  font-weight: 500 !important;
 }
 
 .review-btn {
-  background: #007aff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 12px;
-  cursor: pointer;
-  margin: 12px 4px 4px 0;
-  transition: all 0.2s ease;
+  background: linear-gradient(135deg, #007aff 0%, #00c7ff 50%, #0056cc 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: inline-block !important;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
+  flex: 1 !important;
+}
+
+.review-btn::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+  transition: left 0.5s !important;
 }
 
 .review-btn:hover {
-  background: #0056cc;
+  background: linear-gradient(135deg, #0056cc 0%, #007aff 50%, #003d99 100%) !important;
+  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+}
+
+.review-btn:hover::before {
+  left: 100% !important;
 }
 
 /* Google Maps reviews style */
@@ -530,6 +666,11 @@
     opacity: 0.6;
     transform: scale(1.2);
   }
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }
 
 .review-badge:hover {

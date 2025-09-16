@@ -1,22 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import StarRating from '../ui/StarRating';
 import './ReviewForm.css';
 
 const ReviewForm = ({ marker, onClose, onSubmit }) => {
   const { t } = useTranslation();
   const [reviewText, setReviewText] = useState('');
   const [rating, setRating] = useState(0);
-  const [hoveredRating, setHoveredRating] = useState(0);
-
-  const handleStarClick = (starIndex, isHalf) => {
-    const newRating = isHalf ? starIndex - 0.5 : starIndex;
-    setRating(newRating);
-  };
-
-  const handleStarHover = (starIndex, isHalf) => {
-    const newRating = isHalf ? starIndex - 0.5 : starIndex;
-    setHoveredRating(newRating);
-  };
   const [photo, setPhoto] = useState(null);
 
   const handlePhotoUpload = (e) => {
@@ -79,36 +69,13 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
           <div className="form-group">
             <label>{t('review.rating')}</label>
             <div className="rating-container">
-              <div className="star-rating">
-                {[1, 2, 3, 4, 5].map((star) => {
-                  const currentRating = hoveredRating || rating;
-                  const isFilled = star <= currentRating;
-                  const isHalfFilled = star - 0.5 === currentRating;
-                  
-                  return (
-                    <div key={star} className="star-container">
-                      <div 
-                        className="star-half left"
-                        onClick={() => handleStarClick(star, true)}
-                        onMouseEnter={() => handleStarHover(star, true)}
-                        onMouseLeave={() => setHoveredRating(0)}
-                      >
-                        <span className={`star-icon ${isHalfFilled || isFilled ? 'filled' : ''}`}>★</span>
-                      </div>
-                      <div 
-                        className="star-half right"
-                        onClick={() => handleStarClick(star, false)}
-                        onMouseEnter={() => handleStarHover(star, false)}
-                        onMouseLeave={() => setHoveredRating(0)}
-                      >
-                        <span className={`star-icon ${isFilled ? 'filled' : ''}`}>★</span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <StarRating
+                value={rating}
+                onChange={setRating}
+                size={32}
+              />
               <div className="rating-text">
-                <span>{hoveredRating || rating || 0} {t('review.outOfStars')}</span>
+                <span>{rating || 0} {t('review.outOfStars')}</span>
               </div>
             </div>
           </div>

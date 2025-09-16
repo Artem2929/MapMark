@@ -1,11 +1,11 @@
 import React from 'react';
 import './ReviewsPanel.css';
 
-const ReviewsPanel = ({ marker, reviews, isVisible, onClose, onAddReview }) => {
+const ReviewsPanel = ({ marker, reviews, onClose, onAddReview }) => {
   const markerReviews = reviews.filter(review => review.markerId === marker?.id);
 
   return (
-    <div className={`reviews-panel ${isVisible ? 'visible' : ''}`}>
+    <div className="reviews-panel visible">
       <div className="reviews-panel-header">
         <div className="header-content">
           <h3>📍 {marker?.name}</h3>

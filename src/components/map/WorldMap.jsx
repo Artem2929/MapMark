@@ -19,10 +19,6 @@ const MapClickHandler = ({ onMapClick }) => {
   const map = useMapEvents({
     click: (e) => {
       onMapClick(e.latlng);
-      // Zoom in to clicked location
-      map.flyTo(e.latlng, Math.min(map.getZoom() + 2, 18), {
-        duration: 0.5
-      });
     },
   });
   return null;
@@ -55,9 +51,16 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
         : marker
     ));
     
+    // Close review form
     setShowReviewForm(false);
+    
+    // If reviews panel was open, keep it open and update the selected marker
+    if (showReviewsPanel && selectedMarkerForReviews?.id === selectedMarker.id) {
+      // Panel stays open, just update the marker reference
+      setSelectedMarkerForReviews(prev => ({ ...prev, hasReviews: true }));
+    }
+    
     setSelectedMarker(null);
-    setExpandedPopup(selectedMarker.id);
     console.log('Review submitted:', newReview);
   };
 
@@ -79,11 +82,30 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
     }
   }, [map, onMapReady]);
 
-  const handleMapClick = (latlng) => {
+  const getLocationName = async (lat, lng) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`
+      );
+      const data = await response.json();
+      
+      if (data && data.address) {
+        const { city, town, village, country, state } = data.address;
+        return city || town || village || state || country || 'Unknown Location';
+      }
+      return 'Unknown Location';
+    } catch (error) {
+      console.error('Geocoding error:', error);
+      return 'Unknown Location';
+    }
+  };
+
+  const handleMapClick = async (latlng) => {
+    const locationName = await getLocationName(latlng.lat, latlng.lng);
     const newMarker = {
       id: Date.now(),
       position: [latlng.lat, latlng.lng],
-      name: t('popup.location') + ' ' + (markers.length + 1),
+      name: locationName,
       hasReviews: false
     };
     setMarkers(prev => [...prev, newMarker]);
@@ -198,43 +220,45 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
                 } : {}}
               >
                 <strong>{marker.name}</strong>
-                <br />
-                <div style={{marginBottom: '12px'}}>
-                  {t('popup.coordinates').replace('{lat}', marker.position[0].toFixed(4)).replace('{lng}', marker.position[1].toFixed(4))}
+                <div style={{marginBottom: '8px', fontSize: '12px', color: '#8e8e93'}}>
+                  {marker.position[0].toFixed(4)}, {marker.position[1].toFixed(4)}
                 </div>
                 
                 {hasReviews && (
-                  <div style={{marginBottom: '12px', color: '#007aff', fontSize: '14px'}}>
-                    📝 {markerReviews.length} review{markerReviews.length !== 1 ? 's' : ''}
+                  <div className="reviews-badge">
+                    <span className="reviews-icon">⭐</span>
+                    <span className="reviews-count">{markerReviews.length}</span>
+                    <span className="reviews-text">review{markerReviews.length !== 1 ? 's' : ''}</span>
                   </div>
                 )}
                 
-                {!expandedPopup || expandedPopup !== marker.id ? (
-                  <div style={{marginTop: '12px', marginBottom: '16px'}}>
-                    <button 
-                      className="review-btn"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setSelectedMarker(marker);
-                        setShowReviewForm(true);
-                      }}
-                    >
-                      {t('popup.addReview')}
-                    </button>
+                <div style={{marginTop: '8px', marginBottom: '8px', display: 'flex', gap: '8px'}}>
+                  <button 
+                    className="review-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setSelectedMarker(marker);
+                      setShowReviewForm(true);
+                    }}
+                  >
+                    {t('popup.addReview')}
+                  </button>
+                  {markerReviews.length > 0 && (
                     <button 
                       className="expand-btn"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
+                        console.log('View Reviews clicked', marker, markerReviews);
                         setSelectedMarkerForReviews(marker);
                         setShowReviewsPanel(true);
                       }}
                     >
-                      Show more
+                      View Reviews
                     </button>
-                  </div>
-                ) : null}
+                  )}
+                </div>
 
               </div>
               </Popup>
@@ -254,19 +278,20 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
         />
       )}
       
-      <ReviewsPanel
-        marker={selectedMarkerForReviews}
-        reviews={reviews}
-        isVisible={showReviewsPanel}
-        onClose={() => {
-          setShowReviewsPanel(false);
-          setSelectedMarkerForReviews(null);
-        }}
-        onAddReview={() => {
-          setSelectedMarker(selectedMarkerForReviews);
-          setShowReviewForm(true);
-        }}
-      />
+      {showReviewsPanel && selectedMarkerForReviews && (
+        <ReviewsPanel
+          marker={selectedMarkerForReviews}
+          reviews={reviews}
+          onClose={() => {
+            setShowReviewsPanel(false);
+            setSelectedMarkerForReviews(null);
+          }}
+          onAddReview={() => {
+            setSelectedMarker(selectedMarkerForReviews);
+            setShowReviewForm(true);
+          }}
+        />
+      )}
     </div>
   );
 };
