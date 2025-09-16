@@ -2,6 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const multer = require("multer");
+const { uploadPhotoBuffer } = require('./services/fileStorage');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,30 +15,45 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// MongoDB Schema
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+// MongoDB Schema - Flexible schema with only required fields
 const locationSchema = new mongoose.Schema({
   lat: { type: Number, required: true },
   lng: { type: Number, required: true },
+  images: { type: [String], required: false },
+  createdAt: { type: Date, default: Date.now },
+  // Add GeoJSON location field for geospatial queries
   location: {
     type: {
       type: String,
       enum: ['Point'],
-      required: true
+      default: 'Point'
     },
     coordinates: {
-      type: [Number],
+      type: [Number], // [longitude, latitude]
       required: true
     }
-  },
-  image: { type: String, required: true },
-  review: { type: String, required: true },
-  rating: { type: Number, min: 1, max: 5, required: true },
-  author: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
+  }
+}, {
+  strict: false, // Allow additional fields not defined in schema
+  versionKey: false // Disable __v field
 });
 
-// Create 2dsphere index for geo queries
+// Create 2dsphere index for geospatial queries
 locationSchema.index({ location: '2dsphere' });
+
+// Pre-save middleware to automatically set GeoJSON location from lat/lng
+locationSchema.pre('save', function(next) {
+  if (this.lat && this.lng) {
+    this.location = {
+      type: 'Point',
+      coordinates: [this.lng, this.lat] // GeoJSON uses [lng, lat] order
+    };
+  }
+  next();
+});
 
 const Location = mongoose.model('Location', locationSchema);
 
@@ -58,7 +76,10 @@ app.get('/', (req, res) => {
     message: 'MapMark API Server is running!',
     version: '1.0.0',
     endpoints: {
-      locations: '/api/locations'
+      locations: '/api/locations',
+      nearby: '/api/locations/nearby?lat=40.7128&lng=-74.0060&radius=1000',
+      createAd: 'POST /api/ad',
+      health: '/api/health'
     }
   });
 });
@@ -66,18 +87,17 @@ app.get('/', (req, res) => {
 // Get all locations
 app.get('/api/locations', async (req, res) => {
   try {
-    const locations = await Location.find({}).select('lat lng image review rating author createdAt');
+    const locations = await Location.find({});
     
-    // Transform the data to match the required format
+    // Transform the data to include all fields (flexible schema)
     const transformedLocations = locations.map(loc => ({
       id: loc._id,
       lat: loc.lat,
       lng: loc.lng,
-      image: loc.image,
-      review: loc.review,
-      rating: loc.rating,
-      author: loc.author,
-      createdAt: loc.createdAt
+      images: loc.images,
+      createdAt: loc.createdAt,
+      // Include all other fields dynamically
+      ...loc.toObject()
     }));
 
     res.json({
@@ -90,6 +110,119 @@ app.get('/api/locations', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error fetching locations',
+      error: error.message
+    });
+  }
+});
+
+app.post('/api/ad', upload.array('images', 3), async (req, res) => {
+  try {
+    const { lat, lng, ...additionalFields } = req.body;
+    let imageKeys = [];
+
+    // Validate required fields
+    if (!lat || !lng) {
+      return res.status(400).json({
+        success: false,
+        message: 'Latitude and longitude are required'
+      });
+    }
+
+    // Upload images if provided
+    if (req.files && req.files.length > 0) {
+      imageKeys = await Promise.all(
+        req.files.map(image => 
+          uploadPhotoBuffer(image.buffer, `images/${uuidv4()}-${image.originalname}`, image.mimetype)
+        )
+      );
+    }
+
+    // Create location document with flexible additional fields
+    const locationData = {
+      lat: parseFloat(lat),
+      lng: parseFloat(lng),
+      images: imageKeys,
+      ...additionalFields // Include any additional fields from the request
+    };
+
+    const location = new Location(locationData);
+    const savedLocation = await location.save();
+
+    res.status(201).json({ 
+      success: true, 
+      data: savedLocation 
+    });
+  } catch (error) {
+    console.error('Error creating ad:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error creating ad',
+      error: error.message
+    });
+  }
+});
+
+// Search locations by radius
+app.get('/api/locations/nearby', async (req, res) => {
+  try {
+    const { lat, lng, radius = 1000, limit = 50 } = req.query;
+    
+    // Validate required parameters
+    if (!lat || !lng) {
+      return res.status(400).json({
+        success: false,
+        message: 'Latitude and longitude are required'
+      });
+    }
+
+    const latitude = parseFloat(lat);
+    const longitude = parseFloat(lng);
+    const radiusInMeters = parseInt(radius);
+    const limitCount = parseInt(limit);
+
+    // Validate coordinates
+    if (isNaN(latitude) || isNaN(longitude) || latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid latitude or longitude values'
+      });
+    }
+
+    // Find locations within radius using $geoWithin and $centerSphere
+    const locations = await Location.find({
+      location: {
+        $geoWithin: {
+          $centerSphere: [
+            [longitude, latitude], // [lng, lat] for GeoJSON
+            radiusInMeters / 6371000 // Convert meters to radians (Earth's radius in meters)
+          ]
+        }
+      }
+    }).limit(limitCount);
+
+    // Transform the data to include all fields and add distance
+    const transformedLocations = locations.map(loc => ({
+      id: loc._id,
+      lat: loc.lat,
+      lng: loc.lng,
+      images: loc.images,
+      createdAt: loc.createdAt,
+      // Include all other fields dynamically
+      ...loc.toObject()
+    }));
+
+    res.json({
+      success: true,
+      count: transformedLocations.length,
+      searchCenter: { lat: latitude, lng: longitude },
+      radius: radiusInMeters,
+      data: transformedLocations
+    });
+  } catch (error) {
+    console.error('Error searching nearby locations:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error searching nearby locations',
       error: error.message
     });
   }
