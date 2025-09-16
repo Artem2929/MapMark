@@ -224,15 +224,21 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
                   {marker.position[0].toFixed(4)}, {marker.position[1].toFixed(4)}
                 </div>
                 
-                {hasReviews && (
-                  <div className="reviews-badge">
-                    <span className="reviews-icon">⭐</span>
-                    <span className="reviews-count">{markerReviews.length}</span>
-                    <span className="reviews-text">review{markerReviews.length !== 1 ? 's' : ''}</span>
-                  </div>
-                )}
+                {hasReviews && (() => {
+                  const avgRating = markerReviews.reduce((sum, review) => sum + review.rating, 0) / markerReviews.length;
+                  const roundedRating = Math.round(avgRating);
+                  const stars = '⭐'.repeat(roundedRating);
+                  
+                  return (
+                    <div className="reviews-badge">
+                      <span className="reviews-stars">{stars}</span>
+                      <span className="reviews-rating">{avgRating.toFixed(1)}</span>
+                      <span className="reviews-count">({markerReviews.length})</span>
+                    </div>
+                  );
+                })()}
                 
-                <div style={{marginTop: '8px', marginBottom: '8px', display: 'flex', gap: '8px'}}>
+                <div style={{marginTop: '8px', marginBottom: '8px', display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
                   <button 
                     className="review-btn"
                     onClick={(e) => {
@@ -258,6 +264,17 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
                       View Reviews
                     </button>
                   )}
+                  <button 
+                    className="delete-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setMarkers(prev => prev.filter(m => m.id !== marker.id));
+                      setReviews(prev => prev.filter(r => r.markerId !== marker.id));
+                    }}
+                  >
+                    🗑️
+                  </button>
                 </div>
 
               </div>

@@ -13,7 +13,9 @@
     inset -1px 0 0 rgba(255, 255, 255, 0.8);
   transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 10001;
-  overflow-y: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .reviews-panel::before {
@@ -116,8 +118,10 @@
 }
 
 .reviews-panel-content {
-  padding: 24px;
+  padding: 24px 24px 120px 24px;
   background: transparent;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .review-item {
@@ -207,7 +211,7 @@
 }
 
 .add-review-btn {
-  width: 100%;
+  width: calc(100% - 48px);
   background: linear-gradient(135deg, #007aff 0%, #00c7ff 50%, #0056cc 100%);
   color: white;
   border: none;
@@ -217,12 +221,13 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-top: 24px;
   box-shadow: 
     0 8px 32px rgba(0, 122, 255, 0.25),
     0 4px 16px rgba(0, 122, 255, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  position: relative;
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
 }
