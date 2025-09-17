@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Polyline } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './WorldMap.css';
 import ReviewForm from '../forms/ReviewForm';
 import ReviewsPanel from '../ui/ReviewsPanel';
+import { getCurrentLocation, getRoute } from './LocationService';
 
 // Fix for default markers
 delete L.Icon.Default.prototype._getIconUrl;
@@ -34,6 +35,8 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
   const [expandedPopup, setExpandedPopup] = useState(null);
   const [showReviewsPanel, setShowReviewsPanel] = useState(false);
   const [selectedMarkerForReviews, setSelectedMarkerForReviews] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const [routeCoordinates, setRouteCoordinates] = useState([]);
 
   const handleReviewSubmit = (reviewData) => {
     const newReview = {
@@ -85,18 +88,51 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
   const getLocationName = async (lat, lng) => {
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`
       );
       const data = await response.json();
       
       if (data && data.address) {
-        const { city, town, village, country, state } = data.address;
-        return city || town || village || state || country || 'Unknown Location';
+        const { 
+          house_number, 
+          road, 
+          city, 
+          town, 
+          village, 
+          suburb, 
+          neighbourhood,
+          state, 
+          country 
+        } = data.address;
+        
+        // Формуємо детальну адресу
+        let address = '';
+        
+        // Місто
+        const cityName = city || town || village || suburb || neighbourhood;
+        if (cityName) {
+          address += `м. ${cityName}`;
+        }
+        
+        // Вулиця та номер будинку
+        if (road) {
+          address += address ? `, вул. ${road}` : `вул. ${road}`;
+          if (house_number) {
+            address += ` ${house_number}`;
+          }
+        }
+        
+        // Якщо немає детальної адреси, використовуємо область/країну
+        if (!address) {
+          address = state || country || 'Невідоме місце';
+        }
+        
+        return address;
       }
-      return 'Unknown Location';
+      return 'Невідоме місце';
     } catch (error) {
       console.error('Geocoding error:', error);
-      return 'Unknown Location';
+      return 'Невідоме місце';
     }
   };
 
@@ -154,6 +190,80 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
       // Фільтруємо маркери по країні якщо потрібно
     }
   }, [filters]);
+
+  const findMyLocation = async () => {
+    console.log('findMyLocation called');
+    try {
+      console.log('Getting current location...');
+      const location = await getCurrentLocation();
+      console.log('Location received:', location);
+      setUserLocation(location);
+      
+      // Отримуємо адресу поточної позиції
+      console.log('Getting address...');
+      const address = await getLocationName(location.lat, location.lng);
+      console.log('Address received:', address);
+      
+      // Створюємо маркер з адресою
+      const homeMarker = {
+        id: Date.now(),
+        position: [location.lat, location.lng],
+        name: `🏠 ${address}`,
+        hasReviews: false,
+        isHome: true
+      };
+      
+      console.log('Adding home marker:', homeMarker);
+      // Додаємо маркер до списку
+      setMarkers(prev => {
+        // Видаляємо попередній домашній маркер якщо є
+        const filtered = prev.filter(m => !m.isHome);
+        return [...filtered, homeMarker];
+      });
+      
+      if (map) {
+        console.log('Flying to location:', [location.lat, location.lng]);
+        map.flyTo([location.lat, location.lng], 19, {
+          duration: 2.5
+        });
+      } else {
+        console.log('Map not available');
+      }
+    } catch (error) {
+      console.error('Location error:', error);
+      alert('Не вдалося визначити вашу позицію');
+    }
+  };
+
+  const buildRoute = async (destination) => {
+    if (!userLocation) {
+      alert('Спочатку визначте вашу позицію');
+      return;
+    }
+    
+    try {
+      const route = await getRoute(userLocation, {
+        lat: destination.position[0],
+        lng: destination.position[1]
+      });
+      
+      const leafletCoords = route.coordinates.map(coord => [coord[1], coord[0]]);
+      setRouteCoordinates(leafletCoords);
+      
+      console.log(`Маршрут: ${(route.distance / 1000).toFixed(1)} км, ${Math.round(route.duration / 60)} хв`);
+    } catch (error) {
+      console.error('Route error:', error);
+      alert('Не вдалося побудувати маршрут');
+    }
+  };
+
+  // Виставляємо функцію в window для доступу з QuickFilter
+  React.useEffect(() => {
+    window.findMyLocation = findMyLocation;
+    return () => {
+      delete window.findMyLocation;
+    };
+  }, []);
 
   return (
     <div className="world-map-container">
@@ -265,6 +375,16 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
                     </button>
                   )}
                   <button 
+                    className="route-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      buildRoute(marker);
+                    }}
+                  >
+                    🗺️
+                  </button>
+                  <button 
                     className="delete-btn"
                     onClick={(e) => {
                       e.preventDefault();
@@ -282,7 +402,32 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
             </Marker>
           );
         })}
+        
+        {userLocation && (
+          <Marker 
+            position={[userLocation.lat, userLocation.lng]}
+            icon={L.divIcon({
+              html: '📍',
+              className: 'user-location-icon',
+              iconSize: [20, 20],
+              iconAnchor: [10, 10]
+            })}
+          >
+            <Popup>Ваша позиція</Popup>
+          </Marker>
+        )}
+        
+        {routeCoordinates.length > 0 && (
+          <Polyline 
+            positions={routeCoordinates}
+            color="#007aff"
+            weight={4}
+            opacity={0.8}
+          />
+        )}
       </MapContainer>
+      
+
       
       {showReviewForm && selectedMarker && (
         <ReviewForm

@@ -16,10 +16,6 @@
   overflow: hidden;
 }
 
-.quick-filter.collapsed {
-  width: 160px;
-}
-
 .quick-filter.expanded {
   width: 320px;
   box-shadow: 
@@ -35,17 +31,73 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
+.filter-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+}
+
+.location-btn {
+  background: linear-gradient(135deg, #007aff 0%, #00c7ff 50%, #0056cc 100%);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 4px 16px rgba(0, 122, 255, 0.25),
+    0 2px 8px rgba(0, 122, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.location-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.location-btn:hover {
+  background: linear-gradient(135deg, #0056cc 0%, #007aff 50%, #003d99 100%);
+  box-shadow: 
+    0 8px 24px rgba(0, 122, 255, 0.4),
+    0 4px 16px rgba(0, 122, 255, 0.2);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.location-btn:hover::before {
+  left: 100%;
+}
+
+.location-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
 .filter-toggle {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 20px;
+  padding: 12px 16px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 24px;
+  border-radius: 20px;
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
   position: relative;
   overflow: hidden;
+  flex: 1;
 }
 
 .filter-toggle::before {

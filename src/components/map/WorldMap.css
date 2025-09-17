@@ -454,6 +454,39 @@
   left: 100% !important;
 }
 
+.route-btn {
+  background: linear-gradient(135deg, #34c759 0%, #30d158 50%, #28a745 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: inline-block !important;
+  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
+  flex: 0 0 auto !important;
+}
+
+.route-btn:hover {
+  background: linear-gradient(135deg, #28a745 0%, #34c759 50%, #1e7e34 100%) !important;
+  box-shadow: 0 8px 24px rgba(52, 199, 89, 0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+}
+
+.user-location-icon {
+  background: transparent !important;
+  border: none !important;
+  font-size: 20px !important;
+  text-align: center !important;
+  line-height: 20px !important;
+}
+
 /* Google Maps reviews style */
 .reviews-section {
   margin: 16px 0 0 0 !important;

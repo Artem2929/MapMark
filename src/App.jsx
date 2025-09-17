@@ -7,6 +7,7 @@ import Footer from './components/layout/Footer.jsx'
 import WorldMap from './components/map/WorldMap.jsx'
 import CountryFlags from './components/ui/CountryFlags.jsx'
 import QuickFilter from './components/ui/QuickFilter.jsx'
+import FeatureHub from './components/features/FeatureHub.jsx'
 import AdsPage from './pages/AdsPage.jsx'
 import CookiePolicy from './pages/CookiePolicy.jsx'
 import TermsOfService from './pages/TermsOfService.jsx'
@@ -22,6 +23,8 @@ const AppContent = () => {
   const [mapInstance, setMapInstance] = useState(null);
   const [isCountriesVisible, setIsCountriesVisible] = useState(false);
   const [mapFilters, setMapFilters] = useState({ country: '', category: '' });
+  const [userLocation, setUserLocation] = useState(null);
+  const [places, setPlaces] = useState([]);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
@@ -77,10 +80,33 @@ const AppContent = () => {
       />}
       {isHomePage && <QuickFilter 
         onFilterChange={handleFilterChange}
+        onLocationClick={() => {
+          console.log('Location button clicked');
+          if (window.findMyLocation) {
+            console.log('Calling findMyLocation');
+            window.findMyLocation();
+          } else {
+            console.log('findMyLocation not found in window');
+          }
+        }}
       />}
       <main style={{paddingTop: '64px', flex: 1, overflow: isHomePage ? 'hidden' : 'auto'}}>
         <Routes>
-          <Route path="/" element={<WorldMap searchQuery={searchQuery} onMapReady={setMapInstance} filters={mapFilters} />} />
+          <Route path="/" element={
+            <>
+              <WorldMap 
+                searchQuery={searchQuery} 
+                onMapReady={setMapInstance} 
+                filters={mapFilters}
+                onLocationUpdate={setUserLocation}
+                onPlacesUpdate={setPlaces}
+              />
+              <FeatureHub 
+                userLocation={userLocation}
+                places={places}
+              />
+            </>
+          } />
             <Route path="/ads" element={<AdsPage />} />
             <Route path="/about" element={
               <div style={{maxWidth: '1200px', margin: '0 auto', padding: '104px 20px 40px 20px'}}>

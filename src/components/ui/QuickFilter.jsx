@@ -4,7 +4,7 @@ import countriesData from '../../data/countries.json';
 import CustomSelect from './CustomSelect';
 import './QuickFilter.css';
 
-const QuickFilter = ({ onFilterChange }) => {
+const QuickFilter = ({ onFilterChange, onLocationClick }) => {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const [filters, setFilters] = useState({
@@ -43,10 +43,24 @@ const QuickFilter = ({ onFilterChange }) => {
 
   return (
     <div className={`quick-filter ${isExpanded ? 'expanded' : 'collapsed'}`}>
-      <div className="filter-toggle" onClick={() => setIsExpanded(!isExpanded)}>
-        <span className="filter-icon">⚡</span>
-        <span className="filter-text">{t('filter.quickFilter')}</span>
-        <span className={`arrow ${isExpanded ? 'up' : 'down'}`}>▼</span>
+      <div className="filter-header">
+        <button 
+          className="location-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onLocationClick) {
+              onLocationClick();
+            }
+          }}
+          title="Знайти мою позицію"
+        >
+          📍
+        </button>
+        <div className="filter-toggle" onClick={() => setIsExpanded(!isExpanded)}>
+          <span className="filter-icon">⚡</span>
+          <span className="filter-text">{t('filter.quickFilter')}</span>
+          <span className={`arrow ${isExpanded ? 'up' : 'down'}`}>▼</span>
+        </div>
       </div>
       
       {isExpanded && (

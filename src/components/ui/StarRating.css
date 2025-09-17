@@ -6,7 +6,7 @@
 
 .star {
   cursor: default;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.2, 0, 0.2, 1);
   user-select: none;
   filter: drop-shadow(0 2px 4px rgba(255, 193, 7, 0.2));
 }
