@@ -1,1 +1,237 @@
+/* MapMark Enhanced Global Styles */
+@import './components/features/GlobalEnhancements.css';
 
+/* Root Variables */
+:root {
+  --mapmark-primary: #3b82f6;
+  --mapmark-secondary: #10b981;
+  --mapmark-accent: #8b5cf6;
+  --mapmark-warning: #f59e0b;
+  --mapmark-danger: #ef4444;
+  
+  --mapmark-bg-primary: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
+  --mapmark-glass-blur: blur(24px) saturate(180%);
+  --mapmark-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  
+  --mapmark-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --mapmark-transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Enhanced Body Styles */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  min-height: 100vh;
+}
+
+/* Enhanced App Container */
+#root {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Enhanced Selection */
+::selection {
+  background: rgba(59, 130, 246, 0.2);
+  color: #1e293b;
+}
+
+/* Enhanced Focus Outline */
+*:focus-visible {
+  outline: 2px solid var(--mapmark-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Enhanced Scrollbar for Webkit */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--mapmark-primary) 0%, var(--mapmark-accent) 100%);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+}
+
+/* Enhanced Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  color: #1e293b;
+  margin: 0;
+}
+
+p {
+  line-height: 1.6;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Enhanced Button Reset */
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Enhanced Input Reset */
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Enhanced Link Styles */
+a {
+  color: var(--mapmark-primary);
+  text-decoration: none;
+  transition: var(--mapmark-transition);
+}
+
+a:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+/* Enhanced Utility Classes */
+.mapmark-glass {
+  background: var(--mapmark-bg-primary);
+  backdrop-filter: var(--mapmark-glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: var(--mapmark-shadow);
+}
+
+.mapmark-gradient-primary {
+  background: linear-gradient(135deg, var(--mapmark-primary) 0%, #1d4ed8 100%);
+}
+
+.mapmark-gradient-secondary {
+  background: linear-gradient(135deg, var(--mapmark-secondary) 0%, #059669 100%);
+}
+
+.mapmark-gradient-accent {
+  background: linear-gradient(135deg, var(--mapmark-accent) 0%, #7c3aed 100%);
+}
+
+.mapmark-shadow {
+  box-shadow: var(--mapmark-shadow);
+}
+
+.mapmark-transition {
+  transition: var(--mapmark-transition);
+}
+
+.mapmark-transition-bounce {
+  transition: var(--mapmark-transition-bounce);
+}
+
+/* Enhanced Animation Classes */
+.mapmark-fade-in {
+  animation: mapmarkFadeIn 0.4s ease-out;
+}
+
+.mapmark-slide-up {
+  animation: mapmarkSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mapmark-scale-in {
+  animation: mapmarkScaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes mapmarkFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes mapmarkSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mapmarkScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Enhanced Responsive Utilities */
+@media (max-width: 768px) {
+  .mapmark-mobile-hidden {
+    display: none;
+  }
+  
+  .mapmark-mobile-full {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .mapmark-desktop-hidden {
+    display: none;
+  }
+}
+
+/* Enhanced Print Styles */
+@media print {
+  .mapmark-no-print {
+    display: none !important;
+  }
+}
+
+/* Enhanced Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Enhanced High Contrast */
+@media (prefers-contrast: high) {
+  :root {
+    --mapmark-primary: #0066cc;
+    --mapmark-secondary: #008844;
+    --mapmark-danger: #cc0000;
+  }
+}
+
+/* Enhanced Dark Mode Preparation */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mapmark-bg-primary: linear-gradient(135deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
+  }
+}
