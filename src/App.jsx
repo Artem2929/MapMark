@@ -10,6 +10,7 @@ import QuickFilter from './components/ui/QuickFilter.jsx'
 import FeatureHub from './components/features/FeatureHub.jsx'
 import AdsPage from './pages/AdsPage.jsx'
 import AdDetailPage from './pages/AdDetailPage.jsx'
+import CreateAdPage from './pages/CreateAdPage.jsx'
 import CookiePolicy from './pages/CookiePolicy.jsx'
 import TermsOfService from './pages/TermsOfService.jsx'
 import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
@@ -110,6 +111,7 @@ const AppContent = () => {
           } />
             <Route path="/ads" element={<AdsPage />} />
             <Route path="/ads/:id" element={<AdDetailPage />} />
+            <Route path="/create-ad" element={<CreateAdPage />} />
             <Route path="/about" element={
               <div style={{maxWidth: '1200px', margin: '0 auto', padding: '104px 20px 40px 20px'}}>
                 <h1 style={{fontSize: '32px', fontWeight: 'bold', color: '#333'}}>{t(`aboutPage.${currentLang}.title`)}</h1>

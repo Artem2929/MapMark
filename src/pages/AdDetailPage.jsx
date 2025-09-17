@@ -4,6 +4,7 @@ import PhotoGallery from '../components/features/PhotoGallery';
 import LocationMap from '../components/features/LocationMap';
 import StarRating from '../components/ui/StarRating';
 import ReviewForm from '../components/forms/ReviewForm';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
 import './AdDetailPage.css';
 
 const AdDetailPage = () => {
@@ -109,6 +110,11 @@ const AdDetailPage = () => {
 
   return (
     <div className="ad-detail-page">
+      <Breadcrumbs items={[
+        { label: 'Головна', link: '/', icon: '🏠' },
+        { label: 'Оголошення', link: '/ads', icon: '📋' },
+        { label: ad.title, icon: '📍' }
+      ]} />
       <div className="ad-header">
         <h1>{ad.title}</h1>
         <div className="ad-meta">
