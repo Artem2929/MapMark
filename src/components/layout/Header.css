@@ -7,7 +7,7 @@
   border-bottom: 1px solid #e1e5e9;
   z-index: 1000;
   padding: 0 24px;
-  height: 64px;
+  height: 80px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(8px);
 }
@@ -41,6 +41,7 @@
   flex: 1;
   min-width: 200px;
   transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
 }
 
 .search-input:focus {
@@ -53,20 +54,31 @@
   color: #666;
 }
 
-.search-btn {
+.header .search-btn,
+.header .header-link,
+.header .countries-btn,
+.header .lang-btn {
   padding: 8px 16px;
   border-radius: 20px;
   border: none;
-  background: #007aff;
-  color: white;
+  background: rgba(0, 0, 0, 0.04);
+  color: #1d1d1f;
   cursor: pointer;
   font-size: 14px;
   font-weight: 400;
   transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
 }
 
-.search-btn:hover {
-  background: #0056cc;
+.header .search-btn:hover,
+.header .header-link:hover,
+.header .countries-btn:hover,
+.header .lang-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  text-decoration: none;
 }
 
 .header-logo {
@@ -76,10 +88,11 @@
   text-decoration: none;
   letter-spacing: -0.5px;
   transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
 }
 
 .header-logo:hover {
-  color: #0066cc;
+  color: #333;
   transform: translateY(-1px);
 }
 
@@ -88,51 +101,23 @@
   gap: 16px;
 }
 
-.header-link {
-  color: #1d1d1f;
-  text-decoration: none;
-  font-weight: 400;
-  font-size: 14px;
-  padding: 8px 16px;
-  border-radius: 20px;
-  transition: all 0.2s ease;
-  position: relative;
-  background: rgba(0, 0, 0, 0.04);
-}
 
-.header-link:hover {
-  background: rgba(0, 0, 0, 0.08);
-}
 
-.countries-btn {
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 400;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+
 
 /* Language Dropdown */
 .lang-dropdown {
   position: relative;
 }
 
-.lang-btn {
-  background: rgba(0, 0, 0, 0.04);
-  color: #1d1d1f;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-weight: 400;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.header .countries-btn,
+.header .lang-btn {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.header .lang-btn {
   min-width: 120px;
   justify-content: space-between;
 }
@@ -185,6 +170,7 @@
   font-size: 14px;
   color: #1d1d1f;
   transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
 }
 
 .lang-option:hover {
@@ -192,12 +178,12 @@
 }
 
 .lang-option.active {
-  background: #007aff;
-  color: white;
+  background: rgba(0, 0, 0, 0.1);
+  color: #1d1d1f;
 }
 
 .lang-option.active:hover {
-  background: #0056cc;
+  background: rgba(0, 0, 0, 0.15);
 }
 
 /* Mobile Language */
@@ -226,8 +212,8 @@
 }
 
 .mobile-lang-btn.active {
-  background: #007aff;
-  color: white;
+  background: rgba(0, 0, 0, 0.1);
+  color: #1d1d1f;
 }
 
 
@@ -322,10 +308,12 @@
   transition: all 0.2s ease;
   text-align: center;
   background: rgba(0, 0, 0, 0.04);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
 }
 
 .mobile-link:hover {
   background: rgba(0, 0, 0, 0.08);
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {

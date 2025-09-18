@@ -93,7 +93,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible }) => {
           {/* Countries Toggle - only on home page */}
           {isHomePage && (
             <button 
-              className="header-link countries-btn"
+              className="countries-btn"
               onClick={() => setIsCountriesVisible && setIsCountriesVisible(!isCountriesVisible)}
             >
               {t('header.countries')}
