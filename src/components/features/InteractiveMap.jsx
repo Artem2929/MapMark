@@ -99,7 +99,7 @@ const InteractiveMap = ({ address, onLocationSelect, selectedLocation }) => {
             className="search-input"
           />
           <button 
-            className="search-btn"
+            className="interactive-search-btn"
             onClick={() => searchLocation(searchQuery)}
             disabled={isSearching}
           >
@@ -108,7 +108,7 @@ const InteractiveMap = ({ address, onLocationSelect, selectedLocation }) => {
         </div>
         
         <button 
-          className="location-btn"
+          className="interactive-location-btn"
           onClick={getCurrentLocation}
           title="Використати мою локацію"
         >

@@ -446,34 +446,7 @@
   font-weight: 600;
 }
 
-.action-btn {
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  background: none !important;
-  border: none !important;
-  color: #262626;
-  font-size: 12px;
-  cursor: default !important;
-  padding: 0 !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  text-decoration: none !important;
-  min-width: 40px;
-}
 
-.action-btn .icon {
-  font-size: 24px;
-  line-height: 1;
-}
-
-.action-btn .count {
-  font-weight: 600;
-  color: #262626;
-  font-size: 14px;
-  line-height: 1;
-}
 
 .like-btn.active {
   color: #ef4444;
@@ -638,7 +611,7 @@
   color: #64748b;
 }
 
-.search-btn {
+.map-search-btn {
   background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   color: white;
   border: none;
@@ -649,8 +622,7 @@
   transition: all 0.3s ease;
 }
 
-.search-btn:hover {
-  transform: scale(1.05);
+.map-search-btn:hover {
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
