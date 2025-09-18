@@ -199,28 +199,6 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
       console.log('Location received:', location);
       setUserLocation(location);
       
-      // Отримуємо адресу поточної позиції
-      console.log('Getting address...');
-      const address = await getLocationName(location.lat, location.lng);
-      console.log('Address received:', address);
-      
-      // Створюємо маркер з адресою
-      const homeMarker = {
-        id: Date.now(),
-        position: [location.lat, location.lng],
-        name: `🏠 ${address}`,
-        hasReviews: false,
-        isHome: true
-      };
-      
-      console.log('Adding home marker:', homeMarker);
-      // Додаємо маркер до списку
-      setMarkers(prev => {
-        // Видаляємо попередній домашній маркер якщо є
-        const filtered = prev.filter(m => !m.isHome);
-        return [...filtered, homeMarker];
-      });
-      
       if (map) {
         console.log('Flying to location:', [location.lat, location.lng]);
         map.flyTo([location.lat, location.lng], 19, {

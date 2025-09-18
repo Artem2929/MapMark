@@ -128,8 +128,6 @@
 }
 
 .stats-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 40px;
   margin: 80px 0;
   padding: 60px 40px;
@@ -200,7 +198,7 @@
 
 .cta-button:hover {
   background: linear-gradient(135deg, #0056cc 0%, #003d99 100%);
-  transform: translateY(-2px);
+
   box-shadow: 0 8px 24px rgba(0, 122, 255, 0.4);
 }
 

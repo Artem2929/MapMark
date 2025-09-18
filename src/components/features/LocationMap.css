@@ -44,7 +44,7 @@
 }
 
 .load-map-btn:hover {
-  transform: translateY(-2px);
+
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
@@ -98,7 +98,7 @@
 }
 
 .route-btn:hover, .coords-btn:hover {
-  transform: translateY(-2px);
+
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 

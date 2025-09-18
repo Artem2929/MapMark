@@ -90,7 +90,7 @@
 }
 
 .create-ad-btn:hover {
-  transform: translateY(-2px);
+
   box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
 }
 
@@ -201,7 +201,7 @@
 }
 
 .clear-filters-btn:hover {
-  transform: translateY(-2px);
+
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
@@ -420,7 +420,7 @@
 
 .page-btn:hover:not(:disabled) {
   border-color: #3b82f6;
-  transform: translateY(-2px);
+
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 

@@ -17,6 +17,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
 import HelpCenter from './pages/HelpCenter.jsx'
 import ContactUs from './pages/ContactUs.jsx'
 import DiscoverPlaces from './pages/DiscoverPlaces.jsx'
+import UserProfile from './pages/UserProfile.jsx'
 
 const AppContent = () => {
   const { t, i18n } = useTranslation();
@@ -124,6 +125,7 @@ const AppContent = () => {
             <Route path="/help-center" element={<HelpCenter />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/discover-places" element={<DiscoverPlaces />} />
+            <Route path="/profile/:userId" element={<UserProfile />} />
           </Routes>
         </main>
       </div>

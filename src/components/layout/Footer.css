@@ -86,7 +86,7 @@
 .social-link:hover {
   background: rgba(0, 122, 255, 0.1);
   border-color: rgba(0, 122, 255, 0.2);
-  transform: translateY(-2px);
+
   box-shadow: 0 4px 12px rgba(0, 122, 255, 0.15);
 }
 

@@ -214,8 +214,20 @@ const AdDetailPage = () => {
                   </div>
                   <p className="review-text">{review.text}</p>
                   <div className="review-actions">
-                    <button className="like-btn">👍 {review.likes}</button>
-                    <button className="report-btn">Поскаржитись</button>
+                    <div className="post-actions">
+                      <span className="action-item">
+                        <span className="action-icon">👍</span>
+                        <span className="action-count">{review.likes}</span>
+                      </span>
+                      <span className="action-item">
+                        <span className="action-icon">💬</span>
+                        <span className="action-count">3</span>
+                      </span>
+                      <span className="action-item">
+                        <span className="action-icon">📤</span>
+                        <span className="action-count">7</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -250,15 +262,14 @@ const AdDetailPage = () => {
           </div>
 
           <div className="action-buttons">
-            <button 
-              className={`favorite-btn ${isFavorite ? 'active' : ''}`}
-              onClick={toggleFavorite}
-            >
-              {isFavorite ? '❤️' : '🤍'} Улюблене
-            </button>
-            <button className="share-btn" onClick={shareAd}>
-              📤 Поділитись
-            </button>
+            <div className={`favorite-btn ${isFavorite ? 'active' : ''}`}>
+              <span className="action-icon">{isFavorite ? '❤️' : '🤍'}</span>
+              <span className="action-text">{ad.likes}</span>
+            </div>
+            <div className="share-btn">
+              <span className="action-icon">📤</span>
+              <span className="action-text">7</span>
+            </div>
           </div>
         </div>
       </div>
