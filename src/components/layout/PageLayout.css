@@ -1,0 +1,26 @@
+.page-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-layout--bg-primary {
+  background: var(--color-bg-primary);
+}
+
+.page-layout--bg-secondary {
+  background: var(--color-bg-secondary);
+}
+
+.page-layout--bg-gradient {
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, #e2e8f0 100%);
+}
+
+.page-layout__main {
+  flex: 1;
+  padding-top: 80px; /* Header height */
+}
+
+.page-layout__content {
+  /* Content styling handled by children */
+}

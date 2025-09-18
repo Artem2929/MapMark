@@ -1,0 +1,125 @@
+.ads-page {
+  background: var(--color-bg-secondary);
+  min-height: 100vh;
+  padding-top: 80px; /* Header height */
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  gap: var(--space-4);
+}
+
+.spinner {
+  font-size: var(--font-size-2xl);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.ads-page__header {
+  text-align: center;
+}
+
+.ads-page__header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-6);
+}
+
+.ads-page__title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.ads-page__actions {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.ads-page__view-toggle {
+  display: flex;
+  gap: var(--space-1);
+  background: var(--color-bg-muted);
+  border-radius: var(--radius-md);
+  padding: var(--space-1);
+}
+
+.ads-page__search {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.ads-page__results-info {
+  margin-bottom: var(--space-6);
+  padding: 0 var(--space-4);
+}
+
+.ads-page__results-count {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.ads-page__grid {
+  margin-bottom: var(--space-10);
+}
+
+.ads-page__empty {
+  text-align: center;
+  padding: var(--space-16) var(--space-5);
+  color: var(--color-text-secondary);
+}
+
+.ads-page__empty-icon {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--space-4);
+  opacity: 0.7;
+}
+
+.ads-page__empty h3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 var(--space-2) 0;
+  color: var(--color-text-primary);
+}
+
+.ads-page__empty p {
+  font-size: var(--font-size-base);
+  margin: 0 0 var(--space-6) 0;
+}
+
+@media (max-width: 768px) {
+  .ads-page {
+    padding-top: 80px;
+  }
+  
+  .ads-page__header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-4);
+  }
+  
+  .ads-page__actions {
+    justify-content: space-between;
+  }
+  
+  .ads-page__title {
+    font-size: var(--font-size-2xl);
+    text-align: center;
+  }
+  
+  .ads-page__empty {
+    padding: var(--space-12) var(--space-4);
+  }
+}
