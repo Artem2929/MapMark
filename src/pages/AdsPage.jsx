@@ -212,7 +212,7 @@ const AdsPage = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="search-input"
           />
-          <button className="search-btn">🔍</button>
+          <button className="ads-search-btn">🔍</button>
         </div>
       </div>
 

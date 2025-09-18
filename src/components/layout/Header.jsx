@@ -72,7 +72,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible }) => {
               className="search-input"
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             />
-            <button onClick={handleSearch} className="search-btn">
+            <button onClick={handleSearch} className="header-search-btn">
               {t('search.button')}
             </button>
           </div>
