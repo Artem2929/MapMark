@@ -4,6 +4,9 @@ export const APP_NAME = 'MapMark';
 // API endpoints
 export const API_ENDPOINTS = {
   GEOCODING: 'https://nominatim.openstreetmap.org/search',
+  BACKEND: 'http://localhost:3000/api',
+  REVIEWS: 'http://localhost:3000/api/reviews',
+  REVIEW: 'http://localhost:3000/api/review',
 };
 
 // Supported languages

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Polyline } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
 import L from 'leaflet';
@@ -7,6 +7,7 @@ import './WorldMap.css';
 import ReviewForm from '../forms/ReviewForm';
 import ReviewsPanel from '../ui/ReviewsPanel';
 import { getCurrentLocation, getRoute } from './LocationService';
+import ReviewService from '../../services/reviewService';
 
 // Fix for default markers
 delete L.Icon.Default.prototype._getIconUrl;
@@ -38,33 +39,54 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
   const [userLocation, setUserLocation] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
 
-  const handleReviewSubmit = (reviewData) => {
-    const newReview = {
-      ...reviewData,
-      id: Date.now(),
-      timestamp: new Date().toISOString(),
-      markerId: selectedMarker.id
-    };
-    setReviews(prev => [...prev, newReview]);
-    
-    // Update marker to show it has reviews
-    setMarkers(prev => prev.map(marker => 
-      marker.id === selectedMarker.id 
-        ? { ...marker, hasReviews: true }
-        : marker
-    ));
-    
-    // Close review form
-    setShowReviewForm(false);
-    
-    // If reviews panel was open, keep it open and update the selected marker
-    if (showReviewsPanel && selectedMarkerForReviews?.id === selectedMarker.id) {
-      // Panel stays open, just update the marker reference
-      setSelectedMarkerForReviews(prev => ({ ...prev, hasReviews: true }));
+  // Load reviews from API on component mount
+  useEffect(() => {
+    loadReviews();
+  }, []);
+
+  const loadReviews = async () => {
+    try {
+      const reviewsData = await ReviewService.getAllReviews();
+      setReviews(reviewsData);
+    } catch (error) {
+      console.error('Error loading reviews:', error);
     }
-    
-    setSelectedMarker(null);
-    console.log('Review submitted:', newReview);
+  };
+
+  const handleReviewSubmit = async (reviewData) => {
+    try {
+      // The review has already been submitted to the backend in ReviewForm
+      // Just update the local state for immediate UI feedback
+      const newReview = {
+        ...reviewData,
+        id: reviewData._id || Date.now(),
+        timestamp: reviewData.createdAt || new Date().toISOString(),
+        markerId: selectedMarker.id
+      };
+      
+      setReviews(prev => [...prev, newReview]);
+      
+      // Update marker to show it has reviews
+      setMarkers(prev => prev.map(marker => 
+        marker.id === selectedMarker.id 
+          ? { ...marker, hasReviews: true }
+          : marker
+      ));
+      
+      // Close review form
+      setShowReviewForm(false);
+      
+      // If reviews panel was open, keep it open and update the selected marker
+      if (showReviewsPanel && selectedMarkerForReviews?.id === selectedMarker.id) {
+        // Panel stays open, just update the marker reference
+        setSelectedMarkerForReviews(prev => ({ ...prev, hasReviews: true }));
+      }
+      
+      setSelectedMarker(null);
+      console.log('Review submitted:', newReview);
+    } catch (error) {
+      console.error('Error handling review submission:', error);
+    }
   };
 
   const flyToCountry = (coords) => {

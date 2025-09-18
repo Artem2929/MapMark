@@ -1,4 +1,6 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+
+const bucketName = process.env.R2_BUCKET_NAME || 'mapmark';
 
 const r2 = new S3Client({
   region: "auto",
@@ -10,7 +12,7 @@ const r2 = new S3Client({
 });
 
 // Upload buffer instead of file path
-export async function uploadPhotoBuffer(buffer, keyName, mimeType) {
+async function uploadPhotoBuffer(buffer, keyName, mimeType) {
   const command = new PutObjectCommand({
     Bucket: bucketName,
     Key: keyName,
@@ -21,4 +23,6 @@ export async function uploadPhotoBuffer(buffer, keyName, mimeType) {
   await r2.send(command);
   return keyName;
 }
+
+module.exports = { uploadPhotoBuffer };
 
