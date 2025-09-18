@@ -1,0 +1,98 @@
+{
+  "header": {
+    "home": "首页",
+    "listings": "列表",
+    "about": "关于我们",
+    "countries": "国家"
+  },
+  "search": {
+    "placeholder": "搜索位置...",
+    "button": "搜索"
+  },
+  "footer": {
+    "description": "与我们来自世界各地的旅行者和探险家社区一起发现和分享您访问过的最佳地点。",
+    "explore": {
+      "title": "探索",
+      "discover": "发现地点"
+    },
+    "support": {
+      "title": "支持",
+      "help": "帮助中心",
+      "faq": "常见问题",
+      "contact": "联系我们",
+      "feedback": "反馈"
+    },
+    "legal": {
+      "title": "法律信息",
+      "privacy": "隐私政策",
+      "terms": "服务条款",
+      "cookies": "Cookie政策"
+    },
+    "badges": {
+      "secure": "安全",
+      "trusted": "可信赖"
+    },
+    "rights": "版权所有。"
+  },
+  "review": {
+    "title": "分享您的体验",
+    "subtitle": "帮助他人发现这个精彩的地方",
+    "yourReview": "您的评价",
+    "placeholder": "是什么让这个地方特别？分享您的访问、氛围、无障碍设施或给未来游客的建议...",
+    "rating": "评分",
+    "outOfStars": "/5星",
+    "addPhoto": "添加照片（可选）",
+    "choosePhoto": "选择照片",
+    "cancel": "取消",
+    "publish": "发布评价"
+  },
+  "popup": {
+    "addReview": "添加评价",
+    "location": "位置",
+    "coordinates": "纬度: {lat}, 经度: {lng}"
+  },
+  "pages": {
+    "home": {
+      "title": "主页",
+      "welcome": "欢迎来到MapMark！"
+    },
+    "listings": {
+      "title": "列表",
+      "description": "这里将显示列表"
+    },
+    "about": {
+      "title": "关于我们",
+      "description": "项目信息"
+    }
+  },
+  "ads": {
+    "title": "广告",
+    "description": "在这里您可以找到所需的一切 - 从住房到服务。使用智能过滤器快速搜索！",
+    "createAd": "创建广告",
+    "createAdTitle": "新广告",
+    "categories": {
+      "housing": "房屋租赁",
+      "cars": "汽车租赁",
+      "restaurants": "餐厅",
+      "hotels": "酒店",
+      "events": "活动",
+      "tourism": "旅游",
+      "services": "服务",
+      "other": "其他"
+    },
+    "form": {
+      "country": "国家",
+      "selectCountry": "选择国家",
+      "city": "城市",
+      "cityPlaceholder": "输入城市",
+      "location": "位置",
+      "locationPlaceholder": "描述对象的位置",
+      "category": "类别",
+      "selectCategory": "选择类别",
+      "dateRange": "日期范围",
+      "photos": "位置照片",
+      "cancel": "取消",
+      "publish": "发布"
+    }
+  }
+}

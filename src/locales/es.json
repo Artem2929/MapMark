@@ -1,0 +1,38 @@
+{
+  "header": {
+    "listings": "Anuncios",
+    "about": "Acerca de",
+    "countries": "Países"
+  },
+  "search": {
+    "placeholder": "Buscar ubicación...",
+    "button": "Buscar"
+  },
+  "ads": {
+    "form": {
+      "title": "Título",
+      "description": "Descripción",
+      "country": "País",
+      "selectCountry": "Seleccionar país",
+      "category": "Categoría",
+      "selectCategory": "Seleccionar categoría",
+      "publish": "Publicar"
+    },
+    "categories": {
+      "housing": "Vivienda",
+      "cars": "Coches",
+      "restaurants": "Restaurantes",
+      "hotels": "Hoteles",
+      "events": "Eventos",
+      "tourism": "Turismo",
+      "services": "Servicios",
+      "other": "Otro"
+    }
+  },
+  "filter": {
+    "quickFilter": "Filtro Rápido",
+    "country": "País",
+    "category": "Categoría",
+    "clear": "Limpiar"
+  }
+}

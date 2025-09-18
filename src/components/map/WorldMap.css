@@ -1,0 +1,787 @@
+/* Neutral background to prevent color flash */
+.leaflet-container {
+  background: #f8f9fa !important;
+}
+
+/* Ensure tiles cover the entire visible area */
+.leaflet-tile-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Optimized map container */
+.world-map-container {
+  height: calc(100vh - 64px);
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  transform: translateZ(0) !important;
+  will-change: transform !important;
+  cursor: grab;
+}
+
+.world-map-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+
+/* Move zoom controls below header */
+.leaflet-top.leaflet-left {
+  top: 80px !important;
+  left: 20px !important;
+}
+
+/* Epic zoom controls with glassmorphism */
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37) !important;
+  backdrop-filter: blur(20px) !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  overflow: hidden !important;
+}
+
+.leaflet-control-zoom a {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px) !important;
+  border: none !important;
+  color: #1d1d1f !important;
+  font-weight: 700 !important;
+  font-size: 20px !important;
+  width: 50px !important;
+  height: 50px !important;
+  line-height: 50px !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.leaflet-control-zoom a::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent) !important;
+  transition: left 0.5s !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #007aff !important;
+  transform: scale(1.05) !important;
+}
+
+.leaflet-control-zoom a:hover::before {
+  left: 100% !important;
+}
+
+.leaflet-control-zoom a:active {
+  transform: scale(0.95) !important;
+}
+
+.leaflet-control-zoom a:first-child {
+  border-radius: 20px 20px 0 0 !important;
+}
+
+.leaflet-control-zoom a:last-child {
+  border-radius: 0 0 20px 20px !important;
+}
+
+/* Epic attribution with neon glow */
+.leaflet-control-attribution {
+  background: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(20px) !important;
+  border-radius: 15px !important;
+  font-size: 11px !important;
+  margin: 15px !important;
+  padding: 8px 12px !important;
+  border: 1px solid rgba(0, 255, 255, 0.3) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2) !important;
+  color: #00ffff !important;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5) !important;
+}
+
+/* Custom marker styling */
+.leaflet-marker-icon {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)) !important;
+  transition: filter 0.2s ease !important;
+}
+
+.leaflet-marker-icon:hover {
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4)) brightness(1.1) !important;
+}
+
+/* Google Maps style popup - REMOVED DUPLICATE */
+
+@keyframes popupAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* REMOVED DUPLICATE - using compact version below */
+
+.leaflet-popup-content strong {
+  background: linear-gradient(135deg, #1d1d1f 0%, #4a4a4a 100%) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  font-weight: 700 !important;
+  font-size: 18px !important;
+  display: block !important;
+  margin-bottom: 12px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
+  letter-spacing: -0.02em !important;
+}
+
+.leaflet-popup-content br + br {
+  display: none !important;
+}
+
+.leaflet-popup-content br {
+  margin-bottom: 4px !important;
+}
+
+.leaflet-popup-tip {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%) !important;
+  backdrop-filter: blur(60px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+}
+
+.leaflet-popup-close-button {
+  color: #8e8e93 !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  padding: 0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border-radius: 50% !important;
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  text-align: center !important;
+  background: rgba(0, 0, 0, 0.03) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  right: 16px !important;
+  top: 16px !important;
+  text-decoration: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-indent: -9999px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.leaflet-popup-close-button::before {
+  content: '×' !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  text-indent: 0 !important;
+  z-index: 2 !important;
+  position: relative !important;
+}
+
+.leaflet-popup-close-button::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent) !important;
+  transition: left 0.5s !important;
+}
+
+.leaflet-popup-close-button:hover {
+  background: rgba(255, 59, 48, 0.1) !important;
+  border-color: rgba(255, 59, 48, 0.2) !important;
+  color: #ff3b30 !important;
+  transform: scale(1.05) !important;
+}
+
+.leaflet-popup-close-button:hover::after {
+  left: 100% !important;
+}
+
+.leaflet-popup-close-button::before {
+  content: '×' !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  text-indent: 0 !important;
+}
+
+/* REMOVED DUPLICATE - using compact version below */
+
+/* Leaflet popup improvements - 2025 Style */
+.leaflet-popup-content-wrapper {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%) !important;
+  backdrop-filter: blur(60px) saturate(200%) !important;
+  border-radius: 20px !important;
+  box-shadow: 
+    0 16px 32px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  min-width: 260px !important;
+  max-width: 320px !important;
+  max-height: 180px !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+.leaflet-popup-content-wrapper::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.5), transparent) !important;
+  animation: shimmer 3s ease-in-out infinite !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  padding: 18px !important;
+  max-height: 160px !important;
+  overflow: visible !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
+  line-height: 1.4 !important;
+  font-size: 14px !important;
+  position: relative !important;
+}
+
+.leaflet-popup-tip {
+  background: white !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.leaflet-popup-content-wrapper:has(.expanded) {
+  max-width: 350px !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.leaflet-popup-content:has(.expanded) {
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 20px !important;
+}
+
+.expand-btn {
+  background: linear-gradient(135deg, #34c759 0%, #30d158 50%, #28a745 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: inline-block !important;
+  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
+  flex: 1 !important;
+}
+
+.expand-btn::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+  transition: left 0.5s !important;
+}
+
+.expand-btn:hover {
+  background: linear-gradient(135deg, #28a745 0%, #34c759 50%, #1e7e34 100%) !important;
+  box-shadow: 0 8px 24px rgba(52, 199, 89, 0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+}
+
+.expand-btn:hover::before {
+  left: 100% !important;
+}
+
+/* Стилізований бейдж відгуків */
+.reviews-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 152, 0, 0.1) 100%) !important;
+  border: 1px solid rgba(255, 193, 7, 0.2) !important;
+  border-radius: 12px !important;
+  padding: 6px 12px !important;
+  margin: 8px 0 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #1d1d1f !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.reviews-stars {
+  font-size: 14px !important;
+  filter: drop-shadow(0 1px 2px rgba(255, 193, 7, 0.3)) !important;
+  margin-right: 4px !important;
+}
+
+.reviews-rating {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  margin-right: 4px !important;
+}
+
+.reviews-count {
+  color: #6b7280 !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+}
+
+.review-btn {
+  background: linear-gradient(135deg, #007aff 0%, #00c7ff 50%, #0056cc 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: inline-block !important;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
+  flex: 1 !important;
+}
+
+.review-btn::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+  transition: left 0.5s !important;
+}
+
+.review-btn:hover {
+  background: linear-gradient(135deg, #0056cc 0%, #007aff 50%, #003d99 100%) !important;
+  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+}
+
+.review-btn:hover::before {
+  left: 100% !important;
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #ff3b30 0%, #ff6b6b 50%, #d32f2f 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: inline-block !important;
+  box-shadow: 0 2px 8px rgba(255, 59, 48, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
+  flex: 0 0 auto !important;
+}
+
+.delete-btn::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+  transition: left 0.5s !important;
+}
+
+.delete-btn:hover {
+  background: linear-gradient(135deg, #d32f2f 0%, #ff3b30 50%, #b71c1c 100%) !important;
+  box-shadow: 0 8px 24px rgba(255, 59, 48, 0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+}
+
+.delete-btn:hover::before {
+  left: 100% !important;
+}
+
+.route-btn {
+  background: linear-gradient(135deg, #34c759 0%, #30d158 50%, #28a745 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: inline-block !important;
+  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
+  flex: 0 0 auto !important;
+}
+
+.route-btn:hover {
+  background: linear-gradient(135deg, #28a745 0%, #34c759 50%, #1e7e34 100%) !important;
+  box-shadow: 0 8px 24px rgba(52, 199, 89, 0.3) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+}
+
+.user-location-icon {
+  background: transparent !important;
+  border: none !important;
+  font-size: 20px !important;
+  text-align: center !important;
+  line-height: 20px !important;
+}
+
+/* Google Maps reviews style */
+.reviews-section {
+  margin: 16px 0 0 0 !important;
+  border-top: 1px solid #e8eaed !important;
+  padding-top: 16px !important;
+}
+
+.review-item:first-child {
+  padding-top: 8px !important;
+}
+
+.reviews-title {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #202124 !important;
+  margin-bottom: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.review-item {
+  background: #ffffff !important;
+  border-radius: 0 !important;
+  padding: 12px 0 !important;
+  margin: 0 !important;
+  border-bottom: 1px solid #f1f3f4 !important;
+  transition: none !important;
+}
+
+.review-item:last-child {
+  border-bottom: none !important;
+}
+
+.review-item:hover {
+  background: #ffffff !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.review-rating {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin-bottom: 6px !important;
+  font-size: 12px !important;
+  color: #fbbc04 !important;
+}
+
+.rating-number {
+  color: #70757a !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  margin-left: 4px !important;
+}
+
+.review-text {
+  font-size: 13px !important;
+  color: #3c4043 !important;
+  line-height: 1.4 !important;
+  margin: 0 0 6px 0 !important;
+}
+
+.review-photo {
+  width: 120px !important;
+  height: 80px !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
+  margin: 8px 0 6px 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #e8eaed !important;
+}
+
+.review-date {
+  font-size: 11px !important;
+  color: #70757a !important;
+  font-weight: 400 !important;
+}
+
+/* Fast zoom transitions */
+.leaflet-zoom-animated {
+  transition: transform 0.1s ease !important;
+}
+
+/* Fast tile loading */
+.leaflet-tile {
+  border: none !important;
+  filter: contrast(1.1) saturate(1.2) !important;
+  image-rendering: optimizeSpeed !important;
+  image-rendering: -webkit-optimize-contrast !important;
+}
+
+.leaflet-tile-container {
+  will-change: transform !important;
+}
+
+.leaflet-zoom-anim .leaflet-tile {
+  transition: none !important;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .leaflet-top.leaflet-left {
+    top: 70px !important;
+    left: 10px !important;
+  }
+  
+  .leaflet-control-zoom a {
+    width: 45px !important;
+    height: 45px !important;
+    line-height: 45px !important;
+    font-size: 18px !important;
+  }
+  
+  .world-map-container {
+    height: calc(100vh - 300px) !important;
+  }
+  
+  .world-map-container::before {
+    animation-duration: 10s !important;
+  }
+}
+
+.reviews-section h4 {
+  margin: 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #202124;
+  border-bottom: 1px solid #e8eaed;
+  padding-bottom: 8px;
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 12px;
+  color: #70757a;
+  font-style: italic;
+}
+
+.no-reviews p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.game-flag-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.country-flag-icon {
+  background: transparent !important;
+  border: none !important;
+  font-size: 16px !important;
+  text-align: center !important;
+  line-height: 20px !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) !important;
+  transition: all 0.2s ease !important;
+}
+
+.country-flag-icon:hover {
+  transform: scale(1.2) !important;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4)) !important;
+}
+
+.review-badge {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  animation: badgePulse 3s ease-in-out infinite;
+}
+
+.badge-circle {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #007aff 0%, #0056cc 100%);
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  box-shadow: 
+    0 4px 12px rgba(0, 122, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.badge-circle::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+  animation: badgeShine 4s ease-in-out infinite;
+}
+
+.badge-icon {
+  font-size: 14px;
+  color: white;
+  z-index: 2;
+}
+
+.badge-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(255, 71, 87, 0.4);
+  animation: countBounce 2s ease-in-out infinite;
+}
+
+.badge-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 122, 255, 0.4) 0%, transparent 70%);
+  animation: badgeGlow 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes badgeShine {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes countBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes badgeGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.review-badge:hover {
+  animation-duration: 1.5s;
+}
+
+.review-badge:hover .badge-circle {
+  background: linear-gradient(135deg, #0056cc 0%, #003d99 100%);
+  box-shadow: 
+    0 6px 16px rgba(0, 122, 255, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.review-badge:hover .badge-count {
+  animation-duration: 1s;
+  background: linear-gradient(135deg, #ff6b7a 0%, #ff4757 100%);
+}
+
+.review-badge:hover .badge-glow {
+  opacity: 0.8;
+  animation-duration: 1s;
+}

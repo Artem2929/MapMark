@@ -1,0 +1,137 @@
+.country-flags {
+  position: absolute;
+  top: 64px;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e1e5e9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.country-flags.visible {
+  max-height: 300px;
+  opacity: 1;
+}
+
+.flags-header {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.toggle-btn {
+  color: #1d1d1f;
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  position: relative;
+  background: rgba(0, 0, 0, 0.04);
+  border: none;
+  cursor: pointer;
+}
+
+.toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.flags-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px 40px 20px;
+  flex-wrap: wrap;
+}
+
+.flag-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 12px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.04);
+  border: none;
+  min-width: 32px;
+  min-height: 24px;
+}
+
+.flag-item:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.flag-item:active {
+  background: rgba(0, 0, 0, 0.12);
+  transform: scale(0.95);
+}
+
+.flag-item[data-tooltip] {
+  position: relative;
+}
+
+.flag-item[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.flag-item[data-tooltip]:hover::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.flag-emoji {
+  font-size: 16px;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .flags-container {
+    gap: 8px;
+    padding: 0 16px;
+  }
+  
+  .flag-emoji {
+    font-size: 20px;
+  }
+  
+  .flag-item {
+    padding: 8px 12px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  .country-flags {
+    padding: 12px 0;
+  }
+}

@@ -1,0 +1,572 @@
+{
+  "header": {
+    "home": "Home",
+    "discover": "Discover Places",
+    "listings": "Listings",
+    "about": "About",
+    "countries": "Countries"
+  },
+  "search": {
+    "placeholder": "Search location...",
+    "button": "Search"
+  },
+  "footer": {
+    "description": "Discover and share the best locations you've visited with our community of travelers and explorers worldwide.",
+    "explore": {
+      "title": "Explore",
+      "discover": "Discover Places"
+    },
+    "support": {
+      "title": "Support",
+      "help": "Help Center",
+      "faq": "FAQ",
+      "contact": "Contact Us",
+      "feedback": "Feedback"
+    },
+    "legal": {
+      "title": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "cookies": "Cookie Policy"
+    },
+    "badges": {
+      "secure": "Secure",
+      "trusted": "Trusted"
+    },
+    "rights": "All rights reserved."
+  },
+  "review": {
+    "title": "Share Your Experience",
+    "subtitle": "Help others discover this amazing place",
+    "yourReview": "Your Review",
+    "placeholder": "What made this place special? Share details about your visit, the atmosphere, accessibility, or any tips for future visitors...",
+    "rating": "Rating",
+    "outOfStars": "out of 5 stars",
+    "addPhoto": "Add Photo (Optional)",
+    "choosePhoto": "Choose Photo",
+    "cancel": "Cancel",
+    "publish": "Publish Review"
+  },
+  "popup": {
+    "addReview": "Add Review",
+    "location": "Location",
+    "coordinates": "Lat: {lat}, Lng: {lng}"
+  },
+  "about": {
+    "title": "About MapMark",
+    "subtitle": "Discover, share, and explore the world's most amazing places with our global community of travelers.",
+    "mission": {
+      "title": "Our Mission",
+      "description": "We believe that every place has a story to tell. MapMark connects travelers worldwide, allowing them to discover hidden gems, share authentic experiences, and create lasting memories through the power of community-driven exploration."
+    },
+    "features": {
+      "discover": {
+        "title": "Discover Places",
+        "description": "Find amazing locations around the world through our interactive map and community recommendations."
+      },
+      "review": {
+        "title": "Share Reviews",
+        "description": "Rate and review places you've visited to help other travelers make informed decisions."
+      },
+      "global": {
+        "title": "Global Community",
+        "description": "Connect with travelers from around the world and access content in 12 different languages."
+      }
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description": "To create the world's most comprehensive and trusted platform for location discovery, where every traveler can find their next adventure and share their unique perspective with the global community."
+    },
+    "stats": {
+      "languages": "Languages",
+      "locations": "Locations",
+      "available": "Available"
+    },
+    "cta": {
+      "title": "Ready to Explore?",
+      "description": "Join thousands of travelers who are already discovering amazing places with MapMark.",
+      "button": "Start Exploring"
+    }
+  },
+  "aboutPage": {
+    "ua": {
+      "title": "Про нас",
+      "description": "Ласкаво просимо до нашого додатку – платформи, яка допомагає вам відкривати та ділитися найкращими локаціями, які ви відвідали. Ми прагнемо створити спільноту активних мандрівників і дослідників, де кожен може залишити реальні відгуки та корисні поради для інших користувачів. Наш додаток дозволяє: позначати улюблені місця та відстежувати, де ви вже були; ділитися власними враженнями та рейтингами локацій; рекомендувати готелі, ресторани, кафе, транспортні послуги та інші сервіси; допомагати іншим користувачам відкривати приховані або маловідомі місця. Ми віримо, що кожна поїздка стає цікавішою, коли досвід спільноти допомагає приймати рішення. Наша мета – зробити подорожі легшими, безпечнішими та надихаючими для кожного."
+    },
+    "en": {
+      "title": "About Us",
+      "description": "Welcome to our app – a platform designed to help you discover and share the best locations you've visited. We aim to build a community of active travelers and explorers where everyone can leave authentic reviews and helpful tips for others. Our app allows you to: mark your favorite places and track where you've been; share your personal experiences and location ratings; recommend hotels, restaurants, cafes, transport services, and other amenities; help other users discover hidden or lesser-known spots. We believe every trip becomes more enjoyable when community experience guides your choices. Our goal is to make travel easier, safer, and more inspiring for everyone."
+    },
+    "es": {
+      "title": "Sobre Nosotros",
+      "description": "Bienvenido a nuestra aplicación: una plataforma diseñada para ayudarte a descubrir y compartir los mejores lugares que has visitado. Nuestro objetivo es construir una comunidad de viajeros activos y exploradores donde todos puedan dejar reseñas auténticas y consejos útiles para otros. Nuestra aplicación te permite: marcar tus lugares favoritos y rastrear dónde has estado; compartir tus experiencias personales y calificaciones de ubicaciones; recomendar hoteles, restaurantes, cafés, servicios de transporte y otras comodidades; ayudar a otros usuarios a descubrir lugares ocultos o menos conocidos. Creemos que cada viaje se vuelve más agradable cuando la experiencia de la comunidad guía tus decisiones. Nuestro objetivo es hacer que viajar sea más fácil, seguro e inspirador para todos."
+    },
+    "fr": {
+      "title": "À Propos de Nous",
+      "description": "Bienvenue dans notre application – une plateforme conçue pour vous aider à découvrir et partager les meilleurs endroits que vous avez visités. Nous visons à construire une communauté de voyageurs actifs et d'explorateurs où chacun peut laisser des avis authentiques et des conseils utiles pour les autres. Notre application vous permet de : marquer vos endroits préférés et suivre où vous avez été ; partager vos expériences personnelles et évaluations de lieux ; recommander des hôtels, restaurants, cafés, services de transport et autres commodités ; aider d'autres utilisateurs à découvrir des endroits cachés ou moins connus. Nous croyons que chaque voyage devient plus agréable quand l'expérience communautaire guide vos choix. Notre objectif est de rendre les voyages plus faciles, sûrs et inspirants pour tous."
+    },
+    "de": {
+      "title": "Über Uns",
+      "description": "Willkommen in unserer App – einer Plattform, die Ihnen hilft, die besten Orte zu entdecken und zu teilen, die Sie besucht haben. Wir möchten eine Gemeinschaft aktiver Reisender und Entdecker aufbauen, in der jeder authentische Bewertungen und hilfreiche Tipps für andere hinterlassen kann. Unsere App ermöglicht es Ihnen: Ihre Lieblingsorte zu markieren und zu verfolgen, wo Sie waren; Ihre persönlichen Erfahrungen und Ortsbewertungen zu teilen; Hotels, Restaurants, Cafés, Transportdienste und andere Annehmlichkeiten zu empfehlen; anderen Benutzern zu helfen, versteckte oder weniger bekannte Orte zu entdecken. Wir glauben, dass jede Reise angenehmer wird, wenn Gemeinschaftserfahrung Ihre Entscheidungen leitet. Unser Ziel ist es, das Reisen für alle einfacher, sicherer und inspirierender zu machen."
+    },
+    "it": {
+      "title": "Chi Siamo",
+      "description": "Benvenuti nella nostra app – una piattaforma progettata per aiutarti a scoprire e condividere i migliori luoghi che hai visitato. Miriamo a costruire una comunità di viaggiatori attivi ed esploratori dove ognuno può lasciare recensioni autentiche e consigli utili per gli altri. La nostra app ti permette di: segnare i tuoi luoghi preferiti e tracciare dove sei stato; condividere le tue esperienze personali e valutazioni dei luoghi; raccomandare hotel, ristoranti, caffè, servizi di trasporto e altre comodità; aiutare altri utenti a scoprire luoghi nascosti o meno conosciuti. Crediamo che ogni viaggio diventi più piacevole quando l'esperienza della comunità guida le tue scelte. Il nostro obiettivo è rendere i viaggi più facili, sicuri e ispiranti per tutti."
+    },
+    "pt": {
+      "title": "Sobre Nós",
+      "description": "Bem-vindos ao nosso aplicativo – uma plataforma projetada para ajudá-lo a descobrir e compartilhar os melhores lugares que você visitou. Nosso objetivo é construir uma comunidade de viajantes ativos e exploradores onde todos possam deixar avaliações autênticas e dicas úteis para outros. Nosso aplicativo permite: marcar seus lugares favoritos e rastrear onde você esteve; compartilhar suas experiências pessoais e avaliações de locais; recomendar hotéis, restaurantes, cafés, serviços de transporte e outras comodidades; ajudar outros usuários a descobrir lugares ocultos ou menos conhecidos. Acreditamos que cada viagem se torna mais agradável quando a experiência da comunidade orienta suas escolhas. Nosso objetivo é tornar as viagens mais fáceis, seguras e inspiradoras para todos."
+    },
+    "ru": {
+      "title": "О Нас",
+      "description": "Добро пожаловать в наше приложение – платформу, созданную для того, чтобы помочь вам открывать и делиться лучшими местами, которые вы посетили. Мы стремимся создать сообщество активных путешественников и исследователей, где каждый может оставлять подлинные отзывы и полезные советы для других. Наше приложение позволяет: отмечать ваши любимые места и отслеживать, где вы были; делиться личным опытом и оценками мест; рекомендовать отели, рестораны, кафе, транспортные услуги и другие удобства; помогать другим пользователям открывать скрытые или малоизвестные места. Мы верим, что каждое путешествие становится приятнее, когда опыт сообщества направляет ваши решения. Наша цель – сделать путешествия проще, безопаснее и вдохновляющими для всех."
+    },
+    "ja": {
+      "title": "私たちについて",
+      "description": "私たちのアプリへようこそ – あなたが訪れた最高の場所を発見し、共有するために設計されたプラットフォームです。私たちは、誰もが他の人のために本物のレビューや役立つヒントを残すことができる、アクティブな旅行者と探検家のコミュニティを構築することを目指しています。私たちのアプリでは：お気に入りの場所をマークし、どこに行ったかを追跡する；個人的な体験と場所の評価を共有する；ホテル、レストラン、カフェ、交通サービス、その他のアメニティを推薦する；他のユーザーが隠れた場所や知られていない場所を発見するのを助ける。コミュニティの経験があなたの選択を導くとき、すべての旅行がより楽しくなると信じています。私たちの目標は、すべての人にとって旅行をより簡単で、安全で、インスピレーションに満ちたものにすることです。"
+    },
+    "zh-CN": {
+      "title": "关于我们",
+      "description": "欢迎使用我们的应用程序——一个旨在帮助您发现和分享您访问过的最佳地点的平台。我们的目标是建立一个活跃的旅行者和探险家社区，每个人都可以为他人留下真实的评论和有用的提示。我们的应用程序允许您：标记您最喜欢的地方并跟踪您去过的地方；分享您的个人经历和地点评级；推荐酒店、餐厅、咖啡馆、交通服务和其他便利设施；帮助其他用户发现隐藏或鲜为人知的地方。我们相信，当社区经验指导您的选择时，每次旅行都会变得更加愉快。我们的目标是让每个人的旅行更轻松、更安全、更有启发性。"
+    },
+    "ar": {
+      "title": "معلومات عنا",
+      "description": "مرحباً بكم في تطبيقنا – منصة مصممة لمساعدتكم في اكتشاف ومشاركة أفضل الأماكن التي زرتموها. نهدف إلى بناء مجتمع من المسافرين النشطين والمستكشفين حيث يمكن للجميع ترك مراجعات أصيلة ونصائح مفيدة للآخرين. يتيح لكم تطبيقنا: وضع علامة على أماكنكم المفضلة وتتبع أين كنتم؛ مشاركة تجاربكم الشخصية وتقييمات الأماكن؛ التوصية بالفنادق والمطاعم والمقاهي وخدمات النقل والمرافق الأخرى؛ مساعدة المستخدمين الآخرين في اكتشاف الأماكن المخفية أو الأقل شهرة. نؤمن أن كل رحلة تصبح أكثر متعة عندما تقود تجربة المجتمع اختياراتكم. هدفنا هو جعل السفر أسهل وأكثر أماناً وإلهاماً للجميع."
+    },
+    "hi": {
+      "title": "हमारे बारे में",
+      "description": "हमारे ऐप में आपका स्वागत है – एक प्लेटफ़ॉर्म जो आपको उन बेहतरीन स्थानों की खोज और साझाकरण में मदद करने के लिए डिज़ाइन किया गया है जहाँ आप गए हैं। हमारा लक्ष्य सक्रिय यात्रियों और खोजकर्ताओं का एक समुदाय बनाना है जहाँ हर कोई दूसरों के लिए प्रामाणिक समीक्षाएँ और उपयोगी सुझाव छोड़ सकता है। हमारा ऐप आपको अनुमति देता है: अपने पसंदीदा स्थानों को चिह्नित करना और ट्रैक करना कि आप कहाँ गए हैं; अपने व्यक्तिगत अनुभव और स्थान रेटिंग साझा करना; होटल, रेस्तराँ, कैफे, परिवहन सेवाओं और अन्य सुविधाओं की सिफारिश करना; अन्य उपयोगकर्ताओं को छुपे हुए या कम ज्ञात स्थानों की खोज में मदद करना। हम मानते हैं कि जब समुदाय का अनुभव आपकी पसंद का मार्गदर्शन करता है तो हर यात्रा अधिक आनंददायक हो जाती है। हमारा लक्ष्य सभी के लिए यात्रा को आसान, सुरक्षित और प्रेरणादायक बनाना है।"
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "Home Page",
+      "welcome": "Welcome to MapMark!"
+    },
+    "listings": {
+      "title": "Listings",
+      "description": "Here will be listings"
+    },
+    "about": {
+      "title": "About",
+      "description": "Information about the project"
+    }
+  },
+  "ads": {
+    "title": "Advertisements",
+    "description": "Here you can find everything you need - from housing to services. Use smart filters for quick search!",
+    "createAd": "Create Ad",
+    "createAdTitle": "New Advertisement",
+    "categories": {
+      "housing": "Housing Rental",
+      "cars": "Car Rental",
+      "restaurants": "Restaurants",
+      "hotels": "Hotels",
+      "events": "Events",
+      "tourism": "Tourism",
+      "services": "Services",
+      "other": "Other"
+    },
+    "form": {
+      "country": "Country",
+      "selectCountry": "Select country",
+      "city": "City",
+      "cityPlaceholder": "Enter city",
+      "location": "Location",
+      "locationPlaceholder": "Describe where the object is located",
+      "category": "Category",
+      "selectCategory": "Select category",
+      "dateRange": "Date Range",
+      "photos": "Location Photos",
+      "cancel": "Cancel",
+      "publish": "Publish"
+    }
+  },
+  "filter": {
+    "quickFilter": "Quick Filter",
+    "country": "Country",
+    "category": "Category",
+    "clear": "Clear"
+  },
+  "cookiePolicy": {
+    "title": "Cookie Policy",
+    "subtitle": "Learn how MapMark uses cookies to enhance your experience",
+    "lastUpdated": "Last updated",
+    "date": "January 2025",
+    "whatAreCookies": {
+      "title": "What Are Cookies?",
+      "description": "Cookies are small text files that are stored on your device when you visit our website. They help us provide you with a better experience by remembering your preferences and improving our services."
+    },
+    "howWeUseCookies": {
+      "title": "How We Use Cookies",
+      "description": "We use different types of cookies to enhance your experience on MapMark:"
+    },
+    "cookieTypes": {
+      "essential": {
+        "title": "Essential Cookies",
+        "description": "These cookies are necessary for the website to function properly and cannot be disabled.",
+        "examples": {
+          "authentication": "User authentication and login sessions",
+          "security": "Security and fraud prevention",
+          "preferences": "Basic website functionality and preferences"
+        }
+      },
+      "functional": {
+        "title": "Functional Cookies",
+        "description": "These cookies enhance your experience by remembering your choices and preferences.",
+        "examples": {
+          "language": "Language and region preferences",
+          "location": "Location settings for map display",
+          "mapSettings": "Map view preferences and zoom levels"
+        }
+      },
+      "analytics": {
+        "title": "Analytics Cookies",
+        "description": "These cookies help us understand how visitors use our website so we can improve it.",
+        "examples": {
+          "usage": "Website usage statistics and popular features",
+          "performance": "Page load times and performance metrics",
+          "errors": "Error tracking and debugging information"
+        }
+      }
+    },
+    "thirdParty": {
+      "title": "Third-Party Cookies",
+      "description": "We may use third-party services that set their own cookies:",
+      "services": {
+        "maps": {
+          "title": "Map Services (Leaflet/OpenStreetMap)",
+          "description": "Used to display interactive maps and location data"
+        },
+        "analytics": {
+          "title": "Analytics Services",
+          "description": "Help us understand user behavior and improve our services"
+        }
+      }
+    },
+    "manageCookies": {
+      "title": "Managing Your Cookies",
+      "description": "You can control and manage cookies in several ways:",
+      "browserSettings": "Browser Settings:",
+      "browsers": {
+        "chrome": "Settings > Privacy and security > Cookies and other site data",
+        "firefox": "Settings > Privacy & Security > Cookies and Site Data",
+        "safari": "Preferences > Privacy > Manage Website Data",
+        "edge": "Settings > Cookies and site permissions > Cookies and site data"
+      }
+    },
+    "consent": {
+      "title": "Cookie Consent",
+      "description": "By using MapMark, you consent to our use of cookies as described in this policy. We may ask for your explicit consent for certain types of cookies.",
+      "withdrawal": "You can withdraw your consent at any time by adjusting your browser settings or contacting us directly."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "description": "If you have any questions about our Cookie Policy, please contact us:",
+      "email": "Email",
+      "address": "Address",
+      "addressText": "MapMark Privacy Team, 123 Travel Street, Explorer City, EC 12345"
+    },
+    "changes": {
+      "title": "Changes to This Policy",
+      "description": "We may update this Cookie Policy from time to time. Any changes will be posted on this page with an updated revision date. We encourage you to review this policy periodically."
+    }
+  },
+  "termsOfService": {
+    "title": "Terms of Service",
+    "subtitle": "Please read these terms carefully before using MapMark",
+    "lastUpdated": "Last updated",
+    "date": "January 2025",
+    "acceptance": {
+      "title": "Acceptance of Terms",
+      "description": "By accessing and using MapMark, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service."
+    },
+    "services": {
+      "title": "Description of Service",
+      "description": "MapMark is a platform that allows users to discover, share, and review locations worldwide. Our services include:",
+      "features": {
+        "map": "Interactive world map with location markers",
+        "reviews": "User-generated reviews and ratings for locations",
+        "community": "Community-driven recommendations and experiences",
+        "recommendations": "Personalized location suggestions based on preferences"
+      }
+    },
+    "userAccount": {
+      "title": "User Accounts",
+      "description": "To access certain features of MapMark, you may be required to create an account. You are responsible for maintaining the confidentiality of your account information.",
+      "responsibilities": {
+        "title": "Your Responsibilities:",
+        "accurate": "Provide accurate and complete information when creating your account",
+        "security": "Maintain the security of your password and account",
+        "activities": "Accept responsibility for all activities that occur under your account"
+      }
+    },
+    "userContent": {
+      "title": "User Content",
+      "description": "You retain ownership of any content you submit, post or display on MapMark. By submitting content, you grant us a worldwide, non-exclusive license to use, display, and distribute your content on our platform.",
+      "prohibited": {
+        "title": "Prohibited Content:",
+        "illegal": "Content that is illegal, harmful, or violates any laws",
+        "harmful": "Harassment, hate speech, or discriminatory content",
+        "spam": "Spam, misleading information, or fraudulent content",
+        "copyright": "Content that infringes on intellectual property rights"
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "description": "Your privacy is important to us. Please review our Privacy Policy, which also governs your use of the Service, to understand our practices."
+    },
+    "termination": {
+      "title": "Termination",
+      "description": "We may terminate or suspend your account and bar access to the service immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever including breach of the Terms."
+    },
+    "limitation": {
+      "title": "Limitation of Liability",
+      "description": "In no event shall MapMark, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
+    },
+    "changes": {
+      "title": "Changes to Terms",
+      "description": "We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days notice prior to any new terms taking effect."
+    },
+    "contact": {
+      "title": "Contact Information",
+      "description": "If you have any questions about these Terms of Service, please contact us:",
+      "email": "Email",
+      "address": "Address",
+      "addressText": "MapMark Legal Team, 123 Travel Street, Explorer City, EC 12345"
+    }
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "subtitle": "Your privacy is important to us. Learn how we protect your data.",
+    "lastUpdated": "Last updated",
+    "date": "January 2025",
+    "introduction": {
+      "title": "Introduction",
+      "description": "MapMark is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service."
+    },
+    "dataCollection": {
+      "title": "Information We Collect",
+      "description": "We collect information you provide directly to us and information we obtain automatically when you use our services:",
+      "types": {
+        "personal": {
+          "title": "Personal Information",
+          "items": {
+            "name": "Name and contact information",
+            "email": "Email address for account creation",
+            "location": "Location data when you share reviews"
+          }
+        },
+        "usage": {
+          "title": "Usage Information",
+          "items": {
+            "interactions": "How you interact with our service",
+            "preferences": "Your preferences and settings",
+            "device": "Device information and IP address"
+          }
+        }
+      }
+    },
+    "dataUsage": {
+      "title": "How We Use Your Information",
+      "description": "We use the information we collect for various purposes:",
+      "purposes": {
+        "service": "To provide, maintain, and improve our services",
+        "personalization": "To personalize your experience and recommendations",
+        "communication": "To communicate with you about updates and features",
+        "improvement": "To analyze usage patterns and improve our platform"
+      }
+    },
+    "dataSharing": {
+      "title": "Information Sharing",
+      "description": "We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except in the following circumstances:",
+      "exceptions": {
+        "title": "We may share information when:",
+        "legal": "Required by law or to respond to legal process",
+        "safety": "Necessary to protect the safety of users or the public",
+        "business": "In connection with a merger, acquisition, or sale of assets"
+      }
+    },
+    "dataSecurity": {
+      "title": "Data Security",
+      "description": "We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction:",
+      "measures": {
+        "title": "Security Measures:",
+        "encryption": "Data encryption in transit and at rest",
+        "access": "Limited access controls and authentication",
+        "monitoring": "Regular security monitoring and updates"
+      }
+    },
+    "userRights": {
+      "title": "Your Rights",
+      "description": "You have certain rights regarding your personal information:",
+      "rights": {
+        "access": "Access and review your personal information",
+        "correction": "Request correction of inaccurate information",
+        "deletion": "Request deletion of your personal information",
+        "portability": "Request a copy of your data in a portable format"
+      }
+    },
+    "cookies": {
+      "title": "Cookies and Tracking",
+      "description": "We use cookies and similar technologies to enhance your experience. Please see our Cookie Policy for detailed information about our use of cookies."
+    },
+    "changes": {
+      "title": "Changes to This Policy",
+      "description": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the revision date."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "description": "If you have any questions about this Privacy Policy, please contact us:",
+      "email": "Email",
+      "address": "Address",
+      "addressText": "MapMark Privacy Team, 123 Travel Street, Explorer City, EC 12345"
+    }
+  },
+  "helpCenter": {
+    "title": "Help Center",
+    "subtitle": "Everything you need to know about using MapMark",
+    "gettingStarted": {
+      "title": "Getting Started",
+      "description": "MapMark is designed to help you discover and share amazing places around the world. Here's how to get started:",
+      "steps": {
+        "explore": {
+          "title": "Explore the Map",
+          "description": "Use the interactive world map to browse locations. Zoom in and out, drag to move around, and discover places that interest you."
+        },
+        "click": {
+          "title": "Click on Locations",
+          "description": "Click on any location marker to see details, existing reviews, and ratings from other travelers."
+        },
+        "review": {
+          "title": "Share Your Experience",
+          "description": "Add your own reviews and ratings to help other travelers discover great places and avoid disappointing ones."
+        }
+      }
+    },
+    "features": {
+      "title": "Key Features",
+      "map": {
+        "title": "Interactive World Map",
+        "description": "Explore locations worldwide with our easy-to-use interactive map interface."
+      },
+      "reviews": {
+        "title": "Real User Reviews",
+        "description": "Read authentic reviews and ratings from travelers who have actually visited these places."
+      },
+      "filters": {
+        "title": "Smart Filters",
+        "description": "Filter locations by country, category, or use the quick filter to find exactly what you're looking for."
+      },
+      "languages": {
+        "title": "Multiple Languages",
+        "description": "Access MapMark in 12 different languages to make your experience more comfortable."
+      }
+    },
+    "howToUse": {
+      "title": "How to Use MapMark",
+      "addReview": {
+        "title": "Adding a Review",
+        "steps": {
+          "find": "Find the location you want to review on the map",
+          "click": "Click on the location marker to open the details popup",
+          "write": "Click 'Add Review' and write your honest experience",
+          "rate": "Give a star rating from 1 to 5 stars",
+          "publish": "Click 'Publish Review' to share with the community"
+        }
+      },
+      "navigation": {
+        "title": "Map Navigation",
+        "zoom": "Use mouse wheel or +/- buttons to zoom in and out",
+        "drag": "Click and drag to move around the map",
+        "search": "Use the search bar to find specific locations",
+        "filters": "Apply filters to show only certain types of places"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": {
+        "account": {
+          "question": "Do I need an account to use MapMark?",
+          "answer": "You can browse locations and read reviews without an account. However, to add your own reviews and save favorite places, you'll need to create a free account."
+        },
+        "reviews": {
+          "question": "How do I write a good review?",
+          "answer": "Be honest and specific about your experience. Include details about what made the place special, accessibility, best times to visit, and any tips for future visitors."
+        },
+        "languages": {
+          "question": "Can I change the language?",
+          "answer": "Yes! MapMark supports 12 languages. You can change the language using the language selector in the header."
+        },
+        "mobile": {
+          "question": "Does MapMark work on mobile devices?",
+          "answer": "Absolutely! MapMark is fully responsive and works great on smartphones and tablets. You can access all features on any device."
+        }
+      }
+    },
+    "contact": {
+      "title": "Need More Help?",
+      "description": "If you can't find the answer to your question, don't hesitate to contact our support team:",
+      "email": "Email",
+      "response": "Response Time",
+      "responseTime": "We typically respond within 24 hours"
+    }
+  },
+  "contactUs": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with our team",
+    "description": "Have a question, suggestion, or need help with MapMark? We'd love to hear from you! Our team is here to assist you with any inquiries about our platform, features, or your travel experiences.",
+    "email": "Email",
+    "response": "Response Time",
+    "responseTime": "We typically respond within 24 hours"
+  },
+  "discoverPlaces": {
+    "title": "Discover Amazing Places",
+    "subtitle": "Explore the world through authentic reviews and recommendations from fellow travelers",
+    "featured": {
+      "title": "Featured Categories",
+      "description": "Find the perfect places for your next adventure based on what you love most:"
+    },
+    "categories": {
+      "nature": {
+        "title": "Natural Wonders",
+        "description": "Breathtaking landscapes, national parks, beaches, and outdoor adventures"
+      },
+      "culture": {
+        "title": "Cultural Heritage",
+        "description": "Museums, historical sites, art galleries, and cultural landmarks"
+      },
+      "food": {
+        "title": "Food & Dining",
+        "description": "Local restaurants, street food, cafes, and culinary experiences"
+      },
+      "adventure": {
+        "title": "Adventure & Sports",
+        "description": "Hiking trails, water sports, extreme activities, and outdoor challenges"
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "steps": {
+        "browse": {
+          "title": "Browse Places",
+          "description": "Explore our interactive map or browse by categories to find interesting locations"
+        },
+        "read": {
+          "title": "Read Reviews",
+          "description": "Get insights from real travelers who have visited these places before"
+        },
+        "plan": {
+          "title": "Plan Your Visit",
+          "description": "Use the information and tips to plan your perfect trip"
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Explore?",
+      "description": "Start discovering amazing places around the world with MapMark today!",
+      "exploreMap": "Explore Map",
+      "viewListings": "View All Listings"
+    }
+  }
+}

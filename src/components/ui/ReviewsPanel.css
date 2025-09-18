@@ -1,0 +1,282 @@
+.reviews-panel {
+  position: fixed;
+  top: 0;
+  left: -450px;
+  width: 450px;
+  height: 100vh;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+  backdrop-filter: blur(60px) saturate(200%);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    4px 0 32px rgba(0, 0, 0, 0.12),
+    2px 0 16px rgba(0, 0, 0, 0.08),
+    inset -1px 0 0 rgba(255, 255, 255, 0.8);
+  transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10001;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.reviews-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(0, 122, 255, 0.3), transparent);
+}
+
+.reviews-panel.visible {
+  left: 0;
+}
+
+.reviews-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 80px 24px 24px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+  backdrop-filter: blur(40px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  position: relative;
+}
+
+.reviews-panel-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 24px;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, #007aff, #00c7ff);
+  border-radius: 1px;
+}
+
+.header-content h3 {
+  margin: 0 0 6px 0;
+  font-size: 22px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1d1d1f 0%, #4a4a4a 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.header-content p {
+  margin: 0;
+  font-size: 15px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.close-btn {
+  background: rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #8e8e93;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.close-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s;
+}
+
+.close-btn:hover {
+  background: rgba(255, 59, 48, 0.1);
+  border-color: rgba(255, 59, 48, 0.2);
+  color: #ff3b30;
+  transform: scale(1.05);
+}
+
+.close-btn:hover::before {
+  left: 100%;
+}
+
+.reviews-panel-content {
+  padding: 24px 24px 120px 24px;
+  background: transparent;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.review-item {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.review-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.2), transparent);
+}
+
+.review-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 48px rgba(0, 0, 0, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.06);
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #fbbc04;
+}
+
+.rating-number {
+  color: #70757a;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.review-text {
+  font-size: 14px;
+  color: #3c4043;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+}
+
+.review-photo {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 8px 0;
+  border: 1px solid #e8eaed;
+}
+
+.review-date {
+  font-size: 11px;
+  color: #70757a;
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 48px 24px;
+  background: linear-gradient(145deg, rgba(0, 122, 255, 0.03) 0%, rgba(0, 199, 255, 0.01) 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(0, 122, 255, 0.08);
+  margin: 20px 0;
+}
+
+.no-reviews p {
+  margin: 0;
+  font-size: 15px;
+  color: #8e8e93;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+}
+
+.add-review-btn {
+  width: calc(100% - 48px);
+  background: linear-gradient(135deg, #007aff 0%, #00c7ff 50%, #0056cc 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 18px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 8px 32px rgba(0, 122, 255, 0.25),
+    0 4px 16px rgba(0, 122, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+}
+
+.add-review-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.add-review-btn:hover {
+  background: linear-gradient(135deg, #0056cc 0%, #007aff 50%, #003d99 100%);
+  box-shadow: 
+    0 12px 48px rgba(0, 122, 255, 0.4),
+    0 8px 32px rgba(0, 122, 255, 0.2);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.add-review-btn:hover::before {
+  left: 100%;
+}
+
+@media (max-width: 768px) {
+  .reviews-panel {
+    width: 100vw;
+    left: -100vw;
+    top: 0;
+    height: 100vh;
+    border-radius: 0;
+  }
+  
+  .reviews-panel.visible {
+    left: 0;
+  }
+  
+  .reviews-panel-header {
+    padding: 20px;
+  }
+  
+  .reviews-panel-content {
+    padding: 20px;
+  }
+  
+  .header-content h3 {
+    font-size: 20px;
+  }
+}

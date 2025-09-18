@@ -1,0 +1,38 @@
+{
+  "header": {
+    "listings": "Объявления",
+    "about": "О нас",
+    "countries": "Страны"
+  },
+  "search": {
+    "placeholder": "Поиск местоположения...",
+    "button": "Поиск"
+  },
+  "ads": {
+    "form": {
+      "title": "Заголовок",
+      "description": "Описание",
+      "country": "Страна",
+      "selectCountry": "Выберите страну",
+      "category": "Категория",
+      "selectCategory": "Выберите категорию",
+      "publish": "Опубликовать"
+    },
+    "categories": {
+      "housing": "Жилье",
+      "cars": "Автомобили",
+      "restaurants": "Рестораны",
+      "hotels": "Отели",
+      "events": "События",
+      "tourism": "Туризм",
+      "services": "Услуги",
+      "other": "Другое"
+    }
+  },
+  "filter": {
+    "quickFilter": "Быстрый Фильтр",
+    "country": "Страна",
+    "category": "Категория",
+    "clear": "Очистить"
+  }
+}
