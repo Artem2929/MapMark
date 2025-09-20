@@ -20,7 +20,7 @@ L.Icon.Default.mergeOptions({
 const MapClickHandler = ({ onMapClick }) => {
   const map = useMapEvents({
     click: (e) => {
-      onMapClick(e.latlng);
+      onMapClick(e.latlng, e.originalEvent);
     },
   });
   return null;
@@ -40,6 +40,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
   const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [tempMarker, setTempMarker] = useState(null);
   const tempMarkerRef = useRef(null);
+  const [contextMenu, setContextMenu] = useState(null);
 
   // Load reviews from API on component mount
   useEffect(() => {
@@ -167,8 +168,9 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
     }
   };
 
-  const handleMapClick = async (latlng) => {
-    // Видаляємо попередній тимчасовий маркер
+  const handleMapClick = async (latlng, originalEvent) => {
+    // Закриваємо попереднє контекстне меню
+    setContextMenu(null);
     setTempMarker(null);
     
     const locationName = await getLocationName(latlng.lat, latlng.lng);
@@ -180,6 +182,29 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
       isTemp: true
     };
     setTempMarker(newTempMarker);
+    
+    // Отримуємо позицію маркера на екрані
+    setTimeout(() => {
+      if (map) {
+        const markerPoint = map.latLngToContainerPoint(latlng);
+        const mapContainer = map.getContainer().getBoundingClientRect();
+        
+        const x = mapContainer.left + markerPoint.x + 20; // Зміщення праворуч від маркера
+        const y = mapContainer.top + markerPoint.y - 15; // Мінімальний офсет вгору
+        
+        // Перевіряємо, чи меню не виходить за межі екрану
+        const menuWidth = 200;
+        const menuHeight = 150;
+        const adjustedX = x + menuWidth > window.innerWidth ? x - menuWidth - 40 : x;
+        const adjustedY = y < menuHeight ? y + 40 : y; // Якщо зверху немає місця, показуємо знизу
+        
+        setContextMenu({
+          x: adjustedX,
+          y: adjustedY,
+          marker: newTempMarker
+        });
+      }
+    }, 50);
   };
 
   const searchLocation = async (query) => {
@@ -226,14 +251,18 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
     }
   }, [filters]);
 
-  // Effect to auto-open popup for temp marker
+  // Effect to close context menu on outside click
   React.useEffect(() => {
-    if (tempMarker && tempMarkerRef.current) {
-      setTimeout(() => {
-        tempMarkerRef.current.openPopup();
-      }, 100);
-    }
-  }, [tempMarker]);
+    const handleClickOutside = (event) => {
+      if (contextMenu && !event.target.closest('.map-context-menu')) {
+        setContextMenu(null);
+        setTempMarker(null);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [contextMenu]);
 
   const findMyLocation = async () => {
     console.log('findMyLocation called');
@@ -428,50 +457,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
         
         {/* Тимчасовий маркер */}
         {tempMarker && (
-          <Marker key={tempMarker.id} position={tempMarker.position} ref={tempMarkerRef}>
-            <Popup autoClose={false} closeOnClick={false}>
-              <div className="popup-content">
-                <strong>{tempMarker.name}</strong>
-                <div style={{marginBottom: '8px', fontSize: '12px', color: '#8e8e93'}}>
-                  {tempMarker.position[0].toFixed(4)}, {tempMarker.position[1].toFixed(4)}
-                </div>
-                
-                <div style={{marginTop: '8px', marginBottom: '8px', display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
-                  <button 
-                    className="review-btn"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setSelectedMarker(tempMarker);
-                      setShowReviewForm(true);
-                    }}
-                  >
-                    {t('popup.addReview')}
-                  </button>
-                  <button 
-                    className="route-btn"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      buildRoute(tempMarker);
-                    }}
-                  >
-                    🗺️
-                  </button>
-                  <button 
-                    className="delete-btn"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setTempMarker(null);
-                    }}
-                  >
-                    ✕
-                  </button>
-                </div>
-              </div>
-            </Popup>
-          </Marker>
+          <Marker key={tempMarker.id} position={tempMarker.position} ref={tempMarkerRef} />
         )}
         
         {userLocation && (
@@ -524,6 +510,58 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
             setShowReviewForm(true);
           }}
         />
+      )}
+      
+      {/* Контекстне меню */}
+      {contextMenu && (
+        <div 
+          className="map-context-menu"
+          style={{
+            left: contextMenu.x,
+            top: contextMenu.y
+          }}
+        >
+          <div className="context-menu-header">
+            <div className="context-menu-title">{contextMenu.marker.name}</div>
+            <div className="context-menu-coords">
+              {contextMenu.marker.position[0].toFixed(4)}, {contextMenu.marker.position[1].toFixed(4)}
+            </div>
+          </div>
+          
+          <button 
+            className="context-menu-item"
+            onClick={() => {
+              setSelectedMarker(contextMenu.marker);
+              setShowReviewForm(true);
+              setContextMenu(null);
+            }}
+          >
+            <span className="context-menu-item-icon">📝</span>
+            <span className="context-menu-item-text">{t('popup.addReview')}</span>
+          </button>
+          
+          <button 
+            className="context-menu-item"
+            onClick={() => {
+              buildRoute(contextMenu.marker);
+              setContextMenu(null);
+            }}
+          >
+            <span className="context-menu-item-icon">🗺️</span>
+            <span className="context-menu-item-text">Маршрут</span>
+          </button>
+          
+          <button 
+            className="context-menu-item"
+            onClick={() => {
+              setContextMenu(null);
+              setTempMarker(null);
+            }}
+          >
+            <span className="context-menu-item-icon">✕</span>
+            <span className="context-menu-item-text">Закрити</span>
+          </button>
+        </div>
       )}
     </div>
   );
