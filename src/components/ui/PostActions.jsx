@@ -87,37 +87,37 @@ const PostActions = ({ initialLikes = 0, initialDislikes = 0, initialComments = 
   return (
     <div className="post-actions-container">
       <div className="post-actions">
-        <div className="action-buttons">
+        <div className="post-action-buttons">
           <button 
-            className={`action-btn like-btn ${isLiked ? 'active' : ''} ${animatingLike ? 'animating' : ''}`}
+            className={`post-action-btn like-btn ${isLiked ? 'active' : ''} ${animatingLike ? 'animating' : ''}`}
             onClick={handleLike}
             aria-label={`Лайк (${likes})`}
           >
-            <span className="icon" aria-hidden="true">❤️</span>
-            <span className="count">{likes}</span>
+            <span className="post-icon" aria-hidden="true">❤️</span>
+            <span className="post-count">{likes}</span>
           </button>
           
           <button 
-            className={`action-btn dislike-btn ${isDisliked ? 'active' : ''} ${animatingDislike ? 'animating' : ''}`}
+            className={`post-action-btn dislike-btn ${isDisliked ? 'active' : ''} ${animatingDislike ? 'animating' : ''}`}
             onClick={handleDislike}
             aria-label={`Дизлайк (${dislikes})`}
           >
-            <span className="icon" aria-hidden="true">👎</span>
-            <span className="count">{dislikes}</span>
+            <span className="post-icon" aria-hidden="true">👎</span>
+            <span className="post-count">{dislikes}</span>
           </button>
           
           <button 
-            className="action-btn comment-btn"
+            className="post-action-btn comment-btn"
             onClick={handleComment}
             aria-label={`Коментарі (${comments.length})`}
           >
-            <span className="icon" aria-hidden="true">💬</span>
-            <span className="count">{comments.length}</span>
+            <span className="post-icon" aria-hidden="true">💬</span>
+            <span className="post-count">{comments.length}</span>
           </button>
         </div>
         
         <button 
-          className="bookmark-btn"
+          className="post-bookmark-btn"
           aria-label="Додати в закладки"
         >
           <span aria-hidden="true">🔖</span>
@@ -125,20 +125,20 @@ const PostActions = ({ initialLikes = 0, initialDislikes = 0, initialComments = 
       </div>
 
       {showCommentInput && (
-        <div className="comment-input-section slide-in">
-          <div className="comment-input-container">
+        <div className="post-comment-input-section slide-in">
+          <div className="post-comment-input-container">
             <textarea
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               placeholder="Напишіть коментар..."
               maxLength={500}
-              className="comment-input"
+              className="post-comment-input"
               aria-label="Поле для введення коментаря"
             />
-            <div className="comment-controls">
-              <span className="char-count">{commentText.length}/500</span>
+            <div className="post-comment-controls">
+              <span className="post-char-count">{commentText.length}/500</span>
               <button 
-                className="submit-btn"
+                className="post-submit-btn"
                 onClick={handleSubmitComment}
                 disabled={!commentText.trim()}
                 aria-label="Надіслати коментар"
@@ -151,27 +151,27 @@ const PostActions = ({ initialLikes = 0, initialDislikes = 0, initialComments = 
       )}
 
       {comments.length > 0 && (
-        <div className="comments-list">
+        <div className="post-comments-list">
           {comments.map(comment => (
-            <div key={comment.id} className="comment-item fade-in">
-              <div className="comment-header">
-                <div className="comment-text">{comment.text}</div>
+            <div key={comment.id} className="post-comment-item fade-in">
+              <div className="post-comment-header">
+                <div className="post-comment-text">{comment.text}</div>
                 <button 
-                  className="delete-comment-btn"
+                  className="post-delete-comment-btn"
                   onClick={() => handleDeleteComment(comment.id)}
                   aria-label="Видалити коментар"
                 >
                   ×
                 </button>
               </div>
-              <div className="comment-timestamp">{getTimeAgo(comment.timestamp)}</div>
+              <div className="post-comment-timestamp">{getTimeAgo(comment.timestamp)}</div>
             </div>
           ))}
         </div>
       )}
 
       {showAlert && (
-        <div className="comment-alert slide-in">
+        <div className="post-comment-alert slide-in">
           Коментар додано ✓
         </div>
       )}

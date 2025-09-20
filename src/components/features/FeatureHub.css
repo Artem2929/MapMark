@@ -13,13 +13,13 @@
 }
 
 .fab {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   border: none;
-  font-size: 24px;
+  font-size: 26px;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   box-shadow: 
     0 8px 24px rgba(0, 0, 0, 0.15),
     0 4px 12px rgba(0, 0, 0, 0.1),
@@ -29,18 +29,54 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px) saturate(180%);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
 }
 
 .main-fab {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 30%, #a855f7 60%, #c084fc 100%);
   color: white;
   z-index: 10;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 12px 32px rgba(99, 102, 241, 0.4),
+    0 6px 16px rgba(99, 102, 241, 0.25),
+    0 2px 8px rgba(99, 102, 241, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  animation: mainFabPulse 3s ease-in-out infinite;
+}
+
+@keyframes mainFabPulse {
+  0%, 100% {
+    box-shadow: 
+      0 12px 32px rgba(99, 102, 241, 0.4),
+      0 6px 16px rgba(99, 102, 241, 0.25),
+      0 2px 8px rgba(99, 102, 241, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 16px 40px rgba(99, 102, 241, 0.5),
+      0 8px 20px rgba(99, 102, 241, 0.35),
+      0 4px 12px rgba(99, 102, 241, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  }
 }
 
 .main-fab.active {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  transform: rotate(45deg);
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 30%, #b91c1c 60%, #991b1b 100%);
+  transform: rotate(45deg) scale(1.05);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 16px 40px rgba(239, 68, 68, 0.5),
+    0 8px 20px rgba(239, 68, 68, 0.35),
+    0 4px 12px rgba(239, 68, 68, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  animation: none;
 }
 
 .main-fab::before {
@@ -50,20 +86,53 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.5s;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main-fab::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7, #c084fc);
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .main-fab:hover::before {
   left: 100%;
 }
 
+.main-fab:hover::after {
+  opacity: 0.3;
+  animation: rotateGlow 2s linear infinite;
+}
+
+@keyframes rotateGlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .main-fab:hover {
-  transform: scale(1.15) translateY(-2px);
+  transform: scale(1.2) translateY(-4px);
+  background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 30%, #8b5cf6 60%, #a855f7 100%);
+  border-color: rgba(255, 255, 255, 0.4);
   box-shadow: 
-    0 16px 40px rgba(99, 102, 241, 0.5),
-    0 8px 20px rgba(99, 102, 241, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 20px 48px rgba(99, 102, 241, 0.6),
+    0 12px 24px rgba(99, 102, 241, 0.4),
+    0 6px 16px rgba(99, 102, 241, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.main-fab:active {
+  transform: scale(1.1) translateY(-2px);
+  transition: all 0.1s ease;
 }
 
 .fab-menu {

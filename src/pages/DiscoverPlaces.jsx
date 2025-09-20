@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../components/ui/Breadcrumbs.jsx";
@@ -12,6 +12,9 @@ const DiscoverPlaces = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const scrollRef = useRef(null);
 
   const categories = [
     { id: 'all', name: 'Всі', emoji: '🌍' },
@@ -122,6 +125,31 @@ const DiscoverPlaces = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [loading]);
 
+  const scrollCategories = (direction) => {
+    const container = scrollRef.current;
+    if (!container) return;
+    
+    const scrollAmount = 150;
+    
+    if (direction === 'left') {
+      container.scrollBy({
+        left: -scrollAmount,
+        behavior: 'smooth'
+      });
+    } else {
+      container.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  useEffect(() => {
+    // Always enable both buttons for infinite scroll
+    setCanScrollLeft(true);
+    setCanScrollRight(true);
+  }, []);
+
   const filteredPosts = selectedCategory === 'all' 
     ? posts 
     : posts.filter(post => post.category === selectedCategory);
@@ -137,17 +165,33 @@ const DiscoverPlaces = () => {
         <Breadcrumbs items={breadcrumbItems} />
         
         <div className="categories-section">
-          <div className="categories-scroll">
-            {categories.map(category => (
-              <button
-                key={category.id}
-                className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
-                onClick={() => setSelectedCategory(category.id)}
-              >
-                <span className="category-emoji">{category.emoji}</span>
-                <span className="category-name">{category.name}</span>
-              </button>
-            ))}
+          <div className="categories-carousel">
+            <button 
+              className="carousel-nav-btn carousel-prev"
+              onClick={() => scrollCategories('left')}
+              aria-label="Попередні категорії"
+            >
+              ‹
+            </button>
+            <div className="categories-scroll" ref={scrollRef}>
+              {categories.map(category => (
+                <button
+                  key={category.id}
+                  className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
+                  onClick={() => setSelectedCategory(category.id)}
+                >
+                  <span className="category-emoji">{category.emoji}</span>
+                  <span className="category-name">{category.name}</span>
+                </button>
+              ))}
+            </div>
+            <button 
+              className="carousel-nav-btn carousel-next"
+              onClick={() => scrollCategories('right')}
+              aria-label="Наступні категорії"
+            >
+              ›
+            </button>
           </div>
         </div>
         <div className="instagram-feed">
