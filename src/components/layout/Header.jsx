@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./Header.css";
 
-const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible }) => {
+const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewFormOpen = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,7 +62,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible }) => {
         </Link>
         
         {/* Search Bar - only on home page */}
-        {isHomePage && (
+        {isHomePage && !isReviewFormOpen && (
           <div className="search-container">
             <input
               type="text"
@@ -91,7 +91,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible }) => {
           </Link>
           
           {/* Countries Toggle - only on home page */}
-          {isHomePage && (
+          {isHomePage && !isReviewFormOpen && (
             <button 
               className="countries-btn"
               onClick={() => setIsCountriesVisible && setIsCountriesVisible(!isCountriesVisible)}

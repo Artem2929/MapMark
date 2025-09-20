@@ -28,6 +28,7 @@ const AppContent = () => {
   const [mapFilters, setMapFilters] = useState({ country: '', category: '' });
   const [userLocation, setUserLocation] = useState(null);
   const [places, setPlaces] = useState([]);
+  const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
@@ -68,8 +69,9 @@ const AppContent = () => {
         onSearch={handleSearch} 
         isCountriesVisible={isCountriesVisible}
         setIsCountriesVisible={setIsCountriesVisible}
+        isReviewFormOpen={isReviewFormOpen}
       />
-      {isHomePage && <CountryFlags 
+      {isHomePage && !isReviewFormOpen && <CountryFlags 
         isVisible={isCountriesVisible}
         onCountryClick={(coords) => {
           console.log('Country clicked:', coords, 'mapInstance:', mapInstance);
@@ -81,7 +83,7 @@ const AppContent = () => {
           }
         }} 
       />}
-      {isHomePage && <QuickFilter 
+      {isHomePage && !isReviewFormOpen && <QuickFilter 
         onFilterChange={handleFilterChange}
         onLocationClick={() => {
           console.log('Location button clicked');
@@ -103,10 +105,12 @@ const AppContent = () => {
                 filters={mapFilters}
                 onLocationUpdate={setUserLocation}
                 onPlacesUpdate={setPlaces}
+                onReviewFormToggle={setIsReviewFormOpen}
               />
               <FeatureHub 
                 userLocation={userLocation}
                 places={places}
+                isReviewFormOpen={isReviewFormOpen}
               />
             </>
           } />

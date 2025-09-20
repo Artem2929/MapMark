@@ -71,29 +71,32 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
   return (
     <div className="review-form-overlay">
       <div className="review-form">
-        <div className="drag-handle"></div>
+        <div className="review-form-drag-handle"></div>
         <div className="review-form-header">
-          <div className="header-content">
-            <div className="header-icon">📍</div>
-            <div>
-              <h3>{t('review.title')}</h3>
-              <p className="header-subtitle">{t('review.subtitle')}</p>
-            </div>
+          <div className="review-form-header-content">
+            <div className="review-form-header-icon">📍</div>
+            <h3>{t('review.title')}</h3>
           </div>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <div className="review-form-header-actions">
+            <button className="review-close-btn" onClick={onClose}>×</button>
+          </div>
         </div>
         
-        <div className="location-info">
-          <div className="location-header">
+        <div className="review-form-location-info">
+          <div className="review-form-location-header">
+            <div className="review-form-location-icon">📍</div>
             <strong>{marker.name}</strong>
-            <span className="location-coords">{t('popup.coordinates').replace('{lat}', marker.position[0].toFixed(4)).replace('{lng}', marker.position[1].toFixed(4))}</span>
           </div>
+          <span className="review-form-location-coords">
+            📍 {t('popup.coordinates').replace('{lat}', marker.position[0].toFixed(4)).replace('{lng}', marker.position[1].toFixed(4))}
+          </span>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
+        <div className="review-form-content">
+          <form onSubmit={handleSubmit}>
+          <div className="review-form-group">
             <label>{t('review.yourReview')}</label>
-            <div className="textarea-container">
+            <div className="review-form-textarea-container">
               <textarea
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
@@ -101,52 +104,52 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
                 required
                 maxLength={500}
               />
-              <div className="char-counter">{reviewText.length}/500</div>
+              <div className="review-form-char-counter">{reviewText.length}/500</div>
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="review-form-group">
             <label>{t('review.rating')}</label>
-            <div className="rating-container">
+            <div className="review-form-rating-container">
               <StarRating
                 value={rating}
                 onChange={setRating}
                 size={32}
               />
-              <div className="rating-text">
+              <div className="review-form-rating-text">
                 <span>{rating || 0} {t('review.outOfStars')}</span>
               </div>
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="review-form-group">
             <label>{t('review.addPhoto')} ({photos.length}/5)</label>
-            <div className="photo-upload">
+            <div className="review-form-photo-upload">
               <input
                 type="file"
-                id="photo-upload"
+                id="review-photo-upload"
                 accept="image/*"
                 multiple
                 onChange={handlePhotoUpload}
                 hidden
               />
-              <label htmlFor="photo-upload" className="photo-upload-btn">
+              <label htmlFor="review-photo-upload" className="review-form-photo-upload-btn">
                 📷 {photos.length > 0 ? `Add More Photos` : t('review.choosePhoto')}
               </label>
             </div>
             
             {photos.length > 0 && (
-              <div className="photo-preview-container">
+              <div className="review-photo-preview-container">
                 {photos.map((photo, index) => (
-                  <div key={index} className="photo-preview">
+                  <div key={index} className="review-photo-preview">
                     <img 
                       src={URL.createObjectURL(photo)} 
                       alt={`Preview ${index + 1}`}
-                      className="photo-preview-img"
+                      className="review-form-photo-preview-img"
                     />
                     <button
                       type="button"
-                      className="photo-remove-btn"
+                      className="review-photo-remove-btn"
                       onClick={() => removePhoto(index)}
                     >
                       ×
@@ -158,24 +161,25 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
           </div>
 
           {error && (
-            <div className="error-message">
+            <div className="review-form-error-message">
               {error}
             </div>
           )}
 
-          <div className="form-actions">
-            <button type="button" className="cancel-btn" onClick={onClose}>
+          <div className="review-form-actions">
+            <button type="button" className="review-form-cancel-btn" onClick={onClose}>
               {t('review.cancel')}
             </button>
             <button 
               type="submit" 
-              className="publish-btn" 
+              className="review-form-publish-btn" 
               disabled={!reviewText || !rating || isSubmitting}
             >
               {isSubmitting ? 'Publishing...' : t('review.publish')}
             </button>
           </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

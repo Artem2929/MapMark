@@ -13,7 +13,7 @@ import gamificationService from '../../services/gamificationService';
 import analyticsService from '../../services/analyticsService';
 import './FeatureHub.css';
 
-const FeatureHub = ({ userLocation, places = [] }) => {
+const FeatureHub = ({ userLocation, places = [], isReviewFormOpen = false }) => {
   const [activeFeature, setActiveFeature] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [userProgress, setUserProgress] = useState(null);
@@ -94,7 +94,7 @@ const FeatureHub = ({ userLocation, places = [] }) => {
   return (
     <div className="feature-hub">
       {/* Floating Action Button */}
-      <div className="fab-container">
+      {!isReviewFormOpen && <div className="fab-container">
         <button 
           className={`fab main-fab ${activeFeature ? 'active' : ''}`}
           onClick={() => setActiveFeature(activeFeature ? null : 'menu')}
@@ -148,17 +148,17 @@ const FeatureHub = ({ userLocation, places = [] }) => {
             </button>
           </div>
         )}
-      </div>
+      </div>}
 
       {/* User Progress Widget */}
-      <ProgressWidget userProgress={userProgress} />
+      {!isReviewFormOpen && <ProgressWidget userProgress={userProgress} />}
 
       {/* Notifications */}
-      <NotificationPanel 
+      {!isReviewFormOpen && <NotificationPanel 
         notifications={notifications}
         onDismiss={dismissNotification}
         onAction={handleNotificationAction}
-      />
+      />}
 
       {/* Feature Panels */}
       {activeFeature === 'voice' && (

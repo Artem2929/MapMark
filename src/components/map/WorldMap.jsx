@@ -26,7 +26,7 @@ const MapClickHandler = ({ onMapClick }) => {
   return null;
 };
 
-const WorldMap = ({ searchQuery, onMapReady, filters }) => {
+const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
   const { t } = useTranslation();
   const [markers, setMarkers] = useState([]);
   const [map, setMap] = useState(null);
@@ -41,6 +41,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
   const [tempMarker, setTempMarker] = useState(null);
   const tempMarkerRef = useRef(null);
   const [contextMenu, setContextMenu] = useState(null);
+  const [contextSearchQuery, setContextSearchQuery] = useState('');
 
   // Load reviews from API on component mount
   useEffect(() => {
@@ -57,6 +58,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
   };
 
   const handleReviewSubmit = async (reviewData) => {
+    onReviewFormToggle?.(false);
     try {
       // The review has already been submitted to the backend in ReviewForm
       // Just update the local state for immediate UI feedback
@@ -117,6 +119,15 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
     }
   }, [map, onMapReady]);
 
+  const formatLocationName = (displayName) => {
+    if (!displayName) return 'Невідоме місце';
+    
+    const parts = displayName.split(', ');
+    // Беремо перші 2-3 частини адреси (номер будинку, вулиця, район/місто)
+    const shortName = parts.slice(0, 3).join(', ');
+    return shortName || displayName;
+  };
+
   const getLocationName = async (lat, lng) => {
     try {
       const response = await fetch(
@@ -159,7 +170,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
           address = state || country || 'Невідоме місце';
         }
         
-        return address;
+        return formatLocationName(address);
       }
       return 'Невідоме місце';
     } catch (error) {
@@ -218,17 +229,41 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
       
       if (data && data.length > 0) {
         const { lat, lon, display_name } = data[0];
-        const newMarker = {
-          id: Date.now(),
-          position: [parseFloat(lat), parseFloat(lon)],
-          name: display_name,
-          hasReviews: false
+        const latlng = [parseFloat(lat), parseFloat(lon)];
+        
+        // Створюємо тимчасовий маркер
+        const newTempMarker = {
+          id: `search-${Date.now()}`,
+          position: latlng,
+          name: formatLocationName(display_name),
+          hasReviews: false,
+          isTemp: true
         };
-        setMarkers(prev => [...prev, newMarker]);
+        setTempMarker(newTempMarker);
         
         // Fly to location
         if (map) {
-          map.flyTo([parseFloat(lat), parseFloat(lon)], 10);
+          map.flyTo(latlng, 15);
+          
+          // Показуємо контекстне меню після перельоту
+          setTimeout(() => {
+            const markerPoint = map.latLngToContainerPoint(latlng);
+            const mapContainer = map.getContainer().getBoundingClientRect();
+            
+            const x = mapContainer.left + markerPoint.x + 20;
+            const y = mapContainer.top + markerPoint.y - 15;
+            
+            const menuWidth = 200;
+            const menuHeight = 150;
+            const adjustedX = x + menuWidth > window.innerWidth ? x - menuWidth - 40 : x;
+            const adjustedY = y < menuHeight ? y + 40 : y;
+            
+            setContextMenu({
+              x: adjustedX,
+              y: adjustedY,
+              marker: newTempMarker
+            });
+          }, 1000); // Чекаємо поки завершиться анімація перельоту
         }
       }
     } catch (error) {
@@ -251,6 +286,28 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
     }
   }, [filters]);
 
+  // Function to update context menu position
+  const updateContextMenuPosition = () => {
+    if (contextMenu && map && tempMarker) {
+      const markerPoint = map.latLngToContainerPoint(tempMarker.position);
+      const mapContainer = map.getContainer().getBoundingClientRect();
+      
+      const x = mapContainer.left + markerPoint.x + 20;
+      const y = mapContainer.top + markerPoint.y - 15;
+      
+      const menuWidth = 200;
+      const menuHeight = 150;
+      const adjustedX = x + menuWidth > window.innerWidth ? x - menuWidth - 40 : x;
+      const adjustedY = y < menuHeight ? y + 40 : y;
+      
+      setContextMenu(prev => ({
+        ...prev,
+        x: adjustedX,
+        y: adjustedY
+      }));
+    }
+  };
+
   // Effect to close context menu on outside click
   React.useEffect(() => {
     const handleClickOutside = (event) => {
@@ -263,6 +320,23 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [contextMenu]);
+
+  // Effect to update menu position on zoom/pan
+  React.useEffect(() => {
+    if (map && contextMenu) {
+      const handleMapMove = () => {
+        updateContextMenuPosition();
+      };
+      
+      map.on('zoom', handleMapMove);
+      map.on('move', handleMapMove);
+      
+      return () => {
+        map.off('zoom', handleMapMove);
+        map.off('move', handleMapMove);
+      };
+    }
+  }, [map, contextMenu, tempMarker]);
 
   const findMyLocation = async () => {
     console.log('findMyLocation called');
@@ -408,6 +482,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
                       e.stopPropagation();
                       setSelectedMarker(marker);
                       setShowReviewForm(true);
+                      onReviewFormToggle?.(true);
                     }}
                   >
                     {t('popup.addReview')}
@@ -492,6 +567,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
           onClose={() => {
             setShowReviewForm(false);
             setSelectedMarker(null);
+            onReviewFormToggle?.(false);
           }}
           onSubmit={handleReviewSubmit}
         />
@@ -528,11 +604,31 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
             </div>
           </div>
           
+          <div className="context-menu-search">
+            <input
+              type="text"
+              className="context-menu-search-input"
+              placeholder="🔍 Пошук місця..."
+              value={contextSearchQuery}
+              onChange={(e) => setContextSearchQuery(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && contextSearchQuery.trim()) {
+                  searchLocation(contextSearchQuery);
+                  setContextMenu(null);
+                  setTempMarker(null);
+                  setContextSearchQuery('');
+                }
+              }}
+              autoFocus
+            />
+          </div>
+          
           <button 
             className="context-menu-item"
             onClick={() => {
               setSelectedMarker(contextMenu.marker);
               setShowReviewForm(true);
+              onReviewFormToggle?.(true);
               setContextMenu(null);
             }}
           >
