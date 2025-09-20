@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Polyline } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
 import L from 'leaflet';
@@ -38,6 +38,8 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
   const [selectedMarkerForReviews, setSelectedMarkerForReviews] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
+  const [tempMarker, setTempMarker] = useState(null);
+  const tempMarkerRef = useRef(null);
 
   // Load reviews from API on component mount
   useEffect(() => {
@@ -66,12 +68,19 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
       
       setReviews(prev => [...prev, newReview]);
       
-      // Update marker to show it has reviews
-      setMarkers(prev => prev.map(marker => 
-        marker.id === selectedMarker.id 
-          ? { ...marker, hasReviews: true }
-          : marker
-      ));
+      // Якщо це тимчасовий маркер, робимо його постійним
+      if (selectedMarker.isTemp) {
+        const permanentMarker = { ...selectedMarker, isTemp: false, hasReviews: true };
+        setMarkers(prev => [...prev, permanentMarker]);
+        setTempMarker(null);
+      } else {
+        // Update existing marker to show it has reviews
+        setMarkers(prev => prev.map(marker => 
+          marker.id === selectedMarker.id 
+            ? { ...marker, hasReviews: true }
+            : marker
+        ));
+      }
       
       // Close review form
       setShowReviewForm(false);
@@ -159,14 +168,18 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
   };
 
   const handleMapClick = async (latlng) => {
+    // Видаляємо попередній тимчасовий маркер
+    setTempMarker(null);
+    
     const locationName = await getLocationName(latlng.lat, latlng.lng);
-    const newMarker = {
-      id: Date.now(),
+    const newTempMarker = {
+      id: `temp-${Date.now()}`,
       position: [latlng.lat, latlng.lng],
       name: locationName,
-      hasReviews: false
+      hasReviews: false,
+      isTemp: true
     };
-    setMarkers(prev => [...prev, newMarker]);
+    setTempMarker(newTempMarker);
   };
 
   const searchLocation = async (query) => {
@@ -212,6 +225,15 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
       // Фільтруємо маркери по країні якщо потрібно
     }
   }, [filters]);
+
+  // Effect to auto-open popup for temp marker
+  React.useEffect(() => {
+    if (tempMarker && tempMarkerRef.current) {
+      setTimeout(() => {
+        tempMarkerRef.current.openPopup();
+      }, 100);
+    }
+  }, [tempMarker]);
 
   const findMyLocation = async () => {
     console.log('findMyLocation called');
@@ -292,6 +314,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
         />
         <MapClickHandler onMapClick={handleMapClick} />
         
+        {/* Постійні маркери */}
         {markers.map((marker) => {
           const markerReviews = reviews.filter(review => review.markerId === marker.id);
           const hasReviews = markerReviews.length > 0;
@@ -402,6 +425,54 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
             </Marker>
           );
         })}
+        
+        {/* Тимчасовий маркер */}
+        {tempMarker && (
+          <Marker key={tempMarker.id} position={tempMarker.position} ref={tempMarkerRef}>
+            <Popup autoClose={false} closeOnClick={false}>
+              <div className="popup-content">
+                <strong>{tempMarker.name}</strong>
+                <div style={{marginBottom: '8px', fontSize: '12px', color: '#8e8e93'}}>
+                  {tempMarker.position[0].toFixed(4)}, {tempMarker.position[1].toFixed(4)}
+                </div>
+                
+                <div style={{marginTop: '8px', marginBottom: '8px', display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
+                  <button 
+                    className="review-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setSelectedMarker(tempMarker);
+                      setShowReviewForm(true);
+                    }}
+                  >
+                    {t('popup.addReview')}
+                  </button>
+                  <button 
+                    className="route-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      buildRoute(tempMarker);
+                    }}
+                  >
+                    🗺️
+                  </button>
+                  <button 
+                    className="delete-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setTempMarker(null);
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            </Popup>
+          </Marker>
+        )}
         
         {userLocation && (
           <Marker 

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import aiService from '../../services/aiService';
 import './SmartFilters.css';
 
-const SmartFilters = ({ onFiltersChange, userLocation }) => {
+const SmartFilters = ({ onFiltersChange, userLocation, onClose }) => {
+  const filtersRef = useRef(null);
   const [filters, setFilters] = useState({
     category: '',
     rating: 0,
@@ -22,6 +23,19 @@ const SmartFilters = ({ onFiltersChange, userLocation }) => {
   useEffect(() => {
     generateSmartSuggestions();
   }, [userLocation]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filtersRef.current && !filtersRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
   const generateSmartSuggestions = async () => {
     if (!userLocation) return;
@@ -83,36 +97,42 @@ const SmartFilters = ({ onFiltersChange, userLocation }) => {
   };
 
   return (
-    <div className="smart-filters">
-      <div className="filters-header">
+    <div className="smart-filters" ref={filtersRef}>
+      <div className="smart-filters-header">
         <h3>🎯 Розумні фільтри</h3>
-        <button className="reset-btn" onClick={resetFilters}>
-          Скинути
-        </button>
+        <div className="smart-filters-header-actions">
+          <button className="smart-filters-reset-btn" onClick={resetFilters}>
+            Скинути
+          </button>
+          <button className="smart-filters-close-btn" onClick={onClose}>
+            ✕
+          </button>
+        </div>
       </div>
 
-      {/* Smart Suggestions */}
-      <div className="smart-suggestions">
-        <h4>💡 Рекомендації для вас</h4>
-        {isLoading ? (
-          <div className="loading">Генерую рекомендації...</div>
-        ) : (
-          <div className="suggestions-grid">
-            {smartSuggestions.map((category, index) => (
-              <button
-                key={index}
-                className={`suggestion-chip ${filters.category === category ? 'active' : ''}`}
-                onClick={() => applySmartFilter(category)}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+      <div className="smart-filters-content">
+        {/* Smart Suggestions */}
+        <div className="smart-filters-suggestions">
+          <h4>💡 Рекомендації для вас</h4>
+          {isLoading ? (
+            <div className="smart-filters-loading">Генерую рекомендації...</div>
+          ) : (
+            <div className="smart-filters-suggestions-grid">
+              {smartSuggestions.map((category, index) => (
+                <button
+                  key={index}
+                  className={`smart-filters-suggestion-chip ${filters.category === category ? 'active' : ''}`}
+                  onClick={() => applySmartFilter(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
-      {/* Category Filter */}
-      <div className="filter-group">
+        {/* Category Filter */}
+      <div className="smart-filters-group">
         <label>📂 Категорія</label>
         <select 
           value={filters.category} 
@@ -131,9 +151,9 @@ const SmartFilters = ({ onFiltersChange, userLocation }) => {
       </div>
 
       {/* Rating Filter */}
-      <div className="filter-group">
+      <div className="smart-filters-group">
         <label>⭐ Мінімальний рейтинг</label>
-        <div className="rating-slider">
+        <div className="smart-filters-rating-slider">
           <input
             type="range"
             min="0"
@@ -142,14 +162,14 @@ const SmartFilters = ({ onFiltersChange, userLocation }) => {
             value={filters.rating}
             onChange={(e) => handleFilterChange('rating', parseFloat(e.target.value))}
           />
-          <span className="rating-value">{filters.rating} ⭐</span>
+          <span className="smart-filters-rating-value">{filters.rating} ⭐</span>
         </div>
       </div>
 
       {/* Distance Filter */}
-      <div className="filter-group">
+      <div className="smart-filters-group">
         <label>📍 Відстань</label>
-        <div className="distance-slider">
+        <div className="smart-filters-distance-slider">
           <input
             type="range"
             min="100"
@@ -158,14 +178,14 @@ const SmartFilters = ({ onFiltersChange, userLocation }) => {
             value={filters.distance}
             onChange={(e) => handleFilterChange('distance', parseInt(e.target.value))}
           />
-          <span className="distance-value">
+          <span className="smart-filters-distance-value">
             {filters.distance < 1000 ? `${filters.distance}м` : `${filters.distance/1000}км`}
           </span>
         </div>
       </div>
 
       {/* Price Range */}
-      <div className="filter-group">
+      <div className="smart-filters-group">
         <label>💰 Ціновий діапазон</label>
         <select 
           value={filters.priceRange} 
@@ -180,13 +200,13 @@ const SmartFilters = ({ onFiltersChange, userLocation }) => {
       </div>
 
       {/* Mood Filter */}
-      <div className="filter-group">
+      <div className="smart-filters-group">
         <label>😊 Настрій</label>
-        <div className="mood-grid">
+        <div className="smart-filters-mood-grid">
           {['romantic', 'family', 'business', 'casual', 'party', 'quiet', 'adventure'].map(mood => (
             <button
               key={mood}
-              className={`mood-btn ${filters.mood === mood ? 'active' : ''}`}
+              className={`smart-filters-mood-btn ${filters.mood === mood ? 'active' : ''}`}
               onClick={() => handleFilterChange('mood', filters.mood === mood ? '' : mood)}
             >
               {getMoodEmoji(mood)}
@@ -196,7 +216,7 @@ const SmartFilters = ({ onFiltersChange, userLocation }) => {
       </div>
 
       {/* Time Filter */}
-      <div className="filter-group">
+      <div className="smart-filters-group">
         <label>🕐 Час відвідування</label>
         <select 
           value={filters.timeOfDay} 
@@ -211,61 +231,62 @@ const SmartFilters = ({ onFiltersChange, userLocation }) => {
       </div>
 
       {/* Toggle Filters */}
-      <div className="toggle-filters">
-        <label className="toggle-item">
+      <div className="smart-filters-toggle-filters">
+        <label className="smart-filters-toggle-item">
           <input
             type="checkbox"
             checked={filters.accessibility}
             onChange={(e) => handleFilterChange('accessibility', e.target.checked)}
           />
-          <span className="toggle-label">♿ Доступність</span>
+          <span className="smart-filters-toggle-label">♿ Доступність</span>
         </label>
 
-        <label className="toggle-item">
+        <label className="smart-filters-toggle-item">
           <input
             type="checkbox"
             checked={filters.openNow}
             onChange={(e) => handleFilterChange('openNow', e.target.checked)}
           />
-          <span className="toggle-label">🕐 Відкрито зараз</span>
+          <span className="smart-filters-toggle-label">🕐 Відкрито зараз</span>
         </label>
 
-        <label className="toggle-item">
+        <label className="smart-filters-toggle-item">
           <input
             type="checkbox"
             checked={filters.hasPhotos}
             onChange={(e) => handleFilterChange('hasPhotos', e.target.checked)}
           />
-          <span className="toggle-label">📸 З фото</span>
+          <span className="smart-filters-toggle-label">📸 З фото</span>
         </label>
 
-        <label className="toggle-item">
+        <label className="smart-filters-toggle-item">
           <input
             type="checkbox"
             checked={filters.friendsOnly}
             onChange={(e) => handleFilterChange('friendsOnly', e.target.checked)}
           />
-          <span className="toggle-label">👥 Тільки друзі</span>
+          <span className="smart-filters-toggle-label">👥 Тільки друзі</span>
         </label>
       </div>
 
       {/* Active Filters Summary */}
-      {Object.values(filters).some(v => v !== '' && v !== 0 && v !== 1000 && v !== false && v !== 'any') && (
-        <div className="active-filters">
-          <h4>Активні фільтри:</h4>
-          <div className="active-filters-list">
-            {filters.category && <span className="filter-tag">📂 {filters.category}</span>}
-            {filters.rating > 0 && <span className="filter-tag">⭐ {filters.rating}+</span>}
-            {filters.distance !== 1000 && <span className="filter-tag">📍 {filters.distance}м</span>}
-            {filters.priceRange && <span className="filter-tag">💰 {filters.priceRange}</span>}
-            {filters.mood && <span className="filter-tag">{getMoodEmoji(filters.mood)} {filters.mood}</span>}
-            {filters.accessibility && <span className="filter-tag">♿ Доступно</span>}
-            {filters.openNow && <span className="filter-tag">🕐 Відкрито</span>}
-            {filters.hasPhotos && <span className="filter-tag">📸 З фото</span>}
-            {filters.friendsOnly && <span className="filter-tag">👥 Друзі</span>}
+        {Object.values(filters).some(v => v !== '' && v !== 0 && v !== 1000 && v !== false && v !== 'any') && (
+          <div className="smart-filters-active-filters">
+            <h4>Активні фільтри:</h4>
+            <div className="smart-filters-active-filters-list">
+              {filters.category && <span className="smart-filters-filter-tag">📂 {filters.category}</span>}
+              {filters.rating > 0 && <span className="smart-filters-filter-tag">⭐ {filters.rating}+</span>}
+              {filters.distance !== 1000 && <span className="smart-filters-filter-tag">📍 {filters.distance}м</span>}
+              {filters.priceRange && <span className="smart-filters-filter-tag">💰 {filters.priceRange}</span>}
+              {filters.mood && <span className="smart-filters-filter-tag">{getMoodEmoji(filters.mood)} {filters.mood}</span>}
+              {filters.accessibility && <span className="smart-filters-filter-tag">♿ Доступно</span>}
+              {filters.openNow && <span className="smart-filters-filter-tag">🕐 Відкрито</span>}
+              {filters.hasPhotos && <span className="smart-filters-filter-tag">📸 З фото</span>}
+              {filters.friendsOnly && <span className="smart-filters-filter-tag">👥 Друзі</span>}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

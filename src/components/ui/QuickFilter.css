@@ -1,6 +1,6 @@
 .quick-filter {
   position: fixed;
-  top: 80px;
+  top: 90px; /* 80px header + 10px margin */
   right: 20px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -39,10 +39,10 @@
 }
 
 .quick-location-btn {
-  background: linear-gradient(135deg, #007aff 0%, #00c7ff 50%, #0056cc 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   color: white;
   border: none;
-  border-radius: 50%;
+  border-radius: 12px;
   width: 40px;
   height: 40px;
   font-size: 16px;
@@ -51,9 +51,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 
-    0 4px 16px rgba(0, 122, 255, 0.25),
-    0 2px 8px rgba(0, 122, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
@@ -71,10 +69,8 @@
 }
 
 .quick-location-btn:hover {
-  background: linear-gradient(135deg, #0056cc 0%, #007aff 50%, #003d99 100%);
-  box-shadow: 
-    0 8px 24px rgba(0, 122, 255, 0.4),
-    0 4px 16px rgba(0, 122, 255, 0.2);
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
   transform: translateY(-2px) scale(1.05);
 }
 
@@ -132,7 +128,8 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   flex: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
 }
 
 .arrow {
@@ -152,6 +149,15 @@
   border-top: 1px solid rgba(226, 232, 240, 0.6);
   animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quick-filter.expanded .filter-content {
+  max-height: 430px;
+  opacity: 1;
 }
 
 .filter-content::before {
@@ -188,6 +194,7 @@
   margin-bottom: 8px;
   letter-spacing: 0.01em;
   position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
 }
 
 .filter-group select {
@@ -261,25 +268,33 @@
 }
 
 .clear-btn {
-  background: #007aff;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 400;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  letter-spacing: -0.01em;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
 }
 
 .clear-btn:hover {
-  background: #0056cc;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+.clear-btn:active {
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
 
 @media (max-width: 768px) {
   .quick-filter {
     right: 10px;
-    top: 70px;
+    top: 80px; /* 70px header + 10px margin */
   }
   
   .quick-filter.collapsed {

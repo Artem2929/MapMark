@@ -6,6 +6,8 @@ import GamificationPanel from './GamificationPanel';
 import SocialFeed from './SocialFeed';
 import AnalyticsDashboard from './AnalyticsDashboard';
 import FeatureShowcase from './FeatureShowcase';
+import NotificationPanel from '../ui/NotificationPanel';
+import ProgressWidget from '../ui/ProgressWidget';
 import aiService from '../../services/aiService';
 import gamificationService from '../../services/gamificationService';
 import analyticsService from '../../services/analyticsService';
@@ -83,14 +85,10 @@ const FeatureHub = ({ userLocation, places = [] }) => {
     setNotifications(prev => prev.filter(n => n.id !== notificationId));
   };
 
-  const formatTimeAgo = (timestamp) => {
-    const now = new Date();
-    const diff = now - timestamp;
-    const minutes = Math.floor(diff / (1000 * 60));
-    
-    if (minutes < 1) return 'щойно';
-    if (minutes < 60) return `${minutes} хв тому`;
-    return `${Math.floor(minutes / 60)} год тому`;
+  const handleNotificationAction = (notification) => {
+    if (notification.action) {
+      notification.action();
+    }
   };
 
   return (
@@ -153,56 +151,14 @@ const FeatureHub = ({ userLocation, places = [] }) => {
       </div>
 
       {/* User Progress Widget */}
-      {userProgress && (
-        <div className="progress-widget">
-          <div className="progress-info">
-            <span className="level-badge">
-              {userProgress.currentLevel?.icon} Рівень {userProgress.level}
-            </span>
-            <span className="points-badge">
-              {userProgress.points} балів
-            </span>
-          </div>
-          <div className="progress-bar-mini">
-            <div 
-              className="progress-fill-mini"
-              style={{ width: `${userProgress.progressToNext}%` }}
-            />
-          </div>
-        </div>
-      )}
+      <ProgressWidget userProgress={userProgress} />
 
       {/* Notifications */}
-      {notifications.length > 0 && (
-        <div className="notifications-container">
-          {notifications.map(notification => (
-            <div key={notification.id} className="notification">
-              <div className="notification-icon">{notification.icon}</div>
-              <div className="notification-content">
-                <div className="notification-title">{notification.title}</div>
-                <div className="notification-message">{notification.message}</div>
-                <div className="notification-time">{formatTimeAgo(notification.timestamp)}</div>
-              </div>
-              <div className="notification-actions">
-                {notification.action && (
-                  <button 
-                    className="notification-action-btn"
-                    onClick={notification.action}
-                  >
-                    Переглянути
-                  </button>
-                )}
-                <button 
-                  className="notification-dismiss-btn"
-                  onClick={() => dismissNotification(notification.id)}
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <NotificationPanel 
+        notifications={notifications}
+        onDismiss={dismissNotification}
+        onAction={handleNotificationAction}
+      />
 
       {/* Feature Panels */}
       {activeFeature === 'voice' && (
@@ -227,6 +183,7 @@ const FeatureHub = ({ userLocation, places = [] }) => {
           <SmartFilters 
             onFiltersChange={handleFiltersChange}
             userLocation={userLocation}
+            onClose={() => setActiveFeature(null)}
           />
         </div>
       )}
@@ -236,6 +193,7 @@ const FeatureHub = ({ userLocation, places = [] }) => {
           <SocialFeed 
             userLocation={userLocation}
             friends={['Олена К.', 'Максим П.']}
+            onClose={() => setActiveFeature(null)}
           />
         </div>
       )}
@@ -255,33 +213,7 @@ const FeatureHub = ({ userLocation, places = [] }) => {
         onClose={() => setActiveFeature(null)}
       />
 
-      {/* Quick Actions Bar */}
-      <div className="quick-actions-bar">
-        <button 
-          className="quick-action-btn"
-          onClick={() => handleFeatureSelect('voice')}
-        >
-          🎤 Відгук
-        </button>
-        <button 
-          className="quick-action-btn"
-          onClick={() => handleFeatureSelect('ar')}
-        >
-          📱 AR
-        </button>
-        <button 
-          className="quick-action-btn"
-          onClick={() => handleFeatureSelect('filters')}
-        >
-          🎯 Фільтри
-        </button>
-        <button 
-          className="quick-action-btn showcase-btn"
-          onClick={() => handleFeatureSelect('showcase')}
-        >
-          ✨ Функції
-        </button>
-      </div>
+
     </div>
   );
 };

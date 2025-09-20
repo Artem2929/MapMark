@@ -1,14 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './SocialFeed.css';
 
-const SocialFeed = ({ userLocation, friends = [] }) => {
+const SocialFeed = ({ userLocation, friends = [], onClose }) => {
   const [feedItems, setFeedItems] = useState([]);
   const [filter, setFilter] = useState('all'); // all, friends, nearby, trending
   const [isLoading, setIsLoading] = useState(false);
+  const feedRef = useRef(null);
 
   useEffect(() => {
     loadFeedItems();
   }, [filter, userLocation]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (feedRef.current && !feedRef.current.contains(event.target)) {
+        onClose?.();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
 
   const loadFeedItems = async () => {
     setIsLoading(true);
@@ -123,40 +135,40 @@ const SocialFeed = ({ userLocation, friends = [] }) => {
       case 'photo':
       case 'checkin':
         return (
-          <div key={item.id} className="feed-item">
-            <div className="feed-header">
-              <div className="user-info">
-                <div className="user-avatar">{item.user.avatar}</div>
-                <div className="user-details">
-                  <div className="user-name">
+          <div key={item.id} className="social-feed-item">
+            <div className="social-feed-header">
+              <div className="social-feed-user-info">
+                <div className="social-feed-user-avatar">{item.user.avatar}</div>
+                <div className="social-feed-user-details">
+                  <div className="social-feed-user-name">
                     {item.user.name}
-                    <span className="user-level">Рівень {item.user.level}</span>
+                    <span className="social-feed-user-level">Рівень {item.user.level}</span>
                   </div>
-                  <div className="user-badges">
+                  <div className="social-feed-user-badges">
                     {item.user.badges.map((badge, index) => (
-                      <span key={index} className="badge">{badge}</span>
+                      <span key={index} className="social-feed-badge">{badge}</span>
                     ))}
                   </div>
                 </div>
               </div>
-              <div className="feed-time">{formatTimeAgo(item.timestamp)}</div>
+              <div className="social-feed-time">{formatTimeAgo(item.timestamp)}</div>
             </div>
 
             {item.place && (
-              <div className="place-info">
-                <span className="place-name">📍 {item.place.name}</span>
-                <span className="place-rating">⭐ {item.place.rating}</span>
+              <div className="social-feed-place-info">
+                <span className="social-feed-place-name">📍 {item.place.name}</span>
+                <span className="social-feed-place-rating">⭐ {item.place.rating}</span>
                 {item.distance && (
-                  <span className="place-distance">📏 {item.distance}км</span>
+                  <span className="social-feed-place-distance">📏 {item.distance}км</span>
                 )}
               </div>
             )}
 
-            <div className="feed-content">
+            <div className="social-feed-content">
               <p>{item.content}</p>
               
               {item.photos && item.photos.length > 0 && (
-                <div className={`photo-grid ${item.photos.length > 1 ? 'multiple' : 'single'}`}>
+                <div className={`social-feed-photo-grid ${item.photos.length > 1 ? 'multiple' : 'single'}`}>
                   {item.photos.map((photo, index) => (
                     <img key={index} src={photo} alt="Review photo" />
                   ))}
@@ -164,25 +176,25 @@ const SocialFeed = ({ userLocation, friends = [] }) => {
               )}
 
               {item.tags && (
-                <div className="tags">
+                <div className="social-feed-tags">
                   {item.tags.map((tag, index) => (
-                    <span key={index} className="tag">#{tag}</span>
+                    <span key={index} className="social-feed-tag">#{tag}</span>
                   ))}
                 </div>
               )}
             </div>
 
-            <div className="feed-actions">
+            <div className="social-feed-actions">
               <button 
-                className={`action-btn like-btn ${item.isLiked ? 'liked' : ''}`}
+                className={`social-feed-action-btn social-feed-like-btn ${item.isLiked ? 'liked' : ''}`}
                 onClick={() => handleLike(item.id)}
               >
                 {item.isLiked ? '❤️' : '🤍'} {item.likes}
               </button>
-              <button className="action-btn comment-btn">
+              <button className="social-feed-action-btn social-feed-comment-btn">
                 💬 {item.comments}
               </button>
-              <button className="action-btn share-btn">
+              <button className="social-feed-action-btn social-feed-share-btn">
                 📤 Поділитися
               </button>
             </div>
@@ -191,37 +203,37 @@ const SocialFeed = ({ userLocation, friends = [] }) => {
 
       case 'achievement':
         return (
-          <div key={item.id} className="feed-item achievement-item">
-            <div className="feed-header">
-              <div className="user-info">
-                <div className="user-avatar">{item.user.avatar}</div>
-                <div className="user-details">
-                  <div className="user-name">
+          <div key={item.id} className="social-feed-item social-feed-achievement-item">
+            <div className="social-feed-header">
+              <div className="social-feed-user-info">
+                <div className="social-feed-user-avatar">{item.user.avatar}</div>
+                <div className="social-feed-user-details">
+                  <div className="social-feed-user-name">
                     {item.user.name}
-                    <span className="user-level">Рівень {item.user.level}</span>
+                    <span className="social-feed-user-level">Рівень {item.user.level}</span>
                   </div>
                 </div>
               </div>
-              <div className="feed-time">{formatTimeAgo(item.timestamp)}</div>
+              <div className="social-feed-time">{formatTimeAgo(item.timestamp)}</div>
             </div>
 
-            <div className="achievement-content">
-              <div className="achievement-icon">{item.achievement.icon}</div>
-              <div className="achievement-details">
+            <div className="social-feed-achievement-content">
+              <div className="social-feed-achievement-icon">{item.achievement.icon}</div>
+              <div className="social-feed-achievement-details">
                 <h4>Нове досягнення!</h4>
                 <h3>{item.achievement.name}</h3>
                 <p>{item.achievement.description}</p>
               </div>
             </div>
 
-            <div className="feed-actions">
+            <div className="social-feed-actions">
               <button 
-                className={`action-btn like-btn ${item.isLiked ? 'liked' : ''}`}
+                className={`social-feed-action-btn social-feed-like-btn ${item.isLiked ? 'liked' : ''}`}
                 onClick={() => handleLike(item.id)}
               >
                 {item.isLiked ? '❤️' : '🤍'} {item.likes}
               </button>
-              <button className="action-btn comment-btn">
+              <button className="social-feed-action-btn social-feed-comment-btn">
                 💬 {item.comments}
               </button>
             </div>
@@ -234,49 +246,78 @@ const SocialFeed = ({ userLocation, friends = [] }) => {
   };
 
   return (
-    <div className="social-feed">
-      <div className="feed-header-controls">
+    <div className="social-feed" ref={feedRef}>
+      <div className="social-feed-header-controls">
         <h2>📱 Соціальна стрічка</h2>
+        <button className="social-feed-close-btn" onClick={onClose}>
+          ✕
+        </button>
         
-        <div className="feed-filters">
-          <button 
-            className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
-            onClick={() => setFilter('all')}
-          >
-            Всі
-          </button>
-          <button 
-            className={`filter-btn ${filter === 'friends' ? 'active' : ''}`}
-            onClick={() => setFilter('friends')}
-          >
-            👥 Друзі
-          </button>
-          <button 
-            className={`filter-btn ${filter === 'nearby' ? 'active' : ''}`}
-            onClick={() => setFilter('nearby')}
-          >
-            📍 Поблизу
-          </button>
-          <button 
-            className={`filter-btn ${filter === 'trending' ? 'active' : ''}`}
-            onClick={() => setFilter('trending')}
-          >
-            🔥 Популярне
-          </button>
+        <div className="social-feed-filters">
+          <div className="social-feed-filters-wrapper">
+            <button 
+              className={`social-feed-filter-btn ${filter === 'all' ? 'active' : ''}`}
+              onClick={() => setFilter('all')}
+            >
+              Всі
+            </button>
+            <button 
+              className={`social-feed-filter-btn ${filter === 'friends' ? 'active' : ''}`}
+              onClick={() => setFilter('friends')}
+            >
+              👥 Друзі
+            </button>
+            <button 
+              className={`social-feed-filter-btn ${filter === 'nearby' ? 'active' : ''}`}
+              onClick={() => setFilter('nearby')}
+            >
+              📍 Поблизу
+            </button>
+            <button 
+              className={`social-feed-filter-btn ${filter === 'trending' ? 'active' : ''}`}
+              onClick={() => setFilter('trending')}
+            >
+              🔥 Популярне
+            </button>
+            <button 
+              className={`social-feed-filter-btn ${filter === 'all' ? 'active' : ''}`}
+              onClick={() => setFilter('all')}
+            >
+              Всі
+            </button>
+            <button 
+              className={`social-feed-filter-btn ${filter === 'friends' ? 'active' : ''}`}
+              onClick={() => setFilter('friends')}
+            >
+              👥 Друзі
+            </button>
+            <button 
+              className={`social-feed-filter-btn ${filter === 'nearby' ? 'active' : ''}`}
+              onClick={() => setFilter('nearby')}
+            >
+              📍 Поблизу
+            </button>
+            <button 
+              className={`social-feed-filter-btn ${filter === 'trending' ? 'active' : ''}`}
+              onClick={() => setFilter('trending')}
+            >
+              🔥 Популярне
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="feed-content">
+      <div className="social-feed-content">
         {isLoading ? (
-          <div className="loading-state">
-            <div className="loading-spinner">⏳</div>
+          <div className="social-feed-loading-state">
+            <div className="social-feed-loading-spinner">⏳</div>
             <p>Завантаження стрічки...</p>
           </div>
         ) : feedItems.length > 0 ? (
           feedItems.map(renderFeedItem)
         ) : (
-          <div className="empty-state">
-            <div className="empty-icon">📭</div>
+          <div className="social-feed-empty-state">
+            <div className="social-feed-empty-icon">📭</div>
             <h3>Стрічка порожня</h3>
             <p>Поки що немає активності для відображення</p>
           </div>
