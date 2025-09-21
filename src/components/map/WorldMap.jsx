@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Polyline } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
 import L from 'leaflet';
@@ -20,13 +20,13 @@ L.Icon.Default.mergeOptions({
 const MapClickHandler = ({ onMapClick }) => {
   const map = useMapEvents({
     click: (e) => {
-      onMapClick(e.latlng);
+      onMapClick(e.latlng, e.originalEvent);
     },
   });
   return null;
 };
 
-const WorldMap = ({ searchQuery, onMapReady, filters }) => {
+const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
   const { t } = useTranslation();
   const [markers, setMarkers] = useState([]);
   const [map, setMap] = useState(null);
@@ -38,113 +38,27 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
   const [selectedMarkerForReviews, setSelectedMarkerForReviews] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
-  const [isLoadingReviews, setIsLoadingReviews] = useState(false);
-  const [reviewsError, setReviewsError] = useState(null);
-  const [deletingPhotoId, setDeletingPhotoId] = useState(null);
+  const [tempMarker, setTempMarker] = useState(null);
+  const tempMarkerRef = useRef(null);
+  const [contextMenu, setContextMenu] = useState(null);
+  const [contextSearchQuery, setContextSearchQuery] = useState('');
 
-  // Load reviews from API on component mount (only once)
+  // Load reviews from API on component mount
   useEffect(() => {
     loadReviews();
-  }, []); // Empty dependency array ensures this runs only once
+  }, []);
 
   const loadReviews = async () => {
-    setIsLoadingReviews(true);
-    setReviewsError(null);
-    
     try {
-      // Try to fetch from API first
-      let reviewsData;
-      try {
-        reviewsData = await ReviewService.getAllReviews();
-      } catch (apiError) {
-        console.warn('API not available, using mock data for testing:', apiError.message);
-        // Fallback to mock data for testing
-        reviewsData = [
-          {
-            _id: '507f1f77bcf86cd799439011',
-            lat: 50.4501,
-            lng: 30.5234,
-            review: 'Amazing place with great atmosphere!',
-            rating: 5,
-            createdAt: new Date().toISOString(),
-            photos: [
-              {
-                id: 'mock-photo-1',
-                base64: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjBGMEYwIi8+CjxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjE1IiBmaWxsPSIjQ0NDQ0NDIi8+Cjx0ZXh0IHg9IjMwIiB5PSIzNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5OTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5GAPC90ZXh0Pgo8L3N2Zz4K'
-              }
-            ]
-          },
-          {
-            _id: '507f1f77bcf86cd799439012',
-            lat: 40.7128,
-            lng: -74.0060,
-            review: 'Beautiful location, highly recommended!',
-            rating: 4,
-            createdAt: new Date(Date.now() - 86400000).toISOString(),
-            photos: []
-          },
-          {
-            _id: '507f1f77bcf86cd799439013',
-            lat: 51.5074,
-            lng: -0.1278,
-            review: 'Great experience, will come back again.',
-            rating: 5,
-            createdAt: new Date(Date.now() - 172800000).toISOString(),
-            photos: [
-              {
-                id: 'mock-photo-2',
-                base64: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjBGMEYwIi8+CjxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjE1IiBmaWxsPSIjQ0NDQ0NDIi8+Cjx0ZXh0IHg9IjMwIiB5PSIzNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5OTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5GAPC90ZXh0Pgo8L3N2Zz4K'
-              },
-              {
-                id: 'mock-photo-3',
-                base64: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjBGMEYwIi8+CjxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjE1IiBmaWxsPSIjQ0NDQ0NDIi8+Cjx0ZXh0IHg9IjMwIiB5PSIzNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5OTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5GAPC90ZXh0Pgo8L3N2Zz4K'
-              }
-            ]
-          }
-        ];
-      }
-      
+      const reviewsData = await ReviewService.getAllReviews();
       setReviews(reviewsData);
-      
-      // Convert reviews to markers for display on map
-      const reviewMarkers = reviewsData.map(review => ({
-        id: review._id || review.id || `review-${Date.now()}-${Math.random()}`,
-        position: [review.lat, review.lng],
-        name: `Review at ${review.lat.toFixed(4)}, ${review.lng.toFixed(4)}`,
-        hasReviews: true,
-        isReviewMarker: true,
-        reviewData: review
-      }));
-      
-      setMarkers(prev => {
-        // Filter out existing review markers and add new ones
-        const nonReviewMarkers = prev.filter(marker => !marker.isReviewMarker);
-        return [...nonReviewMarkers, ...reviewMarkers];
-      });
-      
-      console.log(`Loaded ${reviewsData.length} reviews and created ${reviewMarkers.length} markers`);
     } catch (error) {
       console.error('Error loading reviews:', error);
-      setReviewsError(error.message || 'Failed to load reviews');
-    } finally {
-      setIsLoadingReviews(false);
     }
   };
 
-
-  const handleReviewDeleted = (deletedReviewId) => {
-    console.log('handleReviewDeleted called with ID:', deletedReviewId);
-    
-    ReviewService.deleteReview(deletedReviewId).then(() => {
-      setReviews(prev => prev.filter(review => review._id !== deletedReviewId));
-      setMarkers(prev => prev.filter(marker => marker.id !== deletedReviewId));
-      setSelectedMarker(null);
-    }).catch(error => {
-      console.error('Error deleting review:', error);
-    });
-  };
-
   const handleReviewSubmit = async (reviewData) => {
+    onReviewFormToggle?.(false);
     try {
       // The review has already been submitted to the backend in ReviewForm
       // Just update the local state for immediate UI feedback
@@ -157,12 +71,19 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
       
       setReviews(prev => [...prev, newReview]);
       
-      // Update marker to show it has reviews
-      setMarkers(prev => prev.map(marker => 
-        marker.id === selectedMarker.id 
-          ? { ...marker, hasReviews: true }
-          : marker
-      ));
+      // Якщо це тимчасовий маркер, робимо його постійним
+      if (selectedMarker.isTemp) {
+        const permanentMarker = { ...selectedMarker, isTemp: false, hasReviews: true };
+        setMarkers(prev => [...prev, permanentMarker]);
+        setTempMarker(null);
+      } else {
+        // Update existing marker to show it has reviews
+        setMarkers(prev => prev.map(marker => 
+          marker.id === selectedMarker.id 
+            ? { ...marker, hasReviews: true }
+            : marker
+        ));
+      }
       
       // Close review form
       setShowReviewForm(false);
@@ -180,57 +101,6 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
     }
   };
 
-  const handleDeletePhoto = async (reviewId, photoId) => {
-    console.log('Attempting to delete photo with ID:', photoId, 'from review:', reviewId);
-    
-    if (!reviewId || !photoId) {
-      alert('Invalid review ID or photo ID. Cannot delete photo.');
-      return;
-    }
-
-    if (!window.confirm('Are you sure you want to delete this photo?')) {
-      return;
-    }
-
-    setDeletingPhotoId(photoId);
-    try {
-      console.log('Calling ReviewService.deletePhoto with review ID:', reviewId, 'and photo ID:', photoId);
-      
-      // Check if this is a mock review (starts with '507f1f77bcf86cd7994390')
-      if (reviewId.startsWith('507f1f77bcf86cd7994390')) {
-        console.log('Mock review detected, deleting photo locally only');
-        // For mock reviews, just update local state
-        setReviews(prev => prev.map(review => {
-          if ((review._id || review.id) === reviewId) {
-            // Remove the photo from the review
-            const updatedPhotos = review.photos?.filter(photo => photo.id !== photoId) || [];
-            return { ...review, photos: updatedPhotos };
-          }
-          return review;
-        }));
-      } else {
-        // For real reviews, call the API
-        await ReviewService.deletePhoto(reviewId, photoId);
-        console.log('Photo deleted successfully from API');
-        
-        // Update local state to remove the photo
-        setReviews(prev => prev.map(review => {
-          if ((review._id || review.id) === reviewId) {
-            // Remove the photo from the review
-            const updatedPhotos = review.photos?.filter(photo => photo.id !== photoId) || [];
-            return { ...review, photos: updatedPhotos };
-          }
-          return review;
-        }));
-      }
-    } catch (error) {
-      console.error('Error deleting photo:', error);
-      alert(`Failed to delete photo: ${error.message}`);
-    } finally {
-      setDeletingPhotoId(null);
-    }
-  };
-
   const flyToCountry = (coords) => {
     console.log('flyToCountry called with:', coords, 'map:', map);
     if (map && coords && coords.length === 2) {
@@ -241,18 +111,22 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
     }
   };
 
-  // Pass map instance to parent and refresh reviews when map is ready
+  // Pass map instance to parent
   React.useEffect(() => {
     console.log('Setting map instance:', map);
     if (onMapReady && map) {
       onMapReady(map);
     }
-    
-    // Refresh reviews when map is ready to ensure they're displayed
-    if (map && reviews.length === 0) {
-      loadReviews();
-    }
   }, [map, onMapReady]);
+
+  const formatLocationName = (displayName) => {
+    if (!displayName) return 'Невідоме місце';
+    
+    const parts = displayName.split(', ');
+    // Беремо перші 2-3 частини адреси (номер будинку, вулиця, район/місто)
+    const shortName = parts.slice(0, 3).join(', ');
+    return shortName || displayName;
+  };
 
   const getLocationName = async (lat, lng) => {
     try {
@@ -296,7 +170,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
           address = state || country || 'Невідоме місце';
         }
         
-        return address;
+        return formatLocationName(address);
       }
       return 'Невідоме місце';
     } catch (error) {
@@ -305,15 +179,43 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
     }
   };
 
-  const handleMapClick = async (latlng) => {
+  const handleMapClick = async (latlng, originalEvent) => {
+    // Закриваємо попереднє контекстне меню
+    setContextMenu(null);
+    setTempMarker(null);
+    
     const locationName = await getLocationName(latlng.lat, latlng.lng);
-    const newMarker = {
-      id: Date.now(),
+    const newTempMarker = {
+      id: `temp-${Date.now()}`,
       position: [latlng.lat, latlng.lng],
       name: locationName,
-      hasReviews: false
+      hasReviews: false,
+      isTemp: true
     };
-    setMarkers(prev => [...prev, newMarker]);
+    setTempMarker(newTempMarker);
+    
+    // Отримуємо позицію маркера на екрані
+    setTimeout(() => {
+      if (map) {
+        const markerPoint = map.latLngToContainerPoint(latlng);
+        const mapContainer = map.getContainer().getBoundingClientRect();
+        
+        const x = mapContainer.left + markerPoint.x + 20; // Зміщення праворуч від маркера
+        const y = mapContainer.top + markerPoint.y - 15; // Мінімальний офсет вгору
+        
+        // Перевіряємо, чи меню не виходить за межі екрану
+        const menuWidth = 200;
+        const menuHeight = 150;
+        const adjustedX = x + menuWidth > window.innerWidth ? x - menuWidth - 40 : x;
+        const adjustedY = y < menuHeight ? y + 40 : y; // Якщо зверху немає місця, показуємо знизу
+        
+        setContextMenu({
+          x: adjustedX,
+          y: adjustedY,
+          marker: newTempMarker
+        });
+      }
+    }, 50);
   };
 
   const searchLocation = async (query) => {
@@ -327,17 +229,41 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
       
       if (data && data.length > 0) {
         const { lat, lon, display_name } = data[0];
-        const newMarker = {
-          id: Date.now(),
-          position: [parseFloat(lat), parseFloat(lon)],
-          name: display_name,
-          hasReviews: false
+        const latlng = [parseFloat(lat), parseFloat(lon)];
+        
+        // Створюємо тимчасовий маркер
+        const newTempMarker = {
+          id: `search-${Date.now()}`,
+          position: latlng,
+          name: formatLocationName(display_name),
+          hasReviews: false,
+          isTemp: true
         };
-        setMarkers(prev => [...prev, newMarker]);
+        setTempMarker(newTempMarker);
         
         // Fly to location
         if (map) {
-          map.flyTo([parseFloat(lat), parseFloat(lon)], 10);
+          map.flyTo(latlng, 15);
+          
+          // Показуємо контекстне меню після перельоту
+          setTimeout(() => {
+            const markerPoint = map.latLngToContainerPoint(latlng);
+            const mapContainer = map.getContainer().getBoundingClientRect();
+            
+            const x = mapContainer.left + markerPoint.x + 20;
+            const y = mapContainer.top + markerPoint.y - 15;
+            
+            const menuWidth = 200;
+            const menuHeight = 150;
+            const adjustedX = x + menuWidth > window.innerWidth ? x - menuWidth - 40 : x;
+            const adjustedY = y < menuHeight ? y + 40 : y;
+            
+            setContextMenu({
+              x: adjustedX,
+              y: adjustedY,
+              marker: newTempMarker
+            });
+          }, 1000); // Чекаємо поки завершиться анімація перельоту
         }
       }
     } catch (error) {
@@ -359,6 +285,58 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
       // Фільтруємо маркери по країні якщо потрібно
     }
   }, [filters]);
+
+  // Function to update context menu position
+  const updateContextMenuPosition = () => {
+    if (contextMenu && map && tempMarker) {
+      const markerPoint = map.latLngToContainerPoint(tempMarker.position);
+      const mapContainer = map.getContainer().getBoundingClientRect();
+      
+      const x = mapContainer.left + markerPoint.x + 20;
+      const y = mapContainer.top + markerPoint.y - 15;
+      
+      const menuWidth = 200;
+      const menuHeight = 150;
+      const adjustedX = x + menuWidth > window.innerWidth ? x - menuWidth - 40 : x;
+      const adjustedY = y < menuHeight ? y + 40 : y;
+      
+      setContextMenu(prev => ({
+        ...prev,
+        x: adjustedX,
+        y: adjustedY
+      }));
+    }
+  };
+
+  // Effect to close context menu on outside click
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (contextMenu && !event.target.closest('.map-context-menu')) {
+        setContextMenu(null);
+        setTempMarker(null);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [contextMenu]);
+
+  // Effect to update menu position on zoom/pan
+  React.useEffect(() => {
+    if (map && contextMenu) {
+      const handleMapMove = () => {
+        updateContextMenuPosition();
+      };
+      
+      map.on('zoom', handleMapMove);
+      map.on('move', handleMapMove);
+      
+      return () => {
+        map.off('zoom', handleMapMove);
+        map.off('move', handleMapMove);
+      };
+    }
+  }, [map, contextMenu, tempMarker]);
 
   const findMyLocation = async () => {
     console.log('findMyLocation called');
@@ -414,28 +392,6 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
 
   return (
     <div className="world-map-container">
-      {/* Loading indicator for reviews */}
-      {isLoadingReviews && (
-        <div className="reviews-loading-indicator">
-          <div className="loading-spinner"></div>
-          <span>Loading reviews...</span>
-        </div>
-      )}
-      
-      {/* Error message for reviews */}
-      {reviewsError && (
-        <div className="reviews-error-message">
-          <div className="error-icon">⚠️</div>
-          <span>{reviewsError}</span>
-          <button 
-            className="retry-btn"
-            onClick={loadReviews}
-          >
-            Retry
-          </button>
-        </div>
-      )}
-      
       <MapContainer
         center={[20, 0]}
         zoom={3}
@@ -461,26 +417,10 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
         />
         <MapClickHandler onMapClick={handleMapClick} />
         
+        {/* Постійні маркери */}
         {markers.map((marker) => {
-          // For review markers, use the review data directly
-          // For location markers, they have their own data
-          // For regular markers, find associated reviews
-          let markerReviews = [];
-          let hasReviews = false;
-          
-          if (marker.isReviewMarker) {
-            // This is a review marker, use its review data
-            markerReviews = [marker.reviewData];
-            hasReviews = true;
-          } else if (marker.isLocationMarker) {
-            // This is a location marker, it has its own data
-            markerReviews = [];
-            hasReviews = false;
-          } else {
-            // This is a regular marker, find reviews by marker ID
-            markerReviews = reviews.filter(review => review.markerId === marker.id);
-            hasReviews = markerReviews.length > 0;
-          }
+          const markerReviews = reviews.filter(review => review.markerId === marker.id);
+          const hasReviews = markerReviews.length > 0;
           
           // Create custom icon for markers with reviews
           const markerProps = {
@@ -489,52 +429,19 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
           };
           
           if (hasReviews) {
-            // Different icons for review markers vs regular markers with reviews
-            if (marker.isReviewMarker) {
-              markerProps.icon = L.divIcon({
-                html: `
-                  <div class="review-badge review-marker">
-                    <div class="badge-circle">
-                      <div class="badge-icon">⭐</div>
-                    </div>
-                    <div class="badge-count">${markerReviews[0].rating}</div>
-                    <div class="badge-glow"></div>
-                  </div>
-                `,
-                className: 'review-marker-icon',
-                iconSize: [28, 36],
-                iconAnchor: [3, 36]
-              });
-            } else {
-              markerProps.icon = L.divIcon({
-                html: `
-                  <div class="review-badge">
-                    <div class="badge-circle">
-                      <div class="badge-icon">📝</div>
-                    </div>
-                    <div class="badge-count">${markerReviews.length}</div>
-                    <div class="badge-glow"></div>
-                  </div>
-                `,
-                className: 'game-flag-icon',
-                iconSize: [28, 36],
-                iconAnchor: [3, 36]
-              });
-            }
-          } else if (marker.isLocationMarker) {
-            // Location markers have a different icon
             markerProps.icon = L.divIcon({
               html: `
-                <div class="location-badge">
+                <div class="review-badge">
                   <div class="badge-circle">
-                    <div class="badge-icon">📍</div>
+                    <div class="badge-icon">📝</div>
                   </div>
+                  <div class="badge-count">${markerReviews.length}</div>
                   <div class="badge-glow"></div>
                 </div>
               `,
-              className: 'location-marker-icon',
-              iconSize: [24, 32],
-              iconAnchor: [3, 32]
+              className: 'game-flag-icon',
+              iconSize: [28, 36],
+              iconAnchor: [3, 36]
             });
           }
           
@@ -553,83 +460,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
                   {marker.position[0].toFixed(4)}, {marker.position[1].toFixed(4)}
                 </div>
                 
-                {marker.isReviewMarker && markerReviews[0] && (
-                  <div className="review-content" style={{marginBottom: '8px', padding: '8px', backgroundColor: '#f5f5f5', borderRadius: '4px'}}>
-                    <div style={{fontSize: '14px', marginBottom: '4px'}}>
-                      <strong>Review:</strong> {markerReviews[0].review}
-                    </div>
-                    <div style={{fontSize: '12px', color: '#666'}}>
-                      Rating: {'⭐'.repeat(markerReviews[0].rating)} ({markerReviews[0].rating}/5)
-                    </div>
-                    {markerReviews[0].createdAt && (
-                      <div style={{fontSize: '10px', color: '#999', marginTop: '4px'}}>
-                        {new Date(markerReviews[0].createdAt).toLocaleDateString()}
-                      </div>
-                    )}
-                    {markerReviews[0].photos && markerReviews[0].photos.length > 0 && (
-                      <div className="review-photos">
-                        <div className="review-photos-title">
-                          Photos ({markerReviews[0].photos.length}):
-                        </div>
-                        <div className="review-photos-grid">
-                          {markerReviews[0].photos.map((photo, index) => (
-                            <div key={index} className="popup-photo-container">
-                              <img
-                                src={photo.base64}
-                                alt={`Review photo ${index + 1}`}
-                                className="review-photo"
-                                onClick={() => {
-                                  // Open photo in new tab for full view
-                                  const newWindow = window.open();
-                                  newWindow.document.write(`
-                                    <html>
-                                      <head><title>Review Photo</title></head>
-                                      <body style="margin:0; padding:20px; background:#000; display:flex; justify-content:center; align-items:center; min-height:100vh;">
-                                        <img src="${photo.base64}" style="max-width:100%; max-height:100%; border-radius:8px;" />
-                                      </body>
-                                    </html>
-                                  `);
-                                }}
-                              />
-                              <button
-                                className="popup-delete-photo-btn"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  handleDeletePhoto(markerReviews[0]._id || markerReviews[0].id, photo.id || index);
-                                }}
-                                disabled={deletingPhotoId === (photo.id || index)}
-                                title="Delete photo"
-                              >
-                                {deletingPhotoId === (photo.id || index) ? '⏳' : '×'}
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-                
-                {marker.isLocationMarker && (
-                  <div className="location-content" style={{marginBottom: '8px', padding: '8px', backgroundColor: '#e3f2fd', borderRadius: '4px'}}>
-                    <div style={{fontSize: '14px', marginBottom: '4px'}}>
-                      <strong>Location:</strong> {marker.name}
-                    </div>
-                    {marker.rating && (
-                      <div style={{fontSize: '12px', color: '#666'}}>
-                        Rating: {'⭐'.repeat(marker.rating)} ({marker.rating}/5)
-                      </div>
-                    )}
-                    {marker.author && (
-                      <div style={{fontSize: '10px', color: '#999', marginTop: '4px'}}>
-                        By: {marker.author}
-                      </div>
-                    )}
-                  </div>
-                )}
-                
-                {hasReviews && !marker.isReviewMarker && (() => {
+                {hasReviews && (() => {
                   const avgRating = markerReviews.reduce((sum, review) => sum + review.rating, 0) / markerReviews.length;
                   const roundedRating = Math.round(avgRating);
                   const stars = '⭐'.repeat(roundedRating);
@@ -644,19 +475,18 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
                 })()}
                 
                 <div style={{marginTop: '8px', marginBottom: '8px', display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
-                  {!marker.isReviewMarker && !marker.isLocationMarker && (
-                    <button 
-                      className="review-btn"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setSelectedMarker(marker);
-                        setShowReviewForm(true);
-                      }}
-                    >
-                      {t('popup.addReview')}
-                    </button>
-                  )}
+                  <button 
+                    className="review-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setSelectedMarker(marker);
+                      setShowReviewForm(true);
+                      onReviewFormToggle?.(true);
+                    }}
+                  >
+                    {t('popup.addReview')}
+                  </button>
                   {markerReviews.length > 0 && (
                     <button 
                       className="expand-btn"
@@ -668,7 +498,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
                         setShowReviewsPanel(true);
                       }}
                     >
-                      {marker.isReviewMarker ? 'View Review' : 'View Reviews'}
+                      View Reviews
                     </button>
                   )}
                   <button 
@@ -686,7 +516,8 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      handleReviewDeleted(markerReviews[0]._id || markerReviews[0].id);
+                      setMarkers(prev => prev.filter(m => m.id !== marker.id));
+                      setReviews(prev => prev.filter(r => r.markerId !== marker.id));
                     }}
                   >
                     🗑️
@@ -698,6 +529,11 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
             </Marker>
           );
         })}
+        
+        {/* Тимчасовий маркер */}
+        {tempMarker && (
+          <Marker key={tempMarker.id} position={tempMarker.position} ref={tempMarkerRef} />
+        )}
         
         {userLocation && (
           <Marker 
@@ -731,6 +567,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
           onClose={() => {
             setShowReviewForm(false);
             setSelectedMarker(null);
+            onReviewFormToggle?.(false);
           }}
           onSubmit={handleReviewSubmit}
         />
@@ -748,8 +585,79 @@ const WorldMap = ({ searchQuery, onMapReady, filters }) => {
             setSelectedMarker(selectedMarkerForReviews);
             setShowReviewForm(true);
           }}
-          onReviewDeleted={handleReviewDeleted}
         />
+      )}
+      
+      {/* Контекстне меню */}
+      {contextMenu && (
+        <div 
+          className="map-context-menu"
+          style={{
+            left: contextMenu.x,
+            top: contextMenu.y
+          }}
+        >
+          <div className="context-menu-header">
+            <div className="context-menu-title">{contextMenu.marker.name}</div>
+            <div className="context-menu-coords">
+              {contextMenu.marker.position[0].toFixed(4)}, {contextMenu.marker.position[1].toFixed(4)}
+            </div>
+          </div>
+          
+          <div className="context-menu-search">
+            <input
+              type="text"
+              className="context-menu-search-input"
+              placeholder="🔍 Пошук місця..."
+              value={contextSearchQuery}
+              onChange={(e) => setContextSearchQuery(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && contextSearchQuery.trim()) {
+                  searchLocation(contextSearchQuery);
+                  setContextMenu(null);
+                  setTempMarker(null);
+                  setContextSearchQuery('');
+                }
+              }}
+              autoFocus
+            />
+          </div>
+          
+          <button 
+            className="context-menu-item"
+            onClick={() => {
+              setSelectedMarker(contextMenu.marker);
+              setShowReviewForm(true);
+              onReviewFormToggle?.(true);
+              setContextMenu(null);
+            }}
+          >
+            <span className="context-menu-item-icon">📝</span>
+            <span className="context-menu-item-text">{t('popup.addReview')}</span>
+          </button>
+          
+          <button 
+            className="context-menu-item"
+            onClick={() => {
+              buildRoute(contextMenu.marker);
+              setContextMenu(null);
+            }}
+          >
+            <span className="context-menu-item-icon">🗺️</span>
+            <span className="context-menu-item-text">Маршрут</span>
+          </button>
+          
+          <button 
+            className="context-menu-item"
+            onClick={() => {
+              setContextMenu(null);
+              setTempMarker(null);
+            }}
+          >
+            <span className="context-menu-item-icon">✕</span>
+            <span className="context-menu-item-text">Закрити</span>
+          </button>
+        </div>
       )}
     </div>
   );
