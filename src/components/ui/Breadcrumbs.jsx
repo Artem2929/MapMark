@@ -27,12 +27,10 @@ const Breadcrumbs = ({ items = null }) => {
             {index > 0 && <span className="breadcrumb-separator">›</span>}
             {item.link ? (
               <Link to={item.link} className="breadcrumb-link">
-                {item.icon && <span className="breadcrumb-icon">{item.icon}</span>}
                 {item.label}
               </Link>
             ) : (
               <span className="breadcrumb-current">
-                {item.icon && <span className="breadcrumb-icon">{item.icon}</span>}
                 {item.label}
               </span>
             )}
