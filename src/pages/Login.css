@@ -167,6 +167,62 @@
   border-color: rgba(59, 130, 246, 0.4);
 }
 
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+  text-align: center;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.divider span {
+  padding: 0 16px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.google-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: white;
+  color: #1e293b;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  padding: 14px 20px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  letter-spacing: -0.01em;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.google-login-btn:hover {
+  background: #f8f9fa;
+  border-color: rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.google-icon {
+  flex-shrink: 0;
+}
+
 .forgot-password-btn {
   background: none;
   color: #3b82f6;
@@ -176,7 +232,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: underline;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .forgot-password-btn:hover {

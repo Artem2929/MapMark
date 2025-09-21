@@ -83,7 +83,6 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
           {/* Profile/Login Button */}
           {localStorage.getItem('userId') ? (
             <Link to={`/profile/${localStorage.getItem('userId')}`} className="header-link profile-link">
-              <span className="profile-icon">👤</span>
               Профіль
             </Link>
           ) : (
@@ -154,7 +153,6 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
             className="mobile-link profile-link"
             onClick={() => setIsMenuOpen(false)}
           >
-            <span className="profile-icon">👤</span>
             Профіль
           </Link>
         ) : (
