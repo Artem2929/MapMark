@@ -54,18 +54,18 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
+  background: #f1f5f9;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, var(--mapmark-primary) 0%, var(--mapmark-accent) 100%);
+  background: #94a3b8;
   border-radius: 4px;
   transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  background: #64748b;
 }
 
 /* Enhanced Typography */

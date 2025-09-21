@@ -9,8 +9,8 @@ const UserStats = ({ stats, onStatClick }) => {
   };
 
   const statItems = [
-    { key: 'posts', label: 'Постів', value: stats?.posts || 0 },
-    { key: 'likes', label: 'Лайків', value: stats?.likes || 0 },
+    { key: 'messages', label: 'Повідомлення', value: stats?.messages || 0 },
+    { key: 'posts', label: 'Пости', value: stats?.posts || 0 },
     { key: 'followers', label: 'Підписників', value: stats?.followers || 0 },
     { key: 'following', label: 'Підписок', value: stats?.following || 0 }
   ];

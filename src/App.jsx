@@ -18,6 +18,10 @@ import HelpCenter from './pages/HelpCenter.jsx'
 import ContactUs from './pages/ContactUs.jsx'
 import DiscoverPlaces from './pages/DiscoverPlaces.jsx'
 import UserProfile from './pages/UserProfile.jsx'
+import Messages from './pages/Messages.jsx'
+import Chat from './pages/Chat.jsx'
+import Followers from './pages/Followers.jsx'
+import Following from './pages/Following.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 
@@ -132,6 +136,11 @@ const AppContent = () => {
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/discover-places" element={<DiscoverPlaces />} />
             <Route path="/profile/:userId" element={<UserProfile />} />
+            <Route path="/user/:userId" element={<UserProfile />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/chat/:userId" element={<Chat />} />
+            <Route path="/user/:userId/followers" element={<Followers />} />
+            <Route path="/user/:userId/following" element={<Following />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>
