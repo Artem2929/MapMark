@@ -223,18 +223,36 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 950;
-  animation: panelSlide 0.3s ease-out;
+  animation: panelSlide 0.2s ease-out;
   margin-top: 40px;
+  opacity: 0;
+  animation-fill-mode: forwards;
 }
 
 @keyframes panelSlide {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: translate(-50%, -50%) scale(0.95);
   }
   to {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.feature-panel * {
+  animation: contentFadeIn 0.2s ease-out;
+  animation-fill-mode: forwards;
+  opacity: 0;
+  animation-delay: 0.05s;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

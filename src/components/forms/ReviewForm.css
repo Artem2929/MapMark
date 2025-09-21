@@ -13,6 +13,13 @@
   animation: review-form-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Приховати елементи коли відкрита форма відгуків */
+body:has(.review-form-overlay) .progress-widget,
+body:has(.review-form-overlay) .notification-panel,
+body:has(.review-form-overlay) .filter-header {
+  display: none !important;
+}
+
 @keyframes review-form-fade-in {
   from { 
     opacity: 0;
