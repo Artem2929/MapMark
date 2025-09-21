@@ -18,6 +18,8 @@ import HelpCenter from './pages/HelpCenter.jsx'
 import ContactUs from './pages/ContactUs.jsx'
 import DiscoverPlaces from './pages/DiscoverPlaces.jsx'
 import UserProfile from './pages/UserProfile.jsx'
+import Login from './pages/Login.jsx'
+import Register from './pages/Register.jsx'
 
 const AppContent = () => {
   const { t, i18n } = useTranslation();
@@ -130,6 +132,8 @@ const AppContent = () => {
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/discover-places" element={<DiscoverPlaces />} />
             <Route path="/profile/:userId" element={<UserProfile />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </main>
       </div>

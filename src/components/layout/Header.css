@@ -352,6 +352,44 @@
   text-decoration: none;
 }
 
+/* Profile and Login Button Styles */
+.profile-link,
+.login-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.profile-link {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: #16a34a;
+}
+
+.profile-link:hover {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.08) 100%);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #15803d;
+}
+
+.login-link {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.login-link:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #2563eb;
+}
+
+.profile-icon,
+.login-icon {
+  font-size: 16px;
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 0 16px;

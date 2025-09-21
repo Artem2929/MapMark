@@ -80,6 +80,18 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
         
         {/* Desktop Navigation */}
         <nav className="header-nav desktop-nav">
+          {/* Profile/Login Button */}
+          {localStorage.getItem('userId') ? (
+            <Link to={`/profile/${localStorage.getItem('userId')}`} className="header-link profile-link">
+              <span className="profile-icon">👤</span>
+              Профіль
+            </Link>
+          ) : (
+            <Link to="/login" className="header-link login-link">
+              Login
+            </Link>
+          )}
+          
           <Link to="/discover-places" className="header-link">
             {t('header.discover')}
           </Link>
@@ -135,6 +147,26 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
 
       {/* Mobile Navigation */}
       <nav className={`mobile-nav ${isMenuOpen ? 'open' : ''}`}>
+        {/* Mobile Profile/Login Button */}
+        {localStorage.getItem('userId') ? (
+          <Link 
+            to={`/profile/${localStorage.getItem('userId')}`} 
+            className="mobile-link profile-link"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <span className="profile-icon">👤</span>
+            Профіль
+          </Link>
+        ) : (
+          <Link 
+            to="/login" 
+            className="mobile-link login-link"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Login
+          </Link>
+        )}
+        
         <Link 
           to="/discover-places" 
           className="mobile-link"
