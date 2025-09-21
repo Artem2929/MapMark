@@ -169,18 +169,13 @@
 }
 
 .categories-scroll {
-  display: flex;
-  gap: 16px;
-  padding: 20px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  padding: 16px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(248, 250, 252, 0.05) 100%);
   border-radius: 20px;
   backdrop-filter: blur(8px);
-  flex: 1;
 }
 
 .categories-scroll::before {
@@ -286,18 +281,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  padding: 20px 24px;
+  gap: 8px;
+  padding: 12px 16px;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 50%, rgba(241, 245, 249, 0.95) 100%);
   border: 2px solid rgba(59, 130, 246, 0.1);
-  border-radius: 24px;
+  border-radius: 16px;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  min-width: 90px;
+  min-width: 70px;
   flex-shrink: 0;
   box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.08),
-    0 4px 12px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 2px 6px rgba(0, 0, 0, 0.03),
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     inset 0 -1px 0 rgba(0, 0, 0, 0.02);
   position: relative;
@@ -353,7 +348,7 @@
 }
 
 .category-emoji {
-  font-size: 28px;
+  font-size: 20px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
@@ -371,7 +366,7 @@
 }
 
 .category-name {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   text-align: center;
   letter-spacing: -0.01em;
@@ -393,7 +388,7 @@
   font-weight: 800;
 }
 
-.instagram-feed {
+.places-feed {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px 10px;
@@ -410,7 +405,6 @@
 }
 
 .post-item:hover {
-  transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
@@ -480,6 +474,7 @@
 
 .post-media {
   position: relative;
+  margin-bottom: 10px;
 }
 
 .post-image {
@@ -520,28 +515,46 @@
   gap: 8px;
 }
 
-.post-actions .action-buttons {
+.post-action-buttons {
   display: flex;
-  background: none !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  border: none !important;
+  gap: 12px;
+}
+
+.post-action-btn {
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #1d1d1f;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.post-action-btn:hover {
+  background: rgba(248, 249, 250, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.post-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.post-count {
+  font-weight: 500;
+  font-size: 12px;
+  color: #86868b;
 }
 
 
 
-.post-actions .like-btn:hover {
-  background: rgba(255, 59, 48, 0.1);
-  border-color: rgba(255, 59, 48, 0.2);
-}
 
-
-.post-actions .comment-btn:hover {
-  background: rgba(0, 122, 255, 0.1);
-  border-color: rgba(0, 122, 255, 0.2);
-}
 
 .bookmark-btn {
   background: none;
@@ -621,6 +634,208 @@
   font-weight: 500;
 }
 
+.comment-form {
+  padding: 16px 20px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+.comment-input {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  background: white;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.comment-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.char-count {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.submit-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.submit-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.comments-list {
+  padding: 16px 20px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+.comment-item {
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.comment-item:last-child {
+  margin-bottom: 0;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.comment-text {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+  margin-bottom: 4px;
+  flex: 1;
+}
+
+.comment-timestamp {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.delete-comment-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  opacity: 0.7;
+}
+
+.delete-comment-btn:hover {
+  background: rgba(220, 53, 69, 0.1);
+  opacity: 1;
+}
+
+.saved-posts-btn {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #1a1a1a;
+  padding: 14px 20px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.saved-posts-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.saved-posts-btn:hover::before {
+  left: 100%;
+}
+
+.saved-posts-btn:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.15) 50%, rgba(16, 185, 129, 0.15) 100%);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 
+    0 16px 48px rgba(59, 130, 246, 0.2),
+    0 8px 24px rgba(59, 130, 246, 0.15),
+    0 4px 12px rgba(59, 130, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.saved-count {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
+  color: #1a1a1a;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.post-bookmark-btn {
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 16px;
+  color: #1d1d1f;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.post-bookmark-btn:hover {
+  background: rgba(248, 249, 250, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.post-bookmark-btn.saved {
+  color: #007bff;
+  background: linear-gradient(135deg, rgba(0, 123, 255, 0.15) 0%, rgba(0, 123, 255, 0.08) 100%);
+  border: 1px solid rgba(0, 123, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+  backdrop-filter: blur(10px);
+}
+
 .loading-spinner {
   display: flex;
   flex-direction: column;
@@ -650,7 +865,7 @@
     padding: 1rem 0;
   }
   
-  .instagram-feed {
+  .places-feed {
     padding: 20px 5px;
   }
   
@@ -701,6 +916,7 @@
   }
   
   .categories-scroll {
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     padding: 10px 0;
   }
