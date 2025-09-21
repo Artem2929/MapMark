@@ -47,7 +47,6 @@ const Breadcrumbs = ({ items = null }) => {
     <nav className="breadcrumbs">
       <span className="breadcrumb-item">
         <Link to="/" className="breadcrumb-link">
-          <span className="breadcrumb-icon">🏠</span>
           Головна
         </Link>
       </span>

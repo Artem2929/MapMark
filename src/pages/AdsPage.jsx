@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import StarRating from '../components/ui/StarRating';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
+import Footer from '../components/layout/Footer';
 import './AdsPage.css';
 
 const AdsPage = () => {
@@ -11,10 +12,12 @@ const AdsPage = () => {
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'map'
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
+    country: '',
+    region: '',
     category: '',
     rating: 0,
     distance: '',
-    sortBy: 'newest',
+    sortBy: 'rating',
     tags: []
   });
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,7 +43,7 @@ const AdsPage = () => {
         category: ['cafe', 'restaurant', 'park', 'museum'][i % 4],
         rating: 3 + Math.random() * 2,
         distance: Math.floor(Math.random() * 10) + 1,
-        image: `/images/place${(i % 5) + 1}.jpg`,
+        image: `https://picsum.photos/300/160?random=${i + 1}`,
         tags: ['Wi-Fi', 'Паркінг', 'Веган-френдлі'].slice(0, Math.floor(Math.random() * 3) + 1),
         price: Math.floor(Math.random() * 4) + 1,
         isNew: i < 5,
@@ -93,9 +96,7 @@ const AdsPage = () => {
 
     // Сортування
     switch (filters.sortBy) {
-      case 'newest':
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        break;
+
       case 'rating':
         filtered.sort((a, b) => b.rating - a.rating);
         break;
@@ -127,10 +128,12 @@ const AdsPage = () => {
 
   const clearFilters = () => {
     setFilters({
+      country: '',
+      region: '',
       category: '',
       rating: 0,
       distance: '',
-      sortBy: 'newest',
+      sortBy: 'rating',
       tags: []
     });
     setSearchQuery('');
@@ -162,7 +165,7 @@ const AdsPage = () => {
   );
 
   const activeFiltersCount = Object.values(filters).filter(v => 
-    Array.isArray(v) ? v.length > 0 : v && v !== 'newest'
+    Array.isArray(v) ? v.length > 0 : v && v !== 'rating'
   ).length + (searchQuery ? 1 : 0);
 
   if (loading) {
@@ -179,46 +182,36 @@ const AdsPage = () => {
   return (
     <div className="ads-page">
       <Breadcrumbs />
-      {/* Заголовок та пошук */}
-      <div className="page-header">
-        <div className="header-content">
-          <h1>Оголошення</h1>
-          <div className="header-actions">
-            <Link to="/create-ad" className="create-ad-btn">
-              ➕ Створити оголошення
-            </Link>
-            <div className="view-toggle">
-              <button 
-                className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                onClick={() => setViewMode('grid')}
-              >
-                ⊞ Список
-              </button>
-              <button 
-                className={`view-btn ${viewMode === 'map' ? 'active' : ''}`}
-                onClick={() => setViewMode('map')}
-              >
-                🗺️ Карта
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <div className="search-bar">
-          <input
-            type="text"
-            placeholder="Пошук оголошень..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
-          <button className="ads-search-btn">🔍</button>
-        </div>
-      </div>
-
       {/* Фільтри */}
       <div className="filters-panel">
         <div className="filters-row">
+          <Link to="/create-ad" className="create-ad-btn">
+            ➕ Створити оголошення
+          </Link>
+          <select
+            value={filters.country}
+            onChange={(e) => handleFilterChange('country', e.target.value)}
+            className="filter-select"
+          >
+            <option value="">Всі країни</option>
+            <option value="ukraine">🇺🇦 Україна</option>
+            <option value="poland">🇵🇱 Польща</option>
+            <option value="germany">🇩🇪 Німеччина</option>
+            <option value="france">🇫🇷 Франція</option>
+          </select>
+
+          <select
+            value={filters.region}
+            onChange={(e) => handleFilterChange('region', e.target.value)}
+            className="filter-select"
+          >
+            <option value="">Всі області/міста</option>
+            <option value="kyiv">Київ</option>
+            <option value="lviv">Львів</option>
+            <option value="odesa">Одеса</option>
+            <option value="kharkiv">Харків</option>
+          </select>
+
           <select
             value={filters.category}
             onChange={(e) => handleFilterChange('category', e.target.value)}
@@ -232,55 +225,15 @@ const AdsPage = () => {
           </select>
 
           <select
-            value={filters.rating}
-            onChange={(e) => handleFilterChange('rating', parseFloat(e.target.value))}
-            className="filter-select"
-          >
-            <option value={0}>Будь-який рейтинг</option>
-            <option value={4}>4+ зірки</option>
-            <option value={3}>3+ зірки</option>
-            <option value={2}>2+ зірки</option>
-          </select>
-
-          <select
-            value={filters.distance}
-            onChange={(e) => handleFilterChange('distance', e.target.value)}
-            className="filter-select"
-          >
-            <option value="">Будь-яка відстань</option>
-            <option value="1">До 1 км</option>
-            <option value="5">До 5 км</option>
-            <option value="10">До 10 км</option>
-          </select>
-
-          <select
             value={filters.sortBy}
             onChange={(e) => handleFilterChange('sortBy', e.target.value)}
             className="filter-select"
           >
-            <option value="newest">Найновіші</option>
             <option value="rating">За рейтингом</option>
             <option value="distance">За відстанню</option>
             <option value="popular">Популярні</option>
           </select>
 
-          {activeFiltersCount > 0 && (
-            <button className="clear-filters-btn" onClick={clearFilters}>
-              Очистити ({activeFiltersCount})
-            </button>
-          )}
-        </div>
-
-        <div className="tags-filter">
-          {['Wi-Fi', 'Паркінг', 'Веган-френдлі', 'Романтика', 'Kids Friendly'].map(tag => (
-            <button
-              key={tag}
-              className={`tag-filter ${filters.tags.includes(tag) ? 'active' : ''}`}
-              onClick={() => handleTagToggle(tag)}
-            >
-              {tag}
-            </button>
-          ))}
         </div>
       </div>
 
@@ -295,37 +248,38 @@ const AdsPage = () => {
       {viewMode === 'grid' && (
         <div className="ads-grid">
           {paginatedAds.map(ad => (
-            <Link key={ad.id} to={`/ads/${ad.id}`} className="ad-card">
-              <div className="ad-image">
+            <Link key={ad.id} to={`/ads/${ad.id}`} className="ads-ad-card">
+              <div className="ads-ad-image">
                 <img src={ad.image} alt={ad.title} />
-                <div className="ad-badges">
-                  {ad.isNew && <span className="badge new">Нове</span>}
-                  {ad.isPopular && <span className="badge popular">Популярне</span>}
-                  {ad.hasPromo && <span className="badge promo">Акція</span>}
+                <div className="ads-ad-badges">
+                  {ad.isNew && <span className="ads-badge ads-new">Нове</span>}
+                  {ad.isPopular && <span className="ads-badge ads-popular">Популярне</span>}
+                  {ad.hasPromo && <span className="ads-badge ads-promo">Акція</span>}
                 </div>
-                <div className="ad-distance">{ad.distance} км</div>
+                <div className="ads-ad-distance">{ad.distance} км</div>
               </div>
               
-              <div className="ad-content">
-                <div className="ad-category">
+              <div className="ads-ad-content">
+                <div className="ads-ad-category">
                   {getCategoryIcon(ad.category)} {getCategoryName(ad.category)}
                 </div>
                 
-                <h3 className="ad-title">{ad.title}</h3>
-                <p className="ad-description">{ad.description}</p>
+                <h3 className="ads-ad-title">{ad.title}</h3>
                 
-                <div className="ad-rating">
-                  <StarRating rating={ad.rating} size="small" />
-                  <span className="rating-text">{ad.rating.toFixed(1)}</span>
-                </div>
-                
-                <div className="ad-tags">
-                  {ad.tags.slice(0, 2).map(tag => (
-                    <span key={tag} className="ad-tag">{tag}</span>
-                  ))}
-                  {ad.tags.length > 2 && (
-                    <span className="more-tags">+{ad.tags.length - 2}</span>
-                  )}
+                <div className="ads-ad-footer">
+                  <div className="ads-ad-rating">
+                    <StarRating rating={ad.rating} size="small" />
+                    <span className="ads-rating-text">{ad.rating.toFixed(1)}</span>
+                  </div>
+                  
+                  <div className="ads-ad-tags">
+                    {ad.tags.slice(0, 2).map(tag => (
+                      <span key={tag} className="ads-ad-tag">{tag}</span>
+                    ))}
+                    {ad.tags.length > 2 && (
+                      <span className="ads-more-tags">+{ad.tags.length - 2}</span>
+                    )}
+                  </div>
                 </div>
               </div>
             </Link>
@@ -380,6 +334,8 @@ const AdsPage = () => {
           </button>
         </div>
       )}
+      
+      <Footer />
     </div>
   );
 };
