@@ -7,6 +7,7 @@ export const API_ENDPOINTS = {
   BACKEND: 'http://localhost:3000/api',
   REVIEWS: 'http://localhost:3000/api/reviews',
   REVIEW: 'http://localhost:3000/api/review',
+  PHOTO: 'http://localhost:3000/api/photo',
 };
 
 // Supported languages

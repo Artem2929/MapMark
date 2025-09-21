@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 
 // Review Schema
 const reviewSchema = new mongoose.Schema({
@@ -69,8 +70,27 @@ function getReviewsByLocation(lat, lng, radius, limit) {
   return Review.find({ location: { $geoWithin: { $centerSphere: [[lng, lat], radius / 6371000] } } }).limit(limit);
 }
 
+async function deleteReview(reviewId) {
+  return Review.findByIdAndDelete(reviewId);
+}
+
+async function getReviewById(reviewId) {
+  return Review.findById(reviewId);
+}
+
+async function deletePhotoFromReview(reviewId, photoId) {
+  return Review.findByIdAndUpdate(
+    reviewId,
+    { $pull: { photoIds: photoId } },
+    { new: true }
+  );
+}
+
 module.exports = {
   createReview,
   getReviews,
-  getReviewsByLocation
+  getReviewsByLocation,
+  deleteReview,
+  getReviewById,
+  deletePhotoFromReview
 };

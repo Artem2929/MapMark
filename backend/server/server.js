@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const multer = require("multer");
-const { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler } = require('./services/ReviewService');
+const { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler } = require('./services/ReviewService');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,6 +38,8 @@ app.get('/', (req, res) => {
       createReview: 'POST /api/review',
       reviews: '/api/reviews',
       nearbyReviews: '/api/reviews/nearby?lat=40.7128&lng=-74.0060&radius=1000',
+      deleteReview: 'DELETE /api/review/:reviewId',
+      deletePhoto: 'DELETE /api/review/:reviewId/photo/:photoId',
       health: '/api/health'
     }
   });
@@ -49,6 +51,12 @@ app.post('/api/review', upload.array('photos', 3), createReviewHandler);
 app.get('/api/reviews', getReviewsHandler);
 // Search reviews by radius
 app.get('/api/reviews/nearby', getReviewsByLocationHandler);
+// Delete a review by ID
+app.delete('/api/review/:reviewId', deleteReviewHandler);
+// Delete a photo from a review
+app.delete('/api/review/:reviewId/photo/:photoId', deletePhotoHandler);
+// Get a single photo as base64
+app.get('/api/photo/:photoId', getPhotoHandler);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -122,6 +122,36 @@ curl "http://localhost:3000/api/reviews/nearby?lat=40.7128&lng=-74.0060&radius=5
 }
 ```
 
+### 4. Delete Review
+**DELETE** `/api/review/:reviewId`
+
+Deletes a review by its ID. This will also delete all associated photos from storage.
+
+#### Path Parameters
+- `reviewId` (string, required): The MongoDB ObjectId of the review to delete
+
+#### Example Request
+```bash
+curl -X DELETE "http://localhost:3000/api/review/64f8a1b2c3d4e5f6a7b8c9d0"
+```
+
+#### Response
+```json
+{
+  "success": true,
+  "message": "Review deleted successfully",
+  "data": {
+    "reviewId": "64f8a1b2c3d4e5f6a7b8c9d0",
+    "deletedAt": "2023-09-06T11:30:00.000Z"
+  }
+}
+```
+
+#### Error Responses
+- `400`: Bad Request - Review ID is required
+- `404`: Not Found - Review not found
+- `500`: Internal Server Error - Server-side errors
+
 ## Photo Storage
 
 Photos are automatically uploaded to Cloudflare R2 storage with the following naming convention:

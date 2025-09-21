@@ -111,6 +111,55 @@ class ReviewService {
   }
 
   /**
+   * Delete a review by ID
+   * @param {string} reviewId - Review ID to delete
+   * @returns {Promise<Object>} Deletion result
+   */
+  static async deleteReview(reviewId) {
+    try {
+      const response = await fetch(`${API_ENDPOINTS.REVIEW}/${reviewId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error deleting review:', error);
+      throw new Error(`Failed to delete review: ${error.message}`);
+    }
+  }
+
+  /**
+   * Delete a photo from a review
+   * @param {string} reviewId - Review ID containing the photo
+   * @param {string} photoId - Photo ID to delete
+   * @returns {Promise<Object>} Deletion result
+   */
+  static async deletePhoto(reviewId, photoId) {
+    try {
+      const response = await fetch(`${API_ENDPOINTS.REVIEW}/${reviewId}/photo/${photoId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error deleting photo:', error);
+      throw new Error(`Failed to delete photo: ${error.message}`);
+    }
+  }
+
+  /**
    * Validate review data before submission
    * @param {Object} reviewData - Review data to validate
    * @returns {Object} Validation result
