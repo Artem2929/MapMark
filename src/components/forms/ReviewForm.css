@@ -473,11 +473,31 @@ body:has(.review-form-overlay) .filter-header {
   color: #1e293b;
 }
 
-.review-form-rating-container .star-rating {
+.review-form-rating-container .review-star-rating {
   display: flex;
   gap: 4px;
   justify-content: center;
   padding: 8px;
+}
+
+.review-form-rating-container .review-star {
+  font-size: 32px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #e5e7eb;
+}
+
+.review-form-rating-container .review-star:hover {
+  transform: scale(1.2);
+  color: #fbbf24;
+}
+
+.review-form-rating-container .review-star.filled {
+  color: #f59e0b;
+}
+
+.review-form-rating-container .review-star.filled:hover {
+  color: #d97706;
 }
 
 .review-form-photo-upload {

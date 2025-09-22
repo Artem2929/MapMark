@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const multer = require("multer");
 const { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler } = require('./services/ReviewService');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,11 +31,15 @@ mongoose.connect(DB_URL, {
 });
 
 // Routes
+app.use('/api/auth', authRoutes);
+
 app.get('/', (req, res) => {
   res.json({ 
     message: 'MapMark API Server is running!',
     version: '1.0.0',
     endpoints: {
+      register: 'POST /api/auth/register',
+      login: 'POST /api/auth/login',
       createReview: 'POST /api/review',
       reviews: '/api/reviews',
       nearbyReviews: '/api/reviews/nearby?lat=40.7128&lng=-74.0060&radius=1000',

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import CustomSelect from '../components/ui/CustomSelect';
+import authService from '../services/authService';
 import './Register.css';
 
 const Register = () => {
@@ -9,8 +10,15 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    country: ''
+    country: '',
+    acceptTerms: false,
+    acceptPrivacy: false
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const countries = [
     { code: 'UA', name_en: 'Україна' },
@@ -219,28 +227,36 @@ const Register = () => {
     });
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
+    setError('');
     
     if (formData.password !== formData.confirmPassword) {
-      alert('Паролі не співпадають');
+      setError('Паролі не співпадають');
       return;
     }
 
-    if (formData.password.length < 6) {
-      alert('Пароль повинен містити мінімум 6 символів');
+    if (!formData.acceptTerms) {
+      setError('Ви повинні прийняти умови використання');
       return;
     }
 
-    // Симуляція реєстрації
-    const userId = 'user' + Date.now();
-    localStorage.setItem('userId', userId);
-    localStorage.setItem('userEmail', formData.email);
-    localStorage.setItem('userName', formData.name);
-    
-    alert('Реєстрація успішна!');
-    navigate('/');
-    window.location.reload();
+    if (!formData.acceptPrivacy) {
+      setError('Ви повинні прийняти політику конфіденційності');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await authService.register(formData.name, formData.email, formData.password);
+      navigate('/');
+      window.location.reload();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -249,6 +265,12 @@ const Register = () => {
         <div className="register-form-wrapper">
           <h1 className="register-title">Реєстрація в MapMark</h1>
           <p className="register-subtitle">Створіть акаунт, щоб почати</p>
+          
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
           
           <form onSubmit={handleRegister} className="register-form">
             <div className="form-group">
@@ -275,9 +297,9 @@ const Register = () => {
               />
             </div>
             
-            <div className="form-group">
+            <div className="form-group password-group">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={formData.password}
@@ -285,11 +307,18 @@ const Register = () => {
                 placeholder="Введіть пароль (мін. 6 символів)"
                 required
               />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
             </div>
 
-            <div className="form-group">
+            <div className="form-group password-group">
               <input
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
                 name="confirmPassword"
                 value={formData.confirmPassword}
@@ -297,6 +326,13 @@ const Register = () => {
                 placeholder="Повторіть пароль"
                 required
               />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
             </div>
 
             <div className="form-group">
@@ -307,9 +343,35 @@ const Register = () => {
                 placeholder="Оберіть країну"
               />
             </div>
+
+            <div className="form-group checkbox-group">
+              <div className="checkbox-row">
+                <input
+                  type="checkbox"
+                  name="acceptTerms"
+                  checked={formData.acceptTerms}
+                  onChange={(e) => setFormData({ ...formData, acceptTerms: e.target.checked })}
+                  required
+                />
+                <Link to="/terms-of-service" target="_blank">умови використання</Link>
+              </div>
+            </div>
+
+            <div className="form-group checkbox-group">
+              <div className="checkbox-row">
+                <input
+                  type="checkbox"
+                  name="acceptPrivacy"
+                  checked={formData.acceptPrivacy}
+                  onChange={(e) => setFormData({ ...formData, acceptPrivacy: e.target.checked })}
+                  required
+                />
+                <Link to="/privacy-policy" target="_blank">політику конфіденційності</Link>
+              </div>
+            </div>
             
-            <button type="submit" className="register-btn">
-              Зареєструватися
+            <button type="submit" className="register-btn" disabled={loading}>
+              {loading ? 'Реєстрація...' : 'Зареєструватися'}
             </button>
           </form>
           

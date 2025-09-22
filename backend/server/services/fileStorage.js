@@ -11,7 +11,7 @@ const r2 = new S3Client({
   },
 });
 
-// Upload buffer instead of file path
+// Upload buffer instead of file path test
 async function uploadPhotoBuffer(buffer, keyName, mimeType) {
   const command = new PutObjectCommand({
     Bucket: bucketName,

@@ -1,23 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import authService from '../services/authService';
 import './Login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Симуляція логіну - зберігаємо userId в localStorage
-    const userId = 'user123'; // В реальному додатку це буде з API
-    localStorage.setItem('userId', userId);
-    localStorage.setItem('userEmail', email);
-    
-    // Редірект на головну сторінку
-    navigate('/');
-    window.location.reload(); // Оновлюємо сторінку для оновлення header
+    setLoading(true);
+    setError('');
+
+    try {
+      await authService.login(email, password);
+      navigate('/');
+      window.location.reload();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleForgotPassword = (e) => {
@@ -52,6 +60,12 @@ const Login = () => {
           <h1 className="login-title">Вхід в MapMark</h1>
           <p className="login-subtitle">Увійдіть, щоб продовжити</p>
           
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
+          
           {!showForgotPassword ? (
             <form onSubmit={handleLogin} className="login-form">
               <div className="form-group">
@@ -65,19 +79,26 @@ const Login = () => {
                 />
               </div>
               
-              <div className="form-group">
+              <div className="form-group password-group">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Введіть ваш пароль"
                   required
                 />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                </button>
               </div>
               
-              <button type="submit" className="login-btn">
-                Увійти
+              <button type="submit" className="login-btn" disabled={loading}>
+                {loading ? 'Вхід...' : 'Увійти'}
               </button>
               
               <div className="divider">

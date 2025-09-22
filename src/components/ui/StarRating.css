@@ -45,3 +45,33 @@
 .star.interactive:hover {
   transform: scale(1.1);
 }
+
+/* Review form specific styles */
+.review-star-rating {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.review-star {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+  position: relative;
+  color: #e5e7eb;
+}
+
+.review-star:hover {
+  transform: scale(1.2);
+  color: #fbbf24;
+}
+
+.review-star.filled {
+  color: #f59e0b;
+}
+
+.review-star.filled:hover {
+  color: #d97706;
+}

@@ -191,6 +191,127 @@
   text-decoration: underline;
 }
 
+.checkbox-group {
+  margin: 8px 0;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border: 2px solid rgba(16, 185, 129, 0.3);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.95);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.checkbox-row input[type="checkbox"]:checked {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-color: #10b981;
+}
+
+.checkbox-row input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.checkbox-row a {
+  color: #10b981;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.checkbox-row a:hover {
+  color: #059669;
+  text-decoration: underline;
+}
+
+.checkbox-label-text {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.4;
+  margin-left: 30px;
+}
+
+.password-group {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.password-toggle:hover {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.error-message {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+}
+
+.register-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.register-btn:disabled:hover {
+  transform: none;
+  box-shadow: 
+    0 8px 24px rgba(16, 185, 129, 0.2),
+    0 4px 12px rgba(16, 185, 129, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.checkbox-text a {
+  color: #10b981;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.checkbox-text a:hover {
+  color: #059669;
+  text-decoration: underline;
+}
+
 @media (max-width: 480px) {
   .register-form-wrapper {
     padding: 24px 16px;
@@ -198,5 +319,9 @@
   
   .register-title {
     font-size: 22px;
+  }
+  
+  .checkbox-label {
+    font-size: 13px;
   }
 }
