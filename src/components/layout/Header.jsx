@@ -28,16 +28,16 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
   const languages = [
     { code: 'en', name: 'English' },
     { code: 'ua', name: 'Українська' },
-    { code: 'es', name: 'Español' },
-    { code: 'fr', name: 'Français' },
-    { code: 'de', name: 'Deutsch' },
-    { code: 'it', name: 'Italiano' },
-    { code: 'pt', name: 'Português' },
-    { code: 'ru', name: 'Русский' },
-    { code: 'ja', name: '日本語' },
-    { code: 'zh-CN', name: '中文' },
-    { code: 'ar', name: 'العربية' },
-    { code: 'hi', name: 'हिन्दी' }
+    // { code: 'es', name: 'Español' },
+    // { code: 'fr', name: 'Français' },
+    // { code: 'de', name: 'Deutsch' },
+    // { code: 'it', name: 'Italiano' },
+    // { code: 'pt', name: 'Português' },
+    // { code: 'ru', name: 'Русский' },
+    // { code: 'ja', name: '日本語' },
+    // { code: 'zh-CN', name: '中文' },
+    // { code: 'ar', name: 'العربية' },
+    // { code: 'hi', name: 'हिन्दी' }
   ];
 
   const currentLang = languages.find(lang => lang.code === i18n.language) || languages[0];
@@ -83,11 +83,11 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
           {/* Profile/Login Button */}
           {localStorage.getItem('userId') ? (
             <Link to={`/profile/${localStorage.getItem('userId')}`} className="header-link profile-link">
-              Профіль
+              {t('header.profile')}
             </Link>
           ) : (
             <Link to="/login" className="header-link login-link">
-              Login
+              {t('header.login')}
             </Link>
           )}
           
@@ -153,7 +153,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
             className="mobile-link profile-link"
             onClick={() => setIsMenuOpen(false)}
           >
-            Профіль
+            {t('header.profile')}
           </Link>
         ) : (
           <Link 
@@ -161,7 +161,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
             className="mobile-link login-link"
             onClick={() => setIsMenuOpen(false)}
           >
-            Login
+            {t('header.login')}
           </Link>
         )}
         

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import CustomSelect from '../components/ui/CustomSelect';
 import authService from '../services/authService';
 import { validateRegistrationForm } from '../utils/registerValidation';
@@ -21,6 +22,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
+  const { t } = useTranslation();
 
   const countries = [
     { code: 'UA', name_en: 'Україна' },
@@ -284,8 +286,8 @@ const Register = () => {
     <div className="register-page">
       <div className="register-container">
         <div className="register-form-wrapper">
-          <h1 className="register-title">Реєстрація в MapMark</h1>
-          <p className="register-subtitle">Створіть акаунт, щоб почати</p>
+          <h1 className="register-title">{t('register.title')}</h1>
+          <p className="register-subtitle">{t('register.subtitle')}</p>
           
           <div className="error-container">
             {error && (
@@ -303,7 +305,7 @@ const Register = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Введіть ваше ім'я"
+                placeholder={t('register.namePlaceholder')}
                 required
               />
             </div>
@@ -315,7 +317,7 @@ const Register = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Введіть ваш email"
+                placeholder={t('register.emailPlaceholder')}
                 autoComplete="off"
                 required
               />
@@ -328,7 +330,7 @@ const Register = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Введіть пароль (мін. 6 символів)"
+                placeholder={t('register.passwordPlaceholder')}
                 className={fieldErrors.password ? 'error' : ''}
                 required
               />
@@ -348,7 +350,7 @@ const Register = () => {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="Повторіть пароль"
+                placeholder={t('register.confirmPasswordPlaceholder')}
                 className={fieldErrors.confirmPassword ? 'error' : ''}
                 required
               />
@@ -366,7 +368,7 @@ const Register = () => {
                 options={countries}
                 value={formData.country}
                 onChange={(value) => setFormData({ ...formData, country: value })}
-                placeholder="Оберіть країну"
+                placeholder={t('register.countryPlaceholder')}
               />
             </div>
 
@@ -379,7 +381,7 @@ const Register = () => {
                   onChange={(e) => setFormData({ ...formData, acceptTerms: e.target.checked })}
                   required
                 />
-                <Link to="/terms-of-service" target="_blank">умови використання</Link>
+                <Link to="/terms-of-service" target="_blank">{t('register.acceptTerms')}</Link>
               </div>
             </div>
 
@@ -392,17 +394,17 @@ const Register = () => {
                   onChange={(e) => setFormData({ ...formData, acceptPrivacy: e.target.checked })}
                   required
                 />
-                <Link to="/privacy-policy" target="_blank">політику конфіденційності</Link>
+                <Link to="/privacy-policy" target="_blank">{t('register.acceptPrivacy')}</Link>
               </div>
             </div>
             
             <button type="submit" className="register-btn" disabled={loading || !isFormValid()}>
-              {loading ? 'Реєстрація...' : 'Зареєструватися'}
+              {loading ? t('register.registerButtonLoading') : t('register.registerButton')}
             </button>
           </form>
           
           <div className="register-footer">
-            <p>Вже маєте акаунт? <Link to="/login">Увійти</Link></p>
+            <p>{t('register.haveAccount')} <Link to="/login">{t('register.loginLink')}</Link></p>
           </div>
         </div>
       </div>

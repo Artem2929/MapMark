@@ -24,6 +24,7 @@ import Followers from './pages/Followers.jsx'
 import Following from './pages/Following.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
+import About from './pages/About.jsx'
 
 const AppContent = () => {
   const { t, i18n } = useTranslation();
@@ -123,12 +124,7 @@ const AppContent = () => {
             <Route path="/ads" element={<AdsPage />} />
             <Route path="/ads/:id" element={<AdDetailPage />} />
             <Route path="/create-ad" element={<CreateAdPage />} />
-            <Route path="/about" element={
-              <div style={{maxWidth: '1200px', margin: '0 auto', padding: '104px 20px 40px 20px'}}>
-                <h1 style={{fontSize: '32px', fontWeight: 'bold', color: '#333'}}>{t(`aboutPage.${currentLang}.title`)}</h1>
-                <p style={{marginTop: '16px', color: '#666', lineHeight: '1.6'}}>{t(`aboutPage.${currentLang}.description`)}</p>
-              </div>
-            } />
+            <Route path="/about" element={<About />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />

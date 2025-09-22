@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import authService from '../services/authService';
 import './Login.css';
 
@@ -11,6 +12,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const isFormValid = () => {
     return email.trim() && password;
@@ -72,8 +74,8 @@ const Login = () => {
     <div className="login-page">
       <div className="login-container">
         <div className="login-form-wrapper">
-          <h1 className="login-title">Вхід в MapMark</h1>
-          <p className="login-subtitle">Увійдіть, щоб продовжити</p>
+          <h1 className="login-title">{t('login.title')}</h1>
+          <p className="login-subtitle">{t('login.subtitle')}</p>
           
           <div className="error-container">
             {error && (
@@ -91,7 +93,7 @@ const Login = () => {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Введіть ваш email"
+                  placeholder={t('login.emailPlaceholder')}
                   autoComplete="off"
                   required
                 />
@@ -103,7 +105,7 @@ const Login = () => {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Введіть ваш пароль"
+                  placeholder={t('login.passwordPlaceholder')}
                   autoComplete="off"
                   required
                 />
@@ -117,7 +119,7 @@ const Login = () => {
               </div>
               
               <button type="submit" className="login-btn" disabled={loading || !isFormValid()}>
-                {loading ? 'Вхід...' : 'Увійти'}
+                {loading ? t('login.loginButtonLoading') : t('login.loginButton')}
               </button>
               
               <div className="divider">
@@ -131,7 +133,7 @@ const Login = () => {
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                 </svg>
-                Увійти через Google
+                {t('login.googleLogin')}
               </button>
               
               <button 
@@ -139,7 +141,7 @@ const Login = () => {
                 className="forgot-password-btn"
                 onClick={() => setShowForgotPassword(true)}
               >
-                Забули пароль?
+                {t('login.forgotPassword')}
               </button>
             </form>
           ) : (
@@ -150,13 +152,13 @@ const Login = () => {
                   id="reset-email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Введіть ваш email для скидання паролю"
+                  placeholder={t('login.resetEmailPlaceholder')}
                   required
                 />
               </div>
               
               <button type="submit" className="login-btn" disabled={loading || !email.trim()}>
-                {loading ? 'Надсилання...' : 'Скинути пароль'}
+                {loading ? t('login.resetPasswordLoading') : t('login.resetPassword')}
               </button>
               
               <button 
@@ -164,13 +166,13 @@ const Login = () => {
                 className="forgot-password-btn"
                 onClick={() => setShowForgotPassword(false)}
               >
-                Назад до входу
+                {t('login.backToLogin')}
               </button>
             </form>
           )}
           
           <div className="login-footer">
-            <p>Немає акаунту? <Link to="/register">Зареєструватися</Link></p>
+            <p>{t('login.noAccount')} <Link to="/register">{t('login.registerLink')}</Link></p>
           </div>
         </div>
       </div>
