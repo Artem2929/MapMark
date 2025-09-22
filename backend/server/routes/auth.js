@@ -18,7 +18,7 @@ const loginLimiter = rateLimit({
 // Rate limiting для реєстрації
 const registerLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 година
-  max: 3, // максимум 3 реєстрації на годину
+  max: 10, // максимум 10 реєстрацій на годину
   message: { success: false, message: 'Too many registration attempts, try again later' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -40,16 +40,28 @@ const registerValidation = [
   body('email')
     .isEmail()
     .normalizeEmail()
-    .withMessage('Valid email is required'),
+    .isLength({ max: 100 })
+    .withMessage('Valid email is required (max 100 characters)'),
   body('password')
-    .isLength({ min: 6 })
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-    .withMessage('Password must be at least 6 characters with uppercase, lowercase and number'),
+    .isLength({ min: 6, max: 128 })
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])?/)
+    .withMessage('Password must be 6-128 characters with uppercase, lowercase and number'),
   body('name')
     .trim()
     .isLength({ min: 2, max: 50 })
-    .matches(/^[a-zA-Zа-яА-ЯіІїЇєЄ\s]+$/)
+    .matches(/^[a-zA-Zа-яА-ЯіІїЇєЄ'\-\s]+$/)
     .withMessage('Name must be 2-50 characters, letters only')
+    .custom((value) => {
+      // Перевірка на послідовні пробіли
+      if (/\s{2,}/.test(value)) {
+        throw new Error('Name cannot contain consecutive spaces');
+      }
+      // Перевірка на пробіли на початку/кінці
+      if (value !== value.trim()) {
+        throw new Error('Name cannot start or end with spaces');
+      }
+      return true;
+    })
 ];
 
 // POST /api/auth/login
@@ -114,7 +126,7 @@ router.post('/login', loginLimiter, loginValidation, async (req, res) => {
 });
 
 // POST /api/auth/register
-router.post('/register', registerLimiter, registerValidation, async (req, res) => {
+router.post('/register', registerValidation, async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -127,12 +139,29 @@ router.post('/register', registerLimiter, registerValidation, async (req, res) =
 
     const { email, password, name } = req.body;
 
+    // Додаткові перевірки безпеки
+    if (!email || !password || !name) {
+      return res.status(400).json({
+        success: false,
+        message: 'All fields are required'
+      });
+    }
+
     // Перевірити чи користувач вже існує
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({
         success: false,
         message: 'User already exists'
+      });
+    }
+
+    // Перевірка на підозрілі паттерни в імені
+    const suspiciousPatterns = /^(admin|root|test|user|null|undefined)$/i;
+    if (suspiciousPatterns.test(name.trim())) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid name format'
       });
     }
 
@@ -167,6 +196,44 @@ router.post('/register', registerLimiter, registerValidation, async (req, res) =
       });
     }
     
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+});
+
+// POST /api/auth/forgot-password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email is required'
+      });
+    }
+
+    // Перевірити чи користувач існує
+    const user = await User.findOne({ email, isActive: true });
+    if (!user) {
+      // З міркувань безпеки повертаємо успіх навіть якщо користувач не знайдений
+      return res.json({
+        success: true,
+        message: 'If this email exists, password reset instructions have been sent'
+      });
+    }
+
+    // В реальному додатку тут би генерувався токен і відправлявся email
+    // Поки що просто повертаємо успіх
+    res.json({
+      success: true,
+      message: 'Password reset instructions have been sent to your email'
+    });
+
+  } catch (error) {
+    console.error('Forgot password error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import CustomSelect from '../components/ui/CustomSelect';
 import authService from '../services/authService';
+import { validateRegistrationForm } from '../utils/registerValidation';
 import './Register.css';
 
 const Register = () => {
@@ -19,6 +20,7 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const countries = [
     { code: 'UA', name_en: 'Україна' },
@@ -221,39 +223,58 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+    
+    // Очистити помилку поля при зміні
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
+
+  const isFormValid = () => {
+    return formData.name.trim() && 
+           formData.email.trim() && 
+           formData.password && 
+           formData.confirmPassword && 
+           formData.acceptTerms && 
+           formData.acceptPrivacy;
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
+    setFieldErrors({});
     
-    if (formData.password !== formData.confirmPassword) {
-      setError('Паролі не співпадають');
-      return;
-    }
-
-    if (!formData.acceptTerms) {
-      setError('Ви повинні прийняти умови використання');
-      return;
-    }
-
-    if (!formData.acceptPrivacy) {
-      setError('Ви повинні прийняти політику конфіденційності');
+    // Клієнтська валідація
+    const validation = validateRegistrationForm(formData);
+    if (!validation.isValid) {
+      setFieldErrors(validation.errors);
+      const firstError = Object.values(validation.errors)[0];
+      setError(firstError);
       return;
     }
 
     setLoading(true);
 
     try {
-      await authService.register(formData.name, formData.email, formData.password);
+      await authService.register(formData.name.trim(), formData.email, formData.password);
       navigate('/');
       window.location.reload();
     } catch (err) {
-      setError(err.message);
+      // Обробка помилок валідації з сервера
+      if (err.message.includes('validation') || err.message.includes('Validation')) {
+        setError('Перевірте правильність введених даних');
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -266,11 +287,13 @@ const Register = () => {
           <h1 className="register-title">Реєстрація в MapMark</h1>
           <p className="register-subtitle">Створіть акаунт, щоб почати</p>
           
-          {error && (
-            <div className="error-message">
-              {error}
-            </div>
-          )}
+          <div className="error-container">
+            {error && (
+              <div className="error-message">
+                {error}
+              </div>
+            )}
+          </div>
           
           <form onSubmit={handleRegister} className="register-form">
             <div className="form-group">
@@ -293,6 +316,7 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Введіть ваш email"
+                autoComplete="off"
                 required
               />
             </div>
@@ -305,6 +329,7 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Введіть пароль (мін. 6 символів)"
+                className={fieldErrors.password ? 'error' : ''}
                 required
               />
               <button
@@ -324,6 +349,7 @@ const Register = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Повторіть пароль"
+                className={fieldErrors.confirmPassword ? 'error' : ''}
                 required
               />
               <button
@@ -370,7 +396,7 @@ const Register = () => {
               </div>
             </div>
             
-            <button type="submit" className="register-btn" disabled={loading}>
+            <button type="submit" className="register-btn" disabled={loading || !isFormValid()}>
               {loading ? 'Реєстрація...' : 'Зареєструватися'}
             </button>
           </form>

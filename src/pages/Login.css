@@ -284,6 +284,11 @@
   background-color: rgba(59, 130, 246, 0.1);
 }
 
+.error-container {
+  min-height: 48px;
+  margin-bottom: 16px;
+}
+
 .error-message {
   background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
   color: #dc2626;
@@ -291,9 +296,20 @@
   border-radius: 12px;
   font-size: 14px;
   font-weight: 500;
-  margin-bottom: 16px;
   border: 1px solid rgba(220, 38, 38, 0.2);
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .login-btn:disabled {

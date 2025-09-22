@@ -49,6 +49,24 @@ class AuthService {
     return data;
   }
 
+  async forgotPassword(email) {
+    const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Password reset failed');
+    }
+
+    return data;
+  }
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');

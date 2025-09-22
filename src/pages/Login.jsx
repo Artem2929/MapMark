@@ -12,6 +12,10 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const isFormValid = () => {
+    return email.trim() && password;
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -28,14 +32,25 @@ const Login = () => {
     }
   };
 
-  const handleForgotPassword = (e) => {
+  const handleForgotPassword = async (e) => {
     e.preventDefault();
     if (!email) {
-      alert('Будь ласка, введіть email для скидання паролю');
+      setError('Будь ласка, введіть email для скидання паролю');
       return;
     }
-    alert(`Інструкції для скидання паролю надіслані на ${email}`);
-    setShowForgotPassword(false);
+    
+    setLoading(true);
+    setError('');
+
+    try {
+      await authService.forgotPassword(email);
+      alert(`Інструкції для скидання паролю надіслані на ${email}`);
+      setShowForgotPassword(false);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleLogin = () => {
@@ -60,11 +75,13 @@ const Login = () => {
           <h1 className="login-title">Вхід в MapMark</h1>
           <p className="login-subtitle">Увійдіть, щоб продовжити</p>
           
-          {error && (
-            <div className="error-message">
-              {error}
-            </div>
-          )}
+          <div className="error-container">
+            {error && (
+              <div className="error-message">
+                {error}
+              </div>
+            )}
+          </div>
           
           {!showForgotPassword ? (
             <form onSubmit={handleLogin} className="login-form">
@@ -75,6 +92,7 @@ const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Введіть ваш email"
+                  autoComplete="off"
                   required
                 />
               </div>
@@ -86,6 +104,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Введіть ваш пароль"
+                  autoComplete="off"
                   required
                 />
                 <button
@@ -97,7 +116,7 @@ const Login = () => {
                 </button>
               </div>
               
-              <button type="submit" className="login-btn" disabled={loading}>
+              <button type="submit" className="login-btn" disabled={loading || !isFormValid()}>
                 {loading ? 'Вхід...' : 'Увійти'}
               </button>
               
@@ -136,8 +155,8 @@ const Login = () => {
                 />
               </div>
               
-              <button type="submit" className="login-btn">
-                Скинути пароль
+              <button type="submit" className="login-btn" disabled={loading || !email.trim()}>
+                {loading ? 'Надсилання...' : 'Скинути пароль'}
               </button>
               
               <button 
