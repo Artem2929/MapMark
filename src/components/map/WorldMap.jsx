@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents, Polyline } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './WorldMap.css';
 import ReviewForm from '../forms/ReviewForm';
 import ReviewsPanel from '../ui/ReviewsPanel';
+import MarkerPopup from '../ui/MarkerPopup';
 import { getCurrentLocation, getRoute } from './LocationService';
 import ReviewService from '../../services/reviewService';
 
@@ -42,6 +43,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
   const tempMarkerRef = useRef(null);
   const [contextMenu, setContextMenu] = useState(null);
   const [contextSearchQuery, setContextSearchQuery] = useState('');
+  const [markerPopup, setMarkerPopup] = useState(null);
 
   // Load reviews from API on component mount
   useEffect(() => {
@@ -308,18 +310,21 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
     }
   };
 
-  // Effect to close context menu on outside click
+  // Effect to close context menu and marker popup on outside click
   React.useEffect(() => {
     const handleClickOutside = (event) => {
       if (contextMenu && !event.target.closest('.map-context-menu')) {
         setContextMenu(null);
         setTempMarker(null);
       }
+      if (markerPopup && !event.target.closest('.marker-popup')) {
+        setMarkerPopup(null);
+      }
     };
     
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [contextMenu]);
+  }, [contextMenu, markerPopup]);
 
   // Effect to update menu position on zoom/pan
   React.useEffect(() => {
@@ -433,7 +438,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
               html: `
                 <div class="review-badge">
                   <div class="badge-circle">
-                    <div class="badge-icon">📝</div>
+                    <div class="badge-icon">⭐</div>
                   </div>
                   <div class="badge-count">${markerReviews.length}</div>
                   <div class="badge-glow"></div>
@@ -446,87 +451,27 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
           }
           
           return (
-            <Marker {...markerProps}>
-              <Popup>
-              <div 
-                className={`popup-content ${expandedPopup === marker.id ? 'expanded' : ''}`}
-                style={expandedPopup === marker.id ? {
-                  maxHeight: 'none',
-                  overflow: 'visible'
-                } : {}}
-              >
-                <strong>{marker.name}</strong>
-                <div style={{marginBottom: '8px', fontSize: '12px', color: '#8e8e93'}}>
-                  {marker.position[0].toFixed(4)}, {marker.position[1].toFixed(4)}
-                </div>
-                
-                {hasReviews && (() => {
-                  const avgRating = markerReviews.reduce((sum, review) => sum + review.rating, 0) / markerReviews.length;
-                  const roundedRating = Math.round(avgRating);
-                  const stars = '⭐'.repeat(roundedRating);
-                  
-                  return (
-                    <div className="reviews-badge">
-                      <span className="reviews-stars">{stars}</span>
-                      <span className="reviews-rating">{avgRating.toFixed(1)}</span>
-                      <span className="reviews-count">({markerReviews.length})</span>
-                    </div>
-                  );
-                })()}
-                
-                <div style={{marginTop: '8px', marginBottom: '8px', display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
-                  <button 
-                    className="review-btn"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setSelectedMarker(marker);
-                      setShowReviewForm(true);
-                      onReviewFormToggle?.(true);
-                    }}
-                  >
-                    {t('popup.addReview')}
-                  </button>
-                  {markerReviews.length > 0 && (
-                    <button 
-                      className="expand-btn"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log('View Reviews clicked', marker, markerReviews);
-                        setSelectedMarkerForReviews(marker);
-                        setShowReviewsPanel(true);
-                      }}
-                    >
-                      View Reviews
-                    </button>
-                  )}
-                  <button 
-                    className="route-btn"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      buildRoute(marker);
-                    }}
-                  >
-                    🗺️
-                  </button>
-                  <button 
-                    className="delete-btn"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setMarkers(prev => prev.filter(m => m.id !== marker.id));
-                      setReviews(prev => prev.filter(r => r.markerId !== marker.id));
-                    }}
-                  >
-                    🗑️
-                  </button>
-                </div>
-
-              </div>
-              </Popup>
-            </Marker>
+            <Marker 
+              {...markerProps}
+              eventHandlers={{
+                click: () => {
+                  if (map) {
+                    const markerPoint = map.latLngToContainerPoint(marker.position);
+                    const mapContainer = map.getContainer().getBoundingClientRect();
+                    
+                    const x = mapContainer.left + markerPoint.x + 30;
+                    const y = mapContainer.top + markerPoint.y - 10;
+                    
+                    setMarkerPopup({
+                      x,
+                      y,
+                      marker,
+                      reviews: markerReviews
+                    });
+                  }
+                }
+              }}
+            />
           );
         })}
         
@@ -657,6 +602,43 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
             <span className="context-menu-item-icon">✕</span>
             <span className="context-menu-item-text">Закрити</span>
           </button>
+        </div>
+      )}
+      
+      {/* Marker Popup */}
+      {markerPopup && (
+        <div 
+          style={{
+            position: 'fixed',
+            left: markerPopup.x,
+            top: markerPopup.y,
+            zIndex: 1001
+          }}
+        >
+          <MarkerPopup
+            marker={markerPopup.marker}
+            reviews={markerPopup.reviews}
+            onAddReview={() => {
+              setSelectedMarker(markerPopup.marker);
+              setShowReviewForm(true);
+              onReviewFormToggle?.(true);
+              setMarkerPopup(null);
+            }}
+            onViewReviews={() => {
+              setSelectedMarkerForReviews(markerPopup.marker);
+              setShowReviewsPanel(true);
+              setMarkerPopup(null);
+            }}
+            onBuildRoute={() => {
+              buildRoute(markerPopup.marker);
+              setMarkerPopup(null);
+            }}
+            onDelete={() => {
+              setMarkers(prev => prev.filter(m => m.id !== markerPopup.marker.id));
+              setReviews(prev => prev.filter(r => r.markerId !== markerPopup.marker.id));
+              setMarkerPopup(null);
+            }}
+          />
         </div>
       )}
     </div>

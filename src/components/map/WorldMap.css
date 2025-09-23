@@ -174,108 +174,26 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
 }
 
-.leaflet-popup-close-button {
-  color: #8e8e93 !important;
-  font-size: 16px !important;
-  font-weight: 400 !important;
-  padding: 0 !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  border-radius: 50% !important;
-  width: 28px !important;
-  height: 28px !important;
-  line-height: 28px !important;
-  text-align: center !important;
-  background: rgba(0, 0, 0, 0.03) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(0, 0, 0, 0.06) !important;
-  right: 16px !important;
-  top: 16px !important;
-  text-decoration: none !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-indent: -9999px !important;
-  position: relative !important;
-  overflow: hidden !important;
-}
-
-.leaflet-popup-close-button::before {
-  content: '×' !important;
-  font-size: 16px !important;
-  font-weight: 400 !important;
-  text-indent: 0 !important;
-  z-index: 2 !important;
-  position: relative !important;
-}
-
-.leaflet-popup-close-button::after {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: -100% !important;
-  width: 100% !important;
-  height: 100% !important;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent) !important;
-  transition: left 0.5s !important;
-}
-
-.leaflet-popup-close-button:hover {
-  background: rgba(255, 59, 48, 0.1) !important;
-  border-color: rgba(255, 59, 48, 0.2) !important;
-  color: #ff3b30 !important;
-  transform: scale(1.05) !important;
-}
-
-.leaflet-popup-close-button:hover::after {
-  left: 100% !important;
-}
-
-.leaflet-popup-close-button::before {
-  content: '×' !important;
-  font-size: 16px !important;
-  font-weight: 400 !important;
-  text-indent: 0 !important;
+.leaflet-popup {
+  display: none !important;
 }
 
 /* REMOVED DUPLICATE - using compact version below */
 
-/* Leaflet popup improvements - 2025 Style */
 .leaflet-popup-content-wrapper {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%) !important;
-  backdrop-filter: blur(60px) saturate(200%) !important;
-  border-radius: 20px !important;
-  box-shadow: 
-    0 16px 32px rgba(0, 0, 0, 0.1),
-    0 4px 16px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  min-width: 260px !important;
-  max-width: 320px !important;
-  max-height: 180px !important;
-  overflow: visible !important;
-  position: relative !important;
-}
-
-.leaflet-popup-content-wrapper::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  height: 1px !important;
-  background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.5), transparent) !important;
-  animation: shimmer 3s ease-in-out infinite !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 
 .leaflet-popup-content {
   margin: 0 !important;
-  padding: 8px !important;
-  max-height: 160px !important;
-  overflow: visible !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
-  line-height: 1.4 !important;
-  font-size: 14px !important;
-  position: relative !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .popup-context-menu {
@@ -709,17 +627,12 @@
 .badge-circle {
   width: 28px;
   height: 28px;
-  background: linear-gradient(135deg, #007aff 0%, #0056cc 100%);
-  border-radius: 50%;
-  border: 3px solid #ffffff;
-  box-shadow: 
-    0 4px 12px rgba(0, 122, 255, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
 }
 
 .badge-circle::before {
@@ -734,28 +647,49 @@
 }
 
 .badge-icon {
-  font-size: 14px;
-  color: white;
+  color: #ffd700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+  transition: all 0.3s ease;
+  position: relative;
   z-index: 2;
 }
 
+/* Zoom-responsive sizing */
+.leaflet-zoom-level-3 .badge-icon { font-size: 12px; }
+.leaflet-zoom-level-4 .badge-icon { font-size: 14px; }
+.leaflet-zoom-level-5 .badge-icon { font-size: 16px; }
+.leaflet-zoom-level-6 .badge-icon { font-size: 18px; }
+.leaflet-zoom-level-7 .badge-icon { font-size: 20px; }
+.leaflet-zoom-level-8 .badge-icon { font-size: 22px; }
+.leaflet-zoom-level-9 .badge-icon { font-size: 24px; }
+.leaflet-zoom-level-10 .badge-icon { font-size: 26px; }
+.leaflet-zoom-level-11 .badge-icon { font-size: 28px; }
+.leaflet-zoom-level-12 .badge-icon { font-size: 30px; }
+.leaflet-zoom-level-13 .badge-icon { font-size: 32px; }
+.leaflet-zoom-level-14 .badge-icon { font-size: 34px; }
+.leaflet-zoom-level-15 .badge-icon { font-size: 36px; }
+.leaflet-zoom-level-16 .badge-icon { font-size: 38px; }
+.leaflet-zoom-level-17 .badge-icon { font-size: 40px; }
+.leaflet-zoom-level-18 .badge-icon { font-size: 42px; }
+
 .badge-count {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
-  color: white;
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-weight: bold;
-  border: 2px solid white;
-  box-shadow: 0 2px 6px rgba(255, 71, 87, 0.4);
-  animation: countBounce 2s ease-in-out infinite;
+    position: absolute;
+    top: -25px;
+    right: -16px;
+    background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(255, 71, 87, 0.4);
+    animation: countBounce 2s ease-in-out infinite;
 }
 
 .badge-glow {
@@ -818,10 +752,7 @@
 }
 
 .review-badge:hover .badge-circle {
-  background: linear-gradient(135deg, #0056cc 0%, #003d99 100%);
-  box-shadow: 
-    0 6px 16px rgba(0, 122, 255, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  background: transparent;
 }
 
 .review-badge:hover .badge-count {
