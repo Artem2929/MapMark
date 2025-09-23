@@ -143,12 +143,14 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
             {photos.length > 0 && (
               <div className="review-photo-preview-container">
                 {photos.map((photo, index) => (
-                  <div key={index} className="review-photo-preview">
-                    <img 
-                      src={URL.createObjectURL(photo)} 
-                      alt={`Preview ${index + 1}`}
-                      className="review-form-photo-preview-img"
-                    />
+                  <div key={index} className="review-photo-item">
+                    <div className="review-photo-preview">
+                      <img 
+                        src={URL.createObjectURL(photo)} 
+                        alt={`Preview ${index + 1}`}
+                        className="review-form-photo-preview-img"
+                      />
+                    </div>
                     <button
                       type="button"
                       className="review-photo-remove-btn"
