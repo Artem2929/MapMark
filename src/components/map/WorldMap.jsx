@@ -632,7 +632,6 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
         <div className={`reviews-list-overlay ${showReviewsList ? 'visible' : ''}`}>
           <ReviewsList
             marker={selectedMarkerForReviews}
-            reviews={reviews}
             onClose={() => {
               setShowReviewsList(false);
               setSelectedMarkerForReviews(null);
