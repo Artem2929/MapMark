@@ -53,8 +53,16 @@ const ReviewsList = ({ marker, onClose }) => {
       <div className="reviews-list-content">
         {loading ? (
           <div className="reviews-list-loading">
-            <div className="reviews-list-empty-icon">🔄</div>
-            <h3>Loading reviews...</h3>
+            {[1, 2, 3].map(i => (
+              <div key={i} className="reviews-list-loading-skeleton">
+                <div className="reviews-list-skeleton-avatar"></div>
+                <div className="reviews-list-skeleton-content">
+                  <div className="reviews-list-skeleton-line"></div>
+                  <div className="reviews-list-skeleton-line"></div>
+                  <div className="reviews-list-skeleton-line"></div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : markerReviews.length > 0 ? (
           markerReviews.map((review, index) => (
