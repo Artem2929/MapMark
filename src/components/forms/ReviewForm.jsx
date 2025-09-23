@@ -114,7 +114,9 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
               <StarRating
                 value={rating}
                 onChange={setRating}
-                size={32}
+                size={40}
+                readonly={false}
+                isReviewForm={true}
               />
               <div className="review-form-rating-text">
                 <span>{rating || 0} {t('review.outOfStars')}</span>

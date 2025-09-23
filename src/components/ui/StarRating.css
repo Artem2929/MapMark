@@ -49,29 +49,45 @@
 /* Review form specific styles */
 .review-star-rating {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 40px;
+  padding: 8px;
 }
 
 .review-star {
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
   position: relative;
   color: #e5e7eb;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
 .review-star:hover {
-  transform: scale(1.2);
+  transform: scale(1.25);
   color: #fbbf24;
+  text-shadow: 0 4px 8px rgba(251, 191, 36, 0.4);
+  filter: drop-shadow(0 2px 4px rgba(251, 191, 36, 0.3));
 }
 
 .review-star.filled {
-  color: #f59e0b;
+  color: #f59e0b !important;
+  text-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
+  filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.3));
 }
 
 .review-star.filled:hover {
   color: #d97706;
+  transform: scale(1.3);
+  text-shadow: 0 4px 12px rgba(217, 119, 6, 0.5);
+  filter: drop-shadow(0 3px 6px rgba(217, 119, 6, 0.4));
 }
+
+.review-star:active {
+  transform: scale(1.1);
+  transition: transform 0.1s ease;
+}
+

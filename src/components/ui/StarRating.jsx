@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './StarRating.css';
 
-const StarRating = ({ rating = 0, onChange, size = 'medium', readonly = true, isReviewForm = false }) => {
+const StarRating = ({ value = 0, onChange, size = 'medium', readonly = true, isReviewForm = false }) => {
   const [hoverValue, setHoverValue] = useState(0);
 
   const handleClick = (starRating) => {
@@ -22,11 +22,12 @@ const StarRating = ({ rating = 0, onChange, size = 'medium', readonly = true, is
     }
   };
 
-  const currentValue = hoverValue || rating;
+  const currentValue = hoverValue || value;
 
   const getStarClass = (starIndex) => {
     if (isReviewForm) {
-      return starIndex <= currentValue ? 'filled' : '';
+      const displayValue = hoverValue > 0 ? hoverValue : value;
+      return starIndex <= displayValue ? 'filled' : '';
     }
     const diff = currentValue - starIndex + 1;
     if (diff >= 1) {
@@ -44,6 +45,7 @@ const StarRating = ({ rating = 0, onChange, size = 'medium', readonly = true, is
           <span
             key={star}
             className={`review-star ${getStarClass(star)}`}
+
             onClick={() => handleClick(star)}
             onMouseEnter={() => handleMouseEnter(star)}
             onMouseLeave={handleMouseLeave}
