@@ -3,7 +3,7 @@
   top: 25px;
   left: -400px;
   width: 400px;
-  height: 85%;
+  height: 95%;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
   /* border: 1px solid rgba(255, 255, 255, 0.3); */
   box-shadow: 
@@ -24,6 +24,22 @@
 
 .reviews-list.visible {
   left: 0;
+}
+
+/* Hide notification items when reviews-list is visible */
+body:has(.reviews-list.visible) .notification-item,
+.notification-item {
+  z-index: 999 !important;
+}
+
+.reviews-list.visible ~ * .notification-item,
+.reviews-list.visible + * .notification-item {
+  display: none !important;
+}
+
+/* Alternative approach - hide all notifications when reviews list is open */
+.reviews-list-open .notification-item {
+  display: none !important;
 }
 
 @keyframes reviewsListSlide {

@@ -41,6 +41,15 @@ const ReviewsList = ({ marker, onClose }) => {
     fetchReviews();
   }, [marker]);
   
+  useEffect(() => {
+    // Add class to body when reviews list is open
+    document.body.classList.add('reviews-list-open');
+    
+    return () => {
+      document.body.classList.remove('reviews-list-open');
+    };
+  }, []);
+  
   const markerReviews = reviews;
 
   return (
