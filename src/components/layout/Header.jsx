@@ -58,7 +58,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
     <header className="header">
       <div className="header-container">
         <Link to="/" className="header-logo">
-          MapMark
+          PinPoint
         </Link>
         
         {/* Search Bar - only on home page */}
