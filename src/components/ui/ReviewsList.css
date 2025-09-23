@@ -1,0 +1,294 @@
+.reviews-list {
+  position: fixed;
+  top: 0;
+  left: -400px;
+  width: 400px;
+  height: 100vh;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 0 24px 24px 0;
+  padding: 24px;
+  animation: reviewsListSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reviews-list.visible {
+  left: 0;
+}
+
+@keyframes reviewsListSlide {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+}
+
+.reviews-list-header {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reviews-list-header h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  flex: 1;
+  letter-spacing: -0.01em;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+}
+
+.reviews-list-close-btn {
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  color: #64748b;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 16px;
+}
+
+.reviews-list-close-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.reviews-list-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+  min-width: 0;
+}
+
+.reviews-list-item {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  border: 2px solid rgba(226, 232, 240, 0.6);
+  border-radius: 14px;
+  padding: 17px;
+  margin-bottom: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  position: relative;
+  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.reviews-list-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+  transition: left 0.6s;
+}
+
+.reviews-list-item:hover::before {
+  left: 100%;
+}
+
+.reviews-list-item:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(248, 250, 252, 1) 100%);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.12),
+    0 6px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.reviews-list-header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.4);
+  gap: 12px;
+}
+
+.reviews-list-user-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.reviews-list-user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6 0%, #9333ea 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 
+    0 4px 16px rgba(59, 130, 246, 0.4),
+    0 2px 8px rgba(59, 130, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+.reviews-list-user-avatar:hover {
+  transform: scale(1.1);
+  box-shadow: 
+    0 6px 20px rgba(59, 130, 246, 0.5),
+    0 3px 10px rgba(59, 130, 246, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.reviews-list-user-details {
+  flex: 1;
+}
+
+.reviews-list-user-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reviews-list-time {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.reviews-list-rating {
+  font-size: 14px;
+  color: #fbbc04;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reviews-list-rating-number {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.reviews-list-content-text p {
+  margin: 0 0 12px 0;
+  color: #1e293b;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.reviews-list-photo-grid {
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.reviews-list-photo-grid img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+  border-radius: 8px;
+}
+
+.reviews-list-photo-grid img:hover {
+  transform: scale(1.02);
+}
+
+.reviews-list-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+}
+
+.reviews-list-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  animation: pulse 2s infinite;
+}
+
+.reviews-list-empty-state h3 {
+  margin: 0 0 8px 0;
+  color: #1e293b;
+  font-size: 18px;
+}
+
+.reviews-list-empty-state p {
+  margin: 0;
+  font-size: 14px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Scrollbar */
+.reviews-list-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.reviews-list-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.reviews-list-content::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+
+.reviews-list-content::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+@media (max-width: 768px) {
+  .reviews-list {
+    width: 100vw;
+    left: -100vw;
+    border-radius: 0;
+  }
+  
+  .reviews-list.visible {
+    left: 0;
+  }
+}

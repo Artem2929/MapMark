@@ -5,8 +5,9 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './WorldMap.css';
 import ReviewForm from '../forms/ReviewForm';
-import ReviewsPanel from '../ui/ReviewsPanel';
+
 import MarkerPopup from '../ui/MarkerPopup';
+import ReviewsList from '../ui/ReviewsList';
 import { getCurrentLocation, getRoute } from './LocationService';
 import ReviewService from '../../services/reviewService';
 
@@ -35,8 +36,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [expandedPopup, setExpandedPopup] = useState(null);
-  const [showReviewsPanel, setShowReviewsPanel] = useState(false);
-  const [selectedMarkerForReviews, setSelectedMarkerForReviews] = useState(null);
+
   const [userLocation, setUserLocation] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [tempMarker, setTempMarker] = useState(null);
@@ -44,6 +44,8 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
   const [contextMenu, setContextMenu] = useState(null);
   const [contextSearchQuery, setContextSearchQuery] = useState('');
   const [markerPopup, setMarkerPopup] = useState(null);
+  const [showReviewsList, setShowReviewsList] = useState(false);
+  const [selectedMarkerForReviews, setSelectedMarkerForReviews] = useState(null);
 
   // Load reviews from API on component mount
   useEffect(() => {
@@ -90,11 +92,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
       // Close review form
       setShowReviewForm(false);
       
-      // If reviews panel was open, keep it open and update the selected marker
-      if (showReviewsPanel && selectedMarkerForReviews?.id === selectedMarker.id) {
-        // Panel stays open, just update the marker reference
-        setSelectedMarkerForReviews(prev => ({ ...prev, hasReviews: true }));
-      }
+
       
       setSelectedMarker(null);
       console.log('Review submitted:', newReview);
@@ -518,20 +516,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
         />
       )}
       
-      {showReviewsPanel && selectedMarkerForReviews && (
-        <ReviewsPanel
-          marker={selectedMarkerForReviews}
-          reviews={reviews}
-          onClose={() => {
-            setShowReviewsPanel(false);
-            setSelectedMarkerForReviews(null);
-          }}
-          onAddReview={() => {
-            setSelectedMarker(selectedMarkerForReviews);
-            setShowReviewForm(true);
-          }}
-        />
-      )}
+
       
       {/* Контекстне меню */}
       {contextMenu && (
@@ -626,7 +611,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
             }}
             onViewReviews={() => {
               setSelectedMarkerForReviews(markerPopup.marker);
-              setShowReviewsPanel(true);
+              setShowReviewsList(true);
               setMarkerPopup(null);
             }}
             onBuildRoute={() => {
@@ -637,6 +622,20 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
               setMarkers(prev => prev.filter(m => m.id !== markerPopup.marker.id));
               setReviews(prev => prev.filter(r => r.markerId !== markerPopup.marker.id));
               setMarkerPopup(null);
+            }}
+          />
+        </div>
+      )}
+      
+      {/* Reviews List */}
+      {showReviewsList && selectedMarkerForReviews && (
+        <div className={`reviews-list-overlay ${showReviewsList ? 'visible' : ''}`}>
+          <ReviewsList
+            marker={selectedMarkerForReviews}
+            reviews={reviews}
+            onClose={() => {
+              setShowReviewsList(false);
+              setSelectedMarkerForReviews(null);
             }}
           />
         </div>

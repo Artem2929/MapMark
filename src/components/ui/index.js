@@ -19,7 +19,7 @@ export { default as NotificationPanel } from './NotificationPanel';
 export { default as PostActions } from './PostActions';
 export { default as ProgressWidget } from './ProgressWidget';
 export { default as QuickFilter } from './QuickFilter';
-export { default as ReviewsPanel } from './ReviewsPanel';
+
 export { default as StarRating } from './StarRating';
 export { default as UserAvatarLarge } from './UserAvatarLarge';
 export { default as UserStats } from './UserStats';

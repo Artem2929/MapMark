@@ -5,7 +5,7 @@ export { default as Footer } from './layout/Footer';
 // UI components
 export { default as Button } from './ui/Button';
 export { default as CountryFlags } from './ui/CountryFlags';
-export { default as ReviewsPanel } from './ui/ReviewsPanel';
+
 
 // Form components
 export { default as CreateAdForm } from './forms/CreateAdForm';
