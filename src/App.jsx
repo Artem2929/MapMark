@@ -8,6 +8,7 @@ import WorldMap from './components/map/WorldMap.jsx'
 import CountryFlags from './components/ui/CountryFlags.jsx'
 import QuickFilter from './components/ui/QuickFilter.jsx'
 import FeatureHub from './components/features/FeatureHub.jsx'
+import ProgressWidget from './components/ui/ProgressWidget.jsx'
 import AdsPage from './pages/AdsPage.jsx'
 import AdDetailPage from './pages/AdDetailPage.jsx'
 import CreateAdPage from './pages/CreateAdPage.jsx'
@@ -36,6 +37,7 @@ const AppContent = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [places, setPlaces] = useState([]);
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+  const [userReviewCount, setUserReviewCount] = useState(0);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
@@ -113,7 +115,9 @@ const AppContent = () => {
                 onLocationUpdate={setUserLocation}
                 onPlacesUpdate={setPlaces}
                 onReviewFormToggle={setIsReviewFormOpen}
+                onReviewSubmit={() => setUserReviewCount(prev => prev + 1)}
               />
+              {!isReviewFormOpen && <ProgressWidget onReviewAdded={userReviewCount} />}
               <FeatureHub 
                 userLocation={userLocation}
                 places={places}

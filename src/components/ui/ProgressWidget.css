@@ -94,6 +94,14 @@
   }
 }
 
+.progress-text {
+  font-size: 10px;
+  color: #64748b;
+  text-align: center;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
 @media (max-width: 768px) {
   .progress-widget {
     top: 90px;

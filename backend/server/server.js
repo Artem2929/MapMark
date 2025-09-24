@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const multer = require("multer");
-const { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler } = require('./services/ReviewService');
+const { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler, getUserStatsHandler } = require('./services/ReviewService');
+const { getReviews } = require('./Repositories/ReviewRepository');
 const authRoutes = require('./routes/auth');
 
 const app = express();
@@ -45,6 +46,7 @@ app.get('/', (req, res) => {
       nearbyReviews: '/api/reviews/nearby?lat=40.7128&lng=-74.0060&radius=1000',
       deleteReview: 'DELETE /api/review/:reviewId',
       deletePhoto: 'DELETE /api/review/:reviewId/photo/:photoId',
+      userStats: 'GET /api/user/stats',
       health: '/api/health'
     }
   });
@@ -62,6 +64,35 @@ app.delete('/api/review/:reviewId', deleteReviewHandler);
 app.delete('/api/review/:reviewId/photo/:photoId', deletePhotoHandler);
 // Get a single photo as base64
 app.get('/api/photo/:photoId', getPhotoHandler);
+// Test endpoint
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Test endpoint works' });
+});
+
+// Get user stats (review count)
+app.get('/api/user/stats', async (req, res) => {
+  console.log('User stats endpoint called');
+  try {
+    const reviews = await getReviews();
+    const reviewCount = reviews.length;
+    
+    res.json({
+      success: true,
+      data: {
+        reviewCount,
+        level: Math.floor(reviewCount / 10) + 1,
+        progress: Math.min(reviewCount * 10, 100)
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching user stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching user stats',
+      error: error.message
+    });
+  }
+});
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

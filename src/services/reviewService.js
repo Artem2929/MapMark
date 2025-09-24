@@ -160,6 +160,86 @@ class ReviewService {
   }
 
   /**
+   * Get user statistics with complex level progression
+   * @returns {Promise<Object>} User stats data
+   */
+  static async getUserStats() {
+    try {
+      const reviews = await this.getAllReviews();
+      const reviewCount = reviews.length;
+      
+      // Calculate level and progress based on complex progression
+      const { level, progress, reviewsForNextLevel } = this.calculateLevelProgress(reviewCount);
+      
+      return {
+        reviewCount,
+        level,
+        progress,
+        reviewsForNextLevel
+      };
+    } catch (error) {
+      console.error('Error fetching user stats:', error);
+      throw new Error(`Failed to fetch user stats: ${error.message}`);
+    }
+  }
+
+  /**
+   * Calculate level and progress based on review count
+   * @param {number} reviewCount - Total number of reviews
+   * @returns {Object} Level progression data
+   */
+  static calculateLevelProgress(reviewCount) {
+    // Level requirements: 1=5, 2=15, 3=35, 4=135, 5=235, 6=335, 7=435, 8=535, 9=635, 10=735
+    const levelRequirements = [
+      { level: 1, reviews: 5, progressPerReview: 20 },   // 5 reviews * 20% = 100%
+      { level: 2, reviews: 15, progressPerReview: 10 },  // 10 reviews * 10% = 100%
+      { level: 3, reviews: 35, progressPerReview: 5 },   // 20 reviews * 5% = 100%
+      { level: 4, reviews: 135, progressPerReview: 1 },  // 100 reviews * 1% = 100%
+      { level: 5, reviews: 235, progressPerReview: 1 },  // 100 reviews * 1% = 100%
+      { level: 6, reviews: 335, progressPerReview: 1 },  // 100 reviews * 1% = 100%
+      { level: 7, reviews: 435, progressPerReview: 1 },  // 100 reviews * 1% = 100%
+      { level: 8, reviews: 535, progressPerReview: 1 },  // 100 reviews * 1% = 100%
+      { level: 9, reviews: 635, progressPerReview: 1 },  // 100 reviews * 1% = 100%
+      { level: 10, reviews: 735, progressPerReview: 1 }  // 100 reviews * 1% = 100%
+    ];
+    
+    // Find current level
+    let currentLevel = 1;
+    let reviewsInCurrentLevel = reviewCount;
+    let previousLevelReviews = 0;
+    
+    for (let i = 0; i < levelRequirements.length; i++) {
+      if (reviewCount >= levelRequirements[i].reviews) {
+        currentLevel = levelRequirements[i].level + 1;
+        previousLevelReviews = levelRequirements[i].reviews;
+      } else {
+        break;
+      }
+    }
+    
+    // Cap at level 10
+    if (currentLevel > 10) {
+      return {
+        level: 10,
+        progress: 100,
+        reviewsForNextLevel: 0
+      };
+    }
+    
+    // Calculate progress in current level
+    const currentLevelData = levelRequirements[currentLevel - 1];
+    const reviewsInLevel = reviewCount - previousLevelReviews;
+    const progress = Math.min(reviewsInLevel * currentLevelData.progressPerReview, 100);
+    const reviewsNeeded = Math.ceil((100 - progress) / currentLevelData.progressPerReview);
+    
+    return {
+      level: currentLevel,
+      progress,
+      reviewsForNextLevel: reviewsNeeded
+    };
+  }
+
+  /**
    * Validate review data before submission
    * @param {Object} reviewData - Review data to validate
    * @returns {Object} Validation result

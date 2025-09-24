@@ -340,4 +340,27 @@ async function deletePhotoHandler(req, res) {
   }
 }
 
-module.exports = { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler };
+async function getUserStatsHandler(req, res) {
+  try {
+    const reviews = await getReviews();
+    const reviewCount = reviews.length;
+    
+    res.json({
+      success: true,
+      data: {
+        reviewCount,
+        level: Math.floor(reviewCount / 10) + 1,
+        progress: Math.min(reviewCount * 10, 100)
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching user stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching user stats',
+      error: error.message
+    });
+  }
+}
+
+module.exports = { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler, getUserStatsHandler };

@@ -28,7 +28,7 @@ const MapClickHandler = ({ onMapClick }) => {
   return null;
 };
 
-const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
+const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onReviewSubmit }) => {
   const { t } = useTranslation();
   const [markers, setMarkers] = useState([]);
   const [map, setMap] = useState(null);
@@ -36,6 +36,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [expandedPopup, setExpandedPopup] = useState(null);
+  const [userReviewCount, setUserReviewCount] = useState(0);
 
   const [userLocation, setUserLocation] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
@@ -74,6 +75,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
       };
       
       setReviews(prev => [...prev, newReview]);
+      onReviewSubmit?.();
       
       // Якщо це тимчасовий маркер, робимо його постійним
       if (selectedMarker.isTemp) {
@@ -566,16 +568,18 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle }) => {
             <span className="context-menu-item-text">{t('popup.addReview')}</span>
           </button>
           
-          <button 
-            className="context-menu-item"
-            onClick={() => {
-              buildRoute(contextMenu.marker);
-              setContextMenu(null);
-            }}
-          >
-            <span className="context-menu-item-icon">🗺️</span>
-            <span className="context-menu-item-text">Маршрут</span>
-          </button>
+          {userLocation && (
+            <button 
+              className="context-menu-item"
+              onClick={() => {
+                buildRoute(contextMenu.marker);
+                setContextMenu(null);
+              }}
+            >
+              <span className="context-menu-item-icon">🗺️</span>
+              <span className="context-menu-item-text">Маршрут</span>
+            </button>
+          )}
           
           <button 
             className="context-menu-item"
