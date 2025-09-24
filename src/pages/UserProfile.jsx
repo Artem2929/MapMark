@@ -23,23 +23,27 @@ const UserProfile = () => {
   const [avatarFile, setAvatarFile] = useState(null);
 
   useEffect(() => {
-    // Mock API call
-    setTimeout(() => {
-      const mockUser = {
-        id: userId,
-        name: 'John Doe',
-        username: '@johndoe',
-        avatar: null,
-        country: 'Швейцарія',
-        city: 'Цюрих',
-        joinedAt: '2024-04-12',
-        bio: 'Люблю гори, подорожі та фотографію. Завжди в пошуках нових пригод! 🏔️📸',
-        stats: {
-          messages: 25,
-          posts: 12,
-          followers: 102,
-          following: 33
-        },
+    const fetchUserData = async () => {
+      try {
+        // Fetch user stats from API
+        const statsResponse = await fetch(`http://localhost:3000/api/user/${userId}/stats`);
+        const statsData = await statsResponse.json();
+        
+        const mockUser = {
+          id: userId,
+          name: 'John Doe',
+          username: '@johndoe',
+          avatar: null,
+          country: 'Швейцарія',
+          city: 'Цюрих',
+          joinedAt: '2024-04-12',
+          bio: 'Люблю гори, подорожі та фотографію. Завжди в пошуках нових пригод! 🏔️📸',
+          stats: statsData.success ? statsData.data : {
+            messages: 0,
+            posts: 0,
+            followers: 0,
+            following: 0
+          },
         posts: [
           {
             id: 1,
@@ -64,13 +68,37 @@ const UserProfile = () => {
           }
         ]
       };
-      setUser(mockUser);
-      setIsOwnProfile(localStorage.getItem('userId') === userId);
-      setEditedName(mockUser.name);
-      setEditedCity(mockUser.city);
-      setEditedBio(mockUser.bio || '');
-      setLoading(false);
-    }, 300);
+        setUser(mockUser);
+        setIsOwnProfile(localStorage.getItem('userId') === userId);
+        setEditedName(mockUser.name);
+        setEditedCity(mockUser.city);
+        setEditedBio(mockUser.bio || '');
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        // Fallback to mock data if API fails
+        const mockUser = {
+          id: userId,
+          name: 'John Doe',
+          username: '@johndoe',
+          avatar: null,
+          country: 'Швейцарія',
+          city: 'Цюрих',
+          joinedAt: '2024-04-12',
+          bio: 'Люблю гори, подорожі та фотографію. Завжди в пошуках нових пригод! 🏔️📸',
+          stats: { messages: 0, posts: 0, followers: 0, following: 0 },
+          posts: []
+        };
+        setUser(mockUser);
+        setIsOwnProfile(localStorage.getItem('userId') === userId);
+        setEditedName(mockUser.name);
+        setEditedCity(mockUser.city);
+        setEditedBio(mockUser.bio || '');
+        setLoading(false);
+      }
+    };
+    
+    fetchUserData();
   }, [userId]);
 
   const getJoinedDate = (dateString) => {
@@ -302,16 +330,12 @@ const UserProfile = () => {
           stats={user.stats}
           onStatClick={(statType) => {
             if (statType === 'messages') {
-              // Перехід до сторінки повідомлень
               navigate('/messages');
             } else if (statType === 'posts') {
-              // Прокрутити до секції постів
               document.querySelector('.profile-posts-section')?.scrollIntoView({ behavior: 'smooth' });
             } else if (statType === 'followers') {
-              // Відкрити модальне вікно з підписниками
               navigate(`/user/${user.id}/followers`);
             } else if (statType === 'following') {
-              // Відкрити модальне вікно з підписками
               navigate(`/user/${user.id}/following`);
             }
           }}

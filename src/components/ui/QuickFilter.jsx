@@ -45,7 +45,7 @@ const QuickFilter = ({ onFilterChange, onLocationClick }) => {
     <div className={`quick-filter ${isExpanded ? 'expanded' : 'collapsed'}`}>
       <div className="filter-header">
         <button 
-          className="location-btn"
+          className="quick-location-btn"
           onClick={(e) => {
             e.stopPropagation();
             if (onLocationClick) {

@@ -5,6 +5,7 @@ const cors = require('cors');
 const multer = require("multer");
 const { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler, getUserStatsHandler } = require('./services/ReviewService');
 const { getReviews } = require('./Repositories/ReviewRepository');
+const { getUserStatsHandler: userStatsHandler, getUserFollowersHandler, getUserFollowingHandler, followUserHandler, unfollowUserHandler } = require('./services/UserStatsService');
 const authRoutes = require('./routes/auth');
 
 const app = express();
@@ -47,6 +48,11 @@ app.get('/', (req, res) => {
       deleteReview: 'DELETE /api/review/:reviewId',
       deletePhoto: 'DELETE /api/review/:reviewId/photo/:photoId',
       userStats: 'GET /api/user/stats',
+      userProfileStats: 'GET /api/user/:userId/stats',
+      userFollowers: 'GET /api/user/:userId/followers',
+      userFollowing: 'GET /api/user/:userId/following',
+      followUser: 'POST /api/user/:userId/follow',
+      unfollowUser: 'DELETE /api/user/:userId/follow',
       health: '/api/health'
     }
   });
@@ -69,9 +75,15 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'Test endpoint works' });
 });
 
-// Get user stats (review count)
+// User stats endpoints
+app.get('/api/user/:userId/stats', userStatsHandler);
+app.get('/api/user/:userId/followers', getUserFollowersHandler);
+app.get('/api/user/:userId/following', getUserFollowingHandler);
+app.post('/api/user/:userId/follow', followUserHandler);
+app.delete('/api/user/:userId/follow', unfollowUserHandler);
+
+// Global user stats (for progress widget)
 app.get('/api/user/stats', async (req, res) => {
-  console.log('User stats endpoint called');
   try {
     const reviews = await getReviews();
     const reviewCount = reviews.length;

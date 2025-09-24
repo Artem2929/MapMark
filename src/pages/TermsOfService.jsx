@@ -90,7 +90,7 @@ const TermsOfService = () => {
             <h2>{t('termsOfService.contact.title')}</h2>
             <p>{t('termsOfService.contact.description')}</p>
             <div className="contact-info">
-              <p><strong>{t('termsOfService.contact.email')}:</strong> legal@mapmark.com</p>
+              <p><strong>{t('termsOfService.contact.email')}:</strong> legal@pinpoint.com</p>
               <p><strong>{t('termsOfService.contact.address')}:</strong> {t('termsOfService.contact.addressText')}</p>
             </div>
           </section>
