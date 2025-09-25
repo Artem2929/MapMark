@@ -1,33 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import ReviewService from '../../services/reviewService';
+import useReviews from '../../hooks/useReviews';
 import './ProgressWidget.css';
 
 const ProgressWidget = ({ onReviewAdded }) => {
+  const { reviews, loading: reviewsLoading } = useReviews();
   const [stats, setStats] = useState({ reviewCount: 0, level: 1, progress: 0 });
-  const [loading, setLoading] = useState(true);
-  
-  const fetchStats = async () => {
-    try {
-      const userStats = await ReviewService.getUserStats();
-      setStats(userStats);
-    } catch (error) {
-      console.error('Error fetching stats:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
   
   useEffect(() => {
-    fetchStats();
-  }, []);
-  
-  useEffect(() => {
-    if (onReviewAdded) {
-      fetchStats();
+    if (reviews.length > 0) {
+      const { level, progress, reviewsForNextLevel } = ReviewService.calculateLevelProgress(reviews.length);
+      setStats({
+        reviewCount: reviews.length,
+        level,
+        progress,
+        reviewsForNextLevel
+      });
     }
-  }, [onReviewAdded]);
+  }, [reviews]);
   
-  if (loading) {
+  if (reviewsLoading) {
     return (
       <div className="progress-widget">
         <div className="progress-info">

@@ -6,6 +6,7 @@ const reviewSchema = new mongoose.Schema({
   lat: { type: Number, required: true },
   review: { type: String, required: true },
   rating: { type: Number, required: true, min: 1, max: 5 },
+  username: { type: String, required: true, trim: true, maxlength: 50 },
   photoIds: { type: [String], default: [] },
   createdAt: { type: Date, default: Date.now },
   // Add GeoJSON location field for geospatial queries
@@ -51,6 +52,7 @@ async function createReview({
     lat,
     review,
     rating,
+    username,
     photoIds = []
   }) {
   return Review.create({
@@ -58,6 +60,7 @@ async function createReview({
     lat,
     review,
     rating,
+    username,
     photoIds  
   });
 }

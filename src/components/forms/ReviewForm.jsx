@@ -9,8 +9,10 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
   const [reviewText, setReviewText] = useState('');
   const [rating, setRating] = useState(0);
   const [photos, setPhotos] = useState([]);
+  const [username, setUsername] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const handlePhotoUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -25,9 +27,41 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
     setPhotos(prev => prev.filter((_, i) => i !== index));
   };
 
+  const validateForm = () => {
+    const errors = {};
+    
+    if (!username.trim()) {
+      errors.username = t('validation.usernameRequired');
+    } else if (username.trim().length < 2) {
+      errors.username = t('validation.usernameMinLength');
+    } else if (username.trim().length > 50) {
+      errors.username = t('validation.usernameMaxLength');
+    }
+    
+    if (!reviewText.trim()) {
+      errors.review = t('validation.reviewRequired');
+    } else if (reviewText.trim().length < 10) {
+      errors.review = t('validation.reviewMinLength');
+    }
+    
+    if (!rating || rating < 1 || rating > 5) {
+      errors.rating = t('validation.ratingRequired');
+    }
+    
+    return errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setFieldErrors({});
+    
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
+    
     setIsSubmitting(true);
 
     try {
@@ -36,6 +70,7 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
         lat: marker.position[0], // Latitude
         review: reviewText.trim(),
         rating,
+        username: username.trim(),
         photos
       };
 
@@ -95,15 +130,45 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
         <div className="review-form-content">
           <form onSubmit={handleSubmit}>
           <div className="review-form-group">
+            <label>{t('review.username')}</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                if (fieldErrors.username) {
+                  setFieldErrors(prev => ({ ...prev, username: '' }));
+                }
+              }}
+              placeholder={t('review.usernamePlaceholder')}
+              required
+              maxLength={50}
+              className={`review-form-input ${fieldErrors.username ? 'error' : ''}`}
+            />
+            {fieldErrors.username && (
+              <span className="field-error">{fieldErrors.username}</span>
+            )}
+          </div>
+
+          <div className="review-form-group">
             <label>{t('review.yourReview')}</label>
             <div className="review-form-textarea-container">
               <textarea
                 value={reviewText}
-                onChange={(e) => setReviewText(e.target.value)}
+                onChange={(e) => {
+                  setReviewText(e.target.value);
+                  if (fieldErrors.review) {
+                    setFieldErrors(prev => ({ ...prev, review: '' }));
+                  }
+                }}
                 placeholder={t('review.placeholder')}
                 required
                 maxLength={500}
+                className={fieldErrors.review ? 'error' : ''}
               />
+              {fieldErrors.review && (
+                <span className="field-error">{fieldErrors.review}</span>
+              )}
               <div className="review-form-char-counter">{reviewText.length}/500</div>
             </div>
           </div>
@@ -113,11 +178,19 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
             <div className="review-form-rating-container">
               <StarRating
                 value={rating}
-                onChange={setRating}
+                onChange={(newRating) => {
+                  setRating(newRating);
+                  if (fieldErrors.rating) {
+                    setFieldErrors(prev => ({ ...prev, rating: '' }));
+                  }
+                }}
                 size={40}
                 readonly={false}
                 isReviewForm={true}
               />
+              {fieldErrors.rating && (
+                <span className="field-error">{fieldErrors.rating}</span>
+              )}
               <div className="review-form-rating-text">
                 <span>{rating || 0} {t('review.outOfStars')}</span>
               </div>
@@ -177,7 +250,7 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
             <button 
               type="submit" 
               className="review-form-publish-btn" 
-              disabled={!reviewText || !rating || isSubmitting}
+              disabled={!reviewText || !rating || !username || isSubmitting}
             >
               {isSubmitting ? 'Publishing...' : t('review.publish')}
             </button>

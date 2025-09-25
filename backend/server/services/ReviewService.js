@@ -6,14 +6,15 @@ const { v4: uuidv4 } = require('uuid');
 
 async function createReviewHandler(req, res) {
   try {
-    const { lng, lat, review, rating } = req.body;
+    const { lng, lat, review, rating, username } = req.body;
+    console.log('Received data:', { lng, lat, review, rating, username });
     let photoIds = [];
 
     // Validate required fields
-    if (!lng || !lat || !review || !rating) {
+    if (!lng || !lat || !review || !rating || !username) {
       return res.status(400).json({
         success: false,
-        message: 'Longitude, latitude, review, and rating are required'
+        message: 'Longitude, latitude, review, rating, and username are required'
       });
     }
 
@@ -51,10 +52,14 @@ async function createReviewHandler(req, res) {
       lat: latitude,
       review: review.trim(),
       rating: ratingNum,
+      username: username.trim(),
       photoIds: photoIds
     };
 
+    console.log('Creating review with data:', reviewData);
     const savedReview = await createReview(reviewData);
+    console.log('Saved review:', JSON.stringify(savedReview, null, 2));
+    console.log('Username in saved review:', savedReview.username);
 
     res.status(201).json({ 
       success: true, 
@@ -74,30 +79,19 @@ async function getReviewsHandler(req, res) {
   try {
     const reviews = await getReviews();
     
-    // Process each review to include base64 photos
-    const reviewsWithPhotos = await Promise.all(
-      reviews.map(async (review) => {
-        const reviewObj = review.toObject();
-        
-        // Download photos as base64 if they exist
-        if (reviewObj.photoIds && reviewObj.photoIds.length > 0) {
-          const base64Photos = await downloadPhotosAsBase64(reviewObj.photoIds);
-          reviewObj.photos = base64Photos;
-        } else {
-          reviewObj.photos = [];
-        }
-        
-        // Remove photoIds as we now have photos with base64 data
-        delete reviewObj.photoIds;
-        
-        return reviewObj;
-      })
-    );
+    // Return reviews without photos for faster loading
+    const reviewsData = reviews.map(review => {
+      const reviewObj = review.toObject();
+      // Keep photoIds but don't load actual photos
+      reviewObj.photos = [];
+      reviewObj.hasPhotos = reviewObj.photoIds && reviewObj.photoIds.length > 0;
+      return reviewObj;
+    });
     
     res.json({
       success: true,
-      count: reviewsWithPhotos.length,
-      data: reviewsWithPhotos
+      count: reviewsData.length,
+      data: reviewsData
     });
   } catch (error) {
     console.error('Error fetching reviews:', error);

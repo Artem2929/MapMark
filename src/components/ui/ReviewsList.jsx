@@ -80,7 +80,7 @@ const ReviewsList = ({ marker, onClose }) => {
                 <div className="reviews-list-user-info">
                   <div className="reviews-list-user-avatar">👤</div>
                   <div className="reviews-list-user-details">
-                    <div className="reviews-list-user-name">Anonymous User</div>
+                    <div className="reviews-list-user-name">{review.username || 'Anonymous User'}</div>
                     <div className="reviews-list-time">
                       {new Date(review.createdAt).toLocaleDateString()}
                     </div>

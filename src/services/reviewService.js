@@ -11,10 +11,11 @@ class ReviewService {
    * @param {number} reviewData.lat - Latitude
    * @param {string} reviewData.review - Review text
    * @param {number} reviewData.rating - Rating (1-5)
+   * @param {string} reviewData.username - Username
    * @param {File[]} reviewData.photos - Array of photo files
    * @returns {Promise<Object>} Created review data
    */
-  static async createReview({ lng, lat, review, rating, photos = [] }) {
+  static async createReview({ lng, lat, review, rating, username, photos = [] }) {
     try {
       const formData = new FormData();
       
@@ -23,6 +24,7 @@ class ReviewService {
       formData.append('lat', lat.toString());
       formData.append('review', review);
       formData.append('rating', rating.toString());
+      formData.append('username', username);
       
       // Add photos if provided
       photos.forEach(photo => {
@@ -161,26 +163,18 @@ class ReviewService {
 
   /**
    * Get user statistics with complex level progression
-   * @returns {Promise<Object>} User stats data
+   * @param {number} reviewCount - Number of reviews
+   * @returns {Object} User stats data
    */
-  static async getUserStats() {
-    try {
-      const reviews = await this.getAllReviews();
-      const reviewCount = reviews.length;
-      
-      // Calculate level and progress based on complex progression
-      const { level, progress, reviewsForNextLevel } = this.calculateLevelProgress(reviewCount);
-      
-      return {
-        reviewCount,
-        level,
-        progress,
-        reviewsForNextLevel
-      };
-    } catch (error) {
-      console.error('Error fetching user stats:', error);
-      throw new Error(`Failed to fetch user stats: ${error.message}`);
-    }
+  static getUserStats(reviewCount) {
+    const { level, progress, reviewsForNextLevel } = this.calculateLevelProgress(reviewCount);
+    
+    return {
+      reviewCount,
+      level,
+      progress,
+      reviewsForNextLevel
+    };
   }
 
   /**
@@ -245,8 +239,15 @@ class ReviewService {
    * @returns {Object} Validation result
    */
   static validateReviewData(reviewData) {
-    const { lng, lat, review, rating, photos } = reviewData;
+    const { lng, lat, review, rating, username, photos } = reviewData;
     const errors = [];
+
+    // Validate username
+    if (!username || typeof username !== 'string' || username.trim().length === 0) {
+      errors.push('Username is required.');
+    } else if (username.length > 50) {
+      errors.push('Username must be 50 characters or less.');
+    }
 
     // Validate coordinates
     if (typeof lng !== 'number' || lng < -180 || lng > 180) {

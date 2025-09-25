@@ -71,6 +71,8 @@
   "review": {
     "title": "Share Your Experience",
     "subtitle": "Help others discover this amazing place",
+    "username": "Your Name",
+    "usernamePlaceholder": "Enter your name",
     "yourReview": "Your Review",
     "placeholder": "What made this place special? Share details about your visit, the atmosphere, accessibility, or any tips for future visitors...",
     "rating": "Rating",
@@ -79,6 +81,14 @@
     "choosePhoto": "Choose Photo",
     "cancel": "Cancel",
     "publish": "Publish Review"
+  },
+  "validation": {
+    "usernameRequired": "Name is required",
+    "usernameMinLength": "Name must be at least 2 characters",
+    "usernameMaxLength": "Name cannot exceed 50 characters",
+    "reviewRequired": "Review is required",
+    "reviewMinLength": "Review must be at least 10 characters",
+    "ratingRequired": "Rating is required"
   },
   "popup": {
     "addReview": "Add Review",

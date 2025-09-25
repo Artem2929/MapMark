@@ -10,6 +10,7 @@ import MarkerPopup from '../ui/MarkerPopup';
 import ReviewsList from '../ui/ReviewsList';
 import { getCurrentLocation, getRoute } from './LocationService';
 import ReviewService from '../../services/reviewService';
+import useReviews from '../../hooks/useReviews';
 
 // Fix for default markers
 delete L.Icon.Default.prototype._getIconUrl;
@@ -34,7 +35,21 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
   const [map, setMap] = useState(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState(null);
-  const [reviews, setReviews] = useState([]);
+  const { reviews, addReview } = useReviews();
+
+  // Create markers from reviews
+  useEffect(() => {
+    if (reviews.length > 0) {
+      const reviewMarkers = reviews.map(review => ({
+        id: review._id,
+        position: [review.lat, review.lng],
+        name: `Відгук від ${review.username || 'Anonymous'}`,
+        hasReviews: true,
+        isTemp: false
+      }));
+      setMarkers(reviewMarkers);
+    }
+  }, [reviews]);
   const [expandedPopup, setExpandedPopup] = useState(null);
   const [userReviewCount, setUserReviewCount] = useState(0);
 
@@ -48,20 +63,6 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
   const [showReviewsList, setShowReviewsList] = useState(false);
   const [selectedMarkerForReviews, setSelectedMarkerForReviews] = useState(null);
 
-  // Load reviews from API on component mount
-  useEffect(() => {
-    loadReviews();
-  }, []);
-
-  const loadReviews = async () => {
-    try {
-      const reviewsData = await ReviewService.getAllReviews();
-      setReviews(reviewsData);
-    } catch (error) {
-      console.error('Error loading reviews:', error);
-    }
-  };
-
   const handleReviewSubmit = async (reviewData) => {
     onReviewFormToggle?.(false);
     try {
@@ -74,7 +75,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
         markerId: selectedMarker.id
       };
       
-      setReviews(prev => [...prev, newReview]);
+      addReview(newReview);
       onReviewSubmit?.();
       
       // Якщо це тимчасовий маркер, робимо його постійним
@@ -84,11 +85,17 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
         setTempMarker(null);
       } else {
         // Update existing marker to show it has reviews
-        setMarkers(prev => prev.map(marker => 
-          marker.id === selectedMarker.id 
-            ? { ...marker, hasReviews: true }
-            : marker
-        ));
+        setMarkers(prev => {
+          const existingMarker = prev.find(m => m.id === selectedMarker.id);
+          if (existingMarker) {
+            return prev.map(marker => 
+              marker.id === selectedMarker.id 
+                ? { ...marker, hasReviews: true }
+                : marker
+            );
+          }
+          return prev;
+        });
       }
       
       // Close review form
@@ -424,8 +431,10 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
         
         {/* Постійні маркери */}
         {markers.map((marker) => {
-          const markerReviews = reviews.filter(review => review.markerId === marker.id);
-          const hasReviews = markerReviews.length > 0;
+          const markerReviews = reviews.filter(review => 
+            review._id === marker.id || review.markerId === marker.id
+          );
+          const hasReviews = marker.hasReviews || markerReviews.length > 0;
           
           // Create custom icon for markers with reviews
           const markerProps = {
@@ -434,13 +443,14 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
           };
           
           if (hasReviews) {
+            const reviewCount = markerReviews.length || 1;
             markerProps.icon = L.divIcon({
               html: `
                 <div class="review-badge">
                   <div class="badge-circle">
                     <div class="badge-icon">⭐</div>
                   </div>
-                  <div class="badge-count">${markerReviews.length}</div>
+                  <div class="badge-count">${reviewCount}</div>
                   <div class="badge-glow"></div>
                 </div>
               `,
