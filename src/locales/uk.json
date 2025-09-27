@@ -6,7 +6,8 @@
     "about": "Опис",
     "countries": "Країни",
     "login": "Увійти",
-    "profile": "Профіль"
+    "profile": "Профіль",
+    "logout": "Вийти"
   },
   "search": {
     "placeholder": "Пошук місця...",

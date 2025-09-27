@@ -6,7 +6,8 @@
     "about": "About",
     "countries": "Countries",
     "login": "Login",
-    "profile": "Profile"
+    "profile": "Profile",
+    "logout": "Logout"
   },
   "search": {
     "placeholder": "Search location...",

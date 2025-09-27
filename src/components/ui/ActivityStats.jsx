@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+
 import './ActivityStats.css';
 
 const ActivityStats = ({ userId }) => {
+  const reviews = []; const reviewsLoading = false;
   const [stats, setStats] = useState({
     totalReviews: 0,
     averageRating: 0,
@@ -11,48 +13,24 @@ const ActivityStats = ({ userId }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchActivityStats = async () => {
-      try {
-        const [reviewsResponse, statsResponse] = await Promise.all([
-          fetch(`http://localhost:3000/api/user/${userId}/reviews`),
-          fetch(`http://localhost:3000/api/user/${userId}/stats`)
-        ]);
+    // Generate mock data for demonstration
+    const mockMonthlyActivity = [
+      { month: 'Лип', count: 3 },
+      { month: 'Сер', count: 5 },
+      { month: 'Вер', count: 2 },
+      { month: 'Жов', count: 7 },
+      { month: 'Лис', count: 4 },
+      { month: 'Гру', count: 6 }
+    ];
 
-        const reviewsData = await reviewsResponse.json();
-        const statsData = await statsResponse.json();
-
-        if (reviewsData.success && statsData.success) {
-          const reviews = reviewsData.data;
-          
-          // Calculate stats
-          const totalReviews = reviews.length;
-          const averageRating = reviews.length > 0 
-            ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length 
-            : 0;
-          
-          const countries = new Set(reviews.map(r => r.country).filter(Boolean));
-          const countriesVisited = countries.size;
-
-          // Monthly activity (last 6 months)
-          const monthlyActivity = getMonthlyActivity(reviews);
-
-          setStats({
-            totalReviews,
-            averageRating: Math.round(averageRating * 10) / 10,
-            countriesVisited,
-            monthlyActivity
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching activity stats:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (userId) {
-      fetchActivityStats();
-    }
+    setStats({
+      totalReviews: 15,
+      averageRating: 4.2,
+      countriesVisited: 3,
+      monthlyActivity: mockMonthlyActivity
+    });
+    
+    setLoading(false);
   }, [userId]);
 
   const getMonthlyActivity = (reviews) => {
@@ -92,43 +70,31 @@ const ActivityStats = ({ userId }) => {
       
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon">📊</div>
-          <div className="stat-value">{stats.totalReviews}</div>
+          <div className="stat-header">
+            <div className="stat-icon">📊</div>
+            <div className="stat-value">{stats.totalReviews}</div>
+          </div>
           <div className="stat-label">Всього відгуків</div>
         </div>
         
         <div className="stat-card">
-          <div className="stat-icon">⭐</div>
-          <div className="stat-value">{stats.averageRating}</div>
+          <div className="stat-header">
+            <div className="stat-icon">⭐</div>
+            <div className="stat-value">{stats.averageRating}</div>
+          </div>
           <div className="stat-label">Середня оцінка</div>
         </div>
         
         <div className="stat-card">
-          <div className="stat-icon">🌍</div>
-          <div className="stat-value">{stats.countriesVisited}</div>
+          <div className="stat-header">
+            <div className="stat-icon">🌍</div>
+            <div className="stat-value">{stats.countriesVisited}</div>
+          </div>
           <div className="stat-label">Країн відвідано</div>
         </div>
       </div>
 
-      <div className="activity-chart">
-        <h4>Активність за місяцями</h4>
-        <div className="chart-bars">
-          {stats.monthlyActivity.map((month, index) => (
-            <div key={index} className="chart-bar-container">
-              <div 
-                className="chart-bar"
-                style={{ 
-                  height: `${(month.count / maxActivity) * 100}%`,
-                  minHeight: month.count > 0 ? '4px' : '2px'
-                }}
-              >
-                <span className="bar-value">{month.count}</span>
-              </div>
-              <div className="bar-label">{month.month}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+
     </div>
   );
 };

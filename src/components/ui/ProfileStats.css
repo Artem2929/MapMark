@@ -1,21 +1,26 @@
 .profile-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin: 24px 0;
+  display: flex;
+  gap: 12px;
+  margin: 20px 0 0 0;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .profile-stat-item {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
-  border: 2px solid rgba(59, 130, 246, 0.08);
-  border-radius: 20px;
-  padding: 20px 16px;
-  text-align: center;
+  background: linear-gradient(145deg, #3b82f6 0%, #1d4ed8 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+  white-space: nowrap;
 }
 
 .profile-stat-item::before {
@@ -30,11 +35,9 @@
 }
 
 .profile-stat-item:hover {
-  transform: translateY(-4px) scale(1.02);
-  border-color: rgba(59, 130, 246, 0.2);
-  box-shadow: 
-    0 12px 32px rgba(59, 130, 246, 0.15),
-    0 6px 16px rgba(59, 130, 246, 0.1);
+  background: linear-gradient(145deg, #1d4ed8 0%, #1e40af 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .profile-stat-item:hover::before {
@@ -42,42 +45,45 @@
 }
 
 .profile-stat-icon {
-  font-size: 24px;
-  margin-bottom: 8px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  font-size: 16px;
+  color: white;
+}
+
+.profile-stat-content {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .profile-stat-value {
-  font-size: 24px;
+  font-size: 14px;
   font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 4px;
+  color: white;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
 }
 
 .profile-stat-label {
-  font-size: 12px;
-  color: #64748b;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 14px;
+  color: white;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
   .profile-stats {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   
   .profile-stat-item {
-    padding: 16px 12px;
+    padding: 6px 12px;
   }
   
   .profile-stat-icon {
-    font-size: 20px;
+    font-size: 14px;
   }
   
-  .profile-stat-value {
-    font-size: 20px;
+  .profile-stat-value,
+  .profile-stat-label {
+    font-size: 12px;
   }
 }

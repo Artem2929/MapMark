@@ -1,21 +1,28 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import AuthService from "../../services/authService";
 import "./Header.css";
 
 const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewFormOpen = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { t, i18n } = useTranslation();
   const langDropdownRef = useRef(null);
+  const userMenuRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (langDropdownRef.current && !langDropdownRef.current.contains(event.target)) {
         setIsLangOpen(false);
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setIsUserMenuOpen(false);
       }
     };
 
@@ -54,6 +61,14 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
     }
   };
 
+  const handleLogout = () => {
+    AuthService.logout();
+    setIsUserMenuOpen(false);
+    setIsMenuOpen(false);
+    navigate('/');
+    window.location.reload();
+  };
+
   return (
     <header className="header">
       <div className="header-container">
@@ -82,9 +97,30 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
         <nav className="header-nav desktop-nav">
           {/* Profile/Login Button */}
           {localStorage.getItem('userId') ? (
-            <Link to={`/profile/${localStorage.getItem('userId')}`} className="header-link profile-link">
-              {t('header.profile')}
-            </Link>
+            <div className="user-dropdown" ref={userMenuRef}>
+              <button 
+                className="user-btn"
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              >
+                {localStorage.getItem('userName') || t('header.profile')}
+                <span className={`arrow ${isUserMenuOpen ? 'up' : 'down'}`}>▼</span>
+              </button>
+              <div className={`user-menu ${isUserMenuOpen ? 'open' : ''}`}>
+                <Link
+                  to={`/profile/${localStorage.getItem('userId')}`}
+                  className="user-menu-item"
+                  onClick={() => setIsUserMenuOpen(false)}
+                >
+                  {t('header.profile')}
+                </Link>
+                <button
+                  className="user-menu-item logout-btn"
+                  onClick={handleLogout}
+                >
+                  {t('header.logout')}
+                </button>
+              </div>
+            </div>
           ) : (
             <Link to="/login" className="header-link login-link">
               {t('header.login')}
@@ -148,13 +184,21 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
       <nav className={`mobile-nav ${isMenuOpen ? 'open' : ''}`}>
         {/* Mobile Profile/Login Button */}
         {localStorage.getItem('userId') ? (
-          <Link 
-            to={`/profile/${localStorage.getItem('userId')}`} 
-            className="mobile-link profile-link"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            {t('header.profile')}
-          </Link>
+          <>
+            <Link 
+              to={`/profile/${localStorage.getItem('userId')}`} 
+              className="mobile-link profile-link"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {t('header.profile')}
+            </Link>
+            <button 
+              className="mobile-link logout-btn"
+              onClick={handleLogout}
+            >
+              {t('header.logout')}
+            </button>
+          </>
         ) : (
           <Link 
             to="/login" 

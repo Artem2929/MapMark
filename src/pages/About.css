@@ -1,16 +1,23 @@
 .about-page {
-  min-height: calc(100vh - 64px);
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  padding-top: 0;
+  min-height: calc(100vh - 80px);
+  margin-top: 80px;
+  background: linear-gradient(145deg, #f9f9f9 0%, #f1f5f9 100%);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .about-hero {
-  padding: 80px 20px;
-  text-align: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  margin-bottom:40px;
+  backdrop-filter: blur(10px);
+  padding: 20px 0;
 }
 
 .hero-content {
@@ -18,294 +25,440 @@
   margin: 0 auto;
 }
 
-.hero-icon {
-  font-size: 64px;
-  margin-bottom: 24px;
-  filter: drop-shadow(0 4px 12px rgba(0, 122, 255, 0.2));
-}
-
 .hero-title {
+  text-align: center;
   font-size: 48px;
   font-weight: 800;
-  color: #1d1d1f;
-  margin: 0 0 16px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-}
-
-.hero-subtitle {
-  font-size: 20px;
-  color: #6b7280;
-  margin: 0;
-  font-weight: 400;
-  line-height: 1.5;
-}
-
-.about-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 80px 20px;
-}
-
-.about-content {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-}
-
-.about-text p {
-  font-size: 18px;
-  color: #4b5563;
-  line-height: 1.7;
-  margin-bottom: 16px;
-  font-weight: 400;
-}
-
-.about-text p:last-child {
-  margin-bottom: 0;
-}
-
-.about-section {
-  margin-bottom: 80px;
-}
-
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.section-icon {
-  font-size: 32px;
-  background: linear-gradient(135deg, #007aff 0%, #0056cc 100%);
-  background-clip: text;
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 4px rgba(0, 122, 255, 0.2));
-}
-
-.about-section h2 {
-  font-size: 32px;
-  font-weight: 700;
-  color: #1d1d1f;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  background-clip: text;
+  margin-bottom: 16px;
   letter-spacing: -0.02em;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+    Roboto, sans-serif;
 }
 
-.about-section p {
+.hero-description {
   font-size: 18px;
-  color: #4b5563;
-  line-height: 1.7;
-  margin: 0;
+  color: #64748b;
+  line-height: 1.6;
   font-weight: 400;
-}
-
-.features-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.features-list li {
-  font-size: 18px;
-  color: #4b5563;
-  line-height: 1.7;
-  margin-bottom: 12px;
-  padding-left: 24px;
-  position: relative;
-}
-
-.features-list li:before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: #007aff;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.conclusion {
-  font-size: 20px;
-  color: #1d1d1f;
-  font-weight: 600;
+  letter-spacing: -0.01em;
   text-align: center;
-  padding: 40px;
-  background: linear-gradient(135deg, rgba(0, 122, 255, 0.05) 0%, rgba(0, 86, 204, 0.02) 100%);
-  border-radius: 20px;
-  border: 1px solid rgba(0, 122, 255, 0.1);
-  margin-top: 40px;
 }
 
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 32px;
-  margin: 80px 0;
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-.feature-card {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Stats Section */
+.stats-section {
+  padding: 20px 0;
 }
 
-.feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+.stats-section h2 {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 40px;
+  letter-spacing: -0.02em;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+    Roboto, sans-serif;
 }
 
-.feature-icon {
-  font-size: 48px;
+.about-stats-grid {
+  display: flex;
+  gap: 12px;
   margin-bottom: 20px;
-  display: block;
 }
 
-.feature-card h3 {
-  font-size: 24px;
+.about-stat-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.05);
+  flex: 1;
+}
+
+.about-stat-number {
+  font-size: 18px;
   font-weight: 700;
-  color: #1d1d1f;
-  margin: 0 0 12px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  color: #1e293b;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+    Roboto, sans-serif;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.about-stat-label {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+    Roboto, sans-serif;
+}
+
+/* Mission Section */
+.mission-section {
+  padding: 20px 0;
+}
+
+.mission-content {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: 20px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.mission-content h2 {
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+    Roboto, sans-serif;
+}
+
+.mission-content p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #64748b;
+  margin-bottom: 24px;
+  font-weight: 400;
   letter-spacing: -0.01em;
 }
 
-.feature-card p {
+.features-list {
+  display: grid;
+  gap: 12px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-size: 16px;
-  color: #6b7280;
-  line-height: 1.6;
-  margin: 0;
+  color: #374151;
+  font-weight: 500;
 }
 
-.stats-section {
-  gap: 40px;
-  margin: 80px 0;
-  padding: 60px 40px;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+.feature-icon {
+  font-size: 20px;
 }
 
-.stat-item {
+
+
+/* Team Section */
+.team-section {
+  padding: 60px 20px;
+}
+
+.team-section h2 {
   text-align: center;
-}
-
-.stat-number {
-  font-size: 48px;
-  font-weight: 800;
-  color: #007aff;
-  margin-bottom: 8px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
-  letter-spacing: -0.02em;
-}
-
-.stat-label {
-  font-size: 16px;
-  color: #6b7280;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.cta-section {
-  text-align: center;
-  padding: 80px 40px;
-  background: linear-gradient(135deg, rgba(0, 122, 255, 0.05) 0%, rgba(0, 86, 204, 0.02) 100%);
-  border-radius: 24px;
-  border: 1px solid rgba(0, 122, 255, 0.1);
-}
-
-.cta-section h2 {
   font-size: 36px;
   font-weight: 800;
-  color: #1d1d1f;
-  margin: 0 0 16px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 40px;
   letter-spacing: -0.02em;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+    Roboto, sans-serif;
 }
 
-.cta-section p {
-  font-size: 18px;
-  color: #6b7280;
-  margin: 0 0 32px 0;
-  line-height: 1.6;
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-.cta-button {
-  background: linear-gradient(135deg, #007aff 0%, #0056cc 100%);
+.team-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(248, 250, 252, 0.98) 100%
+  );
+  backdrop-filter: blur(25px) saturate(200%);
+  border: 2px solid rgba(59, 130, 246, 0.15);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(59, 130, 246, 0.12),
+    0 10px 30px rgba(59, 130, 246, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.team-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 32px 80px rgba(59, 130, 246, 0.2),
+    0 16px 40px rgba(59, 130, 246, 0.15), 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.team-avatar {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.team-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: white;
-  border: none;
-  border-radius: 16px;
-  padding: 16px 32px;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.team-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+    Roboto, sans-serif;
+}
+
+.team-role {
+  color: #3b82f6;
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.team-bio {
+  color: #64748b;
+  line-height: 1.5;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* Contact Section */
+.contact-section {
+  padding: 20px 0;
+}
+
+.contact-section h2 {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 40px;
+  letter-spacing: -0.02em;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+    Roboto, sans-serif;
+}
+
+.contact-content {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(248, 250, 252, 0.98) 100%
+  );
+  backdrop-filter: blur(25px) saturate(200%);
+  border: 2px solid rgba(59, 130, 246, 0.15);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(59, 130, 246, 0.12),
+    0 10px 30px rgba(59, 130, 246, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.contact-info h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+    Roboto, sans-serif;
+}
+
+.contact-info p {
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #374151;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.contact-icon {
   font-size: 18px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid rgba(59, 130, 246, 0.08);
+  border-radius: 16px;
+  font-size: 15px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+    Roboto, sans-serif;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15),
+    0 4px 12px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.98);
+  transform: translateY(-2px);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.contact-form button {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+  color: white;
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  padding: 14px 20px;
+  border-radius: 16px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
-  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+    Roboto, sans-serif;
+  letter-spacing: -0.01em;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2),
+    0 4px 12px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.cta-button:hover {
-  background: linear-gradient(135deg, #0056cc 0%, #003d99 100%);
-
-  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.4);
+.contact-form button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 50%, #1d4ed8 100%);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(59, 130, 246, 0.3),
+    0 8px 20px rgba(59, 130, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: rgba(59, 130, 246, 0.4);
 }
 
-/* Mobile responsiveness */
+.contact-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .hero-title {
     font-size: 36px;
   }
-  
-  .hero-subtitle {
-    font-size: 18px;
-  }
-  
-  .about-container {
+
+  .about-hero {
+    margin: 20px 10px;
     padding: 40px 20px;
   }
-  
-  .about-section {
-    margin-bottom: 60px;
-  }
-  
-  .features-grid {
+
+  .mission-content,
+  .contact-content {
     grid-template-columns: 1fr;
-    gap: 24px;
-    margin: 60px 0;
-  }
-  
-  .feature-card {
-    padding: 24px;
-  }
-  
-  .stats-section {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    padding: 40px 20px;
-    margin: 60px 0;
-  }
-  
-  .cta-section {
-    padding: 60px 20px;
-  }
-  
-  .cta-section h2 {
-    font-size: 28px;
-  }
-  
-  .conclusion {
-    font-size: 18px;
+    gap: 30px;
     padding: 30px 20px;
+  }
+
+  .about-stats-grid {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .team-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .image-placeholder {
+    width: 150px;
+    height: 150px;
+    font-size: 3rem;
+  }
+
+  .stats-section,
+  .mission-section,
+  .team-section,
+  .contact-section {
+    padding: 40px 10px;
   }
 }

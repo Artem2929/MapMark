@@ -1,39 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+
 import './UserMap.css';
 
 const UserMap = ({ userId }) => {
-  const [userReviews, setUserReviews] = useState([]);
+  const reviews = []; const reviewsLoading = false;
   const [loading, setLoading] = useState(true);
   const [mapCenter, setMapCenter] = useState([50.4501, 30.5234]); // Київ за замовчуванням
 
   useEffect(() => {
-    const fetchUserReviews = async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/api/user/${userId}/reviews`);
-        const data = await response.json();
-        
-        if (data.success && data.data.length > 0) {
-          const reviews = data.data;
-          setUserReviews(reviews);
-          
-          // Встановлюємо центр карти на основі першого відгуку
-          if (reviews[0].lat && reviews[0].lng) {
-            setMapCenter([reviews[0].lat, reviews[0].lng]);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching user reviews for map:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (userId) {
-      fetchUserReviews();
+    if (reviewsLoading) {
+      setLoading(true);
+      return;
     }
-  }, [userId]);
+
+    if (reviews.length > 0 && reviews[0].lat && reviews[0].lng) {
+      setMapCenter([reviews[0].lat, reviews[0].lng]);
+    }
+    
+    setLoading(false);
+  }, [reviews, reviewsLoading]);
 
   // Створюємо кастомну іконку для маркерів
   const createCustomIcon = (rating) => {
@@ -72,7 +59,7 @@ const UserMap = ({ userId }) => {
     );
   }
 
-  if (userReviews.length === 0) {
+  if (reviews.length === 0) {
     return (
       <div className="user-map empty">
         <div className="empty-icon">🗺️</div>
@@ -83,7 +70,7 @@ const UserMap = ({ userId }) => {
 
   return (
     <div className="user-map">
-      <h3>Карта відвіданих місць ({userReviews.length})</h3>
+      <h3>Карта відвіданих місць ({reviews.length})</h3>
       
       <div className="map-container">
         <MapContainer
@@ -96,7 +83,7 @@ const UserMap = ({ userId }) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           />
           
-          {userReviews.map((review) => (
+          {reviews.map((review) => (
             review.lat && review.lng && (
               <Marker
                 key={review._id}

@@ -7,34 +7,38 @@ async function getUserProfileHandler(req, res) {
     const { userId } = req.params;
     console.log('Looking for user with ID:', userId);
     
-    let user = await User.findById(userId).select('-password');
+    const mongoose = require('mongoose');
+    let user;
+    
+    // Try to find by ObjectId first, then by username
+    if (mongoose.Types.ObjectId.isValid(userId)) {
+      user = await User.findById(userId).select('-password');
+    } else {
+      // Look for user by username (remove @ if present)
+      const username = userId.replace('@', '');
+      user = await User.findOne({ username }).select('-password');
+    }
+    
     console.log('Found user:', user ? 'Yes' : 'No');
     
     if (!user) {
       console.log('User not found, creating default user');
-      const mongoose = require('mongoose');
       
-      // Validate ObjectId
-      if (!mongoose.Types.ObjectId.isValid(userId)) {
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid user ID format'
-        });
-      }
+      // Create username from userId
+      const username = userId.replace('@', '');
       
       // Create default user if not found
       user = new User({
-        _id: new mongoose.Types.ObjectId(userId),
-        email: `user${userId.slice(-4)}@example.com`,
+        email: `${username}@example.com`,
         password: 'defaultpassword123',
         name: 'Новий користувач',
-        username: 'user' + userId.slice(-4),
+        username: username,
         city: 'Київ',
         country: 'Україна',
         bio: 'Привіт! Я новий користувач MapMark 👋'
       });
       await user.save();
-      console.log('Created default user with ID:', userId);
+      console.log('Created default user with username:', username);
     }
 
     // Get user reviews count
@@ -78,7 +82,18 @@ async function updateUserProfileHandler(req, res) {
     const { userId } = req.params;
     const { name, city, country, bio } = req.body;
 
-    const user = await User.findById(userId);
+    const mongoose = require('mongoose');
+    let user;
+    
+    // Try to find by ObjectId first, then by username
+    if (mongoose.Types.ObjectId.isValid(userId)) {
+      user = await User.findById(userId);
+    } else {
+      // Look for user by username (remove @ if present)
+      const username = userId.replace('@', '');
+      user = await User.findOne({ username });
+    }
+
     if (!user) {
       return res.status(404).json({
         success: false,

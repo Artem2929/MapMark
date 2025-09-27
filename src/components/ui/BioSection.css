@@ -67,26 +67,44 @@
 
 .bio-input {
   width: 100%;
-  padding: 16px;
-  border: 2px solid rgba(59, 130, 246, 0.2);
-  border-radius: 12px;
+  padding: 12px 16px;
+  border: 2px solid rgba(59, 130, 246, 0.15);
+  border-radius: 10px;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.5;
   color: #1e293b;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
   resize: vertical;
-  min-height: 100px;
+  min-height: 80px;
+  max-height: 200px;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-  transition: all 0.3s ease;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 2px 8px rgba(59, 130, 246, 0.05),
+    0 1px 4px rgba(59, 130, 246, 0.03);
 }
 
 .bio-input:focus {
   outline: none;
   border-color: #3b82f6;
   background: white;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 
+    0 0 0 3px rgba(59, 130, 246, 0.1),
+    0 4px 12px rgba(59, 130, 246, 0.15),
+    0 2px 6px rgba(59, 130, 246, 0.1);
+  transform: translateY(-1px);
+}
+
+.bio-input:hover:not(:focus) {
+  border-color: rgba(59, 130, 246, 0.25);
+  box-shadow: 
+    0 3px 10px rgba(59, 130, 246, 0.08),
+    0 1px 5px rgba(59, 130, 246, 0.05);
 }
 
 .bio-input::placeholder {
   color: #94a3b8;
+  font-weight: 400;
 }

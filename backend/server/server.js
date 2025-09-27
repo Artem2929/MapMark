@@ -7,11 +7,12 @@ const { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, get
 const { getReviews } = require('./Repositories/ReviewRepository');
 const { getUserStatsHandler: userStatsHandler, getUserFollowersHandler, getUserFollowingHandler, followUserHandler, unfollowUserHandler } = require('./services/UserStatsService');
 const { getUserProfileHandler, updateUserProfileHandler } = require('./services/UserService');
+const { getAboutStatsHandler, getTeamMembersHandler, submitContactMessageHandler, getContactMessagesHandler, markMessageAsReadHandler } = require('./services/AboutService');
 const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DB_URL = process.env.DB_URL || 'mongodb://localhost:27017/mapmark';
+const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/mapmark';
 
 // Middleware
 app.use(cors());
@@ -22,10 +23,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Connect to MongoDB
-mongoose.connect(DB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(DB_URL)
 .then(() => {
   console.log('Connected to MongoDB successfully');
 })
@@ -131,6 +129,25 @@ app.get('/api/user/:userId/following', getUserFollowingHandler);
 app.post('/api/user/:userId/follow', followUserHandler);
 app.delete('/api/user/:userId/follow', unfollowUserHandler);
 
+// About page endpoints
+app.get('/api/about/stats', getAboutStatsHandler);
+app.get('/api/about/team', getTeamMembersHandler);
+app.post('/api/about/contact', submitContactMessageHandler);
+app.get('/api/about/messages', getContactMessagesHandler);
+app.put('/api/about/messages/:messageId/read', markMessageAsReadHandler);
+
+// Admin endpoint to create team members
+app.post('/api/admin/team', async (req, res) => {
+  try {
+    const TeamMember = require('./models/TeamMember');
+    const teamMember = new TeamMember(req.body);
+    await teamMember.save();
+    res.json({ success: true, data: teamMember });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Global user stats (for progress widget)
 app.get('/api/user/stats', async (req, res) => {
   try {
@@ -191,18 +208,16 @@ app.listen(PORT, '0.0.0.0', () => {
 });
 
 // Graceful shutdown
-process.on('SIGTERM', () => {
+process.on('SIGTERM', async () => {
   console.log('SIGTERM received, shutting down gracefully');
-  mongoose.connection.close(() => {
-    console.log('MongoDB connection closed');
-    process.exit(0);
-  });
+  await mongoose.connection.close();
+  console.log('MongoDB connection closed');
+  process.exit(0);
 });
 
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
   console.log('SIGINT received, shutting down gracefully');
-  mongoose.connection.close(() => {
-    console.log('MongoDB connection closed');
-    process.exit(0);
-  });
+  await mongoose.connection.close();
+  console.log('MongoDB connection closed');
+  process.exit(0);
 });
