@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AuthService from "../../services/authService";
+import googleAuthService from "../../services/googleAuthService";
 import "./Header.css";
 
 const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewFormOpen = false }) => {
@@ -61,12 +62,28 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
     }
   };
 
-  const handleLogout = () => {
-    AuthService.logout();
-    setIsUserMenuOpen(false);
-    setIsMenuOpen(false);
-    navigate('/');
-    window.location.reload();
+  const handleLogout = async () => {
+    try {
+      // Якщо користувач увійшов через Google, виходимо з Google
+      const authProvider = localStorage.getItem('authProvider');
+      if (authProvider === 'google') {
+        await googleAuthService.signOut();
+      }
+      
+      AuthService.logout();
+      setIsUserMenuOpen(false);
+      setIsMenuOpen(false);
+      navigate('/');
+      window.location.reload();
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Все одно очищуємо локальні дані
+      AuthService.logout();
+      setIsUserMenuOpen(false);
+      setIsMenuOpen(false);
+      navigate('/');
+      window.location.reload();
+    }
   };
 
   return (

@@ -103,11 +103,46 @@ class AuthService {
     return data;
   }
 
+  async googleLogin(googleData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/google`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(googleData),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Google login failed');
+      }
+
+      // Зберігаємо токен від сервера якщо є
+      if (data.data && data.data.token) {
+        localStorage.setItem('token', data.data.token);
+      }
+
+      return data;
+    } catch (error) {
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        // Якщо сервер недоступний, продовжуємо з локальною авторизацією
+        console.warn('Server unavailable, using local Google auth');
+        return { success: true, local: true };
+      }
+      throw error;
+    }
+  }
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userImage');
+    localStorage.removeItem('authProvider');
+    localStorage.removeItem('googleToken');
   }
 
   getToken() {
@@ -123,6 +158,8 @@ class AuthService {
       id: localStorage.getItem('userId'),
       email: localStorage.getItem('userEmail'),
       name: localStorage.getItem('userName'),
+      image: localStorage.getItem('userImage'),
+      authProvider: localStorage.getItem('authProvider') || 'local',
     };
   }
 }

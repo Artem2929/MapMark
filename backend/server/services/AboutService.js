@@ -80,34 +80,61 @@ async function getTeamMembersHandler(req, res) {
 async function submitContactMessageHandler(req, res) {
   try {
     const { name, email, message } = req.body;
+    const errors = [];
 
-    // Validation
-    if (!name || !email || !message) {
+    // Validate name
+    if (!name || !name.trim()) {
+      errors.push({ field: 'name', message: "Ім'я обов'язкове" });
+    } else {
+      const trimmedName = name.trim();
+      if (trimmedName.length < 2) {
+        errors.push({ field: 'name', message: "Ім'я повинно містити мінімум 2 символи" });
+      } else if (trimmedName.length > 50) {
+        errors.push({ field: 'name', message: "Ім'я не може перевищувати 50 символів" });
+      }
+    }
+
+    // Validate email
+    if (!email || !email.trim()) {
+      errors.push({ field: 'email', message: "Email обов'язковий" });
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.trim())) {
+        errors.push({ field: 'email', message: 'Введіть коректний email' });
+      }
+    }
+
+    // Validate message
+    if (!message || !message.trim()) {
+      errors.push({ field: 'message', message: "Повідомлення обов'язкове" });
+    } else {
+      const trimmedMessage = message.trim();
+      if (trimmedMessage.length < 10) {
+        errors.push({ field: 'message', message: 'Повідомлення повинно містити мінімум 10 символів' });
+      } else if (trimmedMessage.length > 1000) {
+        errors.push({ field: 'message', message: 'Повідомлення не може перевищувати 1000 символів' });
+      }
+    }
+
+    // Return validation errors
+    if (errors.length > 0) {
       return res.status(400).json({
         success: false,
-        message: 'Всі поля обов\'язкові для заповнення'
+        message: 'Помилки валідації',
+        errors: errors
       });
     }
 
-    if (name.length < 2 || name.length > 100) {
-      return res.status(400).json({
-        success: false,
-        message: 'Ім\'я повинно містити від 2 до 100 символів'
-      });
-    }
+    // Check for spam (simple rate limiting)
+    const recentMessages = await ContactMessage.countDocuments({
+      email: email.trim().toLowerCase(),
+      createdAt: { $gte: new Date(Date.now() - 60 * 60 * 1000) } // Last hour
+    });
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({
+    if (recentMessages >= 3) {
+      return res.status(429).json({
         success: false,
-        message: 'Невірний формат email'
-      });
-    }
-
-    if (message.length < 10 || message.length > 1000) {
-      return res.status(400).json({
-        success: false,
-        message: 'Повідомлення повинно містити від 10 до 1000 символів'
+        message: 'Забагато повідомлень. Спробуйте пізніше.'
       });
     }
 
@@ -115,7 +142,8 @@ async function submitContactMessageHandler(req, res) {
     const contactMessage = new ContactMessage({
       name: name.trim(),
       email: email.trim().toLowerCase(),
-      message: message.trim()
+      message: message.trim(),
+      ipAddress: req.ip || req.connection.remoteAddress
     });
 
     await contactMessage.save();
@@ -130,10 +158,28 @@ async function submitContactMessageHandler(req, res) {
     });
   } catch (error) {
     console.error('Error submitting contact message:', error);
+    
+    // Handle MongoDB validation errors
+    if (error.name === 'ValidationError') {
+      const mongoErrors = [];
+      Object.keys(error.errors).forEach(key => {
+        mongoErrors.push({
+          field: key,
+          message: error.errors[key].message
+        });
+      });
+      
+      return res.status(400).json({
+        success: false,
+        message: 'Помилки валідації',
+        errors: mongoErrors
+      });
+    }
+    
     res.status(500).json({
       success: false,
       message: 'Помилка відправки повідомлення',
-      error: error.message
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Внутрішня помилка сервера'
     });
   }
 }

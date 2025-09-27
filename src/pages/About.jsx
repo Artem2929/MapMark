@@ -13,6 +13,8 @@ const About = () => {
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
   const [toast, setToast] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
 
   useEffect(() => {
     fetchAboutData();
@@ -37,23 +39,86 @@ const About = () => {
     }
   };
 
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'name':
+        if (!value.trim()) return "Ім'я обов'язкове";
+        if (value.trim().length < 2) return "Ім'я повинно містити мінімум 2 символи";
+        if (value.trim().length > 50) return "Ім'я не може перевищувати 50 символів";
+        return '';
+      case 'email':
+        if (!value.trim()) return "Email обов'язковий";
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value.trim())) return 'Введіть коректний email';
+        return '';
+      case 'message':
+        if (!value.trim()) return "Повідомлення обов'язкове";
+        if (value.trim().length < 10) return 'Повідомлення повинно містити мінімум 10 символів';
+        if (value.trim().length > 1000) return 'Повідомлення не може перевищувати 1000 символів';
+        return '';
+      default:
+        return '';
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    Object.keys(contactForm).forEach(key => {
+      const error = validateField(key, contactForm[key]);
+      if (error) newErrors[key] = error;
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleInputChange = (name, value) => {
+    setContactForm(prev => ({ ...prev, [name]: value }));
+    if (touched[name]) {
+      setErrors(prev => ({ ...prev, [name]: validateField(name, value) }));
+    }
+  };
+
+  const handleInputBlur = (name) => {
+    setTouched(prev => ({ ...prev, [name]: true }));
+    setErrors(prev => ({ ...prev, [name]: validateField(name, contactForm[name]) }));
+  };
+
   const handleContactSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      setToast({ message: 'Будь ласка, виправте помилки у формі', type: 'error' });
+      return;
+    }
+    
     setSubmitting(true);
     
     try {
       const response = await fetch('http://localhost:3000/api/about/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(contactForm)
+        body: JSON.stringify({
+          name: contactForm.name.trim(),
+          email: contactForm.email.trim().toLowerCase(),
+          message: contactForm.message.trim()
+        })
       });
       
       const data = await response.json();
       
       if (data.success) {
         setContactForm({ name: '', email: '', message: '' });
+        setErrors({});
+        setTouched({});
         setToast({ message: 'Повідомлення надіслано успішно!', type: 'success' });
       } else {
+        if (data.errors) {
+          const serverErrors = {};
+          data.errors.forEach(err => {
+            serverErrors[err.field] = err.message;
+          });
+          setErrors(serverErrors);
+        }
         setToast({ message: data.message || 'Помилка відправки', type: 'error' });
       }
     } catch (error) {
@@ -72,10 +137,10 @@ const About = () => {
     <div className="about-page">
       {/* Hero Section */}
       <div className="about-hero">
-        <div className="container">
-          <div className="hero-content">
-            <h1 className="hero-title">Про MapMark</h1>
-            <p className="hero-description">
+        <div className="about-container">
+          <div className="about-hero-content">
+            <h1 className="about-hero-title">Про MapMark</h1>
+            <p className="about-hero-description">
               Ваш персональний гід у світі подорожей. Відкривайте нові місця, 
               діліться враженнями та створюйте незабутні спогади.
             </p>
@@ -85,8 +150,8 @@ const About = () => {
 
       {/* Stats Section */}
       {stats && (
-        <div className="stats-section">
-          <div className="container">
+        <div className="about-stats-section">
+          <div className="about-container">
             <h2>Наші досягнення</h2>
             <div className="about-stats-grid">
               <div className="about-stat-card">
@@ -111,30 +176,30 @@ const About = () => {
       )}
 
       {/* Mission Section */}
-      <div className="mission-section">
-        <div className="container">
-          <div className="mission-content">
+      <div className="about-mission-section">
+        <div className="about-container">
+          <div className="about-mission-content">
             <h2>Наша місія</h2>
             <p>
               Ми віримо, що кожна подорож - це можливість відкрити щось нове. 
               MapMark допомагає мандрівникам знаходити найкращі місця, 
               ділитися досвідом та надихати інших на нові пригоди.
             </p>
-            <div className="features-list">
-              <div className="feature-item">
-                <span className="feature-icon">🗺️</span>
+            <div className="about-features-list">
+              <div className="about-feature-item">
+                <span className="about-feature-icon">🗺️</span>
                 <span>Інтерактивні карти</span>
               </div>
-              <div className="feature-item">
-                <span className="feature-icon">📸</span>
+              <div className="about-feature-item">
+                <span className="about-feature-icon">📸</span>
                 <span>Фотогалереї</span>
               </div>
-              <div className="feature-item">
-                <span className="feature-icon">⭐</span>
+              <div className="about-feature-item">
+                <span className="about-feature-icon">⭐</span>
                 <span>Рейтинги та відгуки</span>
               </div>
-              <div className="feature-item">
-                <span className="feature-icon">🌍</span>
+              <div className="about-feature-item">
+                <span className="about-feature-icon">🌍</span>
                 <span>Глобальна спільнота</span>
               </div>
             </div>
@@ -144,24 +209,24 @@ const About = () => {
 
       {/* Team Section */}
       {team.length > 0 && (
-        <div className="team-section">
-          <div className="container">
+        <div className="about-team-section">
+          <div className="about-container">
             <h2>Наша команда</h2>
-            <div className="team-grid">
+            <div className="about-team-grid">
               {team.map((member) => (
-                <div key={member._id} className="team-card">
-                  <div className="team-avatar">
+                <div key={member._id} className="about-team-card">
+                  <div className="about-team-avatar">
                     {member.avatar ? (
                       <img src={member.avatar} alt={member.name} />
                     ) : (
-                      <div className="avatar-placeholder">
+                      <div className="about-avatar-placeholder">
                         {member.name.charAt(0)}
                       </div>
                     )}
                   </div>
                   <h3>{member.name}</h3>
-                  <p className="team-role">{member.role}</p>
-                  <p className="team-bio">{member.bio}</p>
+                  <p className="about-team-role">{member.role}</p>
+                  <p className="about-team-bio">{member.bio}</p>
                 </div>
               ))}
             </div>
@@ -170,53 +235,68 @@ const About = () => {
       )}
 
       {/* Contact Section */}
-      <div className="contact-section">
-        <div className="container">
+      <div className="about-contact-section">
+        <div className="about-container">
           <h2>Зв'яжіться з нами</h2>
-          <div className="contact-content">
-            <div className="contact-info">
+          <div className="about-contact-content">
+            <div className="about-contact-info">
               <h3>Маєте питання?</h3>
               <p>Ми завжди раді допомогти! Напишіть нам, і ми відповімо якнайшвидше.</p>
-              <div className="contact-details">
-                <div className="contact-item">
-                  <span className="contact-icon">📧</span>
+              <div className="about-contact-details">
+                <div className="about-contact-item">
+                  <span className="about-contact-icon">📧</span>
                   <span>support@mapmark.com</span>
                 </div>
-                <div className="contact-item">
-                  <span className="contact-icon">🌐</span>
+                <div className="about-contact-item">
+                  <span className="about-contact-icon">🌐</span>
                   <span>www.mapmark.com</span>
                 </div>
               </div>
             </div>
-            <form className="contact-form" onSubmit={handleContactSubmit}>
-              <div className="form-group">
+            <form className="about-contact-form" onSubmit={handleContactSubmit}>
+              <div className="about-form-group">
                 <input
                   type="text"
                   placeholder="Ваше ім'я"
                   value={contactForm.name}
-                  onChange={(e) => setContactForm({...contactForm, name: e.target.value})}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  onBlur={() => handleInputBlur('name')}
+                  className={errors.name && touched.name ? 'error' : ''}
                   required
                 />
+                {errors.name && touched.name && (
+                  <span className="about-field-error">{errors.name}</span>
+                )}
               </div>
-              <div className="form-group">
+              <div className="about-form-group">
                 <input
                   type="email"
                   placeholder="Email"
                   value={contactForm.email}
-                  onChange={(e) => setContactForm({...contactForm, email: e.target.value})}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  onBlur={() => handleInputBlur('email')}
+                  className={errors.email && touched.email ? 'error' : ''}
                   required
                 />
+                {errors.email && touched.email && (
+                  <span className="about-field-error">{errors.email}</span>
+                )}
               </div>
-              <div className="form-group">
+              <div className="about-form-group">
                 <textarea
                   placeholder="Ваше повідомлення"
                   rows="5"
                   value={contactForm.message}
-                  onChange={(e) => setContactForm({...contactForm, message: e.target.value})}
+                  onChange={(e) => handleInputChange('message', e.target.value)}
+                  onBlur={() => handleInputBlur('message')}
+                  className={errors.message && touched.message ? 'error' : ''}
                   required
                 ></textarea>
+                {errors.message && touched.message && (
+                  <span className="about-field-error">{errors.message}</span>
+                )}
               </div>
-              <button type="submit" disabled={submitting}>
+              <button type="submit" disabled={submitting || Object.keys(errors).some(key => errors[key]) || !contactForm.name.trim() || !contactForm.email.trim() || !contactForm.message.trim()}>
                 {submitting ? 'Надсилання...' : 'Надіслати'}
               </button>
             </form>
