@@ -23,83 +23,40 @@ const UserProfile = () => {
   const [avatarFile, setAvatarFile] = useState(null);
 
   useEffect(() => {
+    const currentUserId = localStorage.getItem('userId');
+    
+    // If no current user, redirect to login
+    if (!currentUserId) {
+      navigate('/login', { replace: true });
+      return;
+    }
+    
     const fetchUserData = async () => {
       try {
-        // Fetch user stats from API
-        const statsResponse = await fetch(`http://localhost:3000/api/user/${userId}/stats`);
-        const statsData = await statsResponse.json();
+        // Always use current user ID
+        const profileResponse = await fetch(`http://localhost:3000/api/user/${currentUserId}/profile`);
+        const profileData = await profileResponse.json();
         
-        const mockUser = {
-          id: userId,
-          name: 'John Doe',
-          username: '@johndoe',
-          avatar: null,
-          country: 'Швейцарія',
-          city: 'Цюрих',
-          joinedAt: '2024-04-12',
-          bio: 'Люблю гори, подорожі та фотографію. Завжди в пошуках нових пригод! 🏔️📸',
-          stats: statsData.success ? statsData.data : {
-            messages: 0,
-            posts: 0,
-            followers: 0,
-            following: 0
-          },
-        posts: [
-          {
-            id: 1,
-            image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=300&fit=crop',
-            title: 'Swiss Alps Adventure',
-            rating: 4.8,
-            likes: 234
-          },
-          {
-            id: 2,
-            image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=300&fit=crop',
-            title: 'Paris Evening',
-            rating: 4.7,
-            likes: 189
-          },
-          {
-            id: 3,
-            image: 'https://images.unsplash.com/photo-1539650116574-75c0c6d73c6e?w=300&h=300&fit=crop',
-            title: 'Tropical Paradise',
-            rating: 4.9,
-            likes: 456
-          }
-        ]
-      };
-        setUser(mockUser);
-        setIsOwnProfile(localStorage.getItem('userId') === userId);
-        setEditedName(mockUser.name);
-        setEditedCity(mockUser.city);
-        setEditedBio(mockUser.bio || '');
+        if (profileData.success) {
+          setUser(profileData.data);
+          setEditedName(profileData.data.name);
+          setEditedCity(profileData.data.city);
+          setEditedBio(profileData.data.bio || '');
+        } else {
+          throw new Error('Profile not found');
+        }
+        
+        setIsOwnProfile(true);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        // Fallback to mock data if API fails
-        const mockUser = {
-          id: userId,
-          name: 'John Doe',
-          username: '@johndoe',
-          avatar: null,
-          country: 'Швейцарія',
-          city: 'Цюрих',
-          joinedAt: '2024-04-12',
-          bio: 'Люблю гори, подорожі та фотографію. Завжди в пошуках нових пригод! 🏔️📸',
-          stats: { messages: 0, posts: 0, followers: 0, following: 0 },
-          posts: []
-        };
-        setUser(mockUser);
-        setIsOwnProfile(localStorage.getItem('userId') === userId);
-        setEditedName(mockUser.name);
-        setEditedCity(mockUser.city);
-        setEditedBio(mockUser.bio || '');
+        setUser(null);
         setLoading(false);
       }
     };
     
     fetchUserData();
-  }, [userId]);
+  }, [navigate]);
 
   const getJoinedDate = (dateString) => {
     const date = new Date(dateString);
@@ -141,18 +98,39 @@ const UserProfile = () => {
     }
   };
 
-  const handleEditToggle = () => {
+  const handleEditToggle = async () => {
     if (isEditing) {
-      // Зберігаємо зміни
-      setUser(prev => ({ 
-        ...prev, 
-        name: editedName,
-        city: editedCity,
-        bio: editedBio
-      }));
-      setIsEditing(false);
+      try {
+        const currentUserId = localStorage.getItem('userId');
+        const response = await fetch(`http://localhost:3000/api/user/${currentUserId}/profile`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: editedName,
+            city: editedCity,
+            country: user.country,
+            bio: editedBio
+          })
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+          setUser(prev => ({ 
+            ...prev, 
+            name: editedName,
+            city: editedCity,
+            bio: editedBio
+          }));
+          setIsEditing(false);
+        } else {
+          console.error('Failed to update profile:', result.message);
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+      }
     } else {
-      // Входимо в режим редагування
       setIsEditing(true);
     }
   };
@@ -341,23 +319,7 @@ const UserProfile = () => {
           }}
         />
 
-        <div className="profile-posts-section">
-          <h3 className="profile-posts-title">Пости</h3>
-          <div className="profile-posts-grid">
-            {user.posts.map(post => (
-              <div key={post.id} className="profile-post-card">
-                <img src={post.image} alt={post.title} className="profile-post-image" />
-                <div className="profile-post-info">
-                  <h4 className="profile-post-title">{post.title}</h4>
-                  <div className="profile-post-stats">
-                    <span className="profile-post-rating">⭐ {post.rating}</span>
-                    <span className="profile-post-likes">❤️ {post.likes}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+
       </div>
       <Footer />
     </div>

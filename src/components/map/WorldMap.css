@@ -790,6 +790,8 @@
 /* Custom Context Menu */
 .map-context-menu {
   position: fixed;
+  left: 759px;
+  top: 265px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
   backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.4);

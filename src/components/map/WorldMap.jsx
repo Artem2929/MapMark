@@ -444,9 +444,16 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
           
           if (hasReviews) {
             const reviewCount = markerReviews.length || 1;
+            let scale = 0.1;
+            if (reviewCount > 80) scale = 1.0;
+            else if (reviewCount > 50) scale = 0.8;
+            else if (reviewCount > 20) scale = 0.5;
+            else if (reviewCount > 5) scale = 0.3;
+            
+            const size = Math.round(28 * scale);
             markerProps.icon = L.divIcon({
               html: `
-                <div class="review-badge">
+                <div class="review-badge" style="transform: scale(${scale})">
                   <div class="badge-circle">
                     <div class="badge-icon">⭐</div>
                   </div>
@@ -455,8 +462,8 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
                 </div>
               `,
               className: 'game-flag-icon',
-              iconSize: [28, 36],
-              iconAnchor: [3, 36]
+              iconSize: [size, Math.round(36 * scale)],
+              iconAnchor: [Math.round(3 * scale), Math.round(36 * scale)]
             });
           }
           

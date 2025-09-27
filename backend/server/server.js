@@ -6,6 +6,7 @@ const multer = require("multer");
 const { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler, getUserStatsHandler } = require('./services/ReviewService');
 const { getReviews } = require('./Repositories/ReviewRepository');
 const { getUserStatsHandler: userStatsHandler, getUserFollowersHandler, getUserFollowingHandler, followUserHandler, unfollowUserHandler } = require('./services/UserStatsService');
+const { getUserProfileHandler, updateUserProfileHandler } = require('./services/UserService');
 const authRoutes = require('./routes/auth');
 
 const app = express();
@@ -48,6 +49,8 @@ app.get('/', (req, res) => {
       deleteReview: 'DELETE /api/review/:reviewId',
       deletePhoto: 'DELETE /api/review/:reviewId/photo/:photoId',
       userStats: 'GET /api/user/stats',
+      userProfile: 'GET /api/user/:userId/profile',
+      updateUserProfile: 'PUT /api/user/:userId/profile',
       userProfileStats: 'GET /api/user/:userId/stats',
       userFollowers: 'GET /api/user/:userId/followers',
       userFollowing: 'GET /api/user/:userId/following',
@@ -74,6 +77,10 @@ app.get('/api/photo/:photoId', getPhotoHandler);
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Test endpoint works' });
 });
+
+// User profile endpoints
+app.get('/api/user/:userId/profile', getUserProfileHandler);
+app.put('/api/user/:userId/profile', updateUserProfileHandler);
 
 // User stats endpoints
 app.get('/api/user/:userId/stats', userStatsHandler);
