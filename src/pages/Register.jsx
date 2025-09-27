@@ -23,6 +23,12 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
+  const [emailError, setEmailError] = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [nameError, setNameError] = useState('');
+  const [nameTouched, setNameTouched] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordTouched, setPasswordTouched] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -32,6 +38,65 @@ const Register = () => {
       navigate('/', { replace: true });
     }
   }, [navigate]);
+
+  const validateEmail = (emailValue) => {
+    if (!emailValue.trim()) {
+      return '';
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailValue.trim())) {
+      return 'Введіть коректний email (наприклад: user@example.com)';
+    }
+    
+    const cyrillicRegex = /[а-яё]/i;
+    if (cyrillicRegex.test(emailValue)) {
+      return 'Email не може містити кириличні символи';
+    }
+    
+    return '';
+  };
+
+  const validateEmailOnBlur = (emailValue) => {
+    if (!emailValue.trim()) {
+      return 'Email обов\'язковий';
+    }
+    return validateEmail(emailValue);
+  };
+
+  const validateName = (nameValue) => {
+    if (!nameValue.trim()) {
+      return '';
+    }
+    if (nameValue.trim().length < 2) {
+      return 'Ім\'я повинно містити мінімум 2 символи';
+    }
+    return '';
+  };
+
+  const validateNameOnBlur = (nameValue) => {
+    if (!nameValue.trim()) {
+      return 'Ім\'я обов\'язкове';
+    }
+    return validateName(nameValue);
+  };
+
+  const validatePassword = (passwordValue) => {
+    if (!passwordValue) {
+      return '';
+    }
+    if (passwordValue.length < 6) {
+      return 'Пароль повинен містити мінімум 6 символів';
+    }
+    return '';
+  };
+
+  const validatePasswordOnBlur = (passwordValue) => {
+    if (!passwordValue) {
+      return 'Пароль обов\'язковий';
+    }
+    return validatePassword(passwordValue);
+  };
 
   const countries = [
     { code: 'UA', name_en: 'Україна' },
@@ -321,10 +386,23 @@ const Register = () => {
                 id="name"
                 name="name"
                 value={formData.name}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  if (nameTouched) {
+                    setNameError(validateName(e.target.value));
+                  }
+                }}
+                onBlur={() => {
+                  setNameTouched(true);
+                  setNameError(validateNameOnBlur(formData.name));
+                }}
                 placeholder={t('register.namePlaceholder')}
+                className={nameError && nameTouched ? 'input-error' : ''}
                 required
               />
+              {nameError && nameTouched && (
+                <div className="field-error">{nameError}</div>
+              )}
             </div>
 
             <div className="form-group">
@@ -333,11 +411,24 @@ const Register = () => {
                 id="email"
                 name="email"
                 value={formData.email}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  if (emailTouched) {
+                    setEmailError(validateEmail(e.target.value));
+                  }
+                }}
+                onBlur={() => {
+                  setEmailTouched(true);
+                  setEmailError(validateEmailOnBlur(formData.email));
+                }}
                 placeholder={t('register.emailPlaceholder')}
                 autoComplete="off"
+                className={emailError && emailTouched ? 'input-error' : ''}
                 required
               />
+              {emailError && emailTouched && (
+                <div className="field-error">{emailError}</div>
+              )}
             </div>
             
             <div className="form-group password-group">

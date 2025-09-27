@@ -120,6 +120,30 @@
   font-weight: 400;
 }
 
+.form-group input.input-error {
+  border-color: rgba(220, 38, 38, 0.4);
+  box-shadow: 
+    0 4px 12px rgba(220, 38, 38, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.form-group input.input-error:focus {
+  border-color: rgba(220, 38, 38, 0.6);
+  box-shadow: 
+    0 8px 24px rgba(220, 38, 38, 0.15),
+    0 4px 12px rgba(220, 38, 38, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.field-error {
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+  margin-left: 4px;
+  animation: slideIn 0.3s ease-out;
+}
+
 .login-btn {
   background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
   color: white;
@@ -312,8 +336,9 @@
 }
 
 .login-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  background: #9ca3af;
+  color: #ffffff;
+  border-color: #9ca3af;
   transform: none;
 }
 

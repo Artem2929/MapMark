@@ -12,6 +12,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -21,6 +23,32 @@ const Login = () => {
       navigate('/', { replace: true });
     }
   }, [navigate]);
+
+  const validateEmail = (emailValue) => {
+    if (!emailValue.trim()) {
+      return '';
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailValue.trim())) {
+      return 'Введіть коректний email (наприклад: user@example.com)';
+    }
+    
+    // Перевірка на кирилицю
+    const cyrillicRegex = /[а-яё]/i;
+    if (cyrillicRegex.test(emailValue)) {
+      return 'Email не може містити кириличні символи';
+    }
+    
+    return '';
+  };
+
+  const validateEmailOnBlur = (emailValue) => {
+    if (!emailValue.trim()) {
+      return 'Email обов\'язковий';
+    }
+    return validateEmail(emailValue);
+  };
 
   const isFormValid = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -119,11 +147,24 @@ const Login = () => {
                   type="email"
                   id="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (emailTouched) {
+                      setEmailError(validateEmail(e.target.value));
+                    }
+                  }}
+                  onBlur={() => {
+                    setEmailTouched(true);
+                    setEmailError(validateEmailOnBlur(email));
+                  }}
                   placeholder={t('login.emailPlaceholder')}
                   autoComplete="off"
+                  className={emailError && emailTouched ? 'input-error' : ''}
                   required
                 />
+                {emailError && emailTouched && (
+                  <div className="field-error">{emailError}</div>
+                )}
               </div>
               
               <div className="form-group password-group">
@@ -132,6 +173,12 @@ const Login = () => {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => {
+                    if (email && !emailTouched) {
+                      setEmailTouched(true);
+                      setEmailError(validateEmailOnBlur(email));
+                    }
+                  }}
                   placeholder={t('login.passwordPlaceholder')}
                   autoComplete="off"
                   required
@@ -173,7 +220,12 @@ const Login = () => {
               <button 
                 type="button" 
                 className="forgot-password-btn"
-                onClick={() => setShowForgotPassword(true)}
+                onClick={() => {
+                  setShowForgotPassword(true);
+                  setEmailError('');
+                  setEmailTouched(false);
+                  setError('');
+                }}
               >
                 {t('login.forgotPassword')}
               </button>
@@ -198,7 +250,12 @@ const Login = () => {
               <button 
                 type="button" 
                 className="forgot-password-btn"
-                onClick={() => setShowForgotPassword(false)}
+                onClick={() => {
+                  setShowForgotPassword(false);
+                  setEmailError('');
+                  setEmailTouched(false);
+                  setError('');
+                }}
               >
                 {t('login.backToLogin')}
               </button>
