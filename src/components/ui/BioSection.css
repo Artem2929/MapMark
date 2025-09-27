@@ -1,0 +1,92 @@
+.bio-section {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  border: 2px solid rgba(59, 130, 246, 0.08);
+  border-radius: 20px;
+  padding: 24px;
+  margin: 20px 0;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.bio-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+  transition: left 0.8s;
+}
+
+.bio-section:hover::before {
+  left: 100%;
+}
+
+.bio-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.bio-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+}
+
+.bio-icon {
+  font-size: 20px;
+  opacity: 0.7;
+}
+
+.bio-content {
+  position: relative;
+}
+
+.bio-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #475569;
+  margin: 0;
+  font-weight: 500;
+}
+
+.bio-length {
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.bio-input {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid rgba(59, 130, 246, 0.2);
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.9);
+  resize: vertical;
+  min-height: 100px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  transition: all 0.3s ease;
+}
+
+.bio-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.bio-input::placeholder {
+  color: #94a3b8;
+}

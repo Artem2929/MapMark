@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import CustomSelect from '../components/ui/CustomSelect';
 import authService from '../services/authService';
 import { validateRegistrationForm } from '../utils/registerValidation';
+import AuthLoader from '../components/ui/AuthLoader';
 import './Register.css';
 
 const Register = () => {
@@ -23,6 +24,14 @@ const Register = () => {
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  // Перевіряємо чи користувач вже авторизований
+  React.useEffect(() => {
+    if (authService.isAuthenticated()) {
+      navigate('/', { replace: true });
+    }
+  }, [navigate]);
 
   const countries = [
     { code: 'UA', name_en: 'Україна' },
@@ -222,7 +231,6 @@ const Register = () => {
     { code: 'KN', name_en: 'Сент-Кітс і Невіс' },
     { code: 'BS', name_en: 'Багамські Острови' }
   ];
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -261,22 +269,31 @@ const Register = () => {
       setFieldErrors(validation.errors);
       const firstError = Object.values(validation.errors)[0];
       setError(firstError);
+      // Фокус на першому полі з помилкою
+      const firstErrorField = Object.keys(validation.errors)[0];
+      const element = document.getElementById(firstErrorField);
+      if (element) element.focus();
       return;
     }
 
     setLoading(true);
 
     try {
-      await authService.register(formData.name.trim(), formData.email, formData.password);
-      navigate('/');
-      window.location.reload();
+      await authService.register(
+        formData.name.trim(), 
+        formData.email.trim(), 
+        formData.password
+      );
+      // Успішна реєстрація - перенаправляємо на головну
+      navigate('/', { replace: true });
     } catch (err) {
-      // Обробка помилок валідації з сервера
-      if (err.message.includes('validation') || err.message.includes('Validation')) {
-        setError('Перевірте правильність введених даних');
-      } else {
-        setError(err.message);
-      }
+      setError(err.message);
+      // Очищуємо паролі при помилці
+      setFormData(prev => ({
+        ...prev,
+        password: '',
+        confirmPassword: ''
+      }));
     } finally {
       setLoading(false);
     }
@@ -399,7 +416,14 @@ const Register = () => {
             </div>
             
             <button type="submit" className="register-btn" disabled={loading || !isFormValid()}>
-              {loading ? t('register.registerButtonLoading') : t('register.registerButton')}
+              {loading ? (
+                <div className="btn-loading">
+                  <div className="btn-spinner"></div>
+                  {t('register.registerButtonLoading')}
+                </div>
+              ) : (
+                t('register.registerButton')
+              )}
             </button>
           </form>
           

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import authService from '../services/authService';
+import AuthLoader from '../components/ui/AuthLoader';
 import './Login.css';
 
 const Login = () => {
@@ -14,8 +15,19 @@ const Login = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  // Перевіряємо чи користувач вже авторизований
+  React.useEffect(() => {
+    if (authService.isAuthenticated()) {
+      navigate('/', { replace: true });
+    }
+  }, [navigate]);
+
   const isFormValid = () => {
-    return email.trim() && password;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return email.trim() && 
+           emailRegex.test(email.trim()) && 
+           password && 
+           password.length >= 6;
   };
 
   const handleLogin = async (e) => {
@@ -23,12 +35,27 @@ const Login = () => {
     setLoading(true);
     setError('');
 
+    // Базова валідація
+    if (!email.trim()) {
+      setError('Введіть email');
+      setLoading(false);
+      return;
+    }
+    
+    if (!password) {
+      setError('Введіть пароль');
+      setLoading(false);
+      return;
+    }
+
     try {
-      await authService.login(email, password);
-      navigate('/');
-      window.location.reload();
+      await authService.login(email.trim(), password);
+      // Успішний логін - перенаправляємо на головну
+      navigate('/', { replace: true });
     } catch (err) {
       setError(err.message);
+      // Очищуємо пароль при помилці
+      setPassword('');
     } finally {
       setLoading(false);
     }
@@ -119,7 +146,14 @@ const Login = () => {
               </div>
               
               <button type="submit" className="login-btn" disabled={loading || !isFormValid()}>
-                {loading ? t('login.loginButtonLoading') : t('login.loginButton')}
+                {loading ? (
+                  <div className="btn-loading">
+                    <div className="btn-spinner"></div>
+                    {t('login.loginButtonLoading')}
+                  </div>
+                ) : (
+                  t('login.loginButton')
+                )}
               </button>
               
               <div className="divider">

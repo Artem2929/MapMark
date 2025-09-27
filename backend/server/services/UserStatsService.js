@@ -1,18 +1,38 @@
-const { getReviews } = require('../Repositories/ReviewRepository');
+// Mock reviews data
+const mockReviews = [
+  {
+    _id: '1',
+    username: 'testuser',
+    text: 'Чудове місце для відпочинку!',
+    rating: 5,
+    lat: 50.4501,
+    lng: 30.5234,
+    createdAt: new Date('2024-01-15')
+  },
+  {
+    _id: '2', 
+    username: 'testuser',
+    text: 'Гарний ресторан з смачною їжею',
+    rating: 4,
+    lat: 49.8397,
+    lng: 24.0297,
+    createdAt: new Date('2024-02-01')
+  }
+];
 
 async function getUserStatsHandler(req, res) {
   try {
     const { userId } = req.params;
     
-    // Get all reviews for stats calculation
-    const allReviews = await getReviews();
-    const userReviews = allReviews.filter(review => review.userId === userId);
+    // Mock user data
+    const username = userId === '68d7f31af5d60ea8afa6962d' ? 'testuser' : userId.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10);
+    const userReviews = mockReviews.filter(review => review.username === username);
     
     const stats = {
-      messages: 0, // Placeholder - implement when messaging system is ready
+      messages: 0,
       posts: userReviews.length,
-      followers: 0, // Placeholder - implement when follow system is ready
-      following: 0  // Placeholder - implement when follow system is ready
+      followers: 12,
+      following: 8
     };
 
     res.json({

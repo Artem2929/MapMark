@@ -11,7 +11,8 @@ const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DB_URL = process.env.DB_URL || 'mongodb://admin:password@localhost:27017/mapmark?authSource=admin';
+const DB_URL = process.env.DB_URL || 'mongodb://localhost:27017/mapmark';
+
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
@@ -51,6 +52,7 @@ app.get('/', (req, res) => {
       userStats: 'GET /api/user/stats',
       userProfile: 'GET /api/user/:userId/profile',
       updateUserProfile: 'PUT /api/user/:userId/profile',
+      userReviews: 'GET /api/user/:userId/reviews',
       userProfileStats: 'GET /api/user/:userId/stats',
       userFollowers: 'GET /api/user/:userId/followers',
       userFollowing: 'GET /api/user/:userId/following',
@@ -81,6 +83,46 @@ app.get('/api/test', (req, res) => {
 // User profile endpoints
 app.get('/api/user/:userId/profile', getUserProfileHandler);
 app.put('/api/user/:userId/profile', updateUserProfileHandler);
+app.get('/api/user/:userId/reviews', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Mock reviews data
+    const mockReviews = [
+      {
+        _id: '1',
+        username: 'testuser',
+        text: 'Чудове місце для відпочинку!',
+        rating: 5,
+        lat: 50.4501,
+        lng: 30.5234,
+        country: 'Україна',
+        createdAt: new Date('2024-01-15')
+      },
+      {
+        _id: '2', 
+        username: 'testuser',
+        text: 'Гарний ресторан з смачною їжею',
+        rating: 4,
+        lat: 49.8397,
+        lng: 24.0297,
+        country: 'Україна',
+        createdAt: new Date('2024-02-01')
+      }
+    ];
+    
+    // Get username based on userId
+    const username = userId === '68d7f31af5d60ea8afa6962d' ? 'testuser' : userId.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10);
+    const userReviews = mockReviews.filter(review => review.username === username);
+    
+    res.json({
+      success: true,
+      data: userReviews
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 
 // User stats endpoints
 app.get('/api/user/:userId/stats', userStatsHandler);

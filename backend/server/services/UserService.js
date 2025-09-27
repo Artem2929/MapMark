@@ -12,19 +12,29 @@ async function getUserProfileHandler(req, res) {
     
     if (!user) {
       console.log('User not found, creating default user');
+      const mongoose = require('mongoose');
+      
+      // Validate ObjectId
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid user ID format'
+        });
+      }
+      
       // Create default user if not found
       user = new User({
-        _id: userId,
-        email: 'user@example.com',
-        password: 'defaultpassword',
-        name: 'New User',
-        username: 'user' + Math.random().toString(36).substr(2, 4),
-        city: '',
-        country: '',
-        bio: ''
+        _id: new mongoose.Types.ObjectId(userId),
+        email: `user${userId.slice(-4)}@example.com`,
+        password: 'defaultpassword123',
+        name: 'Новий користувач',
+        username: 'user' + userId.slice(-4),
+        city: 'Київ',
+        country: 'Україна',
+        bio: 'Привіт! Я новий користувач MapMark 👋'
       });
       await user.save();
-      console.log('Created default user');
+      console.log('Created default user with ID:', userId);
     }
 
     // Get user reviews count

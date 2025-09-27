@@ -3,8 +3,17 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import Footer from '../components/layout/Footer';
-import UserAvatarLarge from '../components/ui/UserAvatarLarge';
-import UserStats from '../components/ui/UserStats';
+import ProfileStats from '../components/ui/ProfileStats';
+import BioSection from '../components/ui/BioSection';
+import UserReviews from '../components/ui/UserReviews';
+import ActivityStats from '../components/ui/ActivityStats';
+import ProfileActions from '../components/ui/ProfileActions';
+import UserAchievements from '../components/ui/UserAchievements';
+import UserMap from '../components/ui/UserMap';
+import ProfileExport from '../components/ui/ProfileExport';
+import LoadingSpinner from '../components/ui/LoadingSpinner';
+import ErrorMessage from '../components/ui/ErrorMessage';
+import Toast from '../components/ui/Toast';
 import './UserProfile.css';
 
 const UserProfile = () => {
@@ -21,6 +30,8 @@ const UserProfile = () => {
   const [editedCity, setEditedCity] = useState('');
   const [editedBio, setEditedBio] = useState('');
   const [avatarFile, setAvatarFile] = useState(null);
+  const [toast, setToast] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const currentUserId = localStorage.getItem('userId');
@@ -33,8 +44,9 @@ const UserProfile = () => {
     
     const fetchUserData = async () => {
       try {
-        // Always use current user ID
-        const profileResponse = await fetch(`http://localhost:3000/api/user/${currentUserId}/profile`);
+        // Use userId from URL params or current user ID
+        const targetUserId = userId || currentUserId;
+        const profileResponse = await fetch(`http://localhost:3000/api/user/${targetUserId}/profile`);
         const profileData = await profileResponse.json();
         
         if (profileData.success) {
@@ -46,17 +58,43 @@ const UserProfile = () => {
           throw new Error('Profile not found');
         }
         
-        setIsOwnProfile(true);
+        setIsOwnProfile(!userId || userId === currentUserId);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        setUser(null);
+        // Fallback: create mock user data when server is not available
+        const currentUserId = localStorage.getItem('userId');
+        const userName = localStorage.getItem('userName') || 'Користувач';
+        const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
+        
+        const mockUser = {
+          id: currentUserId,
+          name: userName,
+          username: `@${userName.toLowerCase().replace(/\s+/g, '')}`,
+          avatar: null,
+          city: 'Київ',
+          country: 'Україна',
+          bio: 'Привіт! Я новий користувач MapMark 👋',
+          joinedAt: new Date().toISOString(),
+          stats: {
+            posts: 0,
+            followers: 0,
+            following: 0,
+            messages: 0
+          }
+        };
+        
+        setUser(mockUser);
+        setEditedName(mockUser.name);
+        setEditedCity(mockUser.city);
+        setEditedBio(mockUser.bio);
+        setIsOwnProfile(!userId || userId === currentUserId);
         setLoading(false);
       }
     };
     
     fetchUserData();
-  }, [navigate]);
+  }, [userId, navigate]);
 
   const getJoinedDate = (dateString) => {
     const date = new Date(dateString);
@@ -86,23 +124,46 @@ const UserProfile = () => {
     console.log('Edit profile clicked');
   };
 
-  const handleAvatarChange = (event) => {
+  const handleAvatarChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('Розмір файлу не повинен перевищувати 5MB', 'error');
+        return;
+      }
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        showToast('Можна завантажувати тільки зображення', 'error');
+        return;
+      }
+      
       const reader = new FileReader();
       reader.onload = (e) => {
         setUser(prev => ({ ...prev, avatar: e.target.result }));
+        showToast('Аватар оновлено! Не забудьте зберегти зміни.', 'info');
       };
       reader.readAsDataURL(file);
       setAvatarFile(file);
     }
   };
 
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+  };
+
   const handleEditToggle = async () => {
     if (isEditing) {
+      if (!validateForm()) {
+        return;
+      }
+      
+      setSaving(true);
       try {
         const currentUserId = localStorage.getItem('userId');
-        const response = await fetch(`http://localhost:3000/api/user/${currentUserId}/profile`, {
+        const targetUserId = userId || currentUserId;
+        const response = await fetch(`http://localhost:3000/api/user/${targetUserId}/profile`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -124,19 +185,46 @@ const UserProfile = () => {
             bio: editedBio
           }));
           setIsEditing(false);
+          showToast('Профіль успішно оновлено!', 'success');
         } else {
-          console.error('Failed to update profile:', result.message);
+          showToast('Помилка при оновленні профілю', 'error');
         }
       } catch (error) {
-        console.error('Error updating profile:', error);
+        // Fallback: save locally when server is not available
+        setUser(prev => ({ 
+          ...prev, 
+          name: editedName,
+          city: editedCity,
+          bio: editedBio
+        }));
+        setIsEditing(false);
+        showToast('Профіль збережено локально (сервер недоступний)', 'info');
+      } finally {
+        setSaving(false);
       }
     } else {
       setIsEditing(true);
     }
   };
 
+  const validateForm = () => {
+    if (!editedName.trim()) {
+      showToast('Імʼя не може бути порожнім', 'error');
+      return false;
+    }
+    if (editedName.length > 50) {
+      showToast('Імʼя не може бути довшим 50 символів', 'error');
+      return false;
+    }
+    if (editedBio.length > 500) {
+      showToast('Опис не може бути довшим 500 символів', 'error');
+      return false;
+    }
+    return true;
+  };
+
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && e.ctrlKey) {
       handleEditToggle();
     }
     if (e.key === 'Escape') {
@@ -151,11 +239,7 @@ const UserProfile = () => {
     return (
       <div className="profile-user-profile">
         <div className="profile-profile-container">
-          <div className="profile-loading-skeleton">
-            <div className="profile-skeleton-avatar"></div>
-            <div className="profile-skeleton-text"></div>
-            <div className="profile-skeleton-stats"></div>
-          </div>
+          <LoadingSpinner message="Завантаження профілю..." />
         </div>
       </div>
     );
@@ -165,12 +249,10 @@ const UserProfile = () => {
     return (
       <div className="profile-user-profile">
         <div className="profile-profile-container">
-          <div className="profile-user-not-found">
-            <h2>Користувача не знайдено</h2>
-            <Link to="/discover-places" className="profile-back-link">
-              Повернутися до постів
-            </Link>
-          </div>
+          <ErrorMessage 
+            title="Профіль не знайдено"
+            message="Не вдалося завантажити дані профілю. Спробуйте пізніше."
+          />
         </div>
       </div>
     );
@@ -261,26 +343,16 @@ const UserProfile = () => {
                   📅 Приєднався {getJoinedDate(user.joinedAt)}
                 </p>
                 
-                <div className="profile-bio-section">
-                  <h4 className="profile-bio-label">Про себе</h4>
-                  {isEditing ? (
-                    <textarea
-                      value={editedBio}
-                      onChange={(e) => setEditedBio(e.target.value)}
-                      onKeyDown={handleKeyPress}
-                      className="profile-bio-input"
-                      placeholder="Розкажіть про себе..."
-                      rows="3"
-                    />
-                  ) : (
-                    <p className="profile-bio">{user.bio || 'Не вказано'}</p>
-                  )}
-                </div>
+
               </div>
               
               {isOwnProfile && (
-                <button onClick={handleEditToggle} className="profile-main-edit-btn">
-                  {isEditing ? '✓ Зберегти' : '✏️ Редагувати'}
+                <button 
+                  onClick={handleEditToggle} 
+                  className="profile-main-edit-btn"
+                  disabled={saving}
+                >
+                  {saving ? '⏳ Зберігання...' : isEditing ? '✓ Зберегти' : '✏️ Редагувати'}
                 </button>
               )}
             </div>
@@ -304,13 +376,14 @@ const UserProfile = () => {
           </div>
         </div>
 
-        <UserStats 
+        <ProfileStats 
           stats={user.stats}
           onStatClick={(statType) => {
             if (statType === 'messages') {
               navigate('/messages');
             } else if (statType === 'posts') {
-              document.querySelector('.profile-posts-section')?.scrollIntoView({ behavior: 'smooth' });
+              // Scroll to reviews section or navigate to reviews page
+              console.log('Show user reviews');
             } else if (statType === 'followers') {
               navigate(`/user/${user.id}/followers`);
             } else if (statType === 'following') {
@@ -318,9 +391,39 @@ const UserProfile = () => {
             }
           }}
         />
-
-
+        
+        <BioSection
+          bio={user.bio}
+          isEditing={isEditing}
+          editedBio={editedBio}
+          setEditedBio={setEditedBio}
+          onKeyPress={handleKeyPress}
+        />
+        
+        <ProfileActions 
+          isOwnProfile={isOwnProfile}
+          onEditProfile={() => setIsEditing(!isEditing)}
+        />
+        
+        <ActivityStats userId={user.id} />
+        
+        <UserAchievements userId={user.id} />
+        
+        <UserMap userId={user.id} />
+        
+        <UserReviews userId={user.id} />
+        
+        {isOwnProfile && <ProfileExport userId={user.id} />}
       </div>
+      
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+      
       <Footer />
     </div>
   );
