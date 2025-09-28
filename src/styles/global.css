@@ -1,0 +1,26 @@
+/* Глобальні стилі для всіх сторінок */
+
+/* Базовий контейнер сторінки */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 20px 0px 20px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  min-height: 100vh;
+}
+
+/* Стилі для breadcrumbs на всіх сторінках */
+.page-container .breadcrumbs {
+  margin-top: 26px;
+  margin-bottom: 24px;
+}
+
+/* Стилі для footer на всіх сторінках */
+.page-container .footer {
+  max-width: none;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  width: 100vw;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}

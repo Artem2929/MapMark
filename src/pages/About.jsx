@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Footer from '../components/layout/Footer';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import Toast from '../components/ui/Toast';
+import Breadcrumbs from '../components/ui/Breadcrumbs';
 import './About.css';
 
 const About = () => {
@@ -134,7 +135,8 @@ const About = () => {
 
   return (
     <>
-    <div className="about-page">
+    <div className="page-container about-page">
+      <Breadcrumbs />
       {/* Hero Section */}
       <div className="about-hero">
         <div className="about-container">

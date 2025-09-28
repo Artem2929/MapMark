@@ -283,7 +283,7 @@ const AdsPage = () => {
   }
 
   return (
-    <div className="ads-page">
+    <div className="page-container ads-page">
       <Breadcrumbs />
       
         <div className="categories-section">
@@ -494,48 +494,61 @@ const AdsPage = () => {
           )}
         </div>
 
-        {/* Список оголошень */}
-        {viewMode === 'grid' && (
-          <div className="ads-grid">
-            {paginatedAds.map(ad => (
-            <Link key={ad.id} to={`/ads/${ad.id}`} className="ads-ad-card">
-              <div className="ads-ad-image">
-                <img src={ad.image} alt={ad.title} />
-                <div className="ads-ad-badges">
-                  {ad.isNew && <span className="ads-badge ads-new">Нове</span>}
-                  {ad.isPopular && <span className="ads-badge ads-popular">Популярне</span>}
-                  {ad.hasPromo && <span className="ads-badge ads-promo">Акція</span>}
-                </div>
-                <div className="ads-ad-distance">{ad.distance} км</div>
-              </div>
-              
-              <div className="ads-ad-content">
-                <div className="ads-ad-category">
-                  {getCategoryIcon(ad.category)} {getCategoryName(ad.category)}
-                </div>
-                
-                <h3 className="ads-ad-title">{ad.title}</h3>
-                
-                <div className="ads-ad-footer">
-                  <div className="ads-ad-rating">
-                    <StarRating rating={ad.rating} size="small" />
-                    <span className="ads-rating-text">{ad.rating.toFixed(1)}</span>
+        {/* Список оголошень або порожній стан */}
+        <div className="ads-main-content">
+          {filteredAds.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon">🔍</div>
+              <h3>Оголошення не знайдено</h3>
+              <p>Спробуйте змінити фільтри або пошуковий запит</p>
+              <button className="clear-filters-btn" onClick={clearFilters}>
+                Очистити фільтри
+              </button>
+            </div>
+          ) : (
+            viewMode === 'grid' && (
+              <div className="ads-grid">
+                {paginatedAds.map(ad => (
+                <Link key={ad.id} to={`/ads/${ad.id}`} className="ads-ad-card">
+                  <div className="ads-ad-image">
+                    <img src={ad.image} alt={ad.title} />
+                    <div className="ads-ad-badges">
+                      {ad.isNew && <span className="ads-badge ads-new">Нове</span>}
+                      {ad.isPopular && <span className="ads-badge ads-popular">Популярне</span>}
+                      {ad.hasPromo && <span className="ads-badge ads-promo">Акція</span>}
+                    </div>
+                    <div className="ads-ad-distance">{ad.distance} км</div>
                   </div>
                   
-                  <div className="ads-ad-tags">
-                    {ad.tags.slice(0, 2).map(tag => (
-                      <span key={tag} className="ads-ad-tag">{tag}</span>
-                    ))}
-                    {ad.tags.length > 2 && (
-                      <span className="ads-more-tags">+{ad.tags.length - 2}</span>
-                    )}
+                  <div className="ads-ad-content">
+                    <div className="ads-ad-category">
+                      {getCategoryIcon(ad.category)} {getCategoryName(ad.category)}
+                    </div>
+                    
+                    <h3 className="ads-ad-title">{ad.title}</h3>
+                    
+                    <div className="ads-ad-footer">
+                      <div className="ads-ad-rating">
+                        <StarRating rating={ad.rating} size="small" />
+                        <span className="ads-rating-text">{ad.rating.toFixed(1)}</span>
+                      </div>
+                      
+                      <div className="ads-ad-tags">
+                        {ad.tags.slice(0, 2).map(tag => (
+                          <span key={tag} className="ads-ad-tag">{tag}</span>
+                        ))}
+                        {ad.tags.length > 2 && (
+                          <span className="ads-more-tags">+{ad.tags.length - 2}</span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </Link>
+                ))}
               </div>
-            </Link>
-            ))}
-          </div>
-        )}
+            )
+          )}
+        </div>
       </div>
 
       {/* Пагінація */}
@@ -574,17 +587,7 @@ const AdsPage = () => {
         </div>
       )}
 
-      {/* Порожній стан */}
-      {filteredAds.length === 0 && (
-        <div className="empty-state">
-          <div className="empty-icon">🔍</div>
-          <h3>Оголошення не знайдено</h3>
-          <p>Спробуйте змінити фільтри або пошуковий запит</p>
-          <button className="clear-filters-btn" onClick={clearFilters}>
-            Очистити фільтри
-          </button>
-        </div>
-      )}
+
       
       <Footer />
     </div>

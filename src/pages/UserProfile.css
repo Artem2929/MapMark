@@ -1,13 +1,18 @@
-.profile-user-profile {
-  background-color: #f9f9f9;
+
+
+.page-container.profile-user-profile {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 20px 0px 20px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   min-height: 100vh;
-  padding: 40px 20px 0px 20px;
 }
 
 .profile-profile-container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   margin-bottom: 30px;
+  padding: 0 20px;
 }
 
 .profile-profile-header {
@@ -643,8 +648,8 @@
 .stats-section {
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   border-radius: 20px;
-  padding: 32px 24px;
-  margin-bottom: 24px;
+  padding: 20px 0;
+  margin-bottom: 40px;
   box-shadow: 
     0 10px 25px rgba(0, 0, 0, 0.08),
     0 4px 10px rgba(0, 0, 0, 0.04),
@@ -695,9 +700,16 @@
 }
 
 .profile-bio-section {
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 24px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  padding: 20px 0;
+  margin-bottom: 40px;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.08),
+    0 4px 10px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .profile-bio-section h3 {
@@ -751,10 +763,16 @@
 }
 
 .profile-user-posts-section {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 20px;
+  padding: 20px 0;
+  margin-bottom: 40px;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.08),
+    0 4px 10px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .profile-user-posts-section h3 {

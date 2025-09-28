@@ -1,19 +1,4 @@
-.ads-page {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  min-height: 100vh;
-}
 
-.ads-page .footer {
-  max-width: none;
-  margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%);
-  width: 100vw;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
 
 .loading-state {
   display: flex;
@@ -313,6 +298,10 @@
   grid-template-columns: 300px 1fr;
   gap: 24px;
   margin-bottom: 40px;
+}
+
+.ads-main-content {
+  min-height: 400px;
 }
 
 .ads-grid {
@@ -797,7 +786,7 @@
   }
   
   .page-header {
-    padding: 20px;
+    padding: 16px 20px 0px 20px;
   }
   
   .header-content {

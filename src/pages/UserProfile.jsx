@@ -220,7 +220,7 @@ const UserProfile = () => {
 
   return (
     <>
-    <div className="profile-user-profile">
+    <div className="page-container profile-user-profile">
       <div className="profile-profile-container">
         <Breadcrumbs items={breadcrumbItems} />
         

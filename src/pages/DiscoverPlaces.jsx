@@ -362,7 +362,7 @@ const DiscoverPlaces = () => {
   ];
 
   return (
-    <div className="discover-places">
+    <div className="page-container discover-places">
       <div className="discover-container">
         <Breadcrumbs items={breadcrumbItems} />
         

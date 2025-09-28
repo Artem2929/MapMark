@@ -1,4 +1,5 @@
 import './App.css'
+import './styles/global.css'
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
@@ -19,6 +20,8 @@ import HelpCenter from './pages/HelpCenter.jsx'
 import ContactUs from './pages/ContactUs.jsx'
 import DiscoverPlaces from './pages/DiscoverPlaces.jsx'
 import UserProfile from './pages/UserProfile.jsx'
+import AddReviewButton from './components/ui/AddReviewButton.jsx'
+import QuickReviewForm from './components/forms/QuickReviewForm.jsx'
 import Messages from './pages/Messages.jsx'
 import Chat from './pages/Chat.jsx'
 import Followers from './pages/Followers.jsx'
@@ -38,8 +41,26 @@ const AppContent = () => {
   const [places, setPlaces] = useState([]);
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
   const [userReviewCount, setUserReviewCount] = useState(0);
+  const [showQuickReviewForm, setShowQuickReviewForm] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+
+  const handleAddReviewClick = () => {
+    setShowQuickReviewForm(true);
+    setIsReviewFormOpen(true);
+  };
+
+  const handleQuickReviewSubmit = (reviewData) => {
+    console.log('Quick review submitted:', reviewData);
+    setUserReviewCount(prev => prev + 1);
+    setShowQuickReviewForm(false);
+    setIsReviewFormOpen(false);
+  };
+
+  const handleQuickReviewClose = () => {
+    setShowQuickReviewForm(false);
+    setIsReviewFormOpen(false);
+  };
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -123,6 +144,13 @@ const AppContent = () => {
                 places={places}
                 isReviewFormOpen={isReviewFormOpen}
               />
+              {!isReviewFormOpen && <AddReviewButton onClick={handleAddReviewClick} />}
+              {showQuickReviewForm && (
+                <QuickReviewForm 
+                  onClose={handleQuickReviewClose}
+                  onSubmit={handleQuickReviewSubmit}
+                />
+              )}
             </>
           } />
             <Route path="/ads" element={<AdsPage />} />
