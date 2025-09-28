@@ -118,24 +118,8 @@ const AdsPage = () => {
   const loadAds = async () => {
     setLoading(true);
     try {
-      // Mock data - замінити на API виклик
-      const mockAds = Array.from({ length: 50 }, (_, i) => ({
-        id: i + 1,
-        title: `Місце ${i + 1}`,
-        description: `Опис місця ${i + 1}`,
-        category: ['real-estate', 'auto', 'jobs', 'cafe', 'restaurant', 'park', 'museum'][i % 7],
-        rating: 3 + Math.random() * 2,
-        distance: Math.floor(Math.random() * 10) + 1,
-        image: `https://picsum.photos/300/160?random=${i + 1}`,
-        tags: ['Wi-Fi', 'Паркінг', 'Веган-френдлі'].slice(0, Math.floor(Math.random() * 3) + 1),
-        price: Math.floor(Math.random() * 4) + 1,
-        isNew: i < 5,
-        isPopular: Math.random() > 0.7,
-        hasPromo: Math.random() > 0.8,
-        createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000)
-      }));
-      
-      setAds(mockAds);
+      // TODO: Замінити на API виклик
+      setAds([]);
     } catch (error) {
       console.error('Помилка завантаження оголошень:', error);
     } finally {

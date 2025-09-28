@@ -218,59 +218,7 @@ const DiscoverPlaces = () => {
     }
   ];
 
-  const mockPosts = [
-    {
-      id: 1,
-      category: 'nature',
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
-      title: 'Swiss Alps, Switzerland',
-      description: 'Breathtaking views and perfect hiking trails. The cable car ride to the summit was incredible!',
-      rating: 4.8,
-      reviews: 127,
-      coordinates: [46.5197, 7.4815],
-      address: 'Швейцарські Альпи, Швейцарія',
-      author: 'John Doe',
-      authorId: 'john-doe',
-      likes: 234,
-      dislikes: 12,
-      comments: 45,
-      publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 2,
-      category: 'recreation',
-      image: 'https://images.unsplash.com/photo-1539650116574-75c0c6d73c6e?w=600&h=400&fit=crop',
-      title: 'Maldives Beach Resort',
-      description: 'Crystal clear waters and white sand beaches. Perfect for snorkeling and relaxation.',
-      rating: 4.9,
-      reviews: 89,
-      coordinates: [3.2028, 73.2207],
-      address: 'Мальдіви, Індійський океан',
-      author: 'Jane Smith',
-      authorId: 'jane-smith',
-      likes: 456,
-      dislikes: 8,
-      comments: 67,
-      publishedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      id: 3,
-      category: 'attraction',
-      image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=600&h=400&fit=crop',
-      title: 'Eiffel Tower, Paris',
-      description: 'Iconic landmark with stunning city views. Best visited at sunset.',
-      rating: 4.7,
-      reviews: 2341,
-      coordinates: [48.8584, 2.2945],
-      address: 'Champ de Mars, 5 Avenue Anatole France, 75007 Париж, Франція',
-      author: 'Marie Dubois',
-      authorId: 'marie-dubois',
-      likes: 789,
-      dislikes: 23,
-      comments: 156,
-      publishedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString()
-    }
-  ];
+
 
   const getTimeAgo = (timestamp) => {
     const now = new Date();
@@ -352,11 +300,7 @@ const DiscoverPlaces = () => {
   const loadMorePosts = () => {
     setLoading(true);
     setTimeout(() => {
-      const newPosts = mockPosts.map(post => ({
-        ...post,
-        id: post.id + page * 10,
-        authorId: post.authorId || `user-${post.id + page * 10}`
-      }));
+      const newPosts = [];
       setPosts(prev => [...prev, ...newPosts]);
       setPage(prev => prev + 1);
       setLoading(false);
@@ -364,7 +308,7 @@ const DiscoverPlaces = () => {
   };
 
   useEffect(() => {
-    setPosts(mockPosts);
+    setPosts([]);
     setPage(2);
     const saved = JSON.parse(localStorage.getItem('savedPosts') || '[]');
     setSavedPosts(saved);

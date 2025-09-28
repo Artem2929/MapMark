@@ -8,50 +8,8 @@ const UserAchievements = ({ userId }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock achievements data
-    const mockAchievements = [
-      {
-        id: 'first-review',
-        title: 'Перший крок',
-        description: 'Залишив перший відгук',
-        icon: '🎯',
-        unlocked: true,
-        date: '2024-01-15'
-      },
-      {
-        id: 'ten-reviews',
-        title: 'Активний мандрівник',
-        description: 'Залишив 10 відгуків',
-        icon: '🌟',
-        unlocked: true,
-        date: '2024-03-20'
-      },
-      {
-        id: 'world-traveler',
-        title: 'Світовий мандрівник',
-        description: 'Відвідав 3 країни',
-        icon: '🌍',
-        unlocked: true
-      },
-      {
-        id: 'hundred-reviews',
-        title: 'Експерт',
-        description: 'Залишити 100 відгуків',
-        icon: '🏆',
-        unlocked: false,
-        progress: 15
-      },
-      {
-        id: 'ten-countries',
-        title: 'Глобальний дослідник',
-        description: 'Відвідати 10 країн',
-        icon: '🗺️',
-        unlocked: false,
-        progress: 3
-      }
-    ];
-
-    setAchievements(mockAchievements);
+    // TODO: Завантажити досягнення з API
+    setAchievements([]);
     setLoading(false);
   }, [userId]);
 
