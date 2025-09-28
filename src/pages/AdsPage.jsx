@@ -5,6 +5,7 @@ import Breadcrumbs from '../components/ui/Breadcrumbs';
 import Footer from '../components/layout/Footer';
 import CustomSelect from '../components/ui/CustomSelect';
 import './AdsPage.css';
+import './DiscoverPlaces.css';
 
 const AdsPage = () => {
   const [ads, setAds] = useState([]);
@@ -12,6 +13,9 @@ const AdsPage = () => {
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'map'
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('realestate');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('');
+  const [showSubcategories, setShowSubcategories] = useState(false);
   const [filters, setFilters] = useState({
     country: '',
     region: '',
@@ -31,6 +35,77 @@ const AdsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 12;
+
+  const categories = [
+    { 
+      id: 'realestate', 
+      name: 'Нерухомість', 
+      emoji: '🏠',
+      subcategories: [
+        { id: 'apartments', name: 'Квартири' },
+        { id: 'houses', name: 'Будинки та дачі' },
+        { id: 'commercial', name: 'Комерційна нерухомість' },
+        { id: 'land', name: 'Земельні ділянки' },
+        { id: 'garages', name: 'Гаражі та паркомісця' },
+        { id: 'abroad', name: 'Нерухомість за кордоном' }
+      ]
+    },
+    { 
+      id: 'transport', 
+      name: 'Транспорт', 
+      emoji: '🚗',
+      subcategories: [
+        { id: 'cars', name: 'Легкові авто' },
+        { id: 'motorcycles', name: 'Мотоцикли / скутери' },
+        { id: 'trucks', name: 'Грузові авто / фургони' },
+        { id: 'commercial-transport', name: 'Комерційний транспорт' },
+        { id: 'water-transport', name: 'Водний транспорт' },
+        { id: 'auto-parts', name: 'Автозапчастини та аксесуари' },
+        { id: 'auto-services', name: 'Сервіси та СТО' },
+        { id: 'car-rental', name: 'Оренда авто' }
+      ]
+    },
+    { 
+      id: 'jobs', 
+      name: 'Робота', 
+      emoji: '💼',
+      subcategories: [
+        { id: 'vacancies', name: 'Вакансії' },
+        { id: 'resumes', name: 'Резюме' },
+        { id: 'recruiting', name: 'Послуги рекрутингу' },
+        { id: 'freelance', name: 'Тимчасова робота/фріланс' }
+      ]
+    },
+    { 
+      id: 'services', 
+      name: 'Послуги', 
+      emoji: '🔧',
+      subcategories: [
+        { id: 'construction', name: 'Будівельні та ремонтні' },
+        { id: 'household', name: 'Побутові послуги' },
+        { id: 'education', name: 'Освіта та репетиторство' },
+        { id: 'legal', name: 'Юридичні послуги' },
+        { id: 'medical', name: 'Медичні та догляд' },
+        { id: 'beauty', name: 'Красота та салони' },
+        { id: 'it', name: 'IT та розробка' },
+        { id: 'design', name: 'Дизайн та маркетинг' },
+        { id: 'transport-services', name: 'Транспортні та кур\'єрські' }
+      ]
+    },
+    { 
+      id: 'electronics', 
+      name: 'Електроніка', 
+      emoji: '📱',
+      subcategories: [
+        { id: 'smartphones', name: 'Смартфони та мобільні пристрої' },
+        { id: 'computers', name: 'Комп\'ютери, ноутбуки, планшети' },
+        { id: 'tv-audio', name: 'ТВ, аудіо та фотоапаратура' },
+        { id: 'appliances', name: 'Побутова техніка' },
+        { id: 'gaming', name: 'Ігрові приставки та аксесуари' },
+        { id: 'components', name: 'Запчастини та комплектуючі' }
+      ]
+    }
+  ];
 
   useEffect(() => {
     loadAds();
@@ -226,7 +301,52 @@ const AdsPage = () => {
   return (
     <div className="ads-page">
       <Breadcrumbs />
-
+      
+        <div className="categories-section">
+          <div className="categories-scroll">
+            {categories.map(category => (
+              <button
+                key={category.id}
+                className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
+                onClick={() => {
+                  if (selectedCategory === category.id) {
+                    setShowSubcategories(!showSubcategories);
+                  } else {
+                    setSelectedCategory(category.id);
+                    setSelectedSubcategory('');
+                    setShowSubcategories(true);
+                  }
+                }}
+              >
+                <span className="category-emoji">{category.emoji}</span>
+                <span className="category-name">{category.name}</span>
+              </button>
+            ))}
+          </div>
+          
+          {showSubcategories && categories.find(cat => cat.id === selectedCategory)?.subcategories?.length > 0 && (
+            <div className="subcategories-section">
+              <h4>Підкатегорії:</h4>
+              <div className="subcategories-scroll">
+                <button
+                  className={`subcategory-btn ${!selectedSubcategory ? 'active' : ''}`}
+                  onClick={() => setSelectedSubcategory('')}
+                >
+                  Всі
+                </button>
+                {categories.find(cat => cat.id === selectedCategory)?.subcategories.map(subcategory => (
+                  <button
+                    key={subcategory.id}
+                    className={`subcategory-btn ${selectedSubcategory === subcategory.id ? 'active' : ''}`}
+                    onClick={() => setSelectedSubcategory(subcategory.id)}
+                  >
+                    {subcategory.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
 
       {/* Результати */}
       <div className="results-info">
