@@ -1,9 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './CustomSelect.css';
 
-const CustomSelect = ({ options, value, onChange, placeholder }) => {
+const CustomSelect = ({ value, onChange, options, placeholder, className = '' }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
   const selectRef = useRef(null);
+
+  useEffect(() => {
+    const selected = options.find(option => option.value === value);
+    setSelectedOption(selected);
+  }, [value, options]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -16,30 +22,32 @@ const CustomSelect = ({ options, value, onChange, placeholder }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const selectedOption = options.find(option => option.code === value);
+  const handleOptionClick = (option) => {
+    onChange(option.value);
+    setIsOpen(false);
+  };
 
   return (
-    <div className="custom-select" ref={selectRef}>
+    <div className={`custom-select ${className}`} ref={selectRef}>
       <div 
-        className={`select-trigger ${isOpen ? 'open' : ''}`}
+        className={`custom-select-trigger ${isOpen ? 'open' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span>{selectedOption ? selectedOption.name_en : placeholder}</span>
-        <span className={`select-arrow ${isOpen ? 'up' : 'down'}`}>▼</span>
+        <span className="custom-select-value">
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+        <span className={`custom-select-arrow ${isOpen ? 'up' : 'down'}`}>▼</span>
       </div>
       
       {isOpen && (
-        <div className="select-dropdown">
-          {options.map(option => (
+        <div className="custom-select-dropdown">
+          {options.map((option) => (
             <div
-              key={option.code}
-              className={`select-option ${value === option.code ? 'selected' : ''}`}
-              onClick={() => {
-                onChange(option.code);
-                setIsOpen(false);
-              }}
+              key={option.value}
+              className={`custom-select-option ${value === option.value ? 'selected' : ''}`}
+              onClick={() => handleOptionClick(option)}
             >
-              {option.name_en}
+              {option.label}
             </div>
           ))}
         </div>

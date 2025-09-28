@@ -170,6 +170,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: visible;
 }
 
 .filters-row {
@@ -213,6 +214,35 @@
   border-color: #3b82f6;
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 4px 12px rgba(59, 130, 246, 0.15);
   transform: translateY(-1px);
+}
+
+.filter-select option {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
+  color: #374151;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  margin: 2px 0;
+  transition: all 0.2s ease;
+}
+
+.filter-select option:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.filter-select option:checked {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.filter-select option:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
 }
 
 .clear-filters-btn {
@@ -278,11 +308,74 @@
   color: #64748b;
 }
 
+.ads-content-container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
 .ads-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
-  margin-bottom: 40px;
+}
+
+.sidebar-filters {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  border-radius: 20px;
+  padding: 24px;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.sidebar-filters h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.filter-group {
+  margin-bottom: 20px;
+}
+
+.filter-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.sidebar-filters .custom-select {
+  width: 100%;
+}
+
+.sidebar-filters .create-ad-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  box-sizing: border-box;
+}
+
+.sidebar-filters .clear-filters-btn {
+  width: 100%;
+  margin-top: 8px;
 }
 
 .ad-card {
@@ -659,6 +752,45 @@
   font-size: 16px;
 }
 
+/* Custom select dropdown styling for better cross-browser support */
+.filter-select::-webkit-scrollbar {
+  width: 8px;
+}
+
+.filter-select::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.filter-select::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-radius: 4px;
+}
+
+.filter-select::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+}
+
+@media (max-width: 1024px) {
+  .ads-content-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .sidebar-filters {
+    position: static;
+    order: -1;
+  }
+  
+  .sidebar-filters h3 {
+    font-size: 16px;
+  }
+  
+  .filter-group {
+    margin-bottom: 16px;
+  }
+}
+
 @media (max-width: 768px) {
   .ads-page {
     padding: 16px;
@@ -701,5 +833,9 @@
   .page-btn {
     padding: 10px 16px;
     font-size: 14px;
+  }
+  
+  .sidebar-filters {
+    padding: 16px;
   }
 }

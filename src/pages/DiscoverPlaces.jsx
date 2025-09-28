@@ -261,9 +261,50 @@ const DiscoverPlaces = () => {
             <span className="saved-count">{savedPosts.length}</span>
           </button>
         )}
-        <div className="places-feed">
-          {filteredPosts.map(post => (
-            <div key={post.id} className="post-item">
+        <div className="discover-content-container">
+          {/* Бічна панель фільтрів */}
+          <div className="sidebar-filters">
+            <h3>Фільтри</h3>
+            
+            <div className="filter-group">
+              <label>Категорія</label>
+              <select 
+                value={selectedCategory} 
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="filter-select"
+              >
+                {categories.map(category => (
+                  <option key={category.id} value={category.id}>
+                    {category.emoji} {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Рейтинг</label>
+              <select className="filter-select">
+                <option value="">Всі рейтинги</option>
+                <option value="4.5">4.5+ зірок</option>
+                <option value="4.0">4.0+ зірок</option>
+                <option value="3.5">3.5+ зірок</option>
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Відстань</label>
+              <select className="filter-select">
+                <option value="">Будь-яка відстань</option>
+                <option value="5">До 5 км</option>
+                <option value="10">До 10 км</option>
+                <option value="25">До 25 км</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="places-feed">
+            {filteredPosts.map(post => (
+              <div key={post.id} className="post-item">
               <div className="post-header">
                 <Link to={`/profile/${post.authorId}`} className="post-author">
                   <div className="author-avatar">{post.author.charAt(0)}</div>
@@ -371,12 +412,13 @@ const DiscoverPlaces = () => {
             </div>
           ))}
           
-          {loading && (
-            <div className="loading-spinner">
-              <div className="spinner"></div>
-              <p>Завантаження...</p>
-            </div>
-          )}
+            {loading && (
+              <div className="loading-spinner">
+                <div className="spinner"></div>
+                <p>Завантаження...</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
