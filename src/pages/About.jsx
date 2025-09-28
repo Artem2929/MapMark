@@ -42,19 +42,19 @@ const About = () => {
   const validateField = (name, value) => {
     switch (name) {
       case 'name':
-        if (!value.trim()) return "Ім'я обов'язкове";
-        if (value.trim().length < 2) return "Ім'я повинно містити мінімум 2 символи";
-        if (value.trim().length > 50) return "Ім'я не може перевищувати 50 символів";
+        if (!value.trim()) return t('aboutPage.contact.validation.nameRequired');
+        if (value.trim().length < 2) return t('aboutPage.contact.validation.nameMinLength');
+        if (value.trim().length > 50) return t('aboutPage.contact.validation.nameMaxLength');
         return '';
       case 'email':
-        if (!value.trim()) return "Email обов'язковий";
+        if (!value.trim()) return t('aboutPage.contact.validation.emailRequired');
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value.trim())) return 'Введіть коректний email';
+        if (!emailRegex.test(value.trim())) return t('aboutPage.contact.validation.emailInvalid');
         return '';
       case 'message':
-        if (!value.trim()) return "Повідомлення обов'язкове";
-        if (value.trim().length < 10) return 'Повідомлення повинно містити мінімум 10 символів';
-        if (value.trim().length > 1000) return 'Повідомлення не може перевищувати 1000 символів';
+        if (!value.trim()) return t('aboutPage.contact.validation.messageRequired');
+        if (value.trim().length < 10) return t('aboutPage.contact.validation.messageMinLength');
+        if (value.trim().length > 1000) return t('aboutPage.contact.validation.messageMaxLength');
         return '';
       default:
         return '';
@@ -87,7 +87,7 @@ const About = () => {
     e.preventDefault();
     
     if (!validateForm()) {
-      setToast({ message: 'Будь ласка, виправте помилки у формі', type: 'error' });
+      setToast({ message: t('aboutPage.contact.messages.validationError'), type: 'error' });
       return;
     }
     
@@ -110,7 +110,7 @@ const About = () => {
         setContactForm({ name: '', email: '', message: '' });
         setErrors({});
         setTouched({});
-        setToast({ message: 'Повідомлення надіслано успішно!', type: 'success' });
+        setToast({ message: t('aboutPage.contact.messages.success'), type: 'success' });
       } else {
         if (data.errors) {
           const serverErrors = {};
@@ -119,10 +119,10 @@ const About = () => {
           });
           setErrors(serverErrors);
         }
-        setToast({ message: data.message || 'Помилка відправки', type: 'error' });
+        setToast({ message: data.message || t('aboutPage.contact.messages.error'), type: 'error' });
       }
     } catch (error) {
-      setToast({ message: 'Помилка мережі', type: 'error' });
+      setToast({ message: t('aboutPage.contact.messages.networkError'), type: 'error' });
     } finally {
       setSubmitting(false);
     }
@@ -139,10 +139,9 @@ const About = () => {
       <div className="about-hero">
         <div className="about-container">
           <div className="about-hero-content">
-            <h1 className="about-hero-title">Про MapMark</h1>
+            <h1 className="about-hero-title">{t('aboutPage.hero.title')}</h1>
             <p className="about-hero-description">
-              Ваш персональний гід у світі подорожей. Відкривайте нові місця, 
-              діліться враженнями та створюйте незабутні спогади.
+              {t('aboutPage.hero.description')}
             </p>
           </div>
         </div>
@@ -152,23 +151,23 @@ const About = () => {
       {stats && (
         <div className="about-stats-section">
           <div className="about-container">
-            <h2>Наші досягнення</h2>
+            <h2>{t('aboutPage.stats.title')}</h2>
             <div className="about-stats-grid">
               <div className="about-stat-card">
                 <div className="about-stat-number">{stats.totalUsers}</div>
-                <div className="about-stat-label">Користувачів</div>
+                <div className="about-stat-label">{t('aboutPage.stats.users')}</div>
               </div>
               <div className="about-stat-card">
                 <div className="about-stat-number">{stats.totalReviews}</div>
-                <div className="about-stat-label">Відгуків</div>
+                <div className="about-stat-label">{t('aboutPage.stats.reviews')}</div>
               </div>
               <div className="about-stat-card">
                 <div className="about-stat-number">{stats.totalCountries}</div>
-                <div className="about-stat-label">Країн</div>
+                <div className="about-stat-label">{t('aboutPage.stats.countries')}</div>
               </div>
               <div className="about-stat-card">
                 <div className="about-stat-number">{stats.totalPhotos}</div>
-                <div className="about-stat-label">Фотографій</div>
+                <div className="about-stat-label">{t('aboutPage.stats.photos')}</div>
               </div>
             </div>
           </div>
@@ -179,28 +178,26 @@ const About = () => {
       <div className="about-mission-section">
         <div className="about-container">
           <div className="about-mission-content">
-            <h2>Наша місія</h2>
+            <h2>{t('aboutPage.mission.title')}</h2>
             <p>
-              Ми віримо, що кожна подорож - це можливість відкрити щось нове. 
-              MapMark допомагає мандрівникам знаходити найкращі місця, 
-              ділитися досвідом та надихати інших на нові пригоди.
+              {t('aboutPage.mission.description')}
             </p>
             <div className="about-features-list">
               <div className="about-feature-item">
                 <span className="about-feature-icon">🗺️</span>
-                <span>Інтерактивні карти</span>
+                <span>{t('aboutPage.mission.features.maps')}</span>
               </div>
               <div className="about-feature-item">
                 <span className="about-feature-icon">📸</span>
-                <span>Фотогалереї</span>
+                <span>{t('aboutPage.mission.features.photos')}</span>
               </div>
               <div className="about-feature-item">
                 <span className="about-feature-icon">⭐</span>
-                <span>Рейтинги та відгуки</span>
+                <span>{t('aboutPage.mission.features.ratings')}</span>
               </div>
               <div className="about-feature-item">
                 <span className="about-feature-icon">🌍</span>
-                <span>Глобальна спільнота</span>
+                <span>{t('aboutPage.mission.features.community')}</span>
               </div>
             </div>
           </div>
@@ -211,7 +208,7 @@ const About = () => {
       {team.length > 0 && (
         <div className="about-team-section">
           <div className="about-container">
-            <h2>Наша команда</h2>
+            <h2>{t('aboutPage.team.title')}</h2>
             <div className="about-team-grid">
               {team.map((member) => (
                 <div key={member._id} className="about-team-card">
@@ -237,11 +234,11 @@ const About = () => {
       {/* Contact Section */}
       <div className="about-contact-section">
         <div className="about-container">
-          <h2>Зв'яжіться з нами</h2>
+          <h2>{t('aboutPage.contact.title')}</h2>
           <div className="about-contact-content">
             <div className="about-contact-info">
-              <h3>Маєте питання?</h3>
-              <p>Ми завжди раді допомогти! Напишіть нам, і ми відповімо якнайшвидше.</p>
+              <h3>{t('aboutPage.contact.subtitle')}</h3>
+              <p>{t('aboutPage.contact.description')}</p>
               <div className="about-contact-details">
                 <div className="about-contact-item">
                   <span className="about-contact-icon">📧</span>
@@ -257,7 +254,7 @@ const About = () => {
               <div className="about-form-group">
                 <input
                   type="text"
-                  placeholder="Ваше ім'я"
+                  placeholder={t('aboutPage.contact.form.name')}
                   value={contactForm.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   onBlur={() => handleInputBlur('name')}
@@ -271,7 +268,7 @@ const About = () => {
               <div className="about-form-group">
                 <input
                   type="email"
-                  placeholder="Email"
+                  placeholder={t('aboutPage.contact.form.email')}
                   value={contactForm.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   onBlur={() => handleInputBlur('email')}
@@ -284,7 +281,7 @@ const About = () => {
               </div>
               <div className="about-form-group">
                 <textarea
-                  placeholder="Ваше повідомлення"
+                  placeholder={t('aboutPage.contact.form.message')}
                   rows="5"
                   value={contactForm.message}
                   onChange={(e) => handleInputChange('message', e.target.value)}
@@ -297,7 +294,7 @@ const About = () => {
                 )}
               </div>
               <button type="submit" disabled={submitting || Object.keys(errors).some(key => errors[key]) || !contactForm.name.trim() || !contactForm.email.trim() || !contactForm.message.trim()}>
-                {submitting ? 'Надсилання...' : 'Надіслати'}
+                {submitting ? t('aboutPage.contact.form.submitting') : t('aboutPage.contact.form.submit')}
               </button>
             </form>
           </div>
