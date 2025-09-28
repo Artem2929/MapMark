@@ -9,6 +9,7 @@ const { getUserStatsHandler: userStatsHandler, getUserFollowersHandler, getUserF
 const { getUserProfileHandler, updateUserProfileHandler } = require('./services/UserService');
 const { getAboutStatsHandler, getTeamMembersHandler, submitContactMessageHandler, getContactMessagesHandler, markMessageAsReadHandler } = require('./services/AboutService');
 const authRoutes = require('./routes/auth');
+const postsRoutes = require('./routes/posts');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ mongoose.connect(DB_URL)
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/posts', postsRoutes);
 
 app.get('/', (req, res) => {
   res.json({ 

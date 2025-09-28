@@ -27,18 +27,24 @@ async function getUserProfileHandler(req, res) {
       // Create username from userId
       const username = userId.replace('@', '');
       
-      // Create default user if not found
-      user = new User({
-        email: `${username}@example.com`,
-        password: 'defaultpassword123',
-        name: 'Новий користувач',
-        username: username,
-        city: 'Київ',
-        country: 'Україна',
-        bio: 'Привіт! Я новий користувач MapMark 👋'
-      });
-      await user.save();
-      console.log('Created default user with username:', username);
+      // Check if user with this email already exists
+      const existingUser = await User.findOne({ email: `${username}@example.com` });
+      if (existingUser) {
+        user = existingUser;
+        console.log('Found existing user with email:', existingUser.email);
+      } else {
+        // Create default user if not found
+        user = new User({
+          email: `${username}@example.com`,
+          name: 'Новий користувач',
+          username: username,
+          city: 'Київ',
+          country: 'Україна',
+          bio: 'Привіт! Я новий користувач MapMark 👋'
+        });
+        await user.save();
+        console.log('Created default user with username:', username);
+      }
     }
 
     // Get user reviews count

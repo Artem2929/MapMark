@@ -8,9 +8,8 @@ import ProfileStats from '../components/ui/ProfileStats';
 import BioSection from '../components/ui/BioSection';
 
 import ActivityStats from '../components/ui/ActivityStats';
-
-
 import UserAchievements from '../components/ui/UserAchievements';
+import Wall from '../components/ui/Wall';
 
 
 import LoadingSpinner from '../components/ui/LoadingSpinner';
@@ -384,8 +383,7 @@ const UserProfile = () => {
         
         <UserAchievements userId={targetUserId} />
         
-
-
+        <Wall userId={targetUserId} isOwnProfile={isOwnProfile} />
 
       </div>
       
