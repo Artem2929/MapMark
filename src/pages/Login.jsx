@@ -33,13 +33,13 @@ const Login = () => {
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(emailValue.trim())) {
-      return 'Введіть коректний email (наприклад: user@example.com)';
+      return t('login.validation.emailInvalid');
     }
     
     // Перевірка на кирилицю
     const cyrillicRegex = /[а-яё]/i;
     if (cyrillicRegex.test(emailValue)) {
-      return 'Email не може містити кириличні символи';
+      return t('login.validation.emailCyrillic');
     }
     
     return '';
@@ -47,7 +47,7 @@ const Login = () => {
 
   const validateEmailOnBlur = (emailValue) => {
     if (!emailValue.trim()) {
-      return 'Email обов\'язковий';
+      return t('login.validation.emailRequired');
     }
     return validateEmail(emailValue);
   };
@@ -67,13 +67,13 @@ const Login = () => {
 
     // Базова валідація
     if (!email.trim()) {
-      setError('Введіть email');
+      setError(t('login.validation.emailRequired'));
       setLoading(false);
       return;
     }
     
     if (!password) {
-      setError('Введіть пароль');
+      setError(t('login.validation.passwordRequired'));
       setLoading(false);
       return;
     }
@@ -94,7 +94,7 @@ const Login = () => {
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     if (!email) {
-      setError('Будь ласка, введіть email для скидання паролю');
+      setError(t('login.validation.emailForReset'));
       return;
     }
     
@@ -103,7 +103,7 @@ const Login = () => {
 
     try {
       await authService.forgotPassword(email);
-      alert(`Інструкції для скидання паролю надіслані на ${email}`);
+      alert(t('login.resetPasswordSuccess', { email }));
       setShowForgotPassword(false);
     } catch (err) {
       setError(err.message);
@@ -145,7 +145,7 @@ const Login = () => {
       window.location.reload();
     } catch (error) {
       console.error('Google login error:', error);
-      setError(error.message || 'Помилка входу через Google. Спробуйте ще раз.');
+      setError(error.message || t('login.googleLoginError'));
     } finally {
       setGoogleLoading(false);
     }
@@ -230,7 +230,7 @@ const Login = () => {
               </button>
               
               <div className="divider">
-                <span>або</span>
+                <span>{t('login.or')}</span>
               </div>
               
               <button 
@@ -242,7 +242,7 @@ const Login = () => {
                 {googleLoading ? (
                   <div className="btn-loading">
                     <div className="btn-spinner"></div>
-                    Вхід через Google...
+                    {t('login.googleLoginLoading')}
                   </div>
                 ) : (
                   <>

@@ -27,7 +27,18 @@
     "resetEmailPlaceholder": "Введіть ваш email для скидання паролю",
     "backToLogin": "Назад до входу",
     "noAccount": "Немає акаунту?",
-    "registerLink": "Зареєструватися"
+    "registerLink": "Зареєструватися",
+    "or": "або",
+    "googleLoginLoading": "Вхід через Google...",
+    "googleLoginError": "Помилка входу через Google. Спробуйте ще раз.",
+    "resetPasswordSuccess": "Інструкції для скидання паролю надіслані на {{email}}",
+    "validation": {
+      "emailRequired": "Email обов'язковий",
+      "emailInvalid": "Введіть коректний email (наприклад: user@example.com)",
+      "emailCyrillic": "Email не може містити кириличні символи",
+      "passwordRequired": "Введіть пароль",
+      "emailForReset": "Будь ласка, введіть email для скидання паролю"
+    }
   },
   "register": {
     "title": "Реєстрація в MapMark",
@@ -42,7 +53,20 @@
     "acceptTerms": "умови використання",
     "acceptPrivacy": "політику конфіденційності",
     "haveAccount": "Вже маєте акаунт?",
-    "loginLink": "Увійти"
+    "loginLink": "Увійти",
+    "validation": {
+      "nameRequired": "Ім'я обов'язкове",
+      "nameMinLength": "Ім'я повинно містити мінімум 2 символи",
+      "emailRequired": "Email обов'язковий",
+      "emailInvalid": "Введіть коректний email (наприклад: user@example.com)",
+      "emailCyrillic": "Email не може містити кириличні символи",
+      "passwordRequired": "Пароль обов'язковий",
+      "passwordMinLength": "Пароль повинен містити мінімум 6 символів"
+    }
+  },
+  "countries": {
+    "ukraine": "Україна",
+    "usa": "Сполучені Штати"
   },
   "footer": {
     "description": "Відкривайте та діліться найкращими локаціями, які ви відвідали, з нашою спільнотою мандрівників та дослідників з усього світу.",

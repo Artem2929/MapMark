@@ -27,7 +27,18 @@
     "resetEmailPlaceholder": "Enter your email to reset password",
     "backToLogin": "Back to login",
     "noAccount": "Don't have an account?",
-    "registerLink": "Sign up"
+    "registerLink": "Sign up",
+    "or": "or",
+    "googleLoginLoading": "Signing in with Google...",
+    "googleLoginError": "Google login error. Please try again.",
+    "resetPasswordSuccess": "Password reset instructions sent to {{email}}",
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Enter a valid email (e.g., user@example.com)",
+      "emailCyrillic": "Email cannot contain Cyrillic characters",
+      "passwordRequired": "Enter password",
+      "emailForReset": "Please enter email to reset password"
+    }
   },
   "register": {
     "title": "Sign up for MapMark",
@@ -42,7 +53,20 @@
     "acceptTerms": "terms of service",
     "acceptPrivacy": "privacy policy",
     "haveAccount": "Already have an account?",
-    "loginLink": "Sign in"
+    "loginLink": "Sign in",
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameMinLength": "Name must be at least 2 characters",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Enter a valid email (e.g., user@example.com)",
+      "emailCyrillic": "Email cannot contain Cyrillic characters",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 6 characters"
+    }
+  },
+  "countries": {
+    "ukraine": "Ukraine",
+    "usa": "United States"
   },
   "footer": {
     "description": "Discover and share the best locations you've visited with our community of travelers and explorers worldwide.",
