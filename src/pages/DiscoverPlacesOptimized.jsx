@@ -122,7 +122,7 @@ const DiscoverPlaces = () => {
 
           {filteredPosts.length === 0 && (
             <div className="empty-state">
-              <div className="empty-icon">🔍</div>
+              <div>🔍</div>
               <h3>Нічого не знайдено</h3>
               <p>Спробуйте вибрати іншу категорію</p>
             </div>

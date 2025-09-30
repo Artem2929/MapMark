@@ -10,6 +10,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [searchPlaceholder, setSearchPlaceholder] = useState('');
   const { t, i18n } = useTranslation();
   const langDropdownRef = useRef(null);
   const userMenuRef = useRef(null);
@@ -32,6 +33,20 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // Animated placeholder effect
+  useEffect(() => {
+    const baseText = t('search.placeholder').replace('...', '');
+    let dotCount = 0;
+    
+    const interval = setInterval(() => {
+      dotCount = (dotCount + 1) % 4;
+      const dots = '.'.repeat(dotCount);
+      setSearchPlaceholder(baseText + dots);
+    }, 500);
+    
+    return () => clearInterval(interval);
+  }, [t]);
 
   const languages = [
     { code: 'en', name: 'English' },
@@ -100,7 +115,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t('search.placeholder')}
+              placeholder={searchPlaceholder}
               className="search-input"
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             />

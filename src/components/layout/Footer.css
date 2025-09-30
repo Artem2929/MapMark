@@ -19,7 +19,7 @@
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 48px;
-  margin: 0 auto 40px auto;
+  margin: 0 auto;
   padding: 0 24px;
   max-width: 1200px;
 }
@@ -117,25 +117,7 @@
   width: 100%;
 }
 
-.footer-bottom {
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 24px 0 0;
-}
 
-.footer-bottom-content {
-  text-align: center;
-  padding: 0 24px;
-  max-width: 1200px;
-  margin: 0;
-}
-
-.footer-copyright {
-  color: #8e8e93;
-  font-size: 13px;
-  margin: 0;
-  font-weight: 400;
-  padding-bottom: 0;
-}
 
 
 
@@ -172,7 +154,5 @@
   
 
   
-  .footer-bottom-content {
-    text-align: center;
-  }
+
 }

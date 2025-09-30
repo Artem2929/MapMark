@@ -913,3 +913,25 @@
   color: #64748b;
   font-size: 12px;
 }
+
+/* Animated dots for search placeholder */
+.context-menu-search-input::placeholder::after {
+  content: '';
+  animation: dots 2s infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    content: '';
+  }
+  40% {
+    content: '.';
+  }
+  60% {
+    content: '..';
+  }
+  80%, 100% {
+    content: '...';
+  }
+}
+

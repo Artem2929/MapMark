@@ -352,19 +352,15 @@
 }
 
 .category-btn.active {
-  background: linear-gradient(135deg, 
-    #3b82f6 0%, 
-    #8b5cf6 25%,
-    #10b981 50%,
-    #f59e0b 75%,
-    #ef4444 100%);
-  border-color: #1e40af;
-  transform: translateY(-6px) scale(1.05);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 2px solid #007aff;
+  color: #1d1d1f;
+  transform: translateY(-2px);
   box-shadow: 
-    0 20px 50px rgba(59, 130, 246, 0.3),
-    0 12px 30px rgba(147, 51, 234, 0.2),
-    0 6px 15px rgba(16, 185, 129, 0.15),
-    inset 0 2px 0 rgba(255, 255, 255, 0.4);
+    0 8px 25px rgba(0, 122, 255, 0.2),
+    0 4px 12px rgba(0, 122, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 
@@ -404,9 +400,8 @@
 }
 
 .category-btn.active .category-emoji {
-  transform: scale(1.2) rotate(5deg);
-  filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.8)) 
-          drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  transform: scale(1.1);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 
@@ -434,10 +429,9 @@
 }
 
 .category-btn.active .category-name {
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  font-weight: 800;
-  transform: translateY(-1px);
+  color: #1d1d1f;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  font-weight: 600;
 }
 
 .discover-content-container {

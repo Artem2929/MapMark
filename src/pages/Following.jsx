@@ -118,7 +118,7 @@ const Following = () => {
 
             {following.length === 0 && (
               <div className="empty-followers">
-                <div className="empty-icon">👤</div>
+                <div>👤</div>
                 <h3>Поки що немає підписок</h3>
                 <p>Підпишіться на інших користувачів, щоб вони з'явились тут</p>
               </div>

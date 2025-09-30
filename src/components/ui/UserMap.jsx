@@ -62,7 +62,7 @@ const UserMap = ({ userId }) => {
   if (reviews.length === 0) {
     return (
       <div className="user-map empty">
-        <div className="empty-icon">🗺️</div>
+        <div>🗺️</div>
         <p>Поки що немає відміток на карті</p>
       </div>
     );

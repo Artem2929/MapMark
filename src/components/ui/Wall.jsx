@@ -168,7 +168,7 @@ const Wall = ({ userId, isOwnProfile }) => {
 
       {!loading && posts.length === 0 && (
         <div className="empty-wall">
-          <div className="empty-icon">📝</div>
+          <div>📝</div>
           <p>Поки що записів немає</p>
           {isOwnProfile && <p>Створіть свій перший запис!</p>}
         </div>

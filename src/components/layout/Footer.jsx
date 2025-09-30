@@ -45,14 +45,7 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        
-        <div className="footer-bottom">
-          <div className="footer-bottom-content">
-            <p className="footer-copyright">
-              © 2025 PinPoint. {t('footer.rights')}
-            </p>
-          </div>
-        </div>
+
       </div>
     </footer>
   );

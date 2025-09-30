@@ -147,7 +147,7 @@ const PinCollections = ({ isOpen, onClose, selectedPlace }) => {
               <div className="collections-list">
                 {collections.length === 0 ? (
                   <div className="empty-state">
-                    <div className="empty-icon">📂</div>
+                    <div>📂</div>
                     <p>У вас поки немає колекцій</p>
                     <p>Створіть першу колекцію для збереження улюблених місць</p>
                   </div>

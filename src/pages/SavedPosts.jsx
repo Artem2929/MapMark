@@ -25,7 +25,7 @@ const SavedPosts = () => {
 
         {savedPosts.length === 0 ? (
           <div className="empty-saved">
-            <div className="empty-icon">🔖</div>
+            <div>🔖</div>
             <h2>Немає збережених постів</h2>
             <p>Коли ви збережете пости, вони з'являться тут</p>
             <button className="explore-btn" onClick={handleBackClick}>

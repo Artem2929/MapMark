@@ -53,7 +53,7 @@ const QuickCompare = ({ isOpen, onClose }) => {
 
         {compareList.length === 0 ? (
           <div className="empty-compare">
-            <div className="empty-icon">⚖️</div>
+            <div>⚖️</div>
             <h3>Список порівняння порожній</h3>
             <p>Додайте місця для порівняння, натиснувши кнопку "+" біля місць на карті</p>
           </div>

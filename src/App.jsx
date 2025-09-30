@@ -20,7 +20,7 @@ import HelpCenter from './pages/HelpCenter.jsx'
 import ContactUs from './pages/ContactUs.jsx'
 import DiscoverPlaces from './pages/DiscoverPlaces.jsx'
 import UserProfile from './pages/UserProfile.jsx'
-import AddReviewButton from './components/ui/AddReviewButton.jsx'
+
 import QuickReviewForm from './components/forms/QuickReviewForm.jsx'
 import Messages from './pages/Messages.jsx'
 import Chat from './pages/Chat.jsx'
@@ -144,7 +144,7 @@ const AppContent = () => {
                 places={places}
                 isReviewFormOpen={isReviewFormOpen}
               />
-              {!isReviewFormOpen && <AddReviewButton onClick={handleAddReviewClick} />}
+
               {showQuickReviewForm && (
                 <QuickReviewForm 
                   onClose={handleQuickReviewClose}

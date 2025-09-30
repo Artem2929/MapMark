@@ -498,7 +498,7 @@ const AdsPage = () => {
         <div className="ads-main-content">
           {filteredAds.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-icon">🔍</div>
+              <div>🔍</div>
               <h3>Оголошення не знайдено</h3>
               <p>Спробуйте змінити фільтри або пошуковий запит</p>
               <button className="clear-filters-btn" onClick={clearFilters}>

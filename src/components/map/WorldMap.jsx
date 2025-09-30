@@ -62,6 +62,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
   const [markerPopup, setMarkerPopup] = useState(null);
   const [showReviewsList, setShowReviewsList] = useState(false);
   const [selectedMarkerForReviews, setSelectedMarkerForReviews] = useState(null);
+  const [searchPlaceholder, setSearchPlaceholder] = useState('🔍 Пошук місця');
 
   const handleReviewSubmit = async (reviewData) => {
     onReviewFormToggle?.(false);
@@ -394,6 +395,20 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
     }
   };
 
+  // Animated placeholder effect
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setSearchPlaceholder(prev => {
+        if (prev === '🔍 Пошук місця') return '🔍 Пошук місця.';
+        if (prev === '🔍 Пошук місця.') return '🔍 Пошук місця..';
+        if (prev === '🔍 Пошук місця..') return '🔍 Пошук місця...';
+        return '🔍 Пошук місця';
+      });
+    }, 500);
+    
+    return () => clearInterval(interval);
+  }, []);
+
   // Виставляємо функцію в window для доступу з QuickFilter
   React.useEffect(() => {
     window.findMyLocation = findMyLocation;
@@ -557,7 +572,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
             <input
               type="text"
               className="context-menu-search-input"
-              placeholder="🔍 Пошук місця..."
+              placeholder={searchPlaceholder}
               value={contextSearchQuery}
               onChange={(e) => setContextSearchQuery(e.target.value)}
               onKeyPress={(e) => {

@@ -123,7 +123,7 @@ const Messages = () => {
 
             {conversations.length === 0 && (
               <div className="empty-messages">
-                <div className="empty-icon">💬</div>
+                <div>💬</div>
                 <h3>Поки що немає повідомлень</h3>
                 <p>Почніть спілкування з іншими користувачами</p>
               </div>
