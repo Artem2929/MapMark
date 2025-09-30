@@ -144,13 +144,13 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
             </Link>
           )}
           
-          <Link to="/discover-places" className="header-link">
+          <Link to="/discover-places" className={`header-link ${location.pathname === '/discover-places' ? 'active' : ''}`}>
             {t('header.discover')}
           </Link>
-          <Link to="/ads" className="header-link">
+          <Link to="/ads" className={`header-link ${location.pathname === '/ads' ? 'active' : ''}`}>
             {t('header.listings')}
           </Link>
-          <Link to="/about" className="header-link">
+          <Link to="/about" className={`header-link ${location.pathname === '/about' ? 'active' : ''}`}>
             {t('header.about')}
           </Link>
           

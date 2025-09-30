@@ -9,13 +9,17 @@ const Breadcrumbs = ({ items = null }) => {
   const pathnames = location.pathname.split('/').filter((x) => x);
 
   const breadcrumbNameMap = {
-    '/ads': 'Оголошення',
-    '/create-ad': 'Створити оголошення',
-    '/about': 'Про нас',
-    '/contact': 'Контакти',
-    '/help': 'Допомога',
-    '/profile': 'Профіль',
-    '/settings': 'Налаштування'
+    '/discover-places': t('header.discover'),
+    '/ads': t('ads.title'),
+    '/create-ad': t('ads.createAdTitle'),
+    '/about': t('header.about'),
+    '/contact': t('contactUs.title'),
+    '/help': t('helpCenter.title'),
+    '/profile': t('header.profile'),
+    '/settings': 'Налаштування',
+    '/privacy-policy': t('privacyPolicy.title'),
+    '/terms-of-service': t('termsOfService.title'),
+    '/cookie-policy': t('cookiePolicy.title')
   };
 
   // Якщо передані кастомні елементи, використовуємо їх
@@ -45,7 +49,7 @@ const Breadcrumbs = ({ items = null }) => {
     <nav className="breadcrumbs">
       <span className="breadcrumb-item">
         <Link to="/" className="breadcrumb-link">
-          Головна
+          {t('header.home')}
         </Link>
       </span>
       {pathnames.map((value, index) => {

@@ -991,11 +991,12 @@
   .sidebar-filters {
     position: static;
     order: -1;
+    max-width: 100%;
   }
   
   .places-feed {
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 0;
   }
 }
 
@@ -1004,12 +1005,18 @@
     padding: 1rem 0;
   }
   
+  .discover-container {
+    padding: 0 16px;
+  }
+  
   .places-feed {
-    padding: 20px 5px;
+    padding: 0;
+    max-width: 100%;
   }
   
   .sidebar-filters {
     padding: 16px;
+    border-radius: 16px;
   }
   
   .sidebar-filters h3 {
@@ -1021,7 +1028,7 @@
   }
   
   .post-image {
-    height: 280px;
+    height: 250px;
   }
   
   .post-header {
@@ -1034,28 +1041,22 @@
   
   .post-actions {
     padding: 10px 16px;
-  }
-  
-
-  
-  .action-buttons {
+    flex-wrap: wrap;
     gap: 8px;
   }
   
-  .action-btn {
+  .post-action-buttons {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .post-action-btn {
     font-size: 12px;
-  }
-  
-  .action-btn .icon {
-    font-size: 18px;
-  }
-  
-  .post-content {
-    padding: 0 12px 12px;
+    padding: 6px 10px;
   }
   
   .post-title {
-    font-size: 16px;
+    font-size: 15px;
   }
   
   .post-description {
@@ -1063,26 +1064,128 @@
   }
   
   .categories-section {
-    padding: 0 16px;
+    padding: 0 10px;
+    margin: 16px 0;
   }
   
   .categories-scroll {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    padding: 10px 0;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 20px 0;
   }
   
   .category-btn {
-    min-width: 70px;
-    padding: 12px 16px;
+    min-width: 80px;
+    min-height: 80px;
+    padding: 10px 12px;
     gap: 6px;
   }
   
   .category-emoji {
-    font-size: 20px;
+    font-size: 18px;
   }
   
   .category-name {
+    font-size: 10px;
+  }
+  
+  .subcategories-section {
+    padding: 12px;
+  }
+  
+  .subcategories-scroll {
+    gap: 6px;
+  }
+  
+  .subcategory-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+  
+  .saved-posts-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 16px;
+    top: auto;
+    padding: 12px 16px;
+    font-size: 12px;
+  }
+  
+  .comment-form {
+    padding: 12px 16px;
+  }
+  
+  .comment-input {
+    min-height: 60px;
+    font-size: 14px;
+  }
+  
+  .comments-list {
+    padding: 12px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .discover-container {
+    padding: 0 12px;
+  }
+  
+  .categories-scroll {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  
+  .category-btn {
+    min-width: 70px;
+    min-height: 70px;
+    padding: 8px 10px;
+  }
+  
+  .category-emoji {
+    font-size: 16px;
+  }
+  
+  .category-name {
+    font-size: 9px;
+  }
+  
+  .post-item {
+    margin-bottom: 16px;
+    border-radius: 16px;
+  }
+  
+  .post-image {
+    height: 200px;
+  }
+  
+  .post-header {
+    padding: 10px 12px;
+  }
+  
+  .post-content {
+    padding: 0 12px 12px;
+  }
+  
+  .post-actions {
+    padding: 8px 12px;
+  }
+  
+  .author-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .author-name {
+    font-size: 13px;
+  }
+  
+  .post-time {
+    font-size: 11px;
+  }
+  
+  .saved-posts-btn {
+    padding: 10px 14px;
     font-size: 11px;
   }
 }

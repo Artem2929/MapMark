@@ -12,15 +12,10 @@ const Footer = () => {
           <div className="footer-section footer-brand">
             <div className="brand-logo">
               <div className="logo-icon">📍</div>
-              <h3 className="footer-title">MapMark</h3>
+              <h3 className="footer-title">PinPoint</h3>
             </div>
             <p className="footer-description">{t('footer.description')}</p>
-            <div className="social-links">
-              <a href="#" className="social-link" aria-label="Twitter">🐦</a>
-              <a href="#" className="social-link" aria-label="Facebook">📘</a>
-              <a href="#" className="social-link" aria-label="Instagram">📷</a>
-              <a href="#" className="social-link" aria-label="LinkedIn">💼</a>
-            </div>
+
           </div>
           
           <div className="footer-section">
@@ -54,7 +49,7 @@ const Footer = () => {
         <div className="footer-bottom">
           <div className="footer-bottom-content">
             <p className="footer-copyright">
-              © 2025 MapMark. {t('footer.rights')}
+              © 2025 PinPoint. {t('footer.rights')}
             </p>
           </div>
         </div>

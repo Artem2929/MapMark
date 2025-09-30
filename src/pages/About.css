@@ -1,6 +1,6 @@
 .about-page {
   min-height: calc(100vh - 80px);
-  margin-top: 80px;
+  margin-top: 12px;
   display: flex;
   flex-direction: column;
   max-width: 1200px;

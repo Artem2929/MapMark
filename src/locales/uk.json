@@ -533,6 +533,9 @@
     "response": "Час відповіді",
     "responseTime": "Ми зазвичай відповідаємо протягом 24 годин"
   },
+  "breadcrumbs": {
+    "settings": "Налаштування"
+  },
   "aboutPage": {
     "hero": {
       "title": "Про MapMark",

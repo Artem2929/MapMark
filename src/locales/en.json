@@ -529,6 +529,9 @@
     "response": "Response Time",
     "responseTime": "We typically respond within 24 hours"
   },
+  "breadcrumbs": {
+    "settings": "Settings"
+  },
   "aboutPage": {
     "hero": {
       "title": "About MapMark",
