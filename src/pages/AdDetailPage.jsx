@@ -206,7 +206,6 @@ const AdDetailPage = () => {
                 <a href="mailto:contact@example.com">contact@example.com</a>
               </div>
               <div className="ads-item-contact-item">
-                <span>👤</span>
                 <a href="/profile/google_user1758469031589">Профіль користувача</a>
               </div>
             </div>

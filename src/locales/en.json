@@ -48,12 +48,17 @@
     "passwordPlaceholder": "Enter password (min. 6 characters)",
     "confirmPasswordPlaceholder": "Confirm password",
     "countryPlaceholder": "Select country",
+    "rolePlaceholder": "Select role",
     "registerButton": "Sign Up",
     "registerButtonLoading": "Signing up...",
     "acceptTerms": "terms of service",
     "acceptPrivacy": "privacy policy",
     "haveAccount": "Already have an account?",
     "loginLink": "Sign in",
+    "roles": {
+      "user": "Regular User",
+      "seller": "Seller/Services"
+    },
     "validation": {
       "nameRequired": "Name is required",
       "nameMinLength": "Name must be at least 2 characters",

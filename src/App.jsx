@@ -29,6 +29,7 @@ import Following from './pages/Following.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import About from './pages/About.jsx'
+import SellerProfile from './pages/SellerProfile.jsx'
 
 const AppContent = () => {
   const { t, i18n } = useTranslation();
@@ -166,6 +167,7 @@ const AppContent = () => {
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/profile/:userId" element={<UserProfile />} />
             <Route path="/user/:userId" element={<UserProfile />} />
+            <Route path="/seller/:sellerId" element={<SellerProfile />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/chat/:userId" element={<Chat />} />
             <Route path="/user/:userId/followers" element={<Followers />} />

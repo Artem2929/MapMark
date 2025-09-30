@@ -48,12 +48,17 @@
     "passwordPlaceholder": "Введіть пароль (мін. 6 символів)",
     "confirmPasswordPlaceholder": "Повторіть пароль",
     "countryPlaceholder": "Оберіть країну",
+    "rolePlaceholder": "Оберіть роль",
     "registerButton": "Зареєструватися",
     "registerButtonLoading": "Реєстрація...",
     "acceptTerms": "умови використання",
     "acceptPrivacy": "політику конфіденційності",
     "haveAccount": "Вже маєте акаунт?",
     "loginLink": "Увійти",
+    "roles": {
+      "user": "Звичайний користувач",
+      "seller": "Продавець/Послуги"
+    },
     "validation": {
       "nameRequired": "Ім'я обов'язкове",
       "nameMinLength": "Ім'я повинно містити мінімум 2 символи",

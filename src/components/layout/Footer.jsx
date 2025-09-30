@@ -11,7 +11,6 @@ const Footer = () => {
         <div className="footer-content">
           <div className="footer-section footer-brand">
             <div className="brand-logo">
-              <div className="logo-icon">📍</div>
               <h3 className="footer-title">PinPoint</h3>
             </div>
             <p className="footer-description">{t('footer.description')}</p>

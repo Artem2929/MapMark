@@ -14,6 +14,7 @@ const Register = () => {
     password: '',
     confirmPassword: '',
     country: '',
+    role: 'user',
     acceptTerms: false,
     acceptPrivacy: false
   });
@@ -125,6 +126,8 @@ const Register = () => {
            formData.email.trim() && 
            formData.password && 
            formData.confirmPassword && 
+           formData.country &&
+           formData.role &&
            formData.acceptTerms && 
            formData.acceptPrivacy;
   };
@@ -283,6 +286,18 @@ const Register = () => {
                 value={formData.country}
                 onChange={(value) => setFormData({ ...formData, country: value })}
                 placeholder={t('register.countryPlaceholder')}
+              />
+            </div>
+
+            <div className="form-group">
+              <CustomSelect
+                options={[
+                  { value: 'user', label: t('register.roles.user') },
+                  { value: 'seller', label: t('register.roles.seller') }
+                ]}
+                value={formData.role}
+                onChange={(value) => setFormData({ ...formData, role: value })}
+                placeholder={t('register.rolePlaceholder')}
               />
             </div>
 
