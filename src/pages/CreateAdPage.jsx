@@ -4,6 +4,7 @@ import InteractiveMap from '../components/features/InteractiveMap';
 import PhotoUpload from '../components/features/PhotoUpload';
 import StarRating from '../components/ui/StarRating';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
+import adsService from '../services/adsService';
 import './CreateAdPage.css';
 
 const CreateAdPage = () => {
@@ -123,14 +124,30 @@ const CreateAdPage = () => {
     if (!validateStep(5)) return;
     
     try {
-      // Симуляція API виклику
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const adData = {
+        title: formData.title,
+        address: formData.address,
+        category: formData.category,
+        shortDescription: formData.shortDescription,
+        detailedDescription: formData.detailedDescription,
+        photos: formData.photos,
+        overallRating: formData.overallRating,
+        categoryRatings: formData.categoryRatings,
+        tags: formData.tags,
+        workingHours: formData.workingHours,
+        contacts: formData.contacts,
+        promoCode: formData.promoCode,
+        isAnonymous: formData.isAnonymous,
+        location: formData.location
+      };
+      
+      await adsService.createAd(adData);
       
       // Очистити чернетку
       localStorage.removeItem('adDraft');
       
-      // Перенаправити на сторінку успіху
-      navigate('/ads/success');
+      // Перенаправити на сторінку оголошень
+      navigate('/ads');
     } catch (error) {
       console.error('Помилка створення оголошення:', error);
     }

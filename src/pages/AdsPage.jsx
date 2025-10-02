@@ -4,6 +4,7 @@ import StarRating from '../components/ui/StarRating';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import Footer from '../components/layout/Footer';
 import CustomSelect from '../components/ui/CustomSelect';
+import adsService from '../services/adsService';
 import './AdsPage.css';
 import './DiscoverPlaces.css';
 
@@ -109,19 +110,30 @@ const AdsPage = () => {
 
   useEffect(() => {
     loadAds();
-  }, []);
+  }, [selectedCategory, selectedSubcategory, searchQuery, filters, currentPage]);
 
-  useEffect(() => {
-    applyFilters();
-  }, [ads, searchQuery, filters]);
+
 
   const loadAds = async () => {
     setLoading(true);
     try {
-      // TODO: Замінити на API виклик
-      setAds([]);
+      const params = {
+        category: selectedCategory,
+        subcategory: selectedSubcategory,
+        search: searchQuery,
+        sortBy: filters.sortBy,
+        country: filters.country,
+        region: filters.region,
+        page: currentPage,
+        limit: itemsPerPage
+      };
+      
+      const response = await adsService.getAds(params);
+      setAds(response.data || []);
+      setTotalPages(response.pagination?.pages || 1);
     } catch (error) {
       console.error('Помилка завантаження оголошень:', error);
+      setAds([]);
     } finally {
       setLoading(false);
     }

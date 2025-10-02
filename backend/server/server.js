@@ -10,6 +10,7 @@ const { getUserProfileHandler, updateUserProfileHandler } = require('./services/
 const { getAboutStatsHandler, getTeamMembersHandler, submitContactMessageHandler, getContactMessagesHandler, markMessageAsReadHandler } = require('./services/AboutService');
 const authRoutes = require('./routes/auth');
 const postsRoutes = require('./routes/posts');
+const Ad = require('./models/Ad');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -147,6 +148,246 @@ app.post('/api/admin/team', async (req, res) => {
     res.json({ success: true, data: teamMember });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Ads CRUD
+app.get('/api/ads', async (req, res) => {
+  try {
+    const { 
+      category, 
+      subcategory, 
+      country, 
+      region, 
+      search, 
+      sortBy = 'createdAt', 
+      page = 1, 
+      limit = 12,
+      lat,
+      lng,
+      radius = 10000
+    } = req.query;
+    
+    let query = {};
+    
+    if (category) query.category = category;
+    if (subcategory) query.subcategory = subcategory;
+    if (country) query.country = country;
+    if (region) query.region = region;
+    
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { shortDescription: { $regex: search, $options: 'i' } },
+        { tags: { $in: [new RegExp(search, 'i')] } }
+      ];
+    }
+    
+    if (lat && lng) {
+      const latitude = parseFloat(lat);
+      const longitude = parseFloat(lng);
+      const radiusInMeters = parseInt(radius);
+      
+      query.location = {
+        $geoWithin: {
+          $centerSphere: [[longitude, latitude], radiusInMeters / 6371000]
+        }
+      };
+    }
+    
+    let sortOptions = {};
+    switch (sortBy) {
+      case 'rating':
+        sortOptions = { overallRating: -1 };
+        break;
+      case 'popular':
+        sortOptions = { isPopular: -1, createdAt: -1 };
+        break;
+      case 'distance':
+        sortOptions = { distance: 1 };
+        break;
+      default:
+        sortOptions = { createdAt: -1 };
+    }
+    
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    
+    const ads = await Ad.find(query)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(parseInt(limit));
+    
+    const total = await Ad.countDocuments(query);
+    
+    res.json({
+      success: true,
+      data: ads,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        pages: Math.ceil(total / parseInt(limit))
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching ads:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching ads',
+      error: error.message
+    });
+  }
+});
+
+app.post('/api/ads', async (req, res) => {
+  try {
+    const {
+      title,
+      address,
+      category,
+      subcategory,
+      shortDescription,
+      detailedDescription,
+      photos,
+      overallRating,
+      categoryRatings,
+      tags,
+      workingHours,
+      contacts,
+      promoCode,
+      isAnonymous,
+      location,
+      country,
+      region
+    } = req.body;
+    
+    if (!title || !address || !category || !shortDescription || !location) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields'
+      });
+    }
+    
+    const newAd = new Ad({
+      title: title.trim(),
+      address: address.trim(),
+      category,
+      subcategory,
+      shortDescription: shortDescription.trim(),
+      detailedDescription: detailedDescription?.trim(),
+      photos: photos || [],
+      overallRating: overallRating || 0,
+      categoryRatings: categoryRatings || {},
+      tags: tags || [],
+      workingHours,
+      contacts,
+      promoCode,
+      isAnonymous: isAnonymous || false,
+      lat: location.lat,
+      lng: location.lng,
+      location: {
+        type: 'Point',
+        coordinates: [location.lng, location.lat]
+      },
+      country,
+      region,
+      hasPromo: !!promoCode
+    });
+    
+    const savedAd = await newAd.save();
+    
+    res.status(201).json({
+      success: true,
+      message: 'Ad created successfully',
+      data: savedAd
+    });
+  } catch (error) {
+    console.error('Error creating ad:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error creating ad',
+      error: error.message
+    });
+  }
+});
+
+app.get('/api/ads/:id', async (req, res) => {
+  try {
+    const ad = await Ad.findById(req.params.id);
+    
+    if (!ad) {
+      return res.status(404).json({
+        success: false,
+        message: 'Ad not found'
+      });
+    }
+    
+    res.json({
+      success: true,
+      data: ad
+    });
+  } catch (error) {
+    console.error('Error fetching ad:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching ad',
+      error: error.message
+    });
+  }
+});
+
+app.put('/api/ads/:id', async (req, res) => {
+  try {
+    const updatedAd = await Ad.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body, updatedAt: new Date() },
+      { new: true, runValidators: true }
+    );
+    
+    if (!updatedAd) {
+      return res.status(404).json({
+        success: false,
+        message: 'Ad not found'
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'Ad updated successfully',
+      data: updatedAd
+    });
+  } catch (error) {
+    console.error('Error updating ad:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error updating ad',
+      error: error.message
+    });
+  }
+});
+
+app.delete('/api/ads/:id', async (req, res) => {
+  try {
+    const deletedAd = await Ad.findByIdAndDelete(req.params.id);
+    
+    if (!deletedAd) {
+      return res.status(404).json({
+        success: false,
+        message: 'Ad not found'
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'Ad deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting ad:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting ad',
+      error: error.message
+    });
   }
 });
 
