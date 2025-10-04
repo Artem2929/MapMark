@@ -33,24 +33,7 @@ export const validateCreateAdForm = (formData, step, i18n) => {
       errors.subcategory = isUkrainian ? 'Підкатегорія є обов\'язковою' : 'Subcategory is required';
     }
 
-    // Photos validation
-    if (!formData.photos || formData.photos.length === 0) {
-      errors.photos = isUkrainian ? 'Додайте хоча б одне фото' : 'Add at least one photo';
-    } else if (formData.photos.length > 5) {
-      errors.photos = isUkrainian ? 'Максимум 5 фото' : 'Maximum 5 photos';
-    } else {
-      // Validate each photo
-      for (const photo of formData.photos) {
-        if (photo.file && !isValidImageFile(photo.file)) {
-          errors.photos = isUkrainian ? 'Дозволені тільки зображення (JPEG, PNG, WebP)' : 'Only images are allowed (JPEG, PNG, WebP)';
-          break;
-        }
-        if (photo.file && !isValidFileSize(photo.file, 5)) {
-          errors.photos = isUkrainian ? 'Розмір файлу не повинен перевищувати 5MB' : 'File size should not exceed 5MB';
-          break;
-        }
-      }
-    }
+
   }
 
   if (step === 2) {
@@ -104,6 +87,25 @@ export const validateCreateAdForm = (formData, step, i18n) => {
       const cleanPhone = formData.contactPhone.replace(/[\s\-\(\)]/g, '');
       if (!/^[\+]?[1-9][\d]{7,15}$/.test(cleanPhone)) {
         errors.contactPhone = isUkrainian ? 'Введіть коректний номер телефону' : 'Enter a valid phone number';
+      }
+    }
+
+    // Photos validation
+    if (!formData.photos || formData.photos.length === 0) {
+      errors.photos = isUkrainian ? 'Додайте хоча б одне фото' : 'Add at least one photo';
+    } else if (formData.photos.length > 5) {
+      errors.photos = isUkrainian ? 'Максимум 5 фото' : 'Maximum 5 photos';
+    } else {
+      // Validate each photo
+      for (const photo of formData.photos) {
+        if (photo.file && !isValidImageFile(photo.file)) {
+          errors.photos = isUkrainian ? 'Дозволені тільки зображення (JPEG, PNG, WebP)' : 'Only images are allowed (JPEG, PNG, WebP)';
+          break;
+        }
+        if (photo.file && !isValidFileSize(photo.file, 5)) {
+          errors.photos = isUkrainian ? 'Розмір файлу не повинен перевищувати 5MB' : 'File size should not exceed 5MB';
+          break;
+        }
       }
     }
   }

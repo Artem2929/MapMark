@@ -170,7 +170,7 @@ const CreateAdForm = ({ onClose }) => {
     
     // Validate files before upload
     const tempFormData = { ...formData, photos: [...formData.photos, ...files.map(file => ({ file }))] };
-    const validation = validateCreateAdForm(tempFormData, 1, i18n);
+    const validation = validateCreateAdForm(tempFormData, 2, i18n);
     
     if (validation.errors.photos) {
       setErrors(prev => ({ ...prev, photos: validation.errors.photos }));
@@ -216,8 +216,7 @@ const CreateAdForm = ({ onClose }) => {
     return formData.title.trim().length >= 5 && 
            formData.description.trim().length >= 20 && 
            formData.category && 
-           formData.subcategory && 
-           formData.photos.length > 0;
+           formData.subcategory;
   };
 
   const isStep2Valid = () => {
@@ -228,7 +227,8 @@ const CreateAdForm = ({ onClose }) => {
            formData.price.trim() && 
            !isNaN(parseFloat(formData.price)) && 
            parseFloat(formData.price) > 0 &&
-           (formData.contactPhone.trim() || formData.contactEmail.trim());
+           (formData.contactPhone.trim() || formData.contactEmail.trim()) &&
+           formData.photos.length > 0;
   };
 
   const countries = [
@@ -374,46 +374,6 @@ const CreateAdForm = ({ onClose }) => {
               </div>
             )}
 
-            <div className={`form-group ${errors.photos ? 'has-error' : ''}`}>
-              <label>{t('createAdForm.step1.photos')} * ({formData.photos.length}/5)</label>
-              <div className="photo-upload-area">
-                <input
-                  type="file"
-                  id="photo-upload"
-                  multiple
-                  accept="image/*"
-                  onChange={handlePhotoUpload}
-                  style={{ display: 'none' }}
-                  disabled={formData.photos.length >= 5 || uploadingPhotos}
-                />
-                <label htmlFor="photo-upload" className={`photo-upload-btn ${formData.photos.length >= 5 ? 'disabled' : ''}`}>
-                  {uploadingPhotos ? (
-                    <>🔄 {t('createAdForm.step1.uploading')}</>
-                  ) : (
-                    <>📷 {t('createAdForm.step1.addPhotos')}</>
-                  )}
-                </label>
-                
-                {formData.photos.length > 0 && (
-                  <div className="photo-preview-grid">
-                    {formData.photos.map(photo => (
-                      <div key={photo.id} className="photo-preview">
-                        <img src={photo.url} alt={photo.name} />
-                        <button 
-                          type="button" 
-                          className="remove-photo-btn"
-                          onClick={() => removePhoto(photo.id)}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {errors.photos && <span className="field-error">{errors.photos}</span>}
-            </div>
-
             <div className="form-actions single">
               <button 
                 type="button" 
@@ -532,6 +492,46 @@ const CreateAdForm = ({ onClose }) => {
               </div>
               
               {errors.contact && <span className="field-error contact-error">{errors.contact}</span>}
+            </div>
+
+            <div className={`form-group ${errors.photos ? 'has-error' : ''}`}>
+              <label>{t('createAdForm.step1.photos')} * ({formData.photos.length}/5)</label>
+              <div className="photo-upload-area">
+                <input
+                  type="file"
+                  id="photo-upload"
+                  multiple
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  style={{ display: 'none' }}
+                  disabled={formData.photos.length >= 5 || uploadingPhotos}
+                />
+                <label htmlFor="photo-upload" className={`photo-upload-btn ${formData.photos.length >= 5 ? 'disabled' : ''}`}>
+                  {uploadingPhotos ? (
+                    <>🔄 {t('createAdForm.step1.uploading')}</>
+                  ) : (
+                    <>📷 {t('createAdForm.step1.addPhotos')}</>
+                  )}
+                </label>
+                
+                {formData.photos.length > 0 && (
+                  <div className="photo-preview-grid">
+                    {formData.photos.map(photo => (
+                      <div key={photo.id} className="photo-preview">
+                        <img src={photo.url} alt={photo.name} />
+                        <button 
+                          type="button" 
+                          className="remove-photo-btn"
+                          onClick={() => removePhoto(photo.id)}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {errors.photos && <span className="field-error">{errors.photos}</span>}
             </div>
 
             <div className="form-actions">
