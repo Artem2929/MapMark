@@ -123,7 +123,7 @@ const CreateAdForm = ({ onClose }) => {
 
   // Clear saved data when form is submitted successfully
   React.useEffect(() => {
-    if (currentStep === 3) {
+    if (currentStep === 4) {
       localStorage.removeItem('createAdFormData');
     }
   }, [currentStep]);
@@ -135,6 +135,17 @@ const CreateAdForm = ({ onClose }) => {
   };
 
   const validateStep2 = () => {
+    const newErrors = {};
+    
+    if (!formData.photos || formData.photos.length === 0) {
+      newErrors.photos = i18n.language.includes('uk') ? 'Додайте хоча б одне фото' : 'Add at least one photo';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateStep3 = () => {
     const validation = validateCreateAdForm(formData, 2, i18n);
     setErrors(validation.errors);
     return validation.isValid;
@@ -144,12 +155,14 @@ const CreateAdForm = ({ onClose }) => {
     if (currentStep === 1 && validateStep1()) {
       setCurrentStep(2);
     } else if (currentStep === 2 && validateStep2()) {
+      setCurrentStep(3);
+    } else if (currentStep === 3 && validateStep3()) {
       setIsSubmitting(true);
       try {
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 2000));
         console.log('Form submitted:', formData);
-        setCurrentStep(3);
+        setCurrentStep(4);
       } catch (error) {
         console.error('Submission error:', error);
         setErrors({ submit: i18n.language.includes('uk') ? 'Помилка при створенні оголошення' : 'Error creating ad' });
@@ -165,15 +178,6 @@ const CreateAdForm = ({ onClose }) => {
     // Validate file count
     if (files.length + formData.photos.length > 5) {
       setErrors(prev => ({ ...prev, photos: i18n.language.includes('uk') ? 'Максимум 5 фото' : 'Maximum 5 photos' }));
-      return;
-    }
-    
-    // Validate files before upload
-    const tempFormData = { ...formData, photos: [...formData.photos, ...files.map(file => ({ file }))] };
-    const validation = validateCreateAdForm(tempFormData, 2, i18n);
-    
-    if (validation.errors.photos) {
-      setErrors(prev => ({ ...prev, photos: validation.errors.photos }));
       return;
     }
     
@@ -209,7 +213,11 @@ const CreateAdForm = ({ onClose }) => {
   ];
 
   const handleBack = () => {
-    setCurrentStep(1);
+    if (currentStep === 2) {
+      setCurrentStep(1);
+    } else if (currentStep === 3) {
+      setCurrentStep(2);
+    }
   };
 
   const isStep1Valid = () => {
@@ -220,6 +228,10 @@ const CreateAdForm = ({ onClose }) => {
   };
 
   const isStep2Valid = () => {
+    return formData.photos.length > 0;
+  };
+
+  const isStep3Valid = () => {
     return formData.country && 
            formData.city && 
            formData.address.trim() && 
@@ -227,8 +239,7 @@ const CreateAdForm = ({ onClose }) => {
            formData.price.trim() && 
            !isNaN(parseFloat(formData.price)) && 
            parseFloat(formData.price) > 0 &&
-           (formData.contactPhone.trim() || formData.contactEmail.trim()) &&
-           formData.photos.length > 0;
+           (formData.contactPhone.trim() || formData.contactEmail.trim());
   };
 
   const countries = [
@@ -310,8 +321,11 @@ const CreateAdForm = ({ onClose }) => {
     <div className="create-ad-overlay">
       <div className="create-ad-form">
         <div className="form-header">
-          <h3>{t('createAdForm.title')}</h3>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <h3>{i18n.language.includes('uk') ? 'Створити оголошення' : 'Create Ad'}</h3>
+          <button className="close-btn" onClick={() => {
+            localStorage.removeItem('createAdFormData');
+            onClose();
+          }}>×</button>
         </div>
 
         {errors.submit && (
@@ -323,12 +337,12 @@ const CreateAdForm = ({ onClose }) => {
         {currentStep === 1 && (
           <div className="step-content">
             <div className={`form-group ${errors.title ? 'has-error' : ''}`}>
-              <label>{t('createAdForm.step1.title')} *</label>
+              <label>{i18n.language.includes('uk') ? 'Назва' : 'Title'} *</label>
               <input
                 type="text"
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
-                placeholder={t('createAdForm.step1.titlePlaceholder')}
+                placeholder={i18n.language.includes('uk') ? 'Введіть назву оголошення...' : 'Enter ad title...'}
                 className={errors.title ? 'input-error' : ''}
                 maxLength="100"
               />
@@ -337,11 +351,11 @@ const CreateAdForm = ({ onClose }) => {
             </div>
 
             <div className={`form-group ${errors.description ? 'has-error' : ''}`}>
-              <label>{t('createAdForm.step1.description')} *</label>
+              <label>{i18n.language.includes('uk') ? 'Опис' : 'Description'} *</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
-                placeholder={t('createAdForm.step1.descriptionPlaceholder')}
+                placeholder={i18n.language.includes('uk') ? 'Детальний опис оголошення...' : 'Detailed ad description...'}
                 className={errors.description ? 'input-error' : ''}
                 rows="4"
                 maxLength="1000"
@@ -351,7 +365,7 @@ const CreateAdForm = ({ onClose }) => {
             </div>
 
             <div className={`form-group ${errors.category ? 'has-error' : ''}`}>
-              <label>{t('createAdForm.step1.category')} *</label>
+              <label>{i18n.language.includes('uk') ? 'Категорія' : 'Category'} *</label>
               <CustomSelect
                 value={formData.category}
                 onChange={(value) => handleInputChange('category', value)}
@@ -363,7 +377,7 @@ const CreateAdForm = ({ onClose }) => {
 
             {formData.category && (
               <div className={`form-group ${errors.subcategory ? 'has-error' : ''}`}>
-                <label>{t('createAdForm.step1.subcategory')} *</label>
+                <label>{i18n.language.includes('uk') ? 'Підкатегорія' : 'Subcategory'} *</label>
                 <CustomSelect
                   value={formData.subcategory}
                   onChange={(value) => handleInputChange('subcategory', value)}
@@ -381,18 +395,83 @@ const CreateAdForm = ({ onClose }) => {
                 onClick={handleNext}
                 disabled={!isStep1Valid()}
               >
-                {t('createAdForm.buttons.next')} →
+                {i18n.language.includes('uk') ? 'Далі' : 'Next'} →
               </button>
             </div>
             
             <div className="step-indicator">
               <span className={`step ${currentStep === 1 ? 'active' : currentStep > 1 ? 'completed' : ''}`}>1</span>
-              <span className={`step ${currentStep >= 2 ? 'active' : ''}`}>2</span>
+              <span className={`step ${currentStep === 2 ? 'active' : currentStep > 2 ? 'completed' : ''}`}>2</span>
+              <span className={`step ${currentStep >= 3 ? 'active' : ''}`}>3</span>
             </div>
           </div>
         )}
 
         {currentStep === 2 && (
+          <div className="step-content">
+            <div className={`form-group ${errors.photos ? 'has-error' : ''}`}>
+              <label>{i18n.language.includes('uk') ? 'Фотографії' : 'Photos'} * ({formData.photos.length}/5)</label>
+              <div className="photo-upload-area">
+                <input
+                  type="file"
+                  id="photo-upload"
+                  multiple
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  style={{ display: 'none' }}
+                  disabled={formData.photos.length >= 5 || uploadingPhotos}
+                />
+                <label htmlFor="photo-upload" className={`photo-upload-btn ${formData.photos.length >= 5 ? 'disabled' : ''}`}>
+                  {uploadingPhotos ? (
+                    <>🔄 {i18n.language.includes('uk') ? 'Завантаження...' : 'Uploading...'}</>
+                  ) : (
+                    <>📷 {i18n.language.includes('uk') ? 'Додати фото' : 'Add photos'}</>
+                  )}
+                </label>
+                
+                {formData.photos.length > 0 && (
+                  <div className="photo-preview-grid">
+                    {formData.photos.map(photo => (
+                      <div key={photo.id} className="photo-preview">
+                        <img src={photo.url} alt={photo.name} />
+                        <button 
+                          type="button" 
+                          className="remove-photo-btn"
+                          onClick={() => removePhoto(photo.id)}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {errors.photos && <span className="field-error">{errors.photos}</span>}
+            </div>
+
+            <div className="form-actions">
+              <button type="button" className="back-btn" onClick={handleBack}>
+                ← {i18n.language.includes('uk') ? 'Назад' : 'Back'}
+              </button>
+              <button 
+                type="button" 
+                className="next-btn" 
+                onClick={handleNext}
+                disabled={!isStep2Valid()}
+              >
+                {i18n.language.includes('uk') ? 'Далі' : 'Next'} →
+              </button>
+            </div>
+            
+            <div className="step-indicator">
+              <span className={`step ${currentStep === 1 ? 'active' : currentStep > 1 ? 'completed' : ''}`}>1</span>
+              <span className={`step ${currentStep === 2 ? 'active' : currentStep > 2 ? 'completed' : ''}`}>2</span>
+              <span className={`step ${currentStep >= 3 ? 'active' : ''}`}>3</span>
+            </div>
+          </div>
+        )}
+
+        {currentStep === 3 && (
           <div className="step-content">
             <div className={`form-group ${errors.country ? 'has-error' : ''}`}>
               <label>{i18n.language.includes('uk') ? 'Країна' : 'Country'} *</label>
@@ -494,46 +573,6 @@ const CreateAdForm = ({ onClose }) => {
               {errors.contact && <span className="field-error contact-error">{errors.contact}</span>}
             </div>
 
-            <div className={`form-group ${errors.photos ? 'has-error' : ''}`}>
-              <label>{t('createAdForm.step1.photos')} * ({formData.photos.length}/5)</label>
-              <div className="photo-upload-area">
-                <input
-                  type="file"
-                  id="photo-upload"
-                  multiple
-                  accept="image/*"
-                  onChange={handlePhotoUpload}
-                  style={{ display: 'none' }}
-                  disabled={formData.photos.length >= 5 || uploadingPhotos}
-                />
-                <label htmlFor="photo-upload" className={`photo-upload-btn ${formData.photos.length >= 5 ? 'disabled' : ''}`}>
-                  {uploadingPhotos ? (
-                    <>🔄 {t('createAdForm.step1.uploading')}</>
-                  ) : (
-                    <>📷 {t('createAdForm.step1.addPhotos')}</>
-                  )}
-                </label>
-                
-                {formData.photos.length > 0 && (
-                  <div className="photo-preview-grid">
-                    {formData.photos.map(photo => (
-                      <div key={photo.id} className="photo-preview">
-                        <img src={photo.url} alt={photo.name} />
-                        <button 
-                          type="button" 
-                          className="remove-photo-btn"
-                          onClick={() => removePhoto(photo.id)}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {errors.photos && <span className="field-error">{errors.photos}</span>}
-            </div>
-
             <div className="form-actions">
               <button type="button" className="back-btn" onClick={handleBack}>
                 ← {i18n.language.includes('uk') ? 'Назад' : 'Back'}
@@ -542,7 +581,7 @@ const CreateAdForm = ({ onClose }) => {
                 type="button" 
                 className="submit-btn" 
                 onClick={handleNext}
-                disabled={!isStep2Valid() || isSubmitting}
+                disabled={!isStep3Valid() || isSubmitting}
               >
                 {isSubmitting 
                   ? (i18n.language.includes('uk') ? 'Створення...' : 'Creating...') 
@@ -553,12 +592,13 @@ const CreateAdForm = ({ onClose }) => {
             
             <div className="step-indicator">
               <span className={`step ${currentStep === 1 ? 'active' : currentStep > 1 ? 'completed' : ''}`}>1</span>
-              <span className={`step ${currentStep >= 2 ? 'active' : ''}`}>2</span>
+              <span className={`step ${currentStep === 2 ? 'active' : currentStep > 2 ? 'completed' : ''}`}>2</span>
+              <span className={`step ${currentStep >= 3 ? 'active' : ''}`}>3</span>
             </div>
           </div>
         )}
 
-        {currentStep === 3 && (
+        {currentStep === 4 && (
           <div className="step-content success-content">
             <div className="success-icon">✅</div>
             <h3 className="success-title">
