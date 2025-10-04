@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import arService from '../../services/arService';
-import './ARCamera.css';
+import './ARCamera.scss';
 
 const ARCamera = ({ places, userLocation, onClose }) => {
   const [isActive, setIsActive] = useState(false);
@@ -95,8 +95,8 @@ const ARCamera = ({ places, userLocation, onClose }) => {
 
   if (error) {
     return (
-      <div className="ar-camera error">
-        <div className="error-message">
+      <div className="ar-camera ar-error">
+        <div className="ar-error__message">
           <h3>❌ Помилка AR</h3>
           <p>{error}</p>
           <button onClick={onClose}>Закрити</button>
@@ -109,7 +109,7 @@ const ARCamera = ({ places, userLocation, onClose }) => {
     <div className="ar-camera">
       <video 
         ref={videoRef} 
-        className="ar-video"
+        className="ar-camera__video"
         playsInline
         muted
       />
@@ -117,7 +117,7 @@ const ARCamera = ({ places, userLocation, onClose }) => {
       <canvas ref={canvasRef} style={{ display: 'none' }} />
 
       {/* AR Overlay */}
-      <div className="ar-overlay">
+      <div className="ar-camera__overlay">
         {arPlaces.map(place => (
           <div
             key={place.id}
@@ -128,11 +128,11 @@ const ARCamera = ({ places, userLocation, onClose }) => {
               color: place.color
             }}
           >
-            <div className="ar-marker-content">
-              <div className="ar-marker-icon">📍</div>
-              <div className="ar-marker-info">
-                <div className="ar-marker-name">{place.name}</div>
-                <div className="ar-marker-details">
+            <div className="ar-marker__content">
+              <div className="ar-marker__icon">📍</div>
+              <div className="ar-marker__info">
+                <div className="ar-marker__name">{place.name}</div>
+                <div className="ar-marker__details">
                   ⭐ {place.rating} • {place.distance}m
                 </div>
               </div>
@@ -142,18 +142,18 @@ const ARCamera = ({ places, userLocation, onClose }) => {
       </div>
 
       {/* AR Controls */}
-      <div className="ar-controls">
-        <button className="ar-btn close-btn" onClick={onClose}>
+      <div className="ar-camera__controls">
+        <button className="ar-btn ar-btn--close" onClick={onClose}>
           ✕
         </button>
         
-        <button className="ar-btn photo-btn" onClick={capturePhoto}>
+        <button className="ar-btn ar-btn--photo" onClick={capturePhoto}>
           📸
         </button>
         
-        <div className="ar-compass">
+        <div className="ar-camera__compass">
           <div 
-            className="compass-needle"
+            className="ar-camera__compass-needle"
             style={{
               transform: `rotate(${deviceOrientation?.alpha || 0}deg)`
             }}
@@ -164,8 +164,8 @@ const ARCamera = ({ places, userLocation, onClose }) => {
       </div>
 
       {/* AR Info Panel */}
-      <div className="ar-info-panel">
-        <div className="ar-stats">
+      <div className="ar-camera__info-panel">
+        <div className="ar-camera__stats">
           <span>📍 {arPlaces.length} місць поблизу</span>
           {deviceOrientation && (
             <span>🧭 {Math.round(deviceOrientation.alpha)}°</span>

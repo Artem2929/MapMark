@@ -1,0 +1,6 @@
+// Main SCSS entry point
+@import '_variables';
+@import '_mixins';
+
+// Import component styles
+@import '../components/features/ARCamera';
