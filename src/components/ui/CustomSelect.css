@@ -59,7 +59,7 @@
   backdrop-filter: blur(16px);
   z-index: 999999;
   margin-top: 4px;
-  max-height: 200px;
+  max-height: 300px;
   overflow-y: auto;
 }
 

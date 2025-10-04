@@ -453,7 +453,6 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
           
           // Create custom icon for markers with reviews
           const markerProps = {
-            key: marker.id,
             position: marker.position
           };
           
@@ -484,6 +483,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
           
           return (
             <Marker 
+              key={marker.id}
               {...markerProps}
               eventHandlers={{
                 click: () => {

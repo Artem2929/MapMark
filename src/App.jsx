@@ -12,7 +12,7 @@ import FeatureHub from './components/features/FeatureHub.jsx'
 import ProgressWidget from './components/ui/ProgressWidget.jsx'
 import AdsPage from './pages/AdsPage.jsx'
 import AdDetailPage from './pages/AdDetailPage.jsx'
-import CreateAdPage from './pages/CreateAdPage.jsx'
+
 import CookiePolicy from './pages/CookiePolicy.jsx'
 import TermsOfService from './pages/TermsOfService.jsx'
 import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
@@ -156,7 +156,7 @@ const AppContent = () => {
           } />
             <Route path="/ads" element={<AdsPage />} />
             <Route path="/ads/:id" element={<AdDetailPage />} />
-            <Route path="/create-ad" element={<CreateAdPage />} />
+
             <Route path="/about" element={<About />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />

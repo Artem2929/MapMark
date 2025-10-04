@@ -3,182 +3,180 @@ import { useTranslation } from 'react-i18next';
 import CustomSelect from '../ui/CustomSelect';
 import './CreateAdForm.css';
 
-const CreateAdForm = ({ onClose, onSubmit }) => {
-  const { t } = useTranslation();
+const CreateAdForm = ({ onClose }) => {
+  const { t, i18n } = useTranslation();
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    country: '',
-    location: '',
+    title: '',
     category: '',
-    dateFrom: '',
-    dateTo: '',
-    photos: []
+    subcategory: ''
   });
-
-  const countries = [
-    { code: 'UA', name_en: 'Ukraine' },
-    { code: 'US', name_en: 'United States' },
-    { code: 'DE', name_en: 'Germany' },
-    { code: 'FR', name_en: 'France' },
-    { code: 'ES', name_en: 'Spain' },
-    { code: 'IT', name_en: 'Italy' },
-    { code: 'GB', name_en: 'United Kingdom' },
-    { code: 'PL', name_en: 'Poland' },
-    { code: 'CA', name_en: 'Canada' },
-    { code: 'AU', name_en: 'Australia' },
-    { code: 'JP', name_en: 'Japan' },
-    { code: 'CN', name_en: 'China' }
-  ];
+  const [errors, setErrors] = useState({});
 
   const categories = [
-    { id: 'housing', name: t('ads.categories.housing') },
-    { id: 'cars', name: t('ads.categories.cars') },
-    { id: 'restaurants', name: t('ads.categories.restaurants') },
-    { id: 'hotels', name: t('ads.categories.hotels') },
-    { id: 'events', name: t('ads.categories.events') },
-    { id: 'tourism', name: t('ads.categories.tourism') },
-    { id: 'services', name: t('ads.categories.services') },
-    { id: 'other', name: t('ads.categories.other') }
+    { value: '', label: i18n.language.includes('uk') ? 'Оберіть категорію' : 'Select category' },
+    { value: 'realty', label: `🏠 ${i18n.language.includes('uk') ? 'Нерухомість' : 'Real Estate'}` },
+    { value: 'transport', label: `🚗 ${i18n.language.includes('uk') ? 'Транспорт' : 'Transport'}` },
+    { value: 'work', label: `💼 ${i18n.language.includes('uk') ? 'Робота' : 'Work'}` },
+    { value: 'services', label: `🔧 ${i18n.language.includes('uk') ? 'Послуги' : 'Services'}` },
+    { value: 'electronics', label: `📱 ${i18n.language.includes('uk') ? 'Електроніка' : 'Electronics'}` },
+    { value: 'places', label: `🍽️ ${i18n.language.includes('uk') ? 'Заклади' : 'Places'}` },
+    { value: 'entertainment', label: `🎯 ${i18n.language.includes('uk') ? 'Розваги' : 'Entertainment'}` }
   ];
 
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const getSubcategories = () => {
+    const subcategories = [
+      { value: '', label: i18n.language.includes('uk') ? 'Оберіть підкатегорію' : 'Select subcategory' }
+    ];
+
+    if (formData.category === 'realty') {
+      subcategories.push(
+        { value: 'apartments', label: `🏢 ${i18n.language.includes('uk') ? 'Квартири' : 'Apartments'}` },
+        { value: 'houses', label: `🏡 ${i18n.language.includes('uk') ? 'Будинки' : 'Houses'}` },
+        { value: 'commercial', label: `🏬 ${i18n.language.includes('uk') ? 'Комерційна' : 'Commercial'}` },
+        { value: 'land', label: `🌾 ${i18n.language.includes('uk') ? 'Земля' : 'Land'}` }
+      );
+    } else if (formData.category === 'transport') {
+      subcategories.push(
+        { value: 'cars', label: `🚙 ${i18n.language.includes('uk') ? 'Авто' : 'Cars'}` },
+        { value: 'motorcycles', label: `🏍️ ${i18n.language.includes('uk') ? 'Мото' : 'Motorcycles'}` },
+        { value: 'trucks', label: `🚛 ${i18n.language.includes('uk') ? 'Вантажівки' : 'Trucks'}` },
+        { value: 'boats', label: `⛵ ${i18n.language.includes('uk') ? 'Водний' : 'Boats'}` }
+      );
+    } else if (formData.category === 'work') {
+      subcategories.push(
+        { value: 'vacancies', label: `📋 ${i18n.language.includes('uk') ? 'Вакансії' : 'Vacancies'}` },
+        { value: 'resumes', label: `📄 ${i18n.language.includes('uk') ? 'Резюме' : 'Resumes'}` },
+        { value: 'freelance', label: `💻 ${i18n.language.includes('uk') ? 'Фріланс' : 'Freelance'}` }
+      );
+    } else if (formData.category === 'services') {
+      subcategories.push(
+        { value: 'construction', label: `🔨 ${i18n.language.includes('uk') ? 'Будівельні' : 'Construction'}` },
+        { value: 'household', label: `🏠 ${i18n.language.includes('uk') ? 'Побутові' : 'Household'}` },
+        { value: 'education', label: `📚 ${i18n.language.includes('uk') ? 'Освіта' : 'Education'}` },
+        { value: 'beauty', label: `💄 ${i18n.language.includes('uk') ? 'Краса' : 'Beauty'}` }
+      );
+    } else if (formData.category === 'electronics') {
+      subcategories.push(
+        { value: 'smartphones', label: `📱 ${i18n.language.includes('uk') ? 'Телефони' : 'Smartphones'}` },
+        { value: 'computers', label: `💻 ${i18n.language.includes('uk') ? 'Комп\'ютери' : 'Computers'}` },
+        { value: 'appliances', label: `🔌 ${i18n.language.includes('uk') ? 'Техніка' : 'Appliances'}` }
+      );
+    } else if (formData.category === 'places') {
+      subcategories.push(
+        { value: 'cafe', label: `☕ ${i18n.language.includes('uk') ? 'Кафе' : 'Cafe'}` },
+        { value: 'restaurant', label: `🍽️ ${i18n.language.includes('uk') ? 'Ресторани' : 'Restaurants'}` },
+        { value: 'hotel', label: `🏨 ${i18n.language.includes('uk') ? 'Готелі' : 'Hotels'}` }
+      );
+    } else if (formData.category === 'entertainment') {
+      subcategories.push(
+        { value: 'park', label: `🌳 ${i18n.language.includes('uk') ? 'Парки' : 'Parks'}` },
+        { value: 'museum', label: `🏛️ ${i18n.language.includes('uk') ? 'Музеї' : 'Museums'}` },
+        { value: 'shop', label: `🛍️ ${i18n.language.includes('uk') ? 'Магазини' : 'Shops'}` }
+      );
+    }
+
+    return subcategories;
   };
 
-  const handlePhotoUpload = (e) => {
-    const files = Array.from(e.target.files);
-    if (formData.photos.length + files.length <= 3) {
-      setFormData(prev => ({ 
-        ...prev, 
-        photos: [...prev.photos, ...files] 
-      }));
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({ 
+      ...prev, 
+      [field]: value,
+      ...(field === 'category' ? { subcategory: '' } : {})
+    }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: null }));
     }
   };
 
-  const removePhoto = (index) => {
-    setFormData(prev => ({
-      ...prev,
-      photos: prev.photos.filter((_, i) => i !== index)
-    }));
+  const validateStep1 = () => {
+    const newErrors = {};
+    
+    if (!formData.title.trim()) {
+      newErrors.title = i18n.language.includes('uk') ? 'Назва є обов\'язковою' : 'Title is required';
+    }
+    if (!formData.category) {
+      newErrors.category = i18n.language.includes('uk') ? 'Категорія є обов\'язковою' : 'Category is required';
+    }
+    if (!formData.subcategory) {
+      newErrors.subcategory = i18n.language.includes('uk') ? 'Підкатегорія є обов\'язковою' : 'Subcategory is required';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Get coordinates for the location
-    try {
-      const query = `${formData.location}, ${formData.country}`;
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
-      );
-      const data = await response.json();
-      
-      if (data && data.length > 0) {
-        const { lat, lon } = data[0];
-        const adData = {
-          ...formData,
-          coordinates: [parseFloat(lat), parseFloat(lon)],
-          id: Date.now(),
-          createdAt: new Date().toISOString()
-        };
-        
-        onSubmit(adData);
-        onClose();
-      }
-    } catch (error) {
-      console.error('Geocoding error:', error);
+  const handleNext = () => {
+    if (validateStep1()) {
+      setCurrentStep(2);
     }
   };
 
   return (
     <div className="create-ad-overlay">
       <div className="create-ad-form">
-        <div className="drag-handle"></div>
         <div className="form-header">
-          <h3>{t('ads.createAdTitle')}</h3>
+          <h3>{i18n.language.includes('uk') ? 'Створити оголошення' : 'Create Ad'}</h3>
           <button className="close-btn" onClick={onClose}>×</button>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>{t('ads.form.country')}</label>
-            <CustomSelect
-              options={countries}
-              value={formData.country}
-              onChange={(value) => handleInputChange('country', value)}
-              placeholder={t('ads.form.selectCountry')}
-            />
-          </div>
+        <div className="step-indicator">
+          <span className={`step ${currentStep >= 1 ? 'active' : ''}`}>1</span>
+          <span className={`step ${currentStep >= 2 ? 'active' : ''}`}>2</span>
+        </div>
 
-          <div className="form-group">
-            <label>{t('ads.form.location')}</label>
-            <input
-              type="text"
-              value={formData.location}
-              onChange={(e) => handleInputChange('location', e.target.value)}
-              placeholder={t('ads.form.locationPlaceholder')}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>{t('ads.form.category')}</label>
-            <CustomSelect
-              options={categories.map(cat => ({ code: cat.id, name_en: cat.name }))}
-              value={formData.category}
-              onChange={(value) => handleInputChange('category', value)}
-              placeholder={t('ads.form.selectCategory')}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>{t('ads.form.dateRange')}</label>
-            <div className="date-inputs">
+        {currentStep === 1 && (
+          <div className="step-content">
+            <div className="form-group">
+              <label>{i18n.language.includes('uk') ? 'Назва' : 'Title'} *</label>
               <input
-                type="date"
-                value={formData.dateFrom}
-                onChange={(e) => handleInputChange('dateFrom', e.target.value)}
+                type="text"
+                value={formData.title}
+                onChange={(e) => handleInputChange('title', e.target.value)}
+                placeholder={i18n.language.includes('uk') ? 'Введіть назву оголошення...' : 'Enter ad title...'}
+                className={errors.title ? 'error' : ''}
               />
-              <span>to</span>
-              <input
-                type="date"
-                value={formData.dateTo}
-                onChange={(e) => handleInputChange('dateTo', e.target.value)}
+              {errors.title && <span className="error-message">{errors.title}</span>}
+            </div>
+
+            <div className="form-group">
+              <label>{i18n.language.includes('uk') ? 'Категорія' : 'Category'} *</label>
+              <CustomSelect
+                value={formData.category}
+                onChange={(value) => handleInputChange('category', value)}
+                options={categories}
+                className={errors.category ? 'error' : ''}
               />
+              {errors.category && <span className="error-message">{errors.category}</span>}
+            </div>
+
+            {formData.category && (
+              <div className="form-group">
+                <label>{i18n.language.includes('uk') ? 'Підкатегорія' : 'Subcategory'} *</label>
+                <CustomSelect
+                  value={formData.subcategory}
+                  onChange={(value) => handleInputChange('subcategory', value)}
+                  options={getSubcategories()}
+                  className={errors.subcategory ? 'error' : ''}
+                />
+                {errors.subcategory && <span className="error-message">{errors.subcategory}</span>}
+              </div>
+            )}
+
+            <div className="form-actions">
+              <button type="button" className="next-btn" onClick={handleNext}>
+                {i18n.language.includes('uk') ? 'Далі' : 'Next'} →
+              </button>
             </div>
           </div>
+        )}
 
-          <div className="form-group">
-            <label>{t('ads.form.photos')} ({formData.photos.length}/3)</label>
-            <label className="file-input-btn">
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handlePhotoUpload}
-                disabled={formData.photos.length >= 3}
-                style={{ display: 'none' }}
-              />
-              Choose Files
-            </label>
-            <div className="photo-preview">
-              {formData.photos.map((photo, index) => (
-                <div key={index} className="photo-item">
-                  <img src={URL.createObjectURL(photo)} alt={`Preview ${index + 1}`} />
-                  <button type="button" onClick={() => removePhoto(index)}>×</button>
-                </div>
-              ))}
-            </div>
+        {currentStep === 2 && (
+          <div className="step-content">
+            <p>{i18n.language.includes('uk') ? 'Крок 2 - В розробці' : 'Step 2 - In development'}</p>
           </div>
-
-          <div className="form-actions">
-            <button type="button" className="cancel-btn" onClick={onClose}>
-              {t('ads.form.cancel')}
-            </button>
-            <button type="submit" className="publish-btn">
-              {t('ads.form.publish')}
-            </button>
-          </div>
-        </form>
+        )}
       </div>
     </div>
   );

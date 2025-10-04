@@ -11,6 +11,8 @@ const { getAboutStatsHandler, getTeamMembersHandler, submitContactMessageHandler
 const authRoutes = require('./routes/auth');
 const postsRoutes = require('./routes/posts');
 const Ad = require('./models/Ad');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -386,6 +388,33 @@ app.delete('/api/ads/:id', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error deleting ad',
+      error: error.message
+    });
+  }
+});
+
+// Photo upload endpoint
+app.post('/api/upload/photo', upload.single('photo'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No photo uploaded'
+      });
+    }
+
+    // Convert buffer to base64 for simple storage
+    const photoData = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    
+    res.json({
+      success: true,
+      photoUrl: photoData
+    });
+  } catch (error) {
+    console.error('Error uploading photo:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error uploading photo',
       error: error.message
     });
   }

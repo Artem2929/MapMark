@@ -3,6 +3,15 @@
   background: #f8f9fa !important;
 }
 
+/* Fix flickering leaflet panes */
+.leaflet-pane {
+  transform: translateZ(0);
+}
+
+.leaflet-map-pane {
+  transform: translateZ(0);
+}
+
 /* Ensure tiles cover the entire visible area */
 .leaflet-tile-container {
   width: 100% !important;
@@ -15,8 +24,6 @@
   width: 100%;
   overflow: hidden;
   position: relative;
-  transform: translateZ(0) !important;
-  will-change: transform !important;
   cursor: grab;
 }
 
@@ -168,7 +175,7 @@
 
 /* REMOVED DUPLICATE - using compact version below */
 
-.leaflet-popup-content strong {
+/* .leaflet-popup-content strong {
   background: linear-gradient(135deg, #1d1d1f 0%, #4a4a4a 100%) !important;
   background-clip: text !important;
   -webkit-background-clip: text !important;
@@ -179,7 +186,7 @@
   margin-bottom: 12px !important;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
   letter-spacing: -0.02em !important;
-}
+} */
 
 .leaflet-popup-content br + br {
   display: none !important;
@@ -563,8 +570,6 @@
 .leaflet-tile {
   border: none !important;
   filter: contrast(1.1) saturate(1.2) !important;
-  image-rendering: optimizeSpeed !important;
-  image-rendering: -webkit-optimize-contrast !important;
 }
 
 .leaflet-tile-container {
@@ -574,6 +579,8 @@
 .leaflet-zoom-anim .leaflet-tile {
   transition: none !important;
 }
+
+
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
@@ -722,51 +729,16 @@
   height: 28px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(0, 122, 255, 0.4) 0%, transparent 70%);
-  animation: badgeGlow 2s ease-in-out infinite;
   pointer-events: none;
 }
 
 @keyframes badgePulse {
-  0%, 100% {
+  0%, 10% {
     transform: scale(1);
   }
-  50% {
+  40% {
     transform: scale(1.05);
   }
-}
-
-@keyframes badgeShine {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes countBounce {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-}
-
-@keyframes badgeGlow {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.2);
-  }
-}
-
-@keyframes shimmer {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 1; }
 }
 
 .review-badge:hover {

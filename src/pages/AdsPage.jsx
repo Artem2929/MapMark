@@ -4,7 +4,7 @@ import StarRating from '../components/ui/StarRating';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import Footer from '../components/layout/Footer';
 import CustomSelect from '../components/ui/CustomSelect';
-import adsService from '../services/adsService';
+import CreateAdForm from '../components/forms/CreateAdForm';
 import './AdsPage.css';
 import './DiscoverPlaces.css';
 
@@ -12,6 +12,7 @@ const AdsPage = () => {
   const [ads, setAds] = useState([]);
   const [filteredAds, setFilteredAds] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showCreateAdForm, setShowCreateAdForm] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'map'
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('realestate');
@@ -355,9 +356,12 @@ const AdsPage = () => {
       <div className="ads-content-container">
         {/* Бічна панель фільтрів */}
         <div className="sidebar-filters">
-          <Link to="/create-ad" className="create-ad-btn">
+          <button 
+            className="create-ad-btn"
+            onClick={() => setShowCreateAdForm(true)}
+          >
             ➕ Створити оголошення
-          </Link>
+          </button>
           
           <h3>Фільтри</h3>
           
@@ -600,6 +604,10 @@ const AdsPage = () => {
       )}
 
 
+      
+      {showCreateAdForm && (
+        <CreateAdForm onClose={() => setShowCreateAdForm(false)} />
+      )}
       
       <Footer />
     </div>

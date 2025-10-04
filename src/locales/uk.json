@@ -643,5 +643,94 @@
       "exploreMap": "Дослідити карту",
       "viewListings": "Переглянути всі оголошення"
     }
+  },
+  "createAd": {
+    "progress": "Крок {{current}} з {{total}}",
+    "steps": {
+      "basicInfo": {
+        "title": "Основна інформація",
+        "placeName": "Назва місця",
+        "placeNamePlaceholder": "Наприклад: Затишне кафе в центрі",
+        "address": "Адреса",
+        "addressPlaceholder": "вул. Хрещатик, 22, Київ",
+        "category": "Категорія",
+        "selectCategory": "Оберіть категорію"
+      },
+      "location": {
+        "title": "Розташування на мапі",
+        "description": "Оберіть точне розташування вашого місця на мапі"
+      },
+      "photos": {
+        "title": "Фотографії",
+        "description": "Додайте фото, щоб показати ваше місце з найкращого боку"
+      },
+      "description": {
+        "title": "Опис та рейтинг",
+        "shortDescription": "Короткий опис",
+        "shortDescriptionPlaceholder": "Коротко опишіть ваше місце...",
+        "detailedDescription": "Детальний опис",
+        "detailedDescriptionPlaceholder": "Розкажіть більше про ваше місце...",
+        "overallRating": "Загальний рейтинг",
+        "categoryRatings": "Рейтинг по категоріях"
+      },
+      "additional": {
+        "title": "Додаткова інформація",
+        "tags": "Теги",
+        "workingHours": "Час роботи",
+        "workingHoursPlaceholder": "Пн-Пт: 08:00-22:00, Сб-Нд: 10:00-20:00",
+        "contacts": "Контакти",
+        "contactsPlaceholder": "+380 XX XXX XX XX",
+        "promo": "Промокод/Акція",
+        "promoPlaceholder": "Знижка 10% за промокодом WELCOME",
+        "publishAnonymously": "Опублікувати анонімно",
+        "acceptPolicy": "Я приймаю політику конфіденційності"
+      }
+    },
+    "ratings": {
+      "price": "Ціна",
+      "cleanliness": "Чистота",
+      "atmosphere": "Атмосфера",
+      "service": "Сервіс"
+    },
+    "buttons": {
+      "back": "Назад",
+      "next": "Далі",
+      "preview": "Попередній перегляд",
+      "publish": "Опублікувати"
+    },
+    "preview": {
+      "title": "Попередній перегляд"
+    },
+    "errors": {
+      "titleRequired": "Назва обов'язкова",
+      "addressRequired": "Адреса обов'язкова",
+      "categoryRequired": "Оберіть категорію",
+      "locationRequired": "Оберіть локацію на мапі",
+      "photosRequired": "Додайте хоча б одне фото",
+      "descriptionRequired": "Короткий опис обов'язковий",
+      "ratingRequired": "Поставте загальний рейтинг",
+      "policyRequired": "Прийміть політику конфіденційності"
+    }
+  },
+  "categories": {
+    "cafe": "Кафе",
+    "restaurant": "Ресторан",
+    "park": "Парк",
+    "museum": "Музей",
+    "shop": "Магазин",
+    "hotel": "Готель"
+  },
+  "tags": {
+    "wifi": "Wi-Fi",
+    "parking": "Паркінг",
+    "vegan": "Веган-френдлі",
+    "romantic": "Романтика",
+    "freelance": "Фріланс",
+    "kidsFriendly": "Kids Friendly"
+  },
+  "breadcrumbs": {
+    "home": "Головна",
+    "ads": "Оголошення",
+    "createAd": "Створити оголошення"
   }
 }

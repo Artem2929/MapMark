@@ -639,5 +639,94 @@
       "exploreMap": "Explore Map",
       "viewListings": "View All Listings"
     }
+  },
+  "createAd": {
+    "progress": "Step {{current}} of {{total}}",
+    "steps": {
+      "basicInfo": {
+        "title": "Basic Information",
+        "placeName": "Place Name",
+        "placeNamePlaceholder": "e.g., Cozy cafe in the city center",
+        "address": "Address",
+        "addressPlaceholder": "123 Main Street, New York",
+        "category": "Category",
+        "selectCategory": "Select category"
+      },
+      "location": {
+        "title": "Location on Map",
+        "description": "Select the exact location of your place on the map"
+      },
+      "photos": {
+        "title": "Photos",
+        "description": "Add photos to showcase your place from the best angle"
+      },
+      "description": {
+        "title": "Description and Rating",
+        "shortDescription": "Short Description",
+        "shortDescriptionPlaceholder": "Briefly describe your place...",
+        "detailedDescription": "Detailed Description",
+        "detailedDescriptionPlaceholder": "Tell more about your place...",
+        "overallRating": "Overall Rating",
+        "categoryRatings": "Category Ratings"
+      },
+      "additional": {
+        "title": "Additional Information",
+        "tags": "Tags",
+        "workingHours": "Working Hours",
+        "workingHoursPlaceholder": "Mon-Fri: 08:00-22:00, Sat-Sun: 10:00-20:00",
+        "contacts": "Contacts",
+        "contactsPlaceholder": "+1 XXX XXX XXXX",
+        "promo": "Promo Code/Offer",
+        "promoPlaceholder": "10% discount with promo code WELCOME",
+        "publishAnonymously": "Publish anonymously",
+        "acceptPolicy": "I accept the privacy policy"
+      }
+    },
+    "ratings": {
+      "price": "Price",
+      "cleanliness": "Cleanliness",
+      "atmosphere": "Atmosphere",
+      "service": "Service"
+    },
+    "buttons": {
+      "back": "Back",
+      "next": "Next",
+      "preview": "Preview",
+      "publish": "Publish"
+    },
+    "preview": {
+      "title": "Preview"
+    },
+    "errors": {
+      "titleRequired": "Title is required",
+      "addressRequired": "Address is required",
+      "categoryRequired": "Select a category",
+      "locationRequired": "Select location on map",
+      "photosRequired": "Add at least one photo",
+      "descriptionRequired": "Short description is required",
+      "ratingRequired": "Give an overall rating",
+      "policyRequired": "Accept the privacy policy"
+    }
+  },
+  "categories": {
+    "cafe": "Cafe",
+    "restaurant": "Restaurant",
+    "park": "Park",
+    "museum": "Museum",
+    "shop": "Shop",
+    "hotel": "Hotel"
+  },
+  "tags": {
+    "wifi": "Wi-Fi",
+    "parking": "Parking",
+    "vegan": "Vegan-friendly",
+    "romantic": "Romantic",
+    "freelance": "Freelance",
+    "kidsFriendly": "Kids Friendly"
+  },
+  "breadcrumbs": {
+    "home": "Home",
+    "ads": "Ads",
+    "createAd": "Create Ad"
   }
 }
