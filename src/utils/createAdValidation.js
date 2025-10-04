@@ -8,8 +8,6 @@ export const validateCreateAdForm = (formData, step, i18n) => {
     // Title validation
     if (!isRequired(formData.title?.trim())) {
       errors.title = isUkrainian ? 'Назва є обов\'язковою' : 'Title is required';
-    } else if (!hasMinLength(formData.title.trim(), 5)) {
-      errors.title = isUkrainian ? 'Назва повинна містити мінімум 5 символів' : 'Title must be at least 5 characters';
     } else if (formData.title.trim().length > 100) {
       errors.title = isUkrainian ? 'Назва не може перевищувати 100 символів' : 'Title cannot exceed 100 characters';
     }
@@ -17,8 +15,8 @@ export const validateCreateAdForm = (formData, step, i18n) => {
     // Description validation
     if (!isRequired(formData.description?.trim())) {
       errors.description = isUkrainian ? 'Опис є обов\'язковим' : 'Description is required';
-    } else if (!hasMinLength(formData.description.trim(), 20)) {
-      errors.description = isUkrainian ? 'Опис повинен містити мінімум 20 символів' : 'Description must be at least 20 characters';
+    } else if (!hasMinLength(formData.description.trim(), 10)) {
+      errors.description = isUkrainian ? 'Опис повинен містити мінімум 10 символів' : 'Description must be at least 10 characters';
     } else if (formData.description.trim().length > 1000) {
       errors.description = isUkrainian ? 'Опис не може перевищувати 1000 символів' : 'Description cannot exceed 1000 characters';
     }

@@ -116,3 +116,24 @@
 .custom-select-dropdown::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
 }
+
+/* Error state styles */
+.custom-select.error .custom-select-trigger {
+  border-color: rgba(220, 38, 38, 0.4);
+  box-shadow: 
+    0 4px 12px rgba(220, 38, 38, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.custom-select.error .custom-select-trigger:hover {
+  border-color: #3b82f6;
+  box-shadow: 
+    0 0 0 2px rgba(59, 130, 246, 0.05),
+    0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.custom-select.error .custom-select-trigger:focus,
+.custom-select.error .custom-select-trigger.open {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 4px 12px rgba(59, 130, 246, 0.15);
+}
