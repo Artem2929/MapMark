@@ -31,7 +31,7 @@
 .nav-btn {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  (-50%);
   background: rgba(0, 0, 0, 0.7);
   color: white;
   border: none;
@@ -49,7 +49,6 @@
 
 .nav-btn:hover {
   background: rgba(0, 0, 0, 0.9);
-  transform: translateY(-50%) scale(1.1);
 }
 
 .prev-btn {
@@ -182,7 +181,7 @@
 .fullscreen-nav {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  (-50%);
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: none;
@@ -199,7 +198,7 @@
 
 .fullscreen-nav:hover {
   background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-50%) scale(1.1);
+  (-50%) scale(1.1);
 }
 
 .fullscreen-nav.prev {

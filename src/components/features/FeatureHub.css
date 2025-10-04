@@ -20,9 +20,7 @@
   font-size: 26px;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.15),
-    0 4px 12px rgba(0, 0, 0, 0.1),
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
@@ -30,52 +28,54 @@
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(12px) saturate(180%);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
 }
 
 .main-fab {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 30%, #a855f7 60%, #c084fc 100%);
+  background: linear-gradient(
+    135deg,
+    #6366f1 0%,
+    #8b5cf6 30%,
+    #a855f7 60%,
+    #c084fc 100%
+  );
   color: white;
   z-index: 10;
   border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 
-    0 12px 32px rgba(99, 102, 241, 0.4),
-    0 6px 16px rgba(99, 102, 241, 0.25),
-    0 2px 8px rgba(99, 102, 241, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.4),
+    0 6px 16px rgba(99, 102, 241, 0.25), 0 2px 8px rgba(99, 102, 241, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   animation: mainFabPulse 3s ease-in-out infinite;
 }
 
 @keyframes mainFabPulse {
-  0%, 100% {
-    box-shadow: 
-      0 12px 32px rgba(99, 102, 241, 0.4),
-      0 6px 16px rgba(99, 102, 241, 0.25),
-      0 2px 8px rgba(99, 102, 241, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  0%,
+  100% {
+    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.4),
+      0 6px 16px rgba(99, 102, 241, 0.25), 0 2px 8px rgba(99, 102, 241, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   }
   50% {
-    box-shadow: 
-      0 16px 40px rgba(99, 102, 241, 0.5),
-      0 8px 20px rgba(99, 102, 241, 0.35),
-      0 4px 12px rgba(99, 102, 241, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0 16px 40px rgba(99, 102, 241, 0.5),
+      0 8px 20px rgba(99, 102, 241, 0.35), 0 4px 12px rgba(99, 102, 241, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   }
 }
 
 .main-fab.active {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 30%, #b91c1c 60%, #991b1b 100%);
+  background: linear-gradient(
+    135deg,
+    #ef4444 0%,
+    #dc2626 30%,
+    #b91c1c 60%,
+    #991b1b 100%
+  );
   transform: rotate(45deg) scale(1.05);
   border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 16px 40px rgba(239, 68, 68, 0.5),
-    0 8px 20px rgba(239, 68, 68, 0.35),
-    0 4px 12px rgba(239, 68, 68, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: 0 16px 40px rgba(239, 68, 68, 0.5),
+    0 8px 20px rgba(239, 68, 68, 0.35), 0 4px 12px rgba(239, 68, 68, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   animation: none;
 }
 
@@ -86,7 +86,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -114,20 +119,27 @@
 }
 
 @keyframes rotateGlow {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .main-fab:hover {
   transform: scale(1.2) translateY(-4px);
-  background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 30%, #8b5cf6 60%, #a855f7 100%);
+  background: linear-gradient(
+    135deg,
+    #5b21b6 0%,
+    #7c3aed 30%,
+    #8b5cf6 60%,
+    #a855f7 100%
+  );
   border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 
-    0 20px 48px rgba(99, 102, 241, 0.6),
-    0 12px 24px rgba(99, 102, 241, 0.4),
-    0 6px 16px rgba(99, 102, 241, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 48px rgba(99, 102, 241, 0.6),
+    0 12px 24px rgba(99, 102, 241, 0.4), 0 6px 16px rgba(99, 102, 241, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
 }
 
 .main-fab:active {
@@ -145,17 +157,6 @@
   animation: fabMenuSlide 0.3s ease-out;
 }
 
-@keyframes fabMenuSlide {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .feature-fab {
   width: 50px;
   height: 50px;
@@ -165,11 +166,21 @@
   animation-fill-mode: both;
 }
 
-.feature-fab:nth-child(1) { animation-delay: 0.1s; }
-.feature-fab:nth-child(2) { animation-delay: 0.15s; }
-.feature-fab:nth-child(3) { animation-delay: 0.2s; }
-.feature-fab:nth-child(4) { animation-delay: 0.25s; }
-.feature-fab:nth-child(5) { animation-delay: 0.3s; }
+.feature-fab:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.feature-fab:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.feature-fab:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.feature-fab:nth-child(4) {
+  animation-delay: 0.25s;
+}
+.feature-fab:nth-child(5) {
+  animation-delay: 0.3s;
+}
 
 @keyframes fabItemSlide {
   from {
@@ -207,10 +218,7 @@
 }
 
 .feature-fab:hover {
-  transform: scale(1.15) translateY(-2px);
-  box-shadow: 
-    0 12px 32px rgba(0, 0, 0, 0.25),
-    0 6px 16px rgba(0, 0, 0, 0.15),
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25), 0 6px 16px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
@@ -256,29 +264,27 @@
   }
 }
 
-
-
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .fab-container {
     bottom: 20px;
     right: 20px;
   }
-  
+
   .fab {
     width: 50px;
     height: 50px;
     font-size: 20px;
   }
-  
+
   .feature-fab {
     width: 40px;
     height: 40px;
     font-size: 16px;
   }
-  
+
   /* Progress widget and notifications mobile styles are now in separate components */
-  
+
   .feature-panel {
     top: 0;
     left: 0;
@@ -291,7 +297,7 @@
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
   }
-  
+
   .quick-actions-bar {
     bottom: 10px;
     left: 10px;

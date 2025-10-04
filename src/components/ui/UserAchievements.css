@@ -1,5 +1,9 @@
 .user-achievements {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   border: 2px solid rgba(59, 130, 246, 0.08);
   border-radius: 20px;
   padding: 24px;
@@ -42,7 +46,11 @@
 
 .achievement-card.unlocked {
   border-color: rgba(16, 185, 129, 0.3);
-  background: linear-gradient(145deg, rgba(16, 185, 129, 0.05), rgba(255, 255, 255, 0.9));
+  background: linear-gradient(
+    145deg,
+    rgba(16, 185, 129, 0.05),
+    rgba(255, 255, 255, 0.9)
+  );
 }
 
 .achievement-card.locked {
@@ -51,7 +59,6 @@
 }
 
 .achievement-card:hover {
-  transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
 }
 
@@ -119,12 +126,12 @@
   .achievements-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .achievement-card {
     padding: 12px;
     gap: 12px;
   }
-  
+
   .achievement-icon {
     font-size: 24px;
   }

@@ -10,6 +10,7 @@ const { getUserProfileHandler, updateUserProfileHandler } = require('./services/
 const { getAboutStatsHandler, getTeamMembersHandler, submitContactMessageHandler, getContactMessagesHandler, markMessageAsReadHandler } = require('./services/AboutService');
 const authRoutes = require('./routes/auth');
 const postsRoutes = require('./routes/posts');
+const adsRoutes = require('./routes/ads');
 const Ad = require('./models/Ad');
 const path = require('path');
 const fs = require('fs');
@@ -39,6 +40,10 @@ mongoose.connect(DB_URL)
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postsRoutes);
+app.use('/api/ads', adsRoutes);
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', (req, res) => {
   res.json({ 

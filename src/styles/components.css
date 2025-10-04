@@ -33,27 +33,41 @@
 
 /* Button Variants */
 .btn--primary {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-dark) 100%
+  );
   color: var(--color-text-inverse);
   box-shadow: var(--shadow-md);
 }
 
 .btn--primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--color-primary-dark) 0%, #1e40af 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-dark) 0%,
+    #1e40af 100%
+  );
   box-shadow: var(--shadow-lg);
-  transform: translateY(-1px);
 }
 
 .btn--secondary {
-  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-secondary) 0%,
+    var(--color-secondary-dark) 100%
+  );
   color: var(--color-text-inverse);
   box-shadow: var(--shadow-md);
 }
 
 .btn--secondary:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--color-secondary-dark) 0%, #047857 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-secondary-dark) 0%,
+    #047857 100%
+  );
   box-shadow: var(--shadow-lg);
-  transform: translateY(-1px);
 }
 
 .btn--outline {
@@ -86,7 +100,6 @@
 .btn--danger:hover:not(:disabled) {
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   box-shadow: var(--shadow-lg);
-  transform: translateY(-1px);
 }
 
 /* Button Sizes */
@@ -131,7 +144,6 @@
 
 .card:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
 }
 
 .card__header {

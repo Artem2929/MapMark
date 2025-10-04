@@ -1,5 +1,3 @@
-
-
 .page-container.profile-user-profile {
   max-width: 1200px;
   margin: 0 auto;
@@ -16,16 +14,18 @@
 }
 
 .profile-profile-header {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   backdrop-filter: blur(15px);
   border: 1px solid rgba(59, 130, 246, 0.12);
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 20px;
-  box-shadow: 
-    0 8px 32px rgba(59, 130, 246, 0.06),
-    0 4px 16px rgba(59, 130, 246, 0.04),
-    0 2px 8px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.06),
+    0 4px 16px rgba(59, 130, 246, 0.04), 0 2px 8px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -40,7 +40,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.04), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.04),
+    transparent
+  );
   transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -67,19 +72,15 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  box-shadow: 
-    0 8px 24px rgba(59, 130, 246, 0.2),
-    0 4px 12px rgba(59, 130, 246, 0.12),
-    0 2px 6px rgba(59, 130, 246, 0.08);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2),
+    0 4px 12px rgba(59, 130, 246, 0.12), 0 2px 6px rgba(59, 130, 246, 0.08);
   position: relative;
   transition: all 0.3s ease;
 }
 
 .profile-avatar-large:hover {
-  box-shadow: 
-    0 20px 50px rgba(59, 130, 246, 0.3),
-    0 12px 30px rgba(59, 130, 246, 0.2),
-    0 6px 16px rgba(59, 130, 246, 0.15),
+  box-shadow: 0 20px 50px rgba(59, 130, 246, 0.3),
+    0 12px 30px rgba(59, 130, 246, 0.2), 0 6px 16px rgba(59, 130, 246, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
@@ -113,8 +114,7 @@
   justify-content: center;
   cursor: pointer;
   font-size: 22px;
-  box-shadow: 
-    0 6px 16px rgba(16, 185, 129, 0.3),
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3),
     0 2px 8px rgba(16, 185, 129, 0.2);
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   border: 3px solid white;
@@ -123,8 +123,7 @@
 .profile-avatar-upload-btn:hover {
   background: linear-gradient(135deg, #059669 0%, #047857 100%);
   transform: scale(1.15);
-  box-shadow: 
-    0 8px 20px rgba(16, 185, 129, 0.4),
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4),
     0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
@@ -195,12 +194,17 @@
 
 .profile-profile-text-info {
   flex: 1;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
   border: 1px solid rgba(59, 130, 246, 0.1);
   border-radius: 12px;
   padding: 20px;
   backdrop-filter: blur(10px);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.05);
@@ -227,7 +231,8 @@
   font-weight: 700;
   color: #1e293b;
   margin: 0 0 12px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   line-height: 1.3;
   letter-spacing: -0.01em;
   display: flex;
@@ -245,7 +250,8 @@
   padding: 4px 8px;
   background: rgba(255, 255, 255, 0.9);
   outline: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   letter-spacing: -0.01em;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
@@ -262,7 +268,8 @@
   font-size: 14px;
   color: #64748b;
   margin: 0 0 16px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   font-weight: 500;
 }
 
@@ -308,7 +315,8 @@
 .profile-info-row {
   margin: 8px 0;
   font-size: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -333,7 +341,8 @@
   margin: 16px 0;
   font-size: 14px;
   color: #475569;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   font-style: italic;
   line-height: 1.4;
 }
@@ -347,7 +356,8 @@
 .profile-contact-row {
   margin: 8px 0;
   font-size: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
 }
 
 .profile-contact-link {
@@ -369,7 +379,8 @@
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   font-weight: 600;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
@@ -383,7 +394,7 @@
 
 .profile-main-edit-btn:hover {
   background: linear-gradient(145deg, #1d4ed8 0%, #1e40af 100%);
-  transform: translateY(-1px);
+
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
@@ -409,7 +420,8 @@
   border: none;
   font-size: 14px;
   letter-spacing: -0.01em;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(10px);
@@ -423,7 +435,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
   transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -436,50 +453,43 @@
   background: linear-gradient(145deg, #3b82f6 0%, #1d4ed8 100%);
   color: white;
   border: 2px solid rgba(59, 130, 246, 0.2);
-  box-shadow: 
-    0 4px 12px rgba(59, 130, 246, 0.2),
-    0 2px 6px rgba(59, 130, 246, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2),
+    0 2px 6px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .profile-follow-btn:hover {
   background: linear-gradient(145deg, #1d4ed8 0%, #1e40af 100%);
   transform: translateY(-2px) scale(1.03);
-  box-shadow: 
-    0 8px 20px rgba(59, 130, 246, 0.3),
-    0 4px 12px rgba(59, 130, 246, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3),
+    0 4px 12px rgba(59, 130, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   border-color: rgba(59, 130, 246, 0.3);
 }
 
 .profile-follow-btn.profile-following {
   background: linear-gradient(145deg, #10b981 0%, #059669 100%);
   border-color: rgba(16, 185, 129, 0.2);
-  box-shadow: 
-    0 4px 12px rgba(16, 185, 129, 0.2),
-    0 2px 6px rgba(16, 185, 129, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2),
+    0 2px 6px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .profile-message-btn {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
   color: #3b82f6;
   border: 2px solid rgba(59, 130, 246, 0.2);
-  box-shadow: 
-    0 2px 8px rgba(59, 130, 246, 0.08),
-    0 1px 4px rgba(59, 130, 246, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.08),
+    0 1px 4px rgba(59, 130, 246, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .profile-message-btn:hover {
   background: linear-gradient(145deg, #3b82f6 0%, #1d4ed8 100%);
   color: white;
   border-color: #3b82f6;
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 
-    0 8px 20px rgba(59, 130, 246, 0.25),
-    0 4px 12px rgba(59, 130, 246, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25),
+    0 4px 12px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .user-avatar-large {
@@ -601,7 +611,7 @@
 }
 
 .follow-btn:hover {
-  transform: translateY(-2px);
+ 
   box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
 }
 
@@ -641,7 +651,7 @@
 }
 
 .edit-profile-btn:hover {
-  transform: translateY(-2px);
+ 
   box-shadow: 0 6px 16px rgba(100, 116, 139, 0.4);
 }
 
@@ -650,9 +660,7 @@
   border-radius: 20px;
   padding: 20px 0;
   margin-bottom: 40px;
-  box-shadow: 
-    0 10px 25px rgba(0, 0, 0, 0.08),
-    0 4px 10px rgba(0, 0, 0, 0.04),
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
@@ -704,9 +712,7 @@
   border-radius: 20px;
   padding: 20px 0;
   margin-bottom: 40px;
-  box-shadow: 
-    0 10px 25px rgba(0, 0, 0, 0.08),
-    0 4px 10px rgba(0, 0, 0, 0.04),
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
@@ -767,9 +773,7 @@
   border-radius: 20px;
   padding: 20px 0;
   margin-bottom: 40px;
-  box-shadow: 
-    0 10px 25px rgba(0, 0, 0, 0.08),
-    0 4px 10px rgba(0, 0, 0, 0.04),
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
@@ -799,7 +803,7 @@
 }
 
 .profile-post-card:hover {
-  transform: translateY(-4px);
+ 
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
@@ -825,7 +829,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
   display: flex;
   align-items: flex-end;
   padding: 16px;
@@ -943,16 +951,6 @@
   }
 }
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 .profile-user-not-found {
   background: white;
@@ -979,33 +977,33 @@
 
 .profile-back-link:hover {
   background: #1d4ed8;
-  transform: translateY(-2px);
+ 
 }
 
 @media (max-width: 768px) {
   .profile-header {
     flex-direction: column;
   }
-  
+
   .profile-profile-header {
     animation: fadeInUp 0.4s ease-out;
   }
-  
+
   .user-stats {
     animation: fadeInUp 0.5s ease-out 0.1s both;
   }
-  
+
   .profile-posts-section {
     animation: fadeInUp 0.6s ease-out 0.2s both;
   }
-  
+
   .profile-user-profile {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   }
-  
+
   .profile-profile-container {
     flex: 1;
     padding: 24px;

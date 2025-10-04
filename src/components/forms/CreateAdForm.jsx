@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CustomSelect from '../ui/CustomSelect';
 import { validateCreateAdForm } from '../../utils/createAdValidation';
+import adService from '../../services/adService';
 import './CreateAdForm.css';
 
 const CreateAdForm = ({ onClose }) => {
@@ -26,7 +27,7 @@ const CreateAdForm = ({ onClose }) => {
   });
   const [errors, setErrors] = useState({});
 
-  const categories = [
+  const categories = React.useMemo(() => [
     { value: '', label: t('createAdForm.step1.selectCategory') },
     { value: 'realty', label: `🏠 ${t('createAdForm.categories.realty')}` },
     { value: 'transport', label: `🚗 ${t('createAdForm.categories.transport')}` },
@@ -35,9 +36,9 @@ const CreateAdForm = ({ onClose }) => {
     { value: 'electronics', label: `📱 ${t('createAdForm.categories.electronics')}` },
     { value: 'places', label: `🍽️ ${t('createAdForm.categories.places')}` },
     { value: 'entertainment', label: `🎯 ${t('createAdForm.categories.entertainment')}` }
-  ];
+  ], [t]);
 
-  const getSubcategories = () => {
+  const getSubcategories = React.useMemo(() => {
     const subcategories = [
       { value: '', label: t('createAdForm.step1.selectSubcategory') }
     ];
@@ -90,7 +91,7 @@ const CreateAdForm = ({ onClose }) => {
     }
 
     return subcategories;
-  };
+  }, [formData.category, t]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ 
@@ -131,7 +132,6 @@ const CreateAdForm = ({ onClose }) => {
   const validateStep1 = () => {
     const validation = validateCreateAdForm(formData, 1, i18n);
     setErrors(validation.errors);
-    return validation.isValid;
   };
 
   const validateStep2 = () => {
@@ -142,32 +142,36 @@ const CreateAdForm = ({ onClose }) => {
     }
     
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const validateStep3 = () => {
     const validation = validateCreateAdForm(formData, 2, i18n);
     setErrors(validation.errors);
-    return validation.isValid;
   };
 
   const handleNext = async () => {
-    if (currentStep === 1 && validateStep1()) {
-      setCurrentStep(2);
-    } else if (currentStep === 2 && validateStep2()) {
-      setCurrentStep(3);
-    } else if (currentStep === 3 && validateStep3()) {
-      setIsSubmitting(true);
-      try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        console.log('Form submitted:', formData);
-        setCurrentStep(4);
-      } catch (error) {
-        console.error('Submission error:', error);
-        setErrors({ submit: t('createAdForm.validation.submitError') });
-      } finally {
-        setIsSubmitting(false);
+    if (currentStep === 1) {
+      validateStep1();
+      if (isStep1Valid()) {
+        setCurrentStep(2);
+      }
+    } else if (currentStep === 2) {
+      validateStep2();
+      if (isStep2Valid()) {
+        setCurrentStep(3);
+      }
+    } else if (currentStep === 3) {
+      validateStep3();
+      if (isStep3Valid()) {
+        setIsSubmitting(true);
+        try {
+          await adService.createAd(formData);
+          setCurrentStep(4);
+        } catch (error) {
+          setErrors({ submit: error.message || t('createAdForm.validation.submitError') });
+        } finally {
+          setIsSubmitting(false);
+        }
       }
     }
   };
@@ -178,6 +182,21 @@ const CreateAdForm = ({ onClose }) => {
     // Validate file count
     if (files.length + formData.photos.length > 5) {
       setErrors(prev => ({ ...prev, photos: t('createAdForm.validation.photosMax') }));
+      return;
+    }
+
+    // Validate file types and sizes
+    const invalidFiles = files.filter(file => {
+      const isValidType = file.type.startsWith('image/');
+      const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB
+      return !isValidType || !isValidSize;
+    });
+
+    if (invalidFiles.length > 0) {
+      setErrors(prev => ({ 
+        ...prev, 
+        photos: t('createAdForm.validation.photosInvalid') || 'Invalid file type or size (max 5MB)'
+      }));
       return;
     }
     
@@ -199,17 +218,32 @@ const CreateAdForm = ({ onClose }) => {
   };
 
   const removePhoto = (photoId) => {
-    setFormData(prev => ({
-      ...prev,
-      photos: prev.photos.filter(photo => photo.id !== photoId)
-    }));
+    setFormData(prev => {
+      const photoToRemove = prev.photos.find(photo => photo.id === photoId);
+      if (photoToRemove?.url) {
+        URL.revokeObjectURL(photoToRemove.url);
+      }
+      return {
+        ...prev,
+        photos: prev.photos.filter(photo => photo.id !== photoId)
+      };
+    });
   };
 
+  // Cleanup object URLs on unmount
+  React.useEffect(() => {
+    return () => {
+      formData.photos.forEach(photo => {
+        if (photo.url) {
+          URL.revokeObjectURL(photo.url);
+        }
+      });
+    };
+  }, []);
+
   const currencies = [
-    { value: 'USD', label: '$ USD' },
-    { value: 'EUR', label: '€ EUR' },
-    { value: 'UAH', label: '₴ UAH' },
-    { value: 'PLN', label: 'zł PLN' }
+    { value: 'USD', label: '$' },
+    { value: 'UAH', label: '₴' }
   ];
 
   const handleBack = () => {
@@ -242,13 +276,13 @@ const CreateAdForm = ({ onClose }) => {
            (formData.contactPhone.trim() || formData.contactEmail.trim());
   };
 
-  const countries = [
+  const countries = React.useMemo(() => [
     { value: '', label: t('createAdForm.step2.selectCountry') },
     { value: 'usa', label: `🇺🇸 ${t('createAdForm.countries.usa')}` },
     { value: 'ukraine', label: `🇺🇦 ${t('createAdForm.countries.ukraine')}` }
-  ];
+  ], [t]);
 
-  const getCities = () => {
+  const getCities = React.useMemo(() => {
     const cities = [
       { value: '', label: t('createAdForm.step2.selectCity') }
     ];
@@ -272,9 +306,9 @@ const CreateAdForm = ({ onClose }) => {
     }
 
     return cities;
-  };
+  }, [formData.country, t]);
 
-  const getDetailsOptions = () => {
+  const getDetailsOptions = React.useMemo(() => {
     const details = [
       { value: '', label: t('createAdForm.step2.selectDetails') }
     ];
@@ -315,7 +349,7 @@ const CreateAdForm = ({ onClose }) => {
     }
 
     return details;
-  };
+  }, [formData.subcategory, t]);
 
   return (
     <div className="create-ad-overlay">
@@ -328,11 +362,7 @@ const CreateAdForm = ({ onClose }) => {
           }}>×</button>
         </div>
 
-        {errors.submit && (
-          <div className="error-message">
-            {errors.submit}
-          </div>
-        )}
+
 
         {currentStep === 1 && (
           <div className="step-content">
@@ -381,7 +411,7 @@ const CreateAdForm = ({ onClose }) => {
                 <CustomSelect
                   value={formData.subcategory}
                   onChange={(value) => handleInputChange('subcategory', value)}
-                  options={getSubcategories()}
+                  options={getSubcategories}
                   className={errors.subcategory ? 'error' : ''}
                 />
                 {errors.subcategory && <span className="field-error">{errors.subcategory}</span>}
@@ -490,7 +520,7 @@ const CreateAdForm = ({ onClose }) => {
                 <CustomSelect
                   value={formData.city}
                   onChange={(value) => handleInputChange('city', value)}
-                  options={getCities()}
+                  options={getCities}
                   className={errors.city ? 'error' : ''}
                 />
                 {errors.city && <span className="field-error">{errors.city}</span>}
@@ -515,7 +545,7 @@ const CreateAdForm = ({ onClose }) => {
               <CustomSelect
                 value={formData.details}
                 onChange={(value) => handleInputChange('details', value)}
-                options={getDetailsOptions()}
+                options={getDetailsOptions}
                 className={errors.details ? 'error' : ''}
               />
               {errors.details && <span className="field-error">{errors.details}</span>}

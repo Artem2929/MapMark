@@ -151,7 +151,6 @@
 
 .contact-btn:hover {
   background: #0056cc;
-  transform: translateY(-2px);
 }
 
 .call-btn {
@@ -161,7 +160,7 @@
 
 .call-btn:hover {
   background: #28a745;
-  transform: translateY(-2px);
+ 
 }
 
 .favorite-btn {
@@ -172,7 +171,7 @@
 
 .favorite-btn:hover {
   background: rgba(255, 59, 48, 0.2);
-  transform: translateY(-2px);
+ 
 }
 
 /* Stats */
@@ -272,7 +271,6 @@
 
 .product-card:hover,
 .service-card:hover {
-  transform: translateY(-4px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 

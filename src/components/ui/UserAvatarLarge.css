@@ -38,7 +38,8 @@
   font-size: 48px;
   font-weight: 700;
   color: white;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui,
+    sans-serif;
 }
 
 .user-info-section {
@@ -53,7 +54,8 @@
   font-weight: 700;
   color: #1e293b;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui,
+    sans-serif;
   letter-spacing: -0.02em;
   line-height: 1.2;
 }
@@ -96,7 +98,8 @@
   transition: all 0.3s ease;
   border: none;
   font-size: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui,
+    sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,7 +114,6 @@
 }
 
 .follow-button:hover {
-  transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
 }
 

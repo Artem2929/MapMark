@@ -33,7 +33,6 @@
 }
 
 .search-box button:hover:not(:disabled) {
-  transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
@@ -85,9 +84,15 @@
 }
 
 @keyframes bounce {
-  0% { transform: translate(-50%, -100%) scale(0); }
-  50% { transform: translate(-50%, -100%) scale(1.2); }
-  100% { transform: translate(-50%, -100%) scale(1); }
+  0% {
+    transform: translate(-50%, -100%) scale(0);
+  }
+  50% {
+    transform: translate(-50%, -100%) scale(1.2);
+  }
+  100% {
+    transform: translate(-50%, -100%) scale(1);
+  }
 }
 
 .map-overlay {

@@ -84,7 +84,7 @@
 
 .explore-btn:hover {
   background: #0056b3;
-  transform: translateY(-2px);
+
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
@@ -105,7 +105,6 @@
 }
 
 .saved-post-item:hover {
-  transform: translateY(-4px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
@@ -187,30 +186,30 @@
   .saved-posts-page {
     padding: 10px;
   }
-  
+
   .saved-posts-header {
     padding: 0 10px;
     margin-bottom: 20px;
   }
-  
+
   .saved-posts-title {
     font-size: 24px;
   }
-  
+
   .saved-posts-grid {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 15px;
     padding: 0 10px;
   }
-  
+
   .saved-post-image-container {
     height: 180px;
   }
-  
+
   .empty-saved {
     padding: 60px 20px;
   }
-  
+
   .empty-icon {
     font-size: 60px;
   }

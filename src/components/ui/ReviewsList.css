@@ -203,11 +203,9 @@ body:has(.reviews-list.visible) .notification-item {
 @keyframes reviewItemSlide {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
   }
 }
 
@@ -657,14 +655,6 @@ body:has(.reviews-list.visible) .notification-item {
   z-index: 1;
 }
 
-@keyframes emptyIconFloat {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-10px) rotate(5deg);
-  }
-}
 
 .reviews-list .reviews-list-empty-state h3 {
   margin: 0 0 12px 0;

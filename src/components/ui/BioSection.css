@@ -1,5 +1,9 @@
 .bio-section {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   border: 2px solid rgba(59, 130, 246, 0.08);
   border-radius: 20px;
   padding: 24px;
@@ -16,7 +20,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.05),
+    transparent
+  );
   transition: left 0.8s;
 }
 
@@ -36,7 +45,8 @@
   font-weight: 700;
   color: #1e293b;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
 }
 
 .bio-icon {
@@ -78,11 +88,11 @@
   resize: vertical;
   min-height: 80px;
   max-height: 200px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   font-weight: 500;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 2px 8px rgba(59, 130, 246, 0.05),
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.05),
     0 1px 4px rgba(59, 130, 246, 0.03);
 }
 
@@ -90,17 +100,13 @@
   outline: none;
   border-color: #3b82f6;
   background: white;
-  box-shadow: 
-    0 0 0 3px rgba(59, 130, 246, 0.1),
-    0 4px 12px rgba(59, 130, 246, 0.15),
-    0 2px 6px rgba(59, 130, 246, 0.1);
-  transform: translateY(-1px);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1),
+    0 4px 12px rgba(59, 130, 246, 0.15), 0 2px 6px rgba(59, 130, 246, 0.1);
 }
 
 .bio-input:hover:not(:focus) {
   border-color: rgba(59, 130, 246, 0.25);
-  box-shadow: 
-    0 3px 10px rgba(59, 130, 246, 0.08),
+  box-shadow: 0 3px 10px rgba(59, 130, 246, 0.08),
     0 1px 5px rgba(59, 130, 246, 0.05);
 }
 

@@ -145,7 +145,6 @@
 .follow-btn:hover {
   background: #3b82f6;
   color: white;
-  transform: translateY(-1px);
 }
 
 .follow-btn.following {
@@ -202,8 +201,12 @@
 }
 
 @keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .skeleton-title {
@@ -237,24 +240,24 @@
   .followers-page {
     padding: 16px;
   }
-  
+
   .followers-header {
     flex-direction: column;
     gap: 16px;
     text-align: center;
   }
-  
+
   .follower-item {
     padding: 16px;
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
   }
-  
+
   .follower-info {
     width: 100%;
   }
-  
+
   .follow-btn {
     align-self: stretch;
     text-align: center;

@@ -23,9 +23,6 @@ const CustomSelect = ({ value, onChange, options, placeholder, className = '' })
   }, []);
 
   const handleOptionClick = (option) => {
-    if (option.disabled || option.label === 'Select category') {
-      return;
-    }
     onChange(option.value);
     setIsOpen(false);
   };
@@ -44,10 +41,10 @@ const CustomSelect = ({ value, onChange, options, placeholder, className = '' })
       
       {isOpen && (
         <div className="custom-select-dropdown">
-          {options.map((option) => (
+          {options.filter(option => option.value !== '').map((option) => (
             <div
               key={option.value}
-              className={`custom-select-option ${value === option.value ? 'selected' : ''} ${option.disabled || option.label === 'Select category' ? 'disabled' : ''}`}
+              className={`custom-select-option ${value === option.value ? 'selected' : ''}`}
               onClick={() => handleOptionClick(option)}
             >
               {option.label}

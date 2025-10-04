@@ -87,7 +87,7 @@
 
 .ads-item-back-btn a:hover {
   background: rgba(255, 255, 255, 1);
-  transform: translateY(-2px);
+ 
 }
 
 .ads-item-ad-info {
@@ -335,7 +335,6 @@
 }
 
 .ads-item-add-review-btn:hover {
-  transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
 }
 
@@ -556,7 +555,7 @@
 
 .ads-item-contact-item:hover {
   background: rgba(59, 130, 246, 0.1);
-  transform: translateY(-2px);
+ 
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
 
@@ -709,7 +708,6 @@
 }
 
 .ads-item-nav-btn:hover {
-  transform: translateY(-3px) scale(1.05);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 

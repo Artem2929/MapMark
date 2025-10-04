@@ -14,7 +14,11 @@
 }
 
 .gamification-panel {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   border-radius: 24px;
   padding: 32px;
   max-width: 600px;
@@ -60,10 +64,8 @@
   padding: 32px;
   color: white;
   margin-bottom: 32px;
-  box-shadow: 
-    0 12px 32px rgba(59, 130, 246, 0.3),
-    0 6px 16px rgba(59, 130, 246, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 32px rgba(59, 130, 246, 0.3),
+    0 6px 16px rgba(59, 130, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -149,13 +151,16 @@
 }
 
 .stat-item {
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(241, 245, 249, 0.9) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(248, 250, 252, 0.9) 0%,
+    rgba(241, 245, 249, 0.9) 100%
+  );
   border-radius: 20px;
   padding: 24px 20px;
   text-align: center;
   border: 2px solid rgba(226, 232, 240, 0.6);
-  box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.05),
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -169,7 +174,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.1),
+    transparent
+  );
   transition: left 0.6s;
 }
 
@@ -178,10 +188,7 @@
 }
 
 .stat-item:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 
-    0 12px 32px rgba(0, 0, 0, 0.12),
-    0 6px 16px rgba(0, 0, 0, 0.08),
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), 0 6px 16px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border-color: rgba(59, 130, 246, 0.3);
 }
@@ -204,11 +211,17 @@
   font-weight: 500;
 }
 
-.badges-section, .all-badges-section, .leaderboard-section, .demo-actions {
+.badges-section,
+.all-badges-section,
+.leaderboard-section,
+.demo-actions {
   margin-bottom: 32px;
 }
 
-.badges-section h3, .all-badges-section h3, .leaderboard-section h3, .demo-actions h3 {
+.badges-section h3,
+.all-badges-section h3,
+.leaderboard-section h3,
+.demo-actions h3 {
   margin: 0 0 16px 0;
   color: #1e293b;
   font-size: 18px;
@@ -222,14 +235,17 @@
 }
 
 .badge-item {
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(241, 245, 249, 0.9) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(248, 250, 252, 0.9) 0%,
+    rgba(241, 245, 249, 0.9) 100%
+  );
   border-radius: 20px;
   padding: 20px 16px;
   text-align: center;
   border: 2px solid rgba(226, 232, 240, 0.6);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.05),
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   position: relative;
   overflow: hidden;
@@ -242,12 +258,22 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(16, 185, 129, 0.2),
+    transparent
+  );
   transition: left 0.6s;
 }
 
 .badge-item.earned::before {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
 }
 
 .badge-item:hover::before {
@@ -259,25 +285,19 @@
   color: white;
   border-color: #059669;
   transform: scale(1.05);
-  box-shadow: 
-    0 8px 24px rgba(16, 185, 129, 0.4),
-    0 4px 12px rgba(16, 185, 129, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4),
+    0 4px 12px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   animation: badgeGlow 2s infinite alternate;
 }
 
 @keyframes badgeGlow {
   from {
-    box-shadow: 
-      0 8px 24px rgba(16, 185, 129, 0.4),
-      0 4px 12px rgba(16, 185, 129, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4),
+      0 4px 12px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
   to {
-    box-shadow: 
-      0 12px 32px rgba(16, 185, 129, 0.5),
-      0 6px 16px rgba(16, 185, 129, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    box-shadow: 0 12px 32px rgba(16, 185, 129, 0.5),
+      0 6px 16px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
   }
 }
 
@@ -350,8 +370,7 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex: 1;
   min-width: 140px;
-  box-shadow: 
-    0 4px 16px rgba(99, 102, 241, 0.3),
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
@@ -364,7 +383,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
   transition: left 0.5s;
 }
 
@@ -373,11 +397,8 @@
 }
 
 .action-btn:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 
-    0 8px 24px rgba(99, 102, 241, 0.4),
-    0 4px 12px rgba(99, 102, 241, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4),
+    0 4px 12px rgba(99, 102, 241, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .review-btn {
@@ -413,19 +434,19 @@
     padding: 24px;
     max-width: 100%;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .badges-grid {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
-  
+
   .action-buttons {
     flex-direction: column;
   }
-  
+
   .action-btn {
     min-width: auto;
   }

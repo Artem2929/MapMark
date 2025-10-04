@@ -51,7 +51,6 @@
 }
 
 .action-btn:hover {
-  transform: translateY(-4px) scale(1.05);
   border-color: var(--action-color);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }

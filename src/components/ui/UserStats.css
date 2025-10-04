@@ -27,7 +27,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.05),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -37,7 +42,7 @@
 
 .stat-item:hover {
   background: rgba(59, 130, 246, 0.03);
-  transform: translateY(-2px);
+
   box-shadow: 0 4px 16px rgba(59, 130, 246, 0.1);
 }
 
@@ -46,7 +51,8 @@
   font-weight: 700;
   color: #1e293b;
   margin-bottom: 4px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui,
+    sans-serif;
   letter-spacing: -0.02em;
   line-height: 1;
 }

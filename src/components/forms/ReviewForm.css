@@ -4,7 +4,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
   backdrop-filter: blur(40px) saturate(180%);
   display: flex;
   align-items: center;
@@ -24,10 +28,10 @@ body:has(.review-form-overlay) .filter-header {
 }
 
 @keyframes review-form-fade-in {
-  from { 
+  from {
     opacity: 0;
   }
-  to { 
+  to {
     opacity: 1;
   }
 }
@@ -39,21 +43,33 @@ body:has(.review-form-overlay) .filter-header {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.5), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 122, 255, 0.5),
+    transparent
+  );
   animation: review-form-shimmer 3s ease-in-out infinite;
 }
 
 @keyframes review-form-shimmer {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .review-form {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    0 2px 8px rgba(0, 0, 0, 0.08),
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px) saturate(180%);
   border-radius: 24px;
@@ -65,7 +81,8 @@ body:has(.review-form-overlay) .filter-header {
   animation: review-form-appear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 400;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   display: flex;
   flex-direction: column;
 }
@@ -123,12 +140,14 @@ body:has(.review-form-overlay) .filter-header {
   align-items: center;
   margin-bottom: 20px;
   padding: 16px 20px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.8) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(248, 250, 252, 0.8) 100%
+  );
   border-radius: 16px;
   border: 1px solid rgba(226, 232, 240, 0.4);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.04),
-    0 2px 6px rgba(0, 0, 0, 0.03),
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.03),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(8px);
   flex-shrink: 0;
@@ -161,8 +180,13 @@ body:has(.review-form-overlay) .filter-header {
 }
 
 @keyframes review-form-icon-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 .review-form-header h3 {
@@ -175,12 +199,18 @@ body:has(.review-form-overlay) .filter-header {
   background-clip: text;
   flex: 1;
   letter-spacing: -0.02em;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   text-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
 }
 
-.review-form-close-btn, .review-close-btn {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+.review-form-close-btn,
+.review-close-btn {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
   border: 2px solid rgba(226, 232, 240, 0.5);
   color: #64748b;
   width: 36px;
@@ -192,34 +222,37 @@ body:has(.review-form-overlay) .filter-header {
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 16px;
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.06),
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   position: relative;
   overflow: hidden;
 }
 
-
-
-.review-form-close-btn::before, .review-close-btn::before {
+.review-form-close-btn::before,
+.review-close-btn::before {
   content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(239, 68, 68, 0.1),
+    transparent
+  );
   transition: left 0.5s;
 }
 
-.review-form-close-btn:hover, .review-close-btn:hover {
-  box-shadow: 
-    0 6px 16px rgba(239, 68, 68, 0.15),
-    0 4px 12px rgba(239, 68, 68, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+.review-form-close-btn:hover,
+.review-close-btn:hover {
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.15),
+    0 4px 12px rgba(239, 68, 68, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-.review-form-close-btn:hover::before, .review-close-btn:hover::before {
+.review-form-close-btn:hover::before,
+.review-close-btn:hover::before {
   left: 100%;
 }
 
@@ -227,13 +260,16 @@ body:has(.review-form-overlay) .filter-header {
   min-height: 70px;
   margin-bottom: 24px;
   padding: 20px;
-  background: linear-gradient(145deg, rgba(16, 185, 129, 0.08) 0%, rgba(59, 130, 246, 0.08) 50%, rgba(147, 51, 234, 0.08) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(16, 185, 129, 0.08) 0%,
+    rgba(59, 130, 246, 0.08) 50%,
+    rgba(147, 51, 234, 0.08) 100%
+  );
   border-radius: 20px;
   border: 2px solid rgba(16, 185, 129, 0.2);
-  box-shadow: 
-    0 8px 24px rgba(16, 185, 129, 0.08),
-    0 4px 12px rgba(16, 185, 129, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.08),
+    0 4px 12px rgba(16, 185, 129, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9),
     inset 0 -1px 0 rgba(16, 185, 129, 0.05);
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
@@ -248,17 +284,25 @@ body:has(.review-form-overlay) .filter-header {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.15), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(16, 185, 129, 0.15),
+    transparent
+  );
   transition: left 0.6s;
 }
 
 .review-form-location-info:hover {
   border-color: rgba(16, 185, 129, 0.4);
-  background: linear-gradient(145deg, rgba(16, 185, 129, 0.12) 0%, rgba(59, 130, 246, 0.12) 50%, rgba(147, 51, 234, 0.12) 100%);
-  box-shadow: 
-    0 16px 40px rgba(16, 185, 129, 0.15),
-    0 8px 20px rgba(16, 185, 129, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+  background: linear-gradient(
+    145deg,
+    rgba(16, 185, 129, 0.12) 0%,
+    rgba(59, 130, 246, 0.12) 50%,
+    rgba(147, 51, 234, 0.12) 100%
+  );
+  box-shadow: 0 16px 40px rgba(16, 185, 129, 0.15),
+    0 8px 20px rgba(16, 185, 129, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95),
     inset 0 -1px 0 rgba(16, 185, 129, 0.1);
 }
 
@@ -301,15 +345,18 @@ body:has(.review-form-overlay) .filter-header {
   color: #64748b;
   font-size: 11px;
   font-weight: 600;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.8) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(248, 250, 252, 0.8) 100%
+  );
   padding: 6px 12px;
   border-radius: 12px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   border: 1px solid rgba(16, 185, 129, 0.2);
-  box-shadow: 
-    0 2px 8px rgba(16, 185, 129, 0.08),
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   transition: all 0.2s ease;
   margin-top: 8px;
@@ -317,7 +364,11 @@ body:has(.review-form-overlay) .filter-header {
 }
 
 .review-form-location-coords:hover {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(255, 255, 255, 0.9) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.1) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
 }
 
 .review-form-content {
@@ -337,7 +388,8 @@ body:has(.review-form-overlay) .filter-header {
   color: #475569;
   margin-bottom: 8px;
   letter-spacing: 0.01em;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
 }
 
 .review-form-textarea-container {
@@ -351,42 +403,49 @@ body:has(.review-form-overlay) .filter-header {
   border-radius: 12px;
   font-size: 14px;
   font-weight: 500;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
   color: #1e293b;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
   line-height: 1.5;
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.06),
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
 }
 
 .review-form-input:hover {
   border-color: rgba(59, 130, 246, 0.3);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.08),
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .review-form-input:focus {
   outline: none;
   border-color: #3b82f6;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(248, 250, 252, 1) 100%);
-  box-shadow: 
-    0 0 0 4px rgba(59, 130, 246, 0.1),
-    0 4px 16px rgba(59, 130, 246, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(248, 250, 252, 1) 100%
+  );
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1),
+    0 4px 16px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .review-form-input.error,
 .review-form-group textarea.error {
   border-color: #ef4444;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
-  box-shadow: 
-    0 0 0 4px rgba(239, 68, 68, 0.1),
-    0 4px 16px rgba(239, 68, 68, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1),
+    0 4px 16px rgba(239, 68, 68, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .field-error {
@@ -405,33 +464,38 @@ body:has(.review-form-overlay) .filter-header {
   border-radius: 16px;
   font-size: 14px;
   font-weight: 500;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
   color: #1e293b;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
   resize: vertical;
   line-height: 1.5;
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.06),
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
 }
 
 .review-form-group textarea:hover {
   border-color: rgba(59, 130, 246, 0.3);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.08),
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .review-form-group textarea:focus {
   outline: none;
   border-color: #3b82f6;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(248, 250, 252, 1) 100%);
-  box-shadow: 
-    0 0 0 4px rgba(59, 130, 246, 0.1),
-    0 4px 16px rgba(59, 130, 246, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(248, 250, 252, 1) 100%
+  );
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1),
+    0 4px 16px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .review-form-char-counter {
@@ -450,13 +514,16 @@ body:has(.review-form-overlay) .filter-header {
   flex-direction: column;
   gap: 10px;
   padding: 17px;
-  background: linear-gradient(145deg, rgba(255, 193, 7, 0.08) 0%, rgba(255, 152, 0, 0.08) 50%, rgba(255, 87, 34, 0.08) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 193, 7, 0.08) 0%,
+    rgba(255, 152, 0, 0.08) 50%,
+    rgba(255, 87, 34, 0.08) 100%
+  );
   border-radius: 20px;
   border: 2px solid rgba(255, 193, 7, 0.2);
-  box-shadow: 
-    0 8px 24px rgba(255, 193, 7, 0.08),
-    0 4px 12px rgba(255, 193, 7, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+  box-shadow: 0 8px 24px rgba(255, 193, 7, 0.08),
+    0 4px 12px rgba(255, 193, 7, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9),
     inset 0 -1px 0 rgba(255, 193, 7, 0.05);
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
@@ -471,17 +538,25 @@ body:has(.review-form-overlay) .filter-header {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 193, 7, 0.15), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 193, 7, 0.15),
+    transparent
+  );
   transition: left 0.6s;
 }
 
 .review-form-rating-container:hover {
   border-color: rgba(255, 193, 7, 0.4);
-  background: linear-gradient(145deg, rgba(255, 193, 7, 0.12) 0%, rgba(255, 152, 0, 0.12) 50%, rgba(255, 87, 34, 0.12) 100%);
-  box-shadow: 
-    0 16px 40px rgba(255, 193, 7, 0.15),
-    0 8px 20px rgba(255, 193, 7, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+  background: linear-gradient(
+    145deg,
+    rgba(255, 193, 7, 0.12) 0%,
+    rgba(255, 152, 0, 0.12) 50%,
+    rgba(255, 87, 34, 0.12) 100%
+  );
+  box-shadow: 0 16px 40px rgba(255, 193, 7, 0.15),
+    0 8px 20px rgba(255, 193, 7, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95),
     inset 0 -1px 0 rgba(255, 193, 7, 0.1);
 }
 
@@ -511,12 +586,15 @@ body:has(.review-form-overlay) .filter-header {
   font-weight: 600;
   transition: all 0.3s ease;
   opacity: 0.9;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.8) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(248, 250, 252, 0.8) 100%
+  );
   padding: 6px 12px;
   border-radius: 12px;
   border: 1px solid rgba(255, 193, 7, 0.2);
-  box-shadow: 
-    0 2px 8px rgba(255, 193, 7, 0.08),
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   display: inline-flex;
   align-items: center;
@@ -524,7 +602,11 @@ body:has(.review-form-overlay) .filter-header {
 }
 
 .review-form-rating-text:hover {
-  background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 255, 255, 0.9) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 193, 7, 0.1) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
   border-color: rgba(255, 193, 7, 0.3);
 }
 
@@ -579,7 +661,11 @@ body:has(.review-form-overlay) .filter-header {
   align-items: center;
   gap: 12px;
   padding: 14px 18px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
   border: 2px dashed rgba(226, 232, 240, 0.8);
   border-radius: 16px;
   font-size: 14px;
@@ -594,16 +680,18 @@ body:has(.review-form-overlay) .filter-header {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.06),
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .review-form-photo-upload-btn:hover {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(147, 51, 234, 0.12) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.12) 0%,
+    rgba(147, 51, 234, 0.12) 100%
+  );
   border-color: rgba(59, 130, 246, 0.5);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.08),
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
@@ -617,7 +705,8 @@ body:has(.review-form-overlay) .filter-header {
   flex-shrink: 0;
 }
 
-.review-form-cancel-btn, .review-form-publish-btn {
+.review-form-cancel-btn,
+.review-form-publish-btn {
   padding: 10px 20px;
   border-radius: 12px;
   font-size: 13px;
@@ -625,15 +714,19 @@ body:has(.review-form-overlay) .filter-header {
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
 }
 
 .review-form-cancel-btn {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   border: 2px solid rgba(226, 232, 240, 0.5);
   color: #1e293b;
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.06),
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   position: relative;
   overflow: hidden;
@@ -646,16 +739,24 @@ body:has(.review-form-overlay) .filter-header {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.1),
+    transparent
+  );
   transition: left 0.5s;
 }
 
 .review-form-cancel-btn:hover {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(147, 51, 234, 0.12) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.12) 0%,
+    rgba(147, 51, 234, 0.12) 100%
+  );
   border-color: rgba(59, 130, 246, 0.5);
-  transform: translateY(-1px);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.08),
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
@@ -679,14 +780,18 @@ body:has(.review-form-overlay) .filter-header {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 
 .review-form-publish-btn:hover:not(:disabled) {
   background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
   box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
-  transform: translateY(-1px);
 }
 
 .review-form-publish-btn:hover:not(:disabled)::before {
@@ -718,19 +823,18 @@ body:has(.review-form-overlay) .filter-header {
   background: #64748b;
 }
 
-
-
 @media (max-width: 768px) {
   .review-form {
     max-width: 100%;
     margin: 0 10px;
   }
-  
+
   .review-form-actions {
     flex-direction: column;
   }
-  
-  .review-form-cancel-btn, .review-form-publish-btn {
+
+  .review-form-cancel-btn,
+  .review-form-publish-btn {
     width: 100%;
   }
 }
@@ -743,14 +847,16 @@ body:has(.review-form-overlay) .filter-header {
   margin-top: 20px;
   align-items: center;
   padding: 24px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(248, 250, 252, 0.98) 100%
+  );
   border-radius: 28px;
   border: 2px solid rgba(59, 130, 246, 0.1);
   backdrop-filter: blur(24px) saturate(200%);
-  box-shadow: 
-    0 12px 40px rgba(59, 130, 246, 0.08),
-    0 6px 20px rgba(59, 130, 246, 0.06),
-    0 2px 8px rgba(0, 0, 0, 0.04),
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.08),
+    0 6px 20px rgba(59, 130, 246, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04),
     inset 0 2px 0 rgba(255, 255, 255, 0.95);
   position: relative;
   overflow: hidden;
@@ -760,11 +866,9 @@ body:has(.review-form-overlay) .filter-header {
 @keyframes containerSlide {
   from {
     opacity: 0;
-    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -775,10 +879,14 @@ body:has(.review-form-overlay) .filter-header {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, rgba(59, 130, 246, 0.02) 0%, rgba(147, 51, 234, 0.02) 50%, rgba(16, 185, 129, 0.02) 100%);
+  background: linear-gradient(
+    45deg,
+    rgba(59, 130, 246, 0.02) 0%,
+    rgba(147, 51, 234, 0.02) 50%,
+    rgba(16, 185, 129, 0.02) 100%
+  );
   pointer-events: none;
 }
-
 
 .review-photo-item {
   display: flex;
@@ -794,12 +902,14 @@ body:has(.review-form-overlay) .filter-header {
   border-radius: 24px;
   overflow: hidden;
   border: 4px solid rgba(255, 255, 255, 1);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(248, 250, 252, 1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(248, 250, 252, 1) 100%
+  );
   backdrop-filter: blur(20px) saturate(200%);
-  box-shadow: 
-    0 15px 40px rgba(59, 130, 246, 0.12),
-    0 8px 25px rgba(59, 130, 246, 0.08),
-    0 4px 12px rgba(0, 0, 0, 0.06),
+  box-shadow: 0 15px 40px rgba(59, 130, 246, 0.12),
+    0 8px 25px rgba(59, 130, 246, 0.08), 0 4px 12px rgba(0, 0, 0, 0.06),
     inset 0 2px 0 rgba(255, 255, 255, 1);
   transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   animation: photoPreviewSlide 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -818,12 +928,9 @@ body:has(.review-form-overlay) .filter-header {
 }
 
 .review-photo-preview:hover {
-  box-shadow: 
-    0 25px 60px rgba(59, 130, 246, 0.2),
-    0 15px 35px rgba(59, 130, 246, 0.15),
-    0 8px 20px rgba(0, 0, 0, 0.1),
+  box-shadow: 0 25px 60px rgba(59, 130, 246, 0.2),
+    0 15px 35px rgba(59, 130, 246, 0.15), 0 8px 20px rgba(0, 0, 0, 0.1),
     inset 0 2px 0 rgba(255, 255, 255, 1);
-  
 }
 
 .review-photo-preview::before {
@@ -833,7 +940,12 @@ body:has(.review-form-overlay) .filter-header {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.6) 50%, transparent 70%);
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 70%
+  );
   transition: left 0.8s ease;
   z-index: 2;
 }
@@ -866,9 +978,12 @@ body:has(.review-form-overlay) .filter-header {
   filter: brightness(0.98) contrast(1.1) saturate(1.15);
 }
 
-
 .review-photo-remove-btn {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
   border: 2px solid rgba(226, 232, 240, 0.5);
   color: #64748b;
   width: 32px;
@@ -880,8 +995,7 @@ body:has(.review-form-overlay) .filter-header {
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 14px;
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.06),
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   position: relative;
   overflow: hidden;
@@ -894,15 +1008,18 @@ body:has(.review-form-overlay) .filter-header {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(239, 68, 68, 0.1),
+    transparent
+  );
   transition: left 0.5s;
 }
 
 .review-photo-remove-btn:hover {
-  box-shadow: 
-    0 6px 16px rgba(239, 68, 68, 0.15),
-    0 4px 12px rgba(239, 68, 68, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.15),
+    0 4px 12px rgba(239, 68, 68, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .review-photo-remove-btn:hover::before {

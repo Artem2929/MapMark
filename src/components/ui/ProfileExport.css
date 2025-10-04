@@ -1,5 +1,9 @@
 .profile-export {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   border: 2px solid rgba(59, 130, 246, 0.08);
   border-radius: 20px;
   padding: 24px;
@@ -40,7 +44,6 @@
 }
 
 .export-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
@@ -86,15 +89,19 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 768px) {
   .export-buttons {
     flex-direction: column;
   }
-  
+
   .export-btn {
     justify-content: center;
   }

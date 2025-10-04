@@ -35,7 +35,6 @@
 
 .btn--primary:hover:not(:disabled) {
   background: var(--color-primary-dark);
-  transform: translateY(-1px);
 }
 
 .btn--secondary {
@@ -97,7 +96,6 @@
 
 .card:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
 }
 
 .card__header {
