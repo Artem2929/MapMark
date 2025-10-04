@@ -17,7 +17,10 @@
 body:has(.review-form-overlay) .progress-widget,
 body:has(.review-form-overlay) .notification-panel,
 body:has(.review-form-overlay) .filter-header {
-  display: none !important;
+  display: none;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 @keyframes review-form-fade-in {

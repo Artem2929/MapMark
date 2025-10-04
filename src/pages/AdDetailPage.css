@@ -1,3 +1,5 @@
+/* AdDetailPage Component Styles - Clean version without !important */
+
 .ads-item-ad-detail-page {
   max-width: 1400px;
   margin: 0 auto;
@@ -261,7 +263,6 @@
 }
 
 .ads-item-amenity-item:hover {
-
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
 }
@@ -354,7 +355,6 @@
 }
 
 .ads-item-review-item:hover {
-
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -523,9 +523,7 @@
   margin-top: 8px;
 }
 
-
 .ads-item-action-buttons:hover {
-
   box-shadow: 
     0 12px 32px rgba(0, 0, 0, 0.12),
     0 6px 16px rgba(0, 0, 0, 0.06),
@@ -597,43 +595,42 @@
   color: #475569;
 }
 
-.ads-item-action-buttons {
+/* Action buttons with higher specificity */
+.ads-item-ad-detail-page .ads-item-action-buttons {
   display: flex;
   gap: 16px;
   align-items: flex-start;
   padding: 8px 0;
 }
 
-.ads-item-action-buttons .ads-item-favorite-btn,
-.ads-item-action-buttons .ads-item-share-btn {
+.ads-item-ad-detail-page .ads-item-action-buttons .ads-item-favorite-btn,
+.ads-item-ad-detail-page .ads-item-action-buttons .ads-item-share-btn {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: none !important;
-  border: none !important;
+  background: none;
+  border: none;
   color: #64748b;
   font-size: 14px;
   font-weight: 500;
   cursor: default;
   padding: 0;
-  box-shadow: none !important;
+  box-shadow: none;
   border-radius: 0;
 }
 
-.ads-item-action-buttons .ads-item-favorite-btn.active {
+.ads-item-ad-detail-page .ads-item-action-buttons .ads-item-favorite-btn.active {
   color: #ef4444;
 }
 
-.ads-item-action-buttons .ads-item-action-icon {
+.ads-item-ad-detail-page .ads-item-action-buttons .ads-item-action-icon {
   font-size: 24px;
 }
 
-.ads-item-action-buttons .ads-item-action-text {
+.ads-item-ad-detail-page .ads-item-action-buttons .ads-item-action-text {
   font-size: 14px;
   font-weight: 600;
 }
-
-
 
 .ads-item-like-btn.active {
   color: #ef4444;
@@ -738,7 +735,6 @@
 }
 
 .ads-item-btn-primary:hover {
-
   box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
 }
 
@@ -757,7 +753,6 @@
 .ads-item-btn-outline:hover {
   background: #3b82f6;
   color: white;
-
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
@@ -827,13 +822,8 @@
 }
 
 .ads-item-location-btn:hover {
-
   box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
 }
-
-
-
-
 
 .ads-item-loading {
   display: flex;
@@ -844,6 +834,7 @@
   color: #64748b;
 }
 
+/* Mobile responsive */
 @media (max-width: 768px) {
   .ads-item-ad-content {
     grid-template-columns: 1fr;

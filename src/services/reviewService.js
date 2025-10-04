@@ -31,7 +31,7 @@ class ReviewService {
         formData.append('photos', photo);
       });
 
-      const response = await fetch(API_ENDPOINTS.REVIEW, {
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/reviews`, {
         method: 'POST',
         body: formData,
       });
@@ -55,7 +55,7 @@ class ReviewService {
    */
   static async getAllReviews() {
     try {
-      const response = await fetch(API_ENDPOINTS.REVIEWS);
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/reviews`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -86,7 +86,7 @@ class ReviewService {
         limit: limit.toString(),
       });
 
-      const response = await fetch(`${API_ENDPOINTS.REVIEWS}/nearby?${params}`);
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/reviews/nearby?${params}`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -101,25 +101,13 @@ class ReviewService {
   }
 
   /**
-   * Get photo URL from photo ID
-   * @param {string} photoId - Photo ID from review
-   * @returns {string} Full photo URL
-   */
-  static getPhotoUrl(photoId) {
-    // This would need to be configured based on your Cloudflare R2 setup
-    // For now, return a placeholder or construct the URL based on your R2 configuration
-    const R2_BASE_URL = process.env.REACT_APP_R2_BASE_URL || 'https://your-r2-domain.com';
-    return `${R2_BASE_URL}/${photoId}`;
-  }
-
-  /**
    * Delete a review by ID
    * @param {string} reviewId - Review ID to delete
    * @returns {Promise<Object>} Deletion result
    */
   static async deleteReview(reviewId) {
     try {
-      const response = await fetch(`${API_ENDPOINTS.REVIEW}/${reviewId}`, {
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/reviews/${reviewId}`, {
         method: 'DELETE',
       });
 
@@ -137,69 +125,25 @@ class ReviewService {
   }
 
   /**
-   * Delete a photo from a review
-   * @param {string} reviewId - Review ID containing the photo
-   * @param {string} photoId - Photo ID to delete
-   * @returns {Promise<Object>} Deletion result
-   */
-  static async deletePhoto(reviewId, photoId) {
-    try {
-      const response = await fetch(`${API_ENDPOINTS.REVIEW}/${reviewId}/photo/${photoId}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error deleting photo:', error);
-      throw new Error(`Failed to delete photo: ${error.message}`);
-    }
-  }
-
-  /**
-   * Get user statistics with complex level progression
-   * @param {number} reviewCount - Number of reviews
-   * @returns {Object} User stats data
-   */
-  static getUserStats(reviewCount) {
-    const { level, progress, reviewsForNextLevel } = this.calculateLevelProgress(reviewCount);
-    
-    return {
-      reviewCount,
-      level,
-      progress,
-      reviewsForNextLevel
-    };
-  }
-
-  /**
    * Calculate level and progress based on review count
    * @param {number} reviewCount - Total number of reviews
    * @returns {Object} Level progression data
    */
   static calculateLevelProgress(reviewCount) {
-    // Level requirements: 1=5, 2=15, 3=35, 4=135, 5=235, 6=335, 7=435, 8=535, 9=635, 10=735
     const levelRequirements = [
-      { level: 1, reviews: 5, progressPerReview: 20 },   // 5 reviews * 20% = 100%
-      { level: 2, reviews: 15, progressPerReview: 10 },  // 10 reviews * 10% = 100%
-      { level: 3, reviews: 35, progressPerReview: 5 },   // 20 reviews * 5% = 100%
-      { level: 4, reviews: 135, progressPerReview: 1 },  // 100 reviews * 1% = 100%
-      { level: 5, reviews: 235, progressPerReview: 1 },  // 100 reviews * 1% = 100%
-      { level: 6, reviews: 335, progressPerReview: 1 },  // 100 reviews * 1% = 100%
-      { level: 7, reviews: 435, progressPerReview: 1 },  // 100 reviews * 1% = 100%
-      { level: 8, reviews: 535, progressPerReview: 1 },  // 100 reviews * 1% = 100%
-      { level: 9, reviews: 635, progressPerReview: 1 },  // 100 reviews * 1% = 100%
-      { level: 10, reviews: 735, progressPerReview: 1 }  // 100 reviews * 1% = 100%
+      { level: 1, reviews: 5, progressPerReview: 20 },
+      { level: 2, reviews: 15, progressPerReview: 10 },
+      { level: 3, reviews: 35, progressPerReview: 5 },
+      { level: 4, reviews: 135, progressPerReview: 1 },
+      { level: 5, reviews: 235, progressPerReview: 1 },
+      { level: 6, reviews: 335, progressPerReview: 1 },
+      { level: 7, reviews: 435, progressPerReview: 1 },
+      { level: 8, reviews: 535, progressPerReview: 1 },
+      { level: 9, reviews: 635, progressPerReview: 1 },
+      { level: 10, reviews: 735, progressPerReview: 1 }
     ];
     
-    // Find current level
     let currentLevel = 1;
-    let reviewsInCurrentLevel = reviewCount;
     let previousLevelReviews = 0;
     
     for (let i = 0; i < levelRequirements.length; i++) {
@@ -211,7 +155,6 @@ class ReviewService {
       }
     }
     
-    // Cap at level 10
     if (currentLevel > 10) {
       return {
         level: 10,
@@ -220,7 +163,6 @@ class ReviewService {
       };
     }
     
-    // Calculate progress in current level
     const currentLevelData = levelRequirements[currentLevel - 1];
     const reviewsInLevel = reviewCount - previousLevelReviews;
     const progress = Math.min(reviewsInLevel * currentLevelData.progressPerReview, 100);
@@ -234,86 +176,19 @@ class ReviewService {
   }
 
   /**
-   * Like a review
-   * @param {string} reviewId - Review ID to like
-   * @returns {Promise<Object>} Like result
+   * Get user statistics with level progression
+   * @param {number} reviewCount - Number of reviews
+   * @returns {Object} User stats data
    */
-  static async likeReview(reviewId) {
-    try {
-      const response = await fetch(`${API_ENDPOINTS.REVIEW}/${reviewId}/like`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error liking review:', error);
-      throw new Error(`Failed to like review: ${error.message}`);
-    }
-  }
-
-  /**
-   * Dislike a review
-   * @param {string} reviewId - Review ID to dislike
-   * @returns {Promise<Object>} Dislike result
-   */
-  static async dislikeReview(reviewId) {
-    try {
-      const response = await fetch(`${API_ENDPOINTS.REVIEW}/${reviewId}/dislike`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error disliking review:', error);
-      throw new Error(`Failed to dislike review: ${error.message}`);
-    }
-  }
-
-  /**
-   * Add a comment to a review
-   * @param {string} reviewId - Review ID to comment on
-   * @param {string} comment - Comment text
-   * @returns {Promise<Object>} Comment result
-   */
-  static async addComment(reviewId, comment) {
-    try {
-      const response = await fetch(`${API_ENDPOINTS.REVIEW}/${reviewId}/comment`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ comment }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result.data;
-    } catch (error) {
-      console.error('Error adding comment:', error);
-      throw new Error(`Failed to add comment: ${error.message}`);
-    }
+  static getUserStats(reviewCount) {
+    const { level, progress, reviewsForNextLevel } = this.calculateLevelProgress(reviewCount);
+    
+    return {
+      reviewCount,
+      level,
+      progress,
+      reviewsForNextLevel
+    };
   }
 
   /**
@@ -349,7 +224,7 @@ class ReviewService {
 
     // Validate rating
     if (typeof rating !== 'number' || rating < 1 || rating > 5) {
-      errors.push('Rating must be a number between 1 and 5.');
+      errors.push('Rating must be 500 characters or less.');
     }
 
     // Validate photos

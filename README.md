@@ -1,12 +1,97 @@
-# React + Vite
+# MapMark - Interactive Map Review Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application for discovering and reviewing places on an interactive map.
 
-Currently, two official plugins are available:
+## 🚀 Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+# Install dependencies
+npm install
 
-## Expanding the ESLint configuration
+# Start development server
+npm run dev
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Build for production
+npm run build
+```
+
+## 🛠 Development
+
+### Code Quality
+
+```bash
+# Lint JavaScript/React code
+npm run lint
+npm run lint:fix
+
+# Lint CSS/SCSS
+npm run lint:css
+npm run lint:css:fix
+
+# Format code
+npm run format
+npm run format:check
+```
+
+### Architecture
+
+This project follows a clean architecture with:
+
+- **BEM CSS methodology** - No `!important` rules
+- **CSS Custom Properties** - Consistent design tokens
+- **React Hooks** - Functional components only
+- **Custom Hooks** - Reusable logic extraction
+- **Modular Structure** - Small, focused components
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed guidelines.
+
+## 📁 Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+├── hooks/              # Custom React hooks
+├── pages/              # Page components
+├── styles/             # Global styles and utilities
+├── utils/              # Utility functions
+├── constants/          # Application constants
+└── App.css            # Main stylesheet
+```
+
+## 🎨 Styling
+
+- **CSS Variables** for theming and consistency
+- **BEM methodology** for component styling
+- **Mobile-first** responsive design
+- **Dark/Light theme** support
+- **No !important** rules - proper CSS specificity
+
+## 🔧 Tools & Configuration
+
+- **ESLint** - Code linting with React rules
+- **Prettier** - Code formatting
+- **Stylelint** - CSS linting with BEM enforcement
+- **EditorConfig** - Consistent editor settings
+
+## 📚 Key Features
+
+- Interactive map with place markers
+- User reviews and ratings
+- Theme switching (light/dark/system)
+- Responsive design
+- Clean, accessible UI
+- Performance optimized
+
+## 🤝 Contributing
+
+1. Follow the established architecture patterns
+2. Use BEM methodology for CSS
+3. Write functional components with hooks
+4. Extract reusable logic into custom hooks
+5. Run linting before committing
+
+## 📖 Documentation
+
+- [Architecture Guide](./ARCHITECTURE.md) - Detailed project architecture
+- [Component Examples](./src/components/ui/Button.jsx) - Reference implementations
+- [CSS Guidelines](./src/styles/) - Styling conventions

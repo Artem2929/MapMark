@@ -87,8 +87,10 @@
 }
 
 .custom-marker {
-  background: none !important;
-  border: none !important;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  outline: none;
 }
 
 @media (max-width: 768px) {

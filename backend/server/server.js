@@ -15,7 +15,7 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/mapmark';
 
 // Middleware

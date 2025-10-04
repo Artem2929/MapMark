@@ -1,10 +1,12 @@
+/* DiscoverPlacesOptimized Component Styles - Clean version without !important */
+
 .discover-places {
   background: var(--color-bg-secondary);
   min-height: 100vh;
   padding-top: 80px; /* Header height */
 }
 
-.loading-state {
+.discover-places .loading-state {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,7 +15,7 @@
   gap: var(--space-4);
 }
 
-.spinner {
+.discover-places .spinner {
   font-size: var(--font-size-2xl);
   animation: spin 1s linear infinite;
 }
@@ -23,7 +25,7 @@
   to { transform: rotate(360deg); }
 }
 
-.categories-scroll {
+.discover-places .categories-scroll {
   display: flex;
   gap: var(--space-3);
   overflow-x: auto;
@@ -32,82 +34,84 @@
   -ms-overflow-style: none;
 }
 
-.categories-scroll::-webkit-scrollbar {
+.discover-places .categories-scroll::-webkit-scrollbar {
   display: none;
 }
 
-.category-btn {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  gap: var(--space-2) !important;
-  min-width: 80px !important;
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
+/* Category button with high specificity */
+.discover-places .categories-scroll .category-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 80px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
-.category-emoji {
+.discover-places .category-emoji {
   font-size: var(--font-size-xl);
 }
 
-.category-name {
+.discover-places .category-name {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
 }
 
-.posts-feed {
+.discover-places .posts-feed {
   max-width: 600px;
   margin: 0 auto;
 }
 
-.empty-state {
+.discover-places .empty-state {
   text-align: center;
   padding: var(--space-16) var(--space-5);
   color: var(--color-text-secondary);
 }
 
-.empty-icon {
+.discover-places .empty-icon {
   font-size: var(--font-size-4xl);
   margin-bottom: var(--space-4);
   opacity: 0.7;
 }
 
-.empty-state h3 {
+.discover-places .empty-state h3 {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
   margin: 0 0 var(--space-2) 0;
   color: var(--color-text-primary);
 }
 
-.empty-state p {
+.discover-places .empty-state p {
   font-size: var(--font-size-base);
   margin: 0;
 }
 
+/* Mobile responsive */
 @media (max-width: 768px) {
   .discover-places {
     padding-top: 80px; /* Adjusted header height */
   }
   
-  .categories-scroll {
+  .discover-places .categories-scroll {
     gap: var(--space-2);
     padding: var(--space-2) 0;
   }
   
-  .category-btn {
-    min-width: 70px !important;
-    gap: var(--space-1) !important;
+  .discover-places .categories-scroll .category-btn {
+    min-width: 70px;
+    gap: var(--space-1);
   }
   
-  .category-emoji {
+  .discover-places .category-emoji {
     font-size: var(--font-size-lg);
   }
   
-  .empty-state {
+  .discover-places .empty-state {
     padding: var(--space-12) var(--space-4);
   }
   
-  .empty-icon {
+  .discover-places .empty-icon {
     font-size: var(--font-size-3xl);
   }
 }

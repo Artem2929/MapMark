@@ -1,24 +1,6 @@
-/* Neutral background to prevent color flash */
-.leaflet-container {
-  background: #f8f9fa !important;
-}
+/* WorldMap Component Styles - Clean version without !important */
 
-/* Fix flickering leaflet panes */
-.leaflet-pane {
-  transform: translateZ(0);
-}
-
-.leaflet-map-pane {
-  transform: translateZ(0);
-}
-
-/* Ensure tiles cover the entire visible area */
-.leaflet-tile-container {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* Optimized map container */
+/* Base map container */
 .world-map-container {
   height: calc(100vh - 64px);
   width: 100%;
@@ -48,604 +30,470 @@
   100% { background-position: 0% 50%; }
 }
 
-/* Reviews List Overlay */
-.reviews-list-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
+/* Leaflet overrides with high specificity */
+.world-map-container .leaflet-container {
+  background: #f8f9fa;
+}
+
+.world-map-container .leaflet-tile-container {
   width: 100%;
   height: 100%;
-  z-index: 1000;
-  pointer-events: none;
 }
 
-.reviews-list-overlay.visible {
-  pointer-events: auto;
+.world-map-container .leaflet-pane {
+  transform: translateZ(0);
 }
 
-.reviews-list-overlay .reviews-list {
-  left: -400px;
-  transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+.world-map-container .leaflet-map-pane {
+  transform: translateZ(0);
 }
 
-.reviews-list-overlay.visible .reviews-list {
-  left: 0;
+/* Leaflet controls positioning */
+.world-map-container .leaflet-top.leaflet-left {
+  top: 80px;
+  left: 20px;
 }
 
-/* Move zoom controls below header */
-.leaflet-top.leaflet-left {
-  top: 80px !important;
-  left: 20px !important;
-}
-
-/* Epic zoom controls with glassmorphism */
-.leaflet-control-zoom {
-  border: none !important;
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37) !important;
-  backdrop-filter: blur(20px) !important;
-  border-radius: 20px !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  overflow: hidden !important;
-}
-
-.leaflet-control-zoom a {
-  background: rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(20px) !important;
-  border: none !important;
-  color: #1d1d1f !important;
-  font-weight: 700 !important;
-  font-size: 20px !important;
-  width: 50px !important;
-  height: 50px !important;
-  line-height: 50px !important;
-  transition: all 0.2s ease !important;
-  position: relative !important;
-  overflow: hidden !important;
-}
-
-.leaflet-control-zoom a::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: -100% !important;
-  width: 100% !important;
-  height: 100% !important;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent) !important;
-  transition: left 0.5s !important;
-}
-
-.leaflet-control-zoom a:hover {
-  background: rgba(255, 255, 255, 0.25) !important;
-  color: #007aff !important;
-  transform: scale(1.05) !important;
-}
-
-.leaflet-control-zoom a:hover::before {
-  left: 100% !important;
-}
-
-.leaflet-control-zoom a:active {
-  transform: scale(0.95) !important;
-}
-
-.leaflet-control-zoom a:first-child {
-  border-radius: 20px 20px 0 0 !important;
-}
-
-.leaflet-control-zoom a:last-child {
-  border-radius: 0 0 20px 20px !important;
-}
-
-/* Epic attribution with neon glow */
-.leaflet-control-attribution {
-  background: rgba(0, 0, 0, 0.8) !important;
-  backdrop-filter: blur(20px) !important;
-  border-radius: 15px !important;
-  font-size: 11px !important;
-  margin: 15px !important;
-  padding: 8px 12px !important;
-  border: 1px solid rgba(0, 255, 255, 0.3) !important;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2) !important;
-  color: #00ffff !important;
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5) !important;
-}
-
-/* Custom marker styling */
-.leaflet-marker-icon {
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)) !important;
-  transition: filter 0.2s ease !important;
-}
-
-.leaflet-marker-icon:hover {
-  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4)) brightness(1.1) !important;
-}
-
-/* Google Maps style popup - REMOVED DUPLICATE */
-
-@keyframes popupAppear {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-/* REMOVED DUPLICATE - using compact version below */
-
-/* .leaflet-popup-content strong {
-  background: linear-gradient(135deg, #1d1d1f 0%, #4a4a4a 100%) !important;
-  background-clip: text !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  font-weight: 700 !important;
-  font-size: 18px !important;
-  display: block !important;
-  margin-bottom: 12px !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
-  letter-spacing: -0.02em !important;
-} */
-
-.leaflet-popup-content br + br {
-  display: none !important;
-}
-
-.leaflet-popup-content br {
-  margin-bottom: 4px !important;
-}
-
-.leaflet-popup-tip {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%) !important;
-  backdrop-filter: blur(60px) saturate(200%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
-}
-
-.leaflet-popup {
-  display: none !important;
-}
-
-/* REMOVED DUPLICATE - using compact version below */
-
-.leaflet-popup-content-wrapper {
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
-
-.leaflet-popup-content {
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.popup-context-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 200px;
-}
-
-.popup-menu-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
+/* Zoom controls styling */
+.world-map-container .leaflet-control-zoom {
   border: none;
-  background: none;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+
+.world-map-container .leaflet-control-zoom a {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: none;
+  color: #1d1d1f;
+  font-weight: 700;
+  font-size: 20px;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.world-map-container .leaflet-control-zoom a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
   width: 100%;
-  text-align: left;
-  box-sizing: border-box;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s;
 }
 
-.popup-menu-item:hover {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
-  color: #3b82f6;
-  transform: translateX(2px);
+.world-map-container .leaflet-control-zoom a:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #007aff;
+  transform: scale(1.05);
 }
 
-.popup-menu-item-icon {
-  font-size: 16px;
-  width: 20px;
-  text-align: center;
-  flex-shrink: 0;
+.world-map-container .leaflet-control-zoom a:hover::before {
+  left: 100%;
 }
 
-.popup-menu-item-text {
+.world-map-container .leaflet-control-zoom a:active {
+  transform: scale(0.95);
+}
+
+.world-map-container .leaflet-control-zoom a:first-child {
+  border-radius: 20px 20px 0 0;
+}
+
+.world-map-container .leaflet-control-zoom a:last-child {
+  border-radius: 0 0 20px 20px;
+}
+
+/* Attribution styling */
+.world-map-container .leaflet-control-attribution {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 15px;
+  font-size: 11px;
+  margin: 15px;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* Marker styling */
+.world-map-container .leaflet-marker-icon {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  transition: filter 0.2s ease;
+}
+
+.world-map-container .leaflet-marker-icon:hover {
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4)) brightness(1.1);
+}
+
+/* Popup styling */
+.world-map-container .leaflet-popup {
+  display: none;
+}
+
+.world-map-container .leaflet-popup-content-wrapper {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+.world-map-container .leaflet-popup-content {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.world-map-container .leaflet-popup-content br + br {
+  display: none;
+}
+
+.world-map-container .leaflet-popup-content br {
+  margin-bottom: 4px;
+}
+
+.world-map-container .leaflet-popup-tip {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+  backdrop-filter: blur(60px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.world-map-container .leaflet-popup-content-wrapper:has(.expanded) {
+  max-width: 350px;
+  max-height: none;
+  overflow: visible;
+}
+
+.world-map-container .leaflet-popup-content:has(.expanded) {
+  max-height: none;
+  overflow: visible;
+  padding: 20px;
+}
+
+/* Tile animations */
+.world-map-container .leaflet-zoom-animated {
+  transition: transform 0.1s ease;
+}
+
+.world-map-container .leaflet-tile {
+  border: none;
+  filter: contrast(1.1) saturate(1.2);
+}
+
+.world-map-container .leaflet-tile-container {
+  will-change: transform;
+}
+
+.world-map-container .leaflet-zoom-anim .leaflet-tile {
+  transition: none;
+}
+
+/* Button styles */
+.world-map-container .expand-btn {
+  background: linear-gradient(135deg, #34c759 0%, #30d158 50%, #28a745 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.2);
+  position: relative;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
   flex: 1;
 }
 
-.popup-menu-divider {
-  height: 1px;
-  background: rgba(226, 232, 240, 0.6);
-  margin: 4px 0;
+.world-map-container .expand-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
 }
 
-.leaflet-popup-tip {
-  background: white !important;
-  border: none !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+.world-map-container .expand-btn:hover {
+  background: linear-gradient(135deg, #28a745 0%, #34c759 50%, #1e7e34 100%);
+  box-shadow: 0 8px 24px rgba(52, 199, 89, 0.3);
+  transform: translateY(-2px) scale(1.02);
 }
 
-.leaflet-popup-content-wrapper:has(.expanded) {
-  max-width: 350px !important;
-  max-height: none !important;
-  overflow: visible !important;
+.world-map-container .expand-btn:hover::before {
+  left: 100%;
 }
 
-.leaflet-popup-content:has(.expanded) {
-  max-height: none !important;
-  overflow: visible !important;
-  padding: 20px !important;
-}
-
-.expand-btn {
-  background: linear-gradient(135deg, #34c759 0%, #30d158 50%, #28a745 100%) !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 10px !important;
-  padding: 8px 12px !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  cursor: pointer !important;
-  margin: 0 !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  display: inline-block !important;
-  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.2) !important;
-  position: relative !important;
-  overflow: hidden !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
-  flex: 1 !important;
-}
-
-.expand-btn::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: -100% !important;
-  width: 100% !important;
-  height: 100% !important;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
-  transition: left 0.5s !important;
-}
-
-.expand-btn:hover {
-  background: linear-gradient(135deg, #28a745 0%, #34c759 50%, #1e7e34 100%) !important;
-  box-shadow: 0 8px 24px rgba(52, 199, 89, 0.3) !important;
-  transform: translateY(-2px) scale(1.02) !important;
-}
-
-.expand-btn:hover::before {
-  left: 100% !important;
-}
-
-/* Стилізований бейдж відгуків */
-.reviews-badge {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 152, 0, 0.1) 100%) !important;
-  border: 1px solid rgba(255, 193, 7, 0.2) !important;
-  border-radius: 12px !important;
-  padding: 6px 12px !important;
-  margin: 8px 0 !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  color: #1d1d1f !important;
-  backdrop-filter: blur(10px) !important;
-}
-
-.reviews-stars {
-  font-size: 14px !important;
-  filter: drop-shadow(0 1px 2px rgba(255, 193, 7, 0.3)) !important;
-  margin-right: 4px !important;
-}
-
-.reviews-rating {
-  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%) !important;
-  background-clip: text !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  font-weight: 700 !important;
-  font-size: 14px !important;
-  margin-right: 4px !important;
-}
-
-.reviews-count {
-  color: #6b7280 !important;
-  font-weight: 500 !important;
-  font-size: 12px !important;
-}
-
-.review-btn {
-  background: linear-gradient(135deg, #007aff 0%, #00c7ff 50%, #0056cc 100%) !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 10px !important;
-  padding: 8px 12px !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  cursor: pointer !important;
-  margin: 0 !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  display: inline-block !important;
-  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2) !important;
-  position: relative !important;
-  overflow: hidden !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
-  flex: 1 !important;
-}
-
-.review-btn::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: -100% !important;
-  width: 100% !important;
-  height: 100% !important;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
-  transition: left 0.5s !important;
-}
-
-.review-btn:hover {
-  background: linear-gradient(135deg, #0056cc 0%, #007aff 50%, #003d99 100%) !important;
-  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3) !important;
-  transform: translateY(-2px) scale(1.02) !important;
-}
-
-.review-btn:hover::before {
-  left: 100% !important;
-}
-
-.delete-btn {
-  background: linear-gradient(135deg, #ff3b30 0%, #ff6b6b 50%, #d32f2f 100%) !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 10px !important;
-  padding: 8px 12px !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  cursor: pointer !important;
-  margin: 0 !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  display: inline-block !important;
-  box-shadow: 0 2px 8px rgba(255, 59, 48, 0.2) !important;
-  position: relative !important;
-  overflow: hidden !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
-  flex: 0 0 auto !important;
-}
-
-.delete-btn::before {
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: -100% !important;
-  width: 100% !important;
-  height: 100% !important;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
-  transition: left 0.5s !important;
-}
-
-.delete-btn:hover {
-  background: linear-gradient(135deg, #d32f2f 0%, #ff3b30 50%, #b71c1c 100%) !important;
-  box-shadow: 0 8px 24px rgba(255, 59, 48, 0.3) !important;
-  transform: translateY(-2px) scale(1.02) !important;
-}
-
-.delete-btn:hover::before {
-  left: 100% !important;
-}
-
-.route-btn {
-  background: linear-gradient(135deg, #34c759 0%, #30d158 50%, #28a745 100%) !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 10px !important;
-  padding: 8px 12px !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  cursor: pointer !important;
-  margin: 0 !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  display: inline-block !important;
-  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.2) !important;
-  position: relative !important;
-  overflow: hidden !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif !important;
-  flex: 0 0 auto !important;
-}
-
-.route-btn:hover {
-  background: linear-gradient(135deg, #28a745 0%, #34c759 50%, #1e7e34 100%) !important;
-  box-shadow: 0 8px 24px rgba(52, 199, 89, 0.3) !important;
-  transform: translateY(-2px) scale(1.02) !important;
-}
-
-.user-location-icon {
-  background: transparent !important;
-  border: none !important;
-  font-size: 20px !important;
-  text-align: center !important;
-  line-height: 20px !important;
-}
-
-/* Google Maps reviews style */
-.reviews-section {
-  margin: 16px 0 0 0 !important;
-  border-top: 1px solid #e8eaed !important;
-  padding-top: 16px !important;
-}
-
-.review-item:first-child {
-  padding-top: 8px !important;
-}
-
-.reviews-title {
-  font-size: 14px !important;
-  font-weight: 500 !important;
-  color: #202124 !important;
-  margin-bottom: 12px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-}
-
-.review-item {
-  background: #ffffff !important;
-  border-radius: 0 !important;
-  padding: 12px 0 !important;
-  margin: 0 !important;
-  border-bottom: 1px solid #f1f3f4 !important;
-  transition: none !important;
-}
-
-.review-item:last-child {
-  border-bottom: none !important;
-}
-
-.review-item:hover {
-  background: #ffffff !important;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-.review-rating {
-  display: flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  margin-bottom: 6px !important;
-  font-size: 12px !important;
-  color: #fbbc04 !important;
-}
-
-.rating-number {
-  color: #70757a !important;
-  font-size: 12px !important;
-  font-weight: 400 !important;
-  margin-left: 4px !important;
-}
-
-.review-text {
-  font-size: 13px !important;
-  color: #3c4043 !important;
-  line-height: 1.4 !important;
-  margin: 0 0 6px 0 !important;
-}
-
-.review-photo {
-  width: 120px !important;
-  height: 80px !important;
-  object-fit: cover !important;
-  border-radius: 8px !important;
-  margin: 8px 0 6px 0 !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-  border: 1px solid #e8eaed !important;
-}
-
-.review-date {
-  font-size: 11px !important;
-  color: #70757a !important;
-  font-weight: 400 !important;
-}
-
-/* Fast zoom transitions */
-.leaflet-zoom-animated {
-  transition: transform 0.1s ease !important;
-}
-
-/* Fast tile loading */
-.leaflet-tile {
-  border: none !important;
-  filter: contrast(1.1) saturate(1.2) !important;
-}
-
-.leaflet-tile-container {
-  will-change: transform !important;
-}
-
-.leaflet-zoom-anim .leaflet-tile {
-  transition: none !important;
-}
-
-
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .leaflet-top.leaflet-left {
-    top: 70px !important;
-    left: 10px !important;
-  }
-  
-  .leaflet-control-zoom a {
-    width: 45px !important;
-    height: 45px !important;
-    line-height: 45px !important;
-    font-size: 18px !important;
-  }
-  
-  .world-map-container {
-    height: calc(100vh - 300px) !important;
-  }
-  
-  .world-map-container::before {
-    animation-duration: 10s !important;
-  }
-}
-
-.reviews-section h4 {
-  margin: 8px 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: #202124;
-  border-bottom: 1px solid #e8eaed;
-  padding-bottom: 8px;
-}
-
-.no-reviews {
-  text-align: center;
-  padding: 12px;
-  color: #70757a;
-  font-style: italic;
-}
-
-.no-reviews p {
+.world-map-container .review-btn {
+  background: linear-gradient(135deg, #007aff 0%, #00c7ff 50%, #0056cc 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
   margin: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  flex: 1;
+}
+
+.world-map-container .review-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.world-map-container .review-btn:hover {
+  background: linear-gradient(135deg, #0056cc 0%, #007aff 50%, #003d99 100%);
+  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.world-map-container .review-btn:hover::before {
+  left: 100%;
+}
+
+.world-map-container .delete-btn {
+  background: linear-gradient(135deg, #ff3b30 0%, #ff6b6b 50%, #d32f2f 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+  box-shadow: 0 2px 8px rgba(255, 59, 48, 0.2);
+  position: relative;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  flex: 0 0 auto;
+}
+
+.world-map-container .delete-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.world-map-container .delete-btn:hover {
+  background: linear-gradient(135deg, #d32f2f 0%, #ff3b30 50%, #b71c1c 100%);
+  box-shadow: 0 8px 24px rgba(255, 59, 48, 0.3);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.world-map-container .delete-btn:hover::before {
+  left: 100%;
+}
+
+.world-map-container .route-btn {
+  background: linear-gradient(135deg, #34c759 0%, #30d158 50%, #28a745 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.2);
+  position: relative;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  flex: 0 0 auto;
+}
+
+.world-map-container .route-btn:hover {
+  background: linear-gradient(135deg, #28a745 0%, #34c759 50%, #1e7e34 100%);
+  box-shadow: 0 8px 24px rgba(52, 199, 89, 0.3);
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Badge and icon styles */
+.world-map-container .reviews-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 152, 0, 0.1) 100%);
+  border: 1px solid rgba(255, 193, 7, 0.2);
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin: 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d1d1f;
+  backdrop-filter: blur(10px);
+}
+
+.world-map-container .reviews-stars {
+  font-size: 14px;
+  filter: drop-shadow(0 1px 2px rgba(255, 193, 7, 0.3));
+  margin-right: 4px;
+}
+
+.world-map-container .reviews-rating {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.world-map-container .reviews-count {
+  color: #6b7280;
+  font-weight: 500;
   font-size: 12px;
 }
 
-.game-flag-icon {
-  background: transparent !important;
-  border: none !important;
+.world-map-container .user-location-icon {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  text-align: center;
+  line-height: 20px;
 }
 
-.country-flag-icon {
-  background: transparent !important;
-  border: none !important;
-  font-size: 16px !important;
-  text-align: center !important;
-  line-height: 20px !important;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) !important;
-  transition: all 0.2s ease !important;
+.world-map-container .game-flag-icon {
+  background: transparent;
+  border: none;
 }
 
-.country-flag-icon:hover {
-  transform: scale(1.2) !important;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4)) !important;
+.world-map-container .country-flag-icon {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  text-align: center;
+  line-height: 20px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  transition: all 0.2s ease;
 }
 
+.world-map-container .country-flag-icon:hover {
+  transform: scale(1.2);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+}
+
+/* Review sections */
+.world-map-container .reviews-section {
+  margin: 16px 0 0 0;
+  border-top: 1px solid #e8eaed;
+  padding-top: 16px;
+}
+
+.world-map-container .review-item:first-child {
+  padding-top: 8px;
+}
+
+.world-map-container .reviews-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #202124;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.world-map-container .review-item {
+  background: #ffffff;
+  border-radius: 0;
+  padding: 12px 0;
+  margin: 0;
+  border-bottom: 1px solid #f1f3f4;
+  transition: none;
+}
+
+.world-map-container .review-item:last-child {
+  border-bottom: none;
+}
+
+.world-map-container .review-item:hover {
+  background: #ffffff;
+  transform: none;
+  box-shadow: none;
+}
+
+.world-map-container .review-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #fbbc04;
+}
+
+.world-map-container .rating-number {
+  color: #70757a;
+  font-size: 12px;
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.world-map-container .review-text {
+  font-size: 13px;
+  color: #3c4043;
+  line-height: 1.4;
+  margin: 0 0 6px 0;
+}
+
+.world-map-container .review-photo {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 8px 0 6px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e8eaed;
+}
+
+.world-map-container .review-date {
+  font-size: 11px;
+  color: #70757a;
+  font-weight: 400;
+}
+
+/* Badge animations */
 .review-badge {
   position: relative;
   width: 28px;
@@ -703,22 +551,22 @@
 .leaflet-zoom-level-18 .badge-icon { font-size: 42px; }
 
 .badge-count {
-    position: absolute;
-    top: -25px;
-    right: -16px;
-    background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
-    color: white;
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: bold;
-    border: 2px solid white;
-    box-shadow: 0 2px 6px rgba(255, 71, 87, 0.4);
-    animation: countBounce 2s ease-in-out infinite;
+  position: absolute;
+  top: -25px;
+  right: -16px;
+  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(255, 71, 87, 0.4);
+  animation: countBounce 2s ease-in-out infinite;
 }
 
 .badge-glow {
@@ -733,12 +581,18 @@
 }
 
 @keyframes badgePulse {
-  0%, 10% {
-    transform: scale(1);
-  }
-  40% {
-    transform: scale(1.05);
-  }
+  0%, 10% { transform: scale(1); }
+  40% { transform: scale(1.05); }
+}
+
+@keyframes badgeShine {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes countBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
 }
 
 .review-badge:hover {
@@ -759,7 +613,7 @@
   animation-duration: 1s;
 }
 
-/* Custom Context Menu */
+/* Context Menu */
 .map-context-menu {
   position: fixed;
   left: 759px;
@@ -886,24 +740,120 @@
   font-size: 12px;
 }
 
-/* Animated dots for search placeholder */
-.context-menu-search-input::placeholder::after {
-  content: '';
-  animation: dots 2s infinite;
+/* Popup menu */
+.popup-context-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 200px;
 }
 
-@keyframes dots {
-  0%, 20% {
-    content: '';
-  }
-  40% {
-    content: '.';
-  }
-  60% {
-    content: '..';
-  }
-  80%, 100% {
-    content: '...';
-  }
+.popup-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  box-sizing: border-box;
 }
 
+.popup-menu-item:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+  color: #3b82f6;
+  transform: translateX(2px);
+}
+
+.popup-menu-item-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.popup-menu-item-text {
+  flex: 1;
+}
+
+.popup-menu-divider {
+  height: 1px;
+  background: rgba(226, 232, 240, 0.6);
+  margin: 4px 0;
+}
+
+/* Reviews List Overlay */
+.reviews-list-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.reviews-list-overlay.visible {
+  pointer-events: auto;
+}
+
+.reviews-list-overlay .reviews-list {
+  left: -400px;
+  transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reviews-list-overlay.visible .reviews-list {
+  left: 0;
+}
+
+/* Additional styles */
+.reviews-section h4 {
+  margin: 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #202124;
+  border-bottom: 1px solid #e8eaed;
+  padding-bottom: 8px;
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 12px;
+  color: #70757a;
+  font-style: italic;
+}
+
+.no-reviews p {
+  margin: 0;
+  font-size: 12px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .world-map-container .leaflet-top.leaflet-left {
+    top: 70px;
+    left: 10px;
+  }
+  
+  .world-map-container .leaflet-control-zoom a {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    font-size: 18px;
+  }
+  
+  .world-map-container {
+    height: calc(100vh - 300px);
+  }
+  
+  .world-map-container::before {
+    animation-duration: 10s;
+  }
+}

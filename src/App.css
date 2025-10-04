@@ -1,19 +1,16 @@
-/* MapMark Enhanced Global Styles */
+/* MapMark Enhanced Global Styles - Clean version without !important */
+@import './styles/variables.css';
+@import './styles/bem-components.css';
+@import './styles/components.css';
+@import './styles/animations.css';
+@import './styles/responsive.css';
 @import './components/features/GlobalEnhancements.css';
 
-/* Root Variables */
+/* Additional MapMark Variables */
 :root {
-  --mapmark-primary: #3b82f6;
-  --mapmark-secondary: #10b981;
-  --mapmark-accent: #8b5cf6;
-  --mapmark-warning: #f59e0b;
-  --mapmark-danger: #ef4444;
-  
   --mapmark-bg-primary: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
   --mapmark-glass-blur: blur(24px) saturate(180%);
   --mapmark-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  
-  --mapmark-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --mapmark-transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
@@ -42,9 +39,9 @@ body {
 
 /* Enhanced Focus Outline */
 *:focus-visible {
-  outline: 2px solid var(--mapmark-primary);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 /* Enhanced Scrollbar for Webkit */
@@ -70,15 +67,15 @@ body {
 
 /* Enhanced Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   line-height: 1.2;
-  color: #1e293b;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
 p {
   line-height: 1.6;
-  color: #64748b;
+  color: var(--color-text-secondary);
   margin: 0;
 }
 
@@ -104,13 +101,13 @@ input, textarea, select {
 
 /* Enhanced Link Styles */
 a {
-  color: var(--mapmark-primary);
+  color: var(--color-primary);
   text-decoration: none;
-  transition: var(--mapmark-transition);
+  transition: var(--transition-normal);
 }
 
 a:hover {
-  color: #2563eb;
+  color: var(--color-primary-dark);
   text-decoration: underline;
 }
 
@@ -123,15 +120,15 @@ a:hover {
 }
 
 .mapmark-gradient-primary {
-  background: linear-gradient(135deg, var(--mapmark-primary) 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
 }
 
 .mapmark-gradient-secondary {
-  background: linear-gradient(135deg, var(--mapmark-secondary) 0%, #059669 100%);
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
 }
 
 .mapmark-gradient-accent {
-  background: linear-gradient(135deg, var(--mapmark-accent) 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, var(--color-accent) 0%, #7c3aed 100%);
 }
 
 .mapmark-shadow {
@@ -139,54 +136,27 @@ a:hover {
 }
 
 .mapmark-transition {
-  transition: var(--mapmark-transition);
+  transition: var(--transition-normal);
 }
 
 .mapmark-transition-bounce {
   transition: var(--mapmark-transition-bounce);
 }
 
-/* Enhanced Animation Classes */
+/* Legacy Animation Classes - Use new animate-* classes instead */
 .mapmark-fade-in {
-  animation: mapmarkFadeIn 0.4s ease-out;
+  animation: fadeIn 0.4s ease-out;
 }
 
 .mapmark-slide-up {
-  animation: mapmarkSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mapmark-scale-in {
-  animation: mapmarkScaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes mapmarkFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes mapmarkSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes mapmarkScaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Enhanced Responsive Utilities */
+/* Legacy Responsive Utilities - Use new responsive classes instead */
 @media (max-width: 768px) {
   .mapmark-mobile-hidden {
     display: none;
@@ -207,7 +177,7 @@ a:hover {
 /* Enhanced Print Styles */
 @media print {
   .mapmark-no-print {
-    display: none !important;
+    display: none;
   }
 }
 
@@ -216,18 +186,18 @@ a:hover {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
   }
 }
 
 /* Enhanced High Contrast */
 @media (prefers-contrast: high) {
   :root {
-    --mapmark-primary: #0066cc;
-    --mapmark-secondary: #008844;
-    --mapmark-danger: #cc0000;
+    --color-primary: #0066cc;
+    --color-secondary: #008844;
+    --color-danger: #cc0000;
   }
 }
 
@@ -237,5 +207,3 @@ a:hover {
     --mapmark-bg-primary: linear-gradient(135deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
   }
 }
-
-
