@@ -46,23 +46,20 @@ body {
 
 /* Enhanced Scrollbar for Webkit */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 0px;
+  height: 0px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 4px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #94a3b8;
-  border-radius: 4px;
-  transition: all 0.3s ease;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: transparent;
 }
 
 /* Enhanced Typography */

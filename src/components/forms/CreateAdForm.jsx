@@ -9,7 +9,11 @@ const CreateAdForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
     title: '',
     category: '',
-    subcategory: ''
+    subcategory: '',
+    country: '',
+    city: '',
+    details: '',
+    price: ''
   });
   const [errors, setErrors] = useState({});
 
@@ -83,7 +87,8 @@ const CreateAdForm = ({ onClose }) => {
     setFormData(prev => ({ 
       ...prev, 
       [field]: value,
-      ...(field === 'category' ? { subcategory: '' } : {})
+      ...(field === 'category' ? { subcategory: '' } : {}),
+      ...(field === 'country' ? { city: '' } : {})
     }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: null }));
@@ -107,10 +112,121 @@ const CreateAdForm = ({ onClose }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
-    if (validateStep1()) {
-      setCurrentStep(2);
+  const validateStep2 = () => {
+    const newErrors = {};
+    
+    if (!formData.country) {
+      newErrors.country = i18n.language.includes('uk') ? 'Країна є обов\'язковою' : 'Country is required';
     }
+    if (!formData.city) {
+      newErrors.city = i18n.language.includes('uk') ? 'Місто є обов\'язковим' : 'City is required';
+    }
+    if (!formData.details) {
+      newErrors.details = i18n.language.includes('uk') ? 'Деталі є обов\'язковими' : 'Details are required';
+    }
+    if (!formData.price.trim()) {
+      newErrors.price = i18n.language.includes('uk') ? 'Ціна є обов\'язковою' : 'Price is required';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNext = () => {
+    if (currentStep === 1 && validateStep1()) {
+      setCurrentStep(2);
+    } else if (currentStep === 2 && validateStep2()) {
+      // Submit form
+      console.log('Form submitted:', formData);
+      setCurrentStep(3);
+    }
+  };
+
+  const handleBack = () => {
+    setCurrentStep(1);
+  };
+
+  const isStep1Valid = () => {
+    return formData.title.trim() && formData.category && formData.subcategory;
+  };
+
+  const isStep2Valid = () => {
+    return formData.country && formData.city && formData.details && formData.price.trim();
+  };
+
+  const countries = [
+    { value: '', label: i18n.language.includes('uk') ? 'Оберіть країну' : 'Select country' },
+    { value: 'usa', label: `🇺🇸 ${i18n.language.includes('uk') ? 'США' : 'USA'}` },
+    { value: 'ukraine', label: `🇺🇦 ${i18n.language.includes('uk') ? 'Україна' : 'Ukraine'}` }
+  ];
+
+  const getCities = () => {
+    const cities = [
+      { value: '', label: i18n.language.includes('uk') ? 'Оберіть місто' : 'Select city' }
+    ];
+
+    if (formData.country === 'usa') {
+      cities.push(
+        { value: 'new-york', label: 'New York' },
+        { value: 'los-angeles', label: 'Los Angeles' },
+        { value: 'chicago', label: 'Chicago' },
+        { value: 'houston', label: 'Houston' },
+        { value: 'miami', label: 'Miami' }
+      );
+    } else if (formData.country === 'ukraine') {
+      cities.push(
+        { value: 'kyiv', label: i18n.language.includes('uk') ? 'Київ' : 'Kyiv' },
+        { value: 'kharkiv', label: i18n.language.includes('uk') ? 'Харків' : 'Kharkiv' },
+        { value: 'odesa', label: i18n.language.includes('uk') ? 'Одеса' : 'Odesa' },
+        { value: 'dnipro', label: i18n.language.includes('uk') ? 'Дніпро' : 'Dnipro' },
+        { value: 'lviv', label: i18n.language.includes('uk') ? 'Львів' : 'Lviv' }
+      );
+    }
+
+    return cities;
+  };
+
+  const getDetailsOptions = () => {
+    const details = [
+      { value: '', label: i18n.language.includes('uk') ? 'Оберіть деталі' : 'Select details' }
+    ];
+
+    if (formData.subcategory === 'apartments') {
+      details.push(
+        { value: '1-room', label: i18n.language.includes('uk') ? '1 кімната' : '1 room' },
+        { value: '2-room', label: i18n.language.includes('uk') ? '2 кімнати' : '2 rooms' },
+        { value: '3-room', label: i18n.language.includes('uk') ? '3 кімнати' : '3 rooms' },
+        { value: '4-room', label: i18n.language.includes('uk') ? '4+ кімнат' : '4+ rooms' }
+      );
+    } else if (formData.subcategory === 'cars') {
+      details.push(
+        { value: 'sedan', label: i18n.language.includes('uk') ? 'Седан' : 'Sedan' },
+        { value: 'suv', label: i18n.language.includes('uk') ? 'Позашляховик' : 'SUV' },
+        { value: 'hatchback', label: i18n.language.includes('uk') ? 'Хетчбек' : 'Hatchback' },
+        { value: 'coupe', label: i18n.language.includes('uk') ? 'Купе' : 'Coupe' }
+      );
+    } else if (formData.subcategory === 'vacancies') {
+      details.push(
+        { value: 'full-time', label: i18n.language.includes('uk') ? 'Повний день' : 'Full-time' },
+        { value: 'part-time', label: i18n.language.includes('uk') ? 'Неповний день' : 'Part-time' },
+        { value: 'remote', label: i18n.language.includes('uk') ? 'Віддалено' : 'Remote' },
+        { value: 'contract', label: i18n.language.includes('uk') ? 'Контракт' : 'Contract' }
+      );
+    } else if (formData.subcategory === 'smartphones') {
+      details.push(
+        { value: 'new', label: i18n.language.includes('uk') ? 'Новий' : 'New' },
+        { value: 'used', label: i18n.language.includes('uk') ? 'Вживаний' : 'Used' },
+        { value: 'refurbished', label: i18n.language.includes('uk') ? 'Відновлений' : 'Refurbished' }
+      );
+    } else {
+      details.push(
+        { value: 'excellent', label: i18n.language.includes('uk') ? 'Відмінний стан' : 'Excellent condition' },
+        { value: 'good', label: i18n.language.includes('uk') ? 'Хороший стан' : 'Good condition' },
+        { value: 'fair', label: i18n.language.includes('uk') ? 'Задовільний стан' : 'Fair condition' }
+      );
+    }
+
+    return details;
   };
 
   return (
@@ -119,11 +235,6 @@ const CreateAdForm = ({ onClose }) => {
         <div className="form-header">
           <h3>{i18n.language.includes('uk') ? 'Створити оголошення' : 'Create Ad'}</h3>
           <button className="close-btn" onClick={onClose}>×</button>
-        </div>
-
-        <div className="step-indicator">
-          <span className={`step ${currentStep >= 1 ? 'active' : ''}`}>1</span>
-          <span className={`step ${currentStep >= 2 ? 'active' : ''}`}>2</span>
         </div>
 
         {currentStep === 1 && (
@@ -164,17 +275,110 @@ const CreateAdForm = ({ onClose }) => {
               </div>
             )}
 
-            <div className="form-actions">
-              <button type="button" className="next-btn" onClick={handleNext}>
+            <div className="form-actions single">
+              <button 
+                type="button" 
+                className="next-btn" 
+                onClick={handleNext}
+                disabled={!isStep1Valid()}
+              >
                 {i18n.language.includes('uk') ? 'Далі' : 'Next'} →
               </button>
+            </div>
+            
+            <div className="step-indicator">
+              <span className={`step ${currentStep === 1 ? 'active' : currentStep > 1 ? 'completed' : ''}`}>1</span>
+              <span className={`step ${currentStep >= 2 ? 'active' : ''}`}>2</span>
             </div>
           </div>
         )}
 
         {currentStep === 2 && (
           <div className="step-content">
-            <p>{i18n.language.includes('uk') ? 'Крок 2 - В розробці' : 'Step 2 - In development'}</p>
+            <div className="form-group">
+              <label>{i18n.language.includes('uk') ? 'Країна' : 'Country'} *</label>
+              <CustomSelect
+                value={formData.country}
+                onChange={(value) => handleInputChange('country', value)}
+                options={countries}
+                className={errors.country ? 'error' : ''}
+              />
+              {errors.country && <span className="field-error">{errors.country}</span>}
+            </div>
+
+            {formData.country && (
+              <div className="form-group">
+                <label>{i18n.language.includes('uk') ? 'Місто' : 'City'} *</label>
+                <CustomSelect
+                  value={formData.city}
+                  onChange={(value) => handleInputChange('city', value)}
+                  options={getCities()}
+                  className={errors.city ? 'error' : ''}
+                />
+                {errors.city && <span className="field-error">{errors.city}</span>}
+              </div>
+            )}
+
+            <div className="form-group">
+              <label>{i18n.language.includes('uk') ? 'Деталі' : 'Details'} *</label>
+              <CustomSelect
+                value={formData.details}
+                onChange={(value) => handleInputChange('details', value)}
+                options={getDetailsOptions()}
+                className={errors.details ? 'error' : ''}
+              />
+              {errors.details && <span className="field-error">{errors.details}</span>}
+            </div>
+
+            <div className="form-group">
+              <label>{i18n.language.includes('uk') ? 'Ціна' : 'Price'} *</label>
+              <input
+                type="text"
+                value={formData.price}
+                onChange={(e) => handleInputChange('price', e.target.value)}
+                placeholder={i18n.language.includes('uk') ? 'Введіть ціну...' : 'Enter price...'}
+                className={errors.price ? 'input-error' : ''}
+              />
+              {errors.price && <span className="field-error">{errors.price}</span>}
+            </div>
+
+            <div className="form-actions">
+              <button type="button" className="back-btn" onClick={handleBack}>
+                ← {i18n.language.includes('uk') ? 'Назад' : 'Back'}
+              </button>
+              <button 
+                type="button" 
+                className="next-btn" 
+                onClick={handleNext}
+                disabled={!isStep2Valid()}
+              >
+                {i18n.language.includes('uk') ? 'Створити' : 'Create'}
+              </button>
+            </div>
+            
+            <div className="step-indicator">
+              <span className={`step ${currentStep === 1 ? 'active' : currentStep > 1 ? 'completed' : ''}`}>1</span>
+              <span className={`step ${currentStep >= 2 ? 'active' : ''}`}>2</span>
+            </div>
+          </div>
+        )}
+
+        {currentStep === 3 && (
+          <div className="step-content success-content">
+            <div className="success-icon">✅</div>
+            <h3 className="success-title">
+              {i18n.language.includes('uk') ? 'Оголошення успішно створено!' : 'Ad created successfully!'}
+            </h3>
+            <p className="success-text">
+              {i18n.language.includes('uk') 
+                ? 'Ваше оголошення було успішно опубліковано та з\'явиться на карті найближчим часом.' 
+                : 'Your ad has been successfully published and will appear on the map shortly.'}
+            </p>
+            <div className="form-actions single">
+              <button type="button" className="next-btn" onClick={onClose}>
+                {i18n.language.includes('uk') ? 'Закрити' : 'Close'}
+              </button>
+            </div>
           </div>
         )}
       </div>

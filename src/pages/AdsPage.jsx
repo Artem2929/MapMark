@@ -5,6 +5,7 @@ import Breadcrumbs from '../components/ui/Breadcrumbs';
 import Footer from '../components/layout/Footer';
 import CustomSelect from '../components/ui/CustomSelect';
 import CreateAdForm from '../components/forms/CreateAdForm';
+import AdsService from '../services/adsService';
 import './AdsPage.css';
 import './DiscoverPlaces.css';
 
@@ -129,7 +130,7 @@ const AdsPage = () => {
         limit: itemsPerPage
       };
       
-      const response = await adsService.getAds(params);
+      const response = await AdsService.getAds(params);
       setAds(response.data || []);
       setTotalPages(response.pagination?.pages || 1);
     } catch (error) {
