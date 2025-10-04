@@ -6,6 +6,9 @@ const ReviewsList = ({ marker, onClose }) => {
   const reviewsListRef = useRef(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [expandedComments, setExpandedComments] = useState({});
+  const [newComments, setNewComments] = useState({});
+  const [submittingComment, setSubmittingComment] = useState({});
   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -50,6 +53,61 @@ const ReviewsList = ({ marker, onClose }) => {
     };
   }, []);
   
+  const handleLike = async (reviewId) => {
+    try {
+      await ReviewService.likeReview(reviewId);
+      setReviews(prev => prev.map(review => 
+        review._id === reviewId 
+          ? { ...review, likes: (review.likes || 0) + 1, userLiked: true }
+          : review
+      ));
+    } catch (error) {
+      console.error('Error liking review:', error);
+    }
+  };
+
+  const handleDislike = async (reviewId) => {
+    try {
+      await ReviewService.dislikeReview(reviewId);
+      setReviews(prev => prev.map(review => 
+        review._id === reviewId 
+          ? { ...review, dislikes: (review.dislikes || 0) + 1, userDisliked: true }
+          : review
+      ));
+    } catch (error) {
+      console.error('Error disliking review:', error);
+    }
+  };
+
+  const toggleComments = (reviewId) => {
+    setExpandedComments(prev => ({
+      ...prev,
+      [reviewId]: !prev[reviewId]
+    }));
+  };
+
+  const handleCommentSubmit = async (reviewId) => {
+    const comment = newComments[reviewId]?.trim();
+    if (!comment) return;
+
+    try {
+      setSubmittingComment(prev => ({ ...prev, [reviewId]: true }));
+      const newComment = await ReviewService.addComment(reviewId, comment);
+      
+      setReviews(prev => prev.map(review => 
+        review._id === reviewId 
+          ? { ...review, comments: [...(review.comments || []), newComment] }
+          : review
+      ));
+      
+      setNewComments(prev => ({ ...prev, [reviewId]: '' }));
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    } finally {
+      setSubmittingComment(prev => ({ ...prev, [reviewId]: false }));
+    }
+  };
+
   const markerReviews = reviews;
 
   return (
@@ -103,9 +161,7 @@ const ReviewsList = ({ marker, onClose }) => {
               {review.photos && review.photos.length > 0 && (
                 <div className="reviews-list-photo-grid">
                   {review.photos.map((photo, photoIndex) => {
-                    // Photo comes as object with base64 field that already contains data URL
                     const photoSrc = photo && photo.base64 ? photo.base64 : null;
-                    
                     if (!photoSrc) return null;
                     
                     return (
@@ -119,6 +175,73 @@ const ReviewsList = ({ marker, onClose }) => {
                       />
                     );
                   })}
+                </div>
+              )}
+              
+              <div className="reviews-list-actions">
+                <button 
+                  className={`action-btn like-btn ${review.userLiked ? 'active' : ''}`}
+                  onClick={() => handleLike(review._id)}
+                  title="Подобається"
+                >
+                  👍
+                  {(review.likes || 0) > 0 && <span className="count">{review.likes}</span>}
+                </button>
+                <button 
+                  className={`action-btn dislike-btn ${review.userDisliked ? 'active' : ''}`}
+                  onClick={() => handleDislike(review._id)}
+                  title="Не подобається"
+                >
+                  👎
+                  {(review.dislikes || 0) > 0 && <span className="count">{review.dislikes}</span>}
+                </button>
+                <button 
+                  className="action-btn comment-btn"
+                  onClick={() => toggleComments(review._id)}
+                  title="Коментарі"
+                >
+                  💬
+                  {(review.comments?.length || 0) > 0 && <span className="count">{review.comments.length}</span>}
+                </button>
+              </div>
+              
+              {expandedComments[review._id] && (
+                <div className="comments-section">
+                  <div className="comments-list">
+                    {review.comments?.map((comment, commentIndex) => (
+                      <div key={commentIndex} className="comment-item">
+                        <div className="comment-avatar">👤</div>
+                        <div className="comment-content">
+                          <div className="comment-author">{comment.username || 'Anonymous'}</div>
+                          <div className="comment-text">{comment.text}</div>
+                          <div className="comment-time">{new Date(comment.createdAt).toLocaleDateString()}</div>
+                        </div>
+                      </div>
+                    )) || []}
+                  </div>
+                  
+                  <div className="add-comment">
+                    <input
+                      type="text"
+                      placeholder="Додати коментар..."
+                      value={newComments[review._id] || ''}
+                      onChange={(e) => setNewComments(prev => ({
+                        ...prev,
+                        [review._id]: e.target.value
+                      }))}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handleCommentSubmit(review._id);
+                        }
+                      }}
+                    />
+                    <button 
+                      onClick={() => handleCommentSubmit(review._id)}
+                      disabled={submittingComment[review._id] || !newComments[review._id]?.trim()}
+                    >
+                      {submittingComment[review._id] ? '...' : '➤'}
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

@@ -234,6 +234,89 @@ class ReviewService {
   }
 
   /**
+   * Like a review
+   * @param {string} reviewId - Review ID to like
+   * @returns {Promise<Object>} Like result
+   */
+  static async likeReview(reviewId) {
+    try {
+      const response = await fetch(`${API_ENDPOINTS.REVIEW}/${reviewId}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error liking review:', error);
+      throw new Error(`Failed to like review: ${error.message}`);
+    }
+  }
+
+  /**
+   * Dislike a review
+   * @param {string} reviewId - Review ID to dislike
+   * @returns {Promise<Object>} Dislike result
+   */
+  static async dislikeReview(reviewId) {
+    try {
+      const response = await fetch(`${API_ENDPOINTS.REVIEW}/${reviewId}/dislike`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error disliking review:', error);
+      throw new Error(`Failed to dislike review: ${error.message}`);
+    }
+  }
+
+  /**
+   * Add a comment to a review
+   * @param {string} reviewId - Review ID to comment on
+   * @param {string} comment - Comment text
+   * @returns {Promise<Object>} Comment result
+   */
+  static async addComment(reviewId, comment) {
+    try {
+      const response = await fetch(`${API_ENDPOINTS.REVIEW}/${reviewId}/comment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ comment }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result.data;
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      throw new Error(`Failed to add comment: ${error.message}`);
+    }
+  }
+
+  /**
    * Validate review data before submission
    * @param {Object} reviewData - Review data to validate
    * @returns {Object} Validation result

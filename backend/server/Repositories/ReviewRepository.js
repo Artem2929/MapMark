@@ -8,6 +8,13 @@ const reviewSchema = new mongoose.Schema({
   rating: { type: Number, required: true, min: 1, max: 5 },
   username: { type: String, required: true, trim: true, maxlength: 50 },
   photoIds: { type: [String], default: [] },
+  likes: { type: Number, default: 0 },
+  dislikes: { type: Number, default: 0 },
+  comments: [{
+    text: { type: String, required: true },
+    username: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
+  }],
   createdAt: { type: Date, default: Date.now },
   // Add GeoJSON location field for geospatial queries
   location: {

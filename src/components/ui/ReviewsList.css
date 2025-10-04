@@ -1,9 +1,10 @@
 .reviews-list {
   position: fixed;
   top: 88px;
-  left: -400px;
-  width: 400px;
-  height: auto;
+  left: -440px;
+  width: 440px;
+  height: calc(100vh - 120px);
+  max-height: calc(100vh - 120px);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
   /* border: 1px solid rgba(255, 255, 255, 0.3); */
   box-shadow: 
@@ -147,9 +148,11 @@ body:has(.reviews-list.visible) .notification-item,
 .reviews-list-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-right: 8px;
   min-width: 0;
   position: relative;
+  max-height: calc(100vh - 200px);
 }
 
 .reviews-list-content::before {
@@ -594,4 +597,206 @@ body:has(.reviews-list.visible) .notification-item,
   .reviews-list.visible {
     left: 0;
   }
+}
+
+/* Actions and Comments */
+.reviews-list-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 4px;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(226, 232, 240, 0.3);
+  height: 24px;
+  box-sizing: border-box;
+}
+
+.reviews-list .action-btn {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  width: 24px !important;
+  height: 24px !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  transition: transform 0.1s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  flex-shrink: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  min-width: auto !important;
+}
+
+.reviews-list .action-btn:hover {
+  transform: scale(1.2) !important;
+  background: none !important;
+}
+
+.reviews-list .action-btn .count {
+  position: absolute !important;
+  top: -6px !important;
+  right: -6px !important;
+  background: #64748b !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 12px !important;
+  height: 12px !important;
+  font-size: 8px !important;
+  font-weight: bold !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+
+.reviews-list .like-btn.active {
+  filter: brightness(1.2) !important;
+}
+
+.reviews-list .like-btn .count {
+  background: #22c55e !important;
+}
+
+.reviews-list .dislike-btn.active {
+  filter: brightness(1.2) !important;
+}
+
+.reviews-list .dislike-btn .count {
+  background: #ef4444 !important;
+}
+
+.reviews-list .comment-btn .count {
+  background: #3b82f6 !important;
+}
+
+.comments-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(226, 232, 240, 0.4);
+}
+
+.comments-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+.comment-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: rgba(248, 250, 252, 0.5);
+  border-radius: 12px;
+}
+
+.comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.comment-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.comment-author {
+  font-weight: 600;
+  font-size: 12px;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.comment-text {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.4;
+  margin-bottom: 4px;
+  word-wrap: break-word;
+}
+
+.comment-time {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.add-comment {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.add-comment input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  border-radius: 20px;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.8);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.add-comment input:focus {
+  border-color: #3b82f6;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.add-comment button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.add-comment button:hover:not(:disabled) {
+  background: #2563eb;
+  transform: scale(1.05);
+}
+
+.add-comment button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Custom scrollbar */
+.reviews-list-content::-webkit-scrollbar,
+.comments-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.reviews-list-content::-webkit-scrollbar-track,
+.comments-list::-webkit-scrollbar-track {
+  background: rgba(248, 250, 252, 0.5);
+  border-radius: 3px;
+}
+
+.reviews-list-content::-webkit-scrollbar-thumb,
+.comments-list::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 3px;
+}
+
+.reviews-list-content::-webkit-scrollbar-thumb:hover,
+.comments-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.8);
 }

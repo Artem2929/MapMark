@@ -357,4 +357,130 @@ async function getUserStatsHandler(req, res) {
   }
 }
 
-module.exports = { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler, getUserStatsHandler };
+async function likeReviewHandler(req, res) {
+  try {
+    const { reviewId } = req.params;
+    
+    if (!reviewId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Review ID is required'
+      });
+    }
+
+    const review = await getReviewById(reviewId);
+    if (!review) {
+      return res.status(404).json({
+        success: false,
+        message: 'Review not found'
+      });
+    }
+
+    // Update likes count
+    review.likes = (review.likes || 0) + 1;
+    await review.save();
+
+    res.json({
+      success: true,
+      data: {
+        reviewId,
+        likes: review.likes
+      }
+    });
+  } catch (error) {
+    console.error('Error liking review:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error liking review',
+      error: error.message
+    });
+  }
+}
+
+async function dislikeReviewHandler(req, res) {
+  try {
+    const { reviewId } = req.params;
+    
+    if (!reviewId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Review ID is required'
+      });
+    }
+
+    const review = await getReviewById(reviewId);
+    if (!review) {
+      return res.status(404).json({
+        success: false,
+        message: 'Review not found'
+      });
+    }
+
+    // Update dislikes count
+    review.dislikes = (review.dislikes || 0) + 1;
+    await review.save();
+
+    res.json({
+      success: true,
+      data: {
+        reviewId,
+        dislikes: review.dislikes
+      }
+    });
+  } catch (error) {
+    console.error('Error disliking review:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error disliking review',
+      error: error.message
+    });
+  }
+}
+
+async function addCommentHandler(req, res) {
+  try {
+    const { reviewId } = req.params;
+    const { comment } = req.body;
+    
+    if (!reviewId || !comment) {
+      return res.status(400).json({
+        success: false,
+        message: 'Review ID and comment are required'
+      });
+    }
+
+    const review = await getReviewById(reviewId);
+    if (!review) {
+      return res.status(404).json({
+        success: false,
+        message: 'Review not found'
+      });
+    }
+
+    const newComment = {
+      text: comment.trim(),
+      username: 'Anonymous', // TODO: Get from auth
+      createdAt: new Date()
+    };
+
+    if (!review.comments) {
+      review.comments = [];
+    }
+    review.comments.push(newComment);
+    await review.save();
+
+    res.json({
+      success: true,
+      data: newComment
+    });
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error adding comment',
+      error: error.message
+    });
+  }
+}
+
+module.exports = { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler, getUserStatsHandler, likeReviewHandler, dislikeReviewHandler, addCommentHandler };

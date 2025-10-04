@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const multer = require("multer");
-const { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler, getUserStatsHandler } = require('./services/ReviewService');
+const { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler, getUserStatsHandler, likeReviewHandler, dislikeReviewHandler, addCommentHandler } = require('./services/ReviewService');
 const { getReviews } = require('./Repositories/ReviewRepository');
 const { getUserStatsHandler: userStatsHandler, getUserFollowersHandler, getUserFollowingHandler, followUserHandler, unfollowUserHandler } = require('./services/UserStatsService');
 const { getUserProfileHandler, updateUserProfileHandler } = require('./services/UserService');
@@ -76,6 +76,12 @@ app.get('/api/reviews/nearby', getReviewsByLocationHandler);
 app.delete('/api/review/:reviewId', deleteReviewHandler);
 // Delete a photo from a review
 app.delete('/api/review/:reviewId/photo/:photoId', deletePhotoHandler);
+// Like a review
+app.post('/api/review/:reviewId/like', likeReviewHandler);
+// Dislike a review
+app.post('/api/review/:reviewId/dislike', dislikeReviewHandler);
+// Add comment to a review
+app.post('/api/review/:reviewId/comment', addCommentHandler);
 // Get a single photo as base64
 app.get('/api/photo/:photoId', getPhotoHandler);
 // Test endpoint
