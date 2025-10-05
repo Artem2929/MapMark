@@ -68,7 +68,7 @@ const QuickFilter = ({ onFilterChange, onLocationClick }) => {
           <div className="filter-group">
             <label>{t('ads.form.country')}</label>
             <CustomSelect
-              options={loading ? [] : countries.map(c => ({ code: c.id, name_en: `${c.flag} ${c.name}` }))}
+              options={loading ? [] : [{ value: '', label: t('ads.form.selectCountry') }, ...countries.map(c => ({ value: c.id, label: `${c.flag} ${c.name}` }))]}
               value={filters.country}
               onChange={(value) => handleFilterChange('country', value)}
               placeholder={loading ? 'Loading...' : t('ads.form.selectCountry')}
@@ -78,7 +78,7 @@ const QuickFilter = ({ onFilterChange, onLocationClick }) => {
           <div className="filter-group">
             <label>{t('ads.form.category')}</label>
             <CustomSelect
-              options={categories.map(cat => ({ code: cat.id, name_en: cat.name }))}
+              options={[{ value: '', label: t('ads.form.selectCategory') }, ...categories.map(cat => ({ value: cat.id, label: cat.name }))]}
               value={filters.category}
               onChange={(value) => handleFilterChange('category', value)}
               placeholder={t('ads.form.selectCategory')}

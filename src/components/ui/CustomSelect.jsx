@@ -7,8 +7,11 @@ const CustomSelect = ({ value, onChange, options, placeholder, className = '' })
   const selectRef = useRef(null);
 
   useEffect(() => {
-    const selected = options.find(option => option.value === value);
-    setSelectedOption(selected);
+    if (options && options.length > 0) {
+      const selected = options.find(option => option.value === value);
+
+      setSelectedOption(selected || null);
+    }
   }, [value, options]);
 
   useEffect(() => {
@@ -23,6 +26,7 @@ const CustomSelect = ({ value, onChange, options, placeholder, className = '' })
   }, []);
 
   const handleOptionClick = (option) => {
+
     onChange(option.value);
     setIsOpen(false);
   };
@@ -34,18 +38,18 @@ const CustomSelect = ({ value, onChange, options, placeholder, className = '' })
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className="custom-select-value">
-          {selectedOption ? selectedOption.label : placeholder}
+          {selectedOption && selectedOption.value !== '' ? selectedOption.label : placeholder}
         </span>
         <span className={`custom-select-arrow ${isOpen ? 'up' : 'down'}`}>▼</span>
       </div>
       
       {isOpen && (
         <div className="custom-select-dropdown">
-          {options.filter(option => option.value !== '').map((option) => (
+          {options.map((option) => (
             <div
-              key={option.value}
-              className={`custom-select-option ${value === option.value ? 'selected' : ''}`}
-              onClick={() => handleOptionClick(option)}
+              key={option.value || 'empty'}
+              className={`custom-select-option ${value === option.value ? 'selected' : ''} ${option.value === '' ? 'disabled' : ''}`}
+              onClick={() => option.value !== '' && handleOptionClick(option)}
             >
               {option.label}
             </div>

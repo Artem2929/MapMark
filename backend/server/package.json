@@ -4,7 +4,7 @@
   "description": "MapMark backend server with MongoDB integration",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "dev": "nodemon server.js",
     "seed:team": "node seedTeam.js",
     "docker:build": "docker build -t mapmark-server .",
@@ -26,7 +26,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2"
+    "nodemon": "^3.1.10"
   },
   "author": "MapMark Team",
   "license": "MIT"
