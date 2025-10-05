@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CustomSelect from '../ui/CustomSelect';
+import CountrySelect from '../ui/CountrySelect';
 import { validateCreateAdForm } from '../../utils/createAdValidation';
 import adService from '../../services/adService';
 import './CreateAdForm.css';
@@ -276,18 +277,14 @@ const CreateAdForm = ({ onClose }) => {
            (formData.contactPhone.trim() || formData.contactEmail.trim());
   };
 
-  const countries = React.useMemo(() => [
-    { value: '', label: t('createAdForm.step2.selectCountry') },
-    { value: 'usa', label: `🇺🇸 ${t('createAdForm.countries.usa')}` },
-    { value: 'ukraine', label: `🇺🇦 ${t('createAdForm.countries.ukraine')}` }
-  ], [t]);
+
 
   const getCities = React.useMemo(() => {
     const cities = [
       { value: '', label: t('createAdForm.step2.selectCity') }
     ];
 
-    if (formData.country === 'usa') {
+    if (formData.country === 'us') {
       cities.push(
         { value: 'new-york', label: t('createAdForm.cities.new-york') },
         { value: 'los-angeles', label: t('createAdForm.cities.los-angeles') },
@@ -295,7 +292,7 @@ const CreateAdForm = ({ onClose }) => {
         { value: 'houston', label: t('createAdForm.cities.houston') },
         { value: 'miami', label: t('createAdForm.cities.miami') }
       );
-    } else if (formData.country === 'ukraine') {
+    } else if (formData.country === 'ua') {
       cities.push(
         { value: 'kyiv', label: t('createAdForm.cities.kyiv') },
         { value: 'kharkiv', label: t('createAdForm.cities.kharkiv') },
@@ -505,10 +502,10 @@ const CreateAdForm = ({ onClose }) => {
           <div className="step-content">
             <div className={`form-group ${errors.country ? 'has-error' : ''}`}>
               <label>{t('createAdForm.step2.country')} *</label>
-              <CustomSelect
+              <CountrySelect
                 value={formData.country}
                 onChange={(value) => handleInputChange('country', value)}
-                options={countries}
+                placeholder={t('createAdForm.step2.selectCountry')}
                 className={errors.country ? 'error' : ''}
               />
               {errors.country && <span className="field-error">{errors.country}</span>}

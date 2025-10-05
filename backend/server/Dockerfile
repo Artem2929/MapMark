@@ -13,12 +13,12 @@ RUN npm install
 COPY . .
 
 # Expose port
-EXPOSE 3000
+EXPOSE 3001
 
 # Set environment variables
-ENV NODE_ENV=production
-ENV PORT=3000
+ENV NODE_ENV=development
+ENV PORT=3001
 ENV DB_URL=mongodb://admin:password@mongodb:27017/mapmark?authSource=admin
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

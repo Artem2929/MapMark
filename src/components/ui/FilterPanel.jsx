@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from './Button';
 import CustomSelect from './CustomSelect';
+import CountrySelect from './CountrySelect';
 import './FilterPanel.css';
 
 const FilterPanel = ({ 
@@ -46,6 +47,13 @@ const FilterPanel = ({
   return (
     <div className={`filter-panel ${className}`} {...props}>
       <div className="filter-panel__row">
+        <CountrySelect
+          value={filters.country || ''}
+          onChange={(value) => onFilterChange('country', value)}
+          placeholder="Всі країни"
+          className="filter-panel__select"
+        />
+
         <CustomSelect
           value={filters.category}
           onChange={(value) => onFilterChange('category', value)}

@@ -13,21 +13,11 @@ const ActivityStats = ({ userId }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Generate mock data for demonstration
-    const mockMonthlyActivity = [
-      { month: 'Лип', count: 3 },
-      { month: 'Сер', count: 5 },
-      { month: 'Вер', count: 2 },
-      { month: 'Жов', count: 7 },
-      { month: 'Лис', count: 4 },
-      { month: 'Гру', count: 6 }
-    ];
-
     setStats({
-      totalReviews: 15,
-      averageRating: 4.2,
-      countriesVisited: 3,
-      monthlyActivity: mockMonthlyActivity
+      totalReviews: 0,
+      averageRating: 0,
+      countriesVisited: 0,
+      monthlyActivity: []
     });
     
     setLoading(false);

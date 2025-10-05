@@ -11,12 +11,14 @@ const { getAboutStatsHandler, getTeamMembersHandler, submitContactMessageHandler
 const authRoutes = require('./routes/auth');
 const postsRoutes = require('./routes/posts');
 const adsRoutes = require('./routes/ads');
+const categoriesRoutes = require('./routes/categories');
+const countriesRoutes = require('./routes/countries');
 const Ad = require('./models/Ad');
 const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/mapmark';
 
 // Middleware
@@ -41,6 +43,8 @@ mongoose.connect(DB_URL)
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postsRoutes);
 app.use('/api/ads', adsRoutes);
+app.use('/api/categories', categoriesRoutes);
+app.use('/api/countries', countriesRoutes);
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

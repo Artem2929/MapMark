@@ -1,4 +1,5 @@
 {
+  "lang": "uk",
   "header": {
     "home": "Головна",
     "discover": "Відкрийте місця",
@@ -713,12 +714,44 @@
     }
   },
   "categories": {
+    "restaurants": "Ресторани",
+    "entertainment": "Розваги",
+    "shopping": "Шопінг",
+    "nature": "Природа",
+    "culture": "Культура",
+    "sports": "Спорт",
     "cafe": "Кафе",
     "restaurant": "Ресторан",
     "park": "Парк",
     "museum": "Музей",
     "shop": "Магазин",
     "hotel": "Готель"
+  },
+  "subcategories": {
+    "fine-dining": "Вишукана кухня",
+    "casual": "Повсякденні",
+    "fast-food": "Фаст-фуд",
+    "cafe": "Кафе",
+    "cinema": "Кінотеатри",
+    "theater": "Театри",
+    "concerts": "Концерти",
+    "clubs": "Клуби",
+    "malls": "Торгові центри",
+    "boutiques": "Бутіки",
+    "markets": "Ринки",
+    "outlets": "Аутлети",
+    "parks": "Парки",
+    "beaches": "Пляжі",
+    "mountains": "Гори",
+    "lakes": "Озера",
+    "museums": "Музеї",
+    "galleries": "Галереї",
+    "monuments": "Пам'ятники",
+    "heritage": "Пам'ятки культури",
+    "gyms": "Спортзали",
+    "stadiums": "Стадіони",
+    "pools": "Басейни",
+    "courts": "Спортивні майданчики"
   },
   "tags": {
     "wifi": "Wi-Fi",

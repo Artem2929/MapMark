@@ -20,6 +20,7 @@ const AdsPage = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
+    country: '',
     category: '',
     rating: 0,
     distance: '',
@@ -41,22 +42,8 @@ const AdsPage = () => {
   const loadAds = async () => {
     setLoading(true);
     try {
-      const mockAds = Array.from({ length: 50 }, (_, i) => ({
-        id: i + 1,
-        title: `Місце ${i + 1}`,
-        description: `Опис місця ${i + 1}`,
-        category: ['cafe', 'restaurant', 'park', 'museum'][i % 4],
-        rating: 3 + Math.random() * 2,
-        distance: Math.floor(Math.random() * 10) + 1,
-        image: `https://images.unsplash.com/photo-${1500000000000 + i}?w=400&h=300&fit=crop`,
-        tags: ['Wi-Fi', 'Паркінг', 'Веган-френдлі'].slice(0, Math.floor(Math.random() * 3) + 1),
-        isNew: i < 5,
-        isPopular: Math.random() > 0.7,
-        hasPromo: Math.random() > 0.8,
-        createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000)
-      }));
-      
-      setAds(mockAds);
+      // TODO: Replace with actual API call
+      setAds([]);
     } catch (error) {
       console.error('Помилка завантаження оголошень:', error);
     } finally {
@@ -72,6 +59,10 @@ const AdsPage = () => {
         ad.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         ad.description.toLowerCase().includes(searchQuery.toLowerCase())
       );
+    }
+
+    if (filters.country) {
+      filtered = filtered.filter(ad => ad.country === filters.country);
     }
 
     if (filters.category) {
@@ -129,6 +120,7 @@ const AdsPage = () => {
 
   const clearFilters = () => {
     setFilters({
+      country: '',
       category: '',
       rating: 0,
       distance: '',

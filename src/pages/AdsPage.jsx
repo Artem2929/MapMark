@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import StarRating from '../components/ui/StarRating';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
@@ -6,17 +7,22 @@ import Footer from '../components/layout/Footer';
 import CustomSelect from '../components/ui/CustomSelect';
 import CreateAdForm from '../components/forms/CreateAdForm';
 import AdsService from '../services/adsService';
+import { categoriesService } from '../services/categoriesService.js';
 import './AdsPage.css';
 import './DiscoverPlaces.css';
 
 const AdsPage = () => {
+  const { t } = useTranslation();
+  const [categories, setCategories] = useState([]);
   const [ads, setAds] = useState([]);
   const [filteredAds, setFilteredAds] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [showCreateAdForm, setShowCreateAdForm] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'map'
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('realestate');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
   const [showSubcategories, setShowSubcategories] = useState(false);
   const [filters, setFilters] = useState({
@@ -39,85 +45,57 @@ const AdsPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 12;
 
-  const categories = [
-    { 
-      id: 'realestate', 
-      name: 'Нерухомість', 
-      emoji: '🏠',
-      subcategories: [
-        { id: 'apartments', name: 'Квартири' },
-        { id: 'houses', name: 'Будинки та дачі' },
-        { id: 'commercial', name: 'Комерційна нерухомість' },
-        { id: 'land', name: 'Земельні ділянки' },
-        { id: 'garages', name: 'Гаражі та паркомісця' },
-        { id: 'abroad', name: 'Нерухомість за кордоном' }
-      ]
-    },
-    { 
-      id: 'transport', 
-      name: 'Транспорт', 
-      emoji: '🚗',
-      subcategories: [
-        { id: 'cars', name: 'Легкові авто' },
-        { id: 'motorcycles', name: 'Мотоцикли / скутери' },
-        { id: 'trucks', name: 'Грузові авто / фургони' },
-        { id: 'commercial-transport', name: 'Комерційний транспорт' },
-        { id: 'water-transport', name: 'Водний транспорт' },
-        { id: 'auto-parts', name: 'Автозапчастини та аксесуари' },
-        { id: 'auto-services', name: 'Сервіси та СТО' },
-        { id: 'car-rental', name: 'Оренда авто' }
-      ]
-    },
-    { 
-      id: 'jobs', 
-      name: 'Робота', 
-      emoji: '💼',
-      subcategories: [
-        { id: 'vacancies', name: 'Вакансії' },
-        { id: 'resumes', name: 'Резюме' },
-        { id: 'recruiting', name: 'Послуги рекрутингу' },
-        { id: 'freelance', name: 'Тимчасова робота/фріланс' }
-      ]
-    },
-    { 
-      id: 'services', 
-      name: 'Послуги', 
-      emoji: '🔧',
-      subcategories: [
-        { id: 'construction', name: 'Будівельні та ремонтні' },
-        { id: 'household', name: 'Побутові послуги' },
-        { id: 'education', name: 'Освіта та репетиторство' },
-        { id: 'legal', name: 'Юридичні послуги' },
-        { id: 'medical', name: 'Медичні та догляд' },
-        { id: 'beauty', name: 'Красота та салони' },
-        { id: 'it', name: 'IT та розробка' },
-        { id: 'design', name: 'Дизайн та маркетинг' },
-        { id: 'transport-services', name: 'Транспортні та кур\'єрські' }
-      ]
-    },
-    { 
-      id: 'electronics', 
-      name: 'Електроніка', 
-      emoji: '📱',
-      subcategories: [
-        { id: 'smartphones', name: 'Смартфони та мобільні пристрої' },
-        { id: 'computers', name: 'Комп\'ютери, ноутбуки, планшети' },
-        { id: 'tv-audio', name: 'ТВ, аудіо та фотоапаратура' },
-        { id: 'appliances', name: 'Побутова техніка' },
-        { id: 'gaming', name: 'Ігрові приставки та аксесуари' },
-        { id: 'components', name: 'Запчастини та комплектуючі' }
-      ]
+  const loadCategories = async () => {
+    try {
+      setCategoriesLoading(true);
+      const data = await categoriesService.getCategories();
+      setCategories(data);
+      if (data.length > 0 && !selectedCategory) {
+        setSelectedCategory(data[0].id);
+      }
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+    } finally {
+      setCategoriesLoading(false);
     }
-  ];
+  };
 
   useEffect(() => {
-    loadAds();
-  }, [selectedCategory, selectedSubcategory, searchQuery, filters, currentPage]);
+    loadCategories();
+    
+    const handleLanguageChange = () => {
+      loadCategories();
+    };
+    
+    window.addEventListener('languageChanged', handleLanguageChange);
+    return () => window.removeEventListener('languageChanged', handleLanguageChange);
+  }, []);
+
+  useEffect(() => {
+    if (!categoriesLoading && selectedCategory && ads.length === 0) {
+      loadAds();
+    }
+  }, [categoriesLoading]);
+
+  useEffect(() => {
+    if (searchQuery || Object.values(filters).some(v => Array.isArray(v) ? v.length > 0 : v && v !== 'rating')) {
+      const timeoutId = setTimeout(() => {
+        loadAds();
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [searchQuery, filters, currentPage]);
 
 
 
   const loadAds = async () => {
-    setLoading(true);
+    if (!selectedCategory) return;
+    
+    // Показуємо loading тільки при першому завантаженні
+    if (ads.length === 0 && !categoriesLoading) {
+      setLoading(true);
+    }
+    
     try {
       const params = {
         category: selectedCategory,
@@ -132,10 +110,12 @@ const AdsPage = () => {
       
       const response = await AdsService.getAds(params);
       setAds(response.data || []);
+      setFilteredAds(response.data || []);
       setTotalPages(response.pagination?.pages || 1);
     } catch (error) {
       console.error('Помилка завантаження оголошень:', error);
       setAds([]);
+      setFilteredAds([]);
     } finally {
       setLoading(false);
     }
@@ -285,12 +265,12 @@ const AdsPage = () => {
     Array.isArray(v) ? v.length > 0 : v && v !== 'rating'
   ).length + (searchQuery ? 1 : 0);
 
-  if (loading) {
+  if (loading && ads.length === 0 && categoriesLoading) {
     return (
       <div className="ads-page">
         <div className="loading-state">
           <div className="spinner">🔄</div>
-          <p>Завантаження оголошень...</p>
+          <p>Завантаження...</p>
         </div>
       </div>
     );
@@ -301,26 +281,34 @@ const AdsPage = () => {
       <Breadcrumbs />
       
         <div className="categories-section">
-          <div className="categories-scroll">
-            {categories.map(category => (
-              <button
-                key={category.id}
-                className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
-                onClick={() => {
-                  if (selectedCategory === category.id) {
-                    setShowSubcategories(!showSubcategories);
-                  } else {
-                    setSelectedCategory(category.id);
-                    setSelectedSubcategory('');
-                    setShowSubcategories(true);
-                  }
-                }}
-              >
-                <span className="category-emoji">{category.emoji}</span>
-                <span className="category-name">{category.name}</span>
-              </button>
-            ))}
-          </div>
+          {categoriesLoading ? (
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+              <p>Завантаження категорій...</p>
+            </div>
+          ) : (
+            <div className="categories-scroll">
+              {categories.map(category => (
+                <button
+                  key={category.id}
+                  className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
+                  onClick={() => {
+                    if (selectedCategory === category.id) {
+                      setShowSubcategories(!showSubcategories);
+                    } else {
+                      setSelectedCategory(category.id);
+                      setSelectedSubcategory('');
+                      setShowSubcategories(true);
+                      setCurrentPage(1);
+                    }
+                  }}
+                >
+                  <span className="category-emoji">{category.emoji}</span>
+                  <span className="category-name">{t(`categories.${category.id}`, category.name)}</span>
+                </button>
+              ))}
+            </div>
+          )}
           
           {showSubcategories && categories.find(cat => cat.id === selectedCategory)?.subcategories?.length > 0 && (
             <div className="subcategories-section">
@@ -338,7 +326,7 @@ const AdsPage = () => {
                     className={`subcategory-btn ${selectedSubcategory === subcategory.id ? 'active' : ''}`}
                     onClick={() => setSelectedSubcategory(subcategory.id)}
                   >
-                    {subcategory.name}
+                    {t(`subcategories.${subcategory.id}`, subcategory.name)}
                   </button>
                 ))}
               </div>
@@ -513,57 +501,20 @@ const AdsPage = () => {
 
         {/* Список оголошень або порожній стан */}
         <div className="ads-main-content">
-          {filteredAds.length === 0 ? (
-            <div className="empty-state">
-              <div>🔍</div>
-              <h3>Оголошення не знайдено</h3>
-              <p>Спробуйте змінити фільтри або пошуковий запит</p>
-              <button className="clear-filters-btn" onClick={clearFilters}>
-                Очистити фільтри
-              </button>
+          {loading && ads.length === 0 ? (
+            <div className="loading-state">
+              <div className="spinner">🔄</div>
+              <p>Завантаження оголошень...</p>
             </div>
           ) : (
-            viewMode === 'grid' && (
-              <div className="ads-grid">
-                {paginatedAds.map(ad => (
-                <Link key={ad.id} to={`/ads/${ad.id}`} className="ads-ad-card">
-                  <div className="ads-ad-image">
-                    <img src={ad.image} alt={ad.title} />
-                    <div className="ads-ad-badges">
-                      {ad.isNew && <span className="ads-badge ads-new">Нове</span>}
-                      {ad.isPopular && <span className="ads-badge ads-popular">Популярне</span>}
-                      {ad.hasPromo && <span className="ads-badge ads-promo">Акція</span>}
-                    </div>
-                    <div className="ads-ad-distance">{ad.distance} км</div>
-                  </div>
-                  
-                  <div className="ads-ad-content">
-                    <div className="ads-ad-category">
-                      {getCategoryIcon(ad.category)} {getCategoryName(ad.category)}
-                    </div>
-                    
-                    <h3 className="ads-ad-title">{ad.title}</h3>
-                    
-                    <div className="ads-ad-footer">
-                      <div className="ads-ad-rating">
-                        <StarRating rating={ad.rating} size="small" />
-                        <span className="ads-rating-text">{ad.rating.toFixed(1)}</span>
-                      </div>
-                      
-                      <div className="ads-ad-tags">
-                        {ad.tags.slice(0, 2).map(tag => (
-                          <span key={tag} className="ads-ad-tag">{tag}</span>
-                        ))}
-                        {ad.tags.length > 2 && (
-                          <span className="ads-more-tags">+{ad.tags.length - 2}</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-                ))}
-              </div>
-            )
+            <div className="category-placeholder">
+              <div className="placeholder-icon">{categories.find(cat => cat.id === selectedCategory)?.emoji || '📍'}</div>
+              <h3>Категорія: {categories.find(cat => cat.id === selectedCategory)?.name}</h3>
+              <p>Оголошення для цієї категорії будуть відображені тут</p>
+              {selectedSubcategory && (
+                <p>Підкатегорія: {categories.find(cat => cat.id === selectedCategory)?.subcategories?.find(sub => sub.id === selectedSubcategory)?.name}</p>
+              )}
+            </div>
           )}
         </div>
       </div>

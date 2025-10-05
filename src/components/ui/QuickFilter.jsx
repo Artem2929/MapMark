@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import countriesData from '../../data/countries.json';
+import { useCountries } from '../../hooks/useCountries';
 import CustomSelect from './CustomSelect';
 import './QuickFilter.css';
 
@@ -12,7 +12,7 @@ const QuickFilter = ({ onFilterChange, onLocationClick }) => {
     category: ''
   });
 
-  const countries = countriesData;
+  const { countries, loading } = useCountries();
 
   const categories = [
     { id: 'housing', name: t('ads.categories.housing') },
@@ -68,10 +68,10 @@ const QuickFilter = ({ onFilterChange, onLocationClick }) => {
           <div className="filter-group">
             <label>{t('ads.form.country')}</label>
             <CustomSelect
-              options={countries}
+              options={loading ? [] : countries.map(c => ({ code: c.id, name_en: `${c.flag} ${c.name}` }))}
               value={filters.country}
               onChange={(value) => handleFilterChange('country', value)}
-              placeholder={t('ads.form.selectCountry')}
+              placeholder={loading ? 'Loading...' : t('ads.form.selectCountry')}
             />
           </div>
 

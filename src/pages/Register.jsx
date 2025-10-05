@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import CustomSelect from '../components/ui/CustomSelect';
+import CountrySelect from '../components/ui/CountrySelect';
 import authService from '../services/authService';
 import { validateRegistrationForm } from '../utils/registerValidation';
 import AuthLoader from '../components/ui/AuthLoader';
@@ -99,10 +99,7 @@ const Register = () => {
     return validatePassword(passwordValue);
   };
 
-  const countries = [
-    { value: 'UA', label: t('countries.ukraine') },
-    { value: 'US', label: t('countries.usa') }
-  ];
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -281,8 +278,7 @@ const Register = () => {
             </div>
 
             <div className="form-group">
-              <CustomSelect
-                options={countries}
+              <CountrySelect
                 value={formData.country}
                 onChange={(value) => setFormData({ ...formData, country: value })}
                 placeholder={t('register.countryPlaceholder')}

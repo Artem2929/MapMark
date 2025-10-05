@@ -31,23 +31,28 @@ services:
     container_name: mapmark-server-dev
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3001:3001"
     environment:
       NODE_ENV: development
-      PORT: 3000
+      PORT: 3001
       DB_URL: mongodb://admin:password@mongodb:27017/mapmark?authSource=admin
       R2_ACCOUNT_ID: 902b25f017bc15826ba1e1ffef2f9a1f
       R2_ACCESS_KEY_ID: 0c87a71dc4babc271655c8f616e4e235
       R2_SECRET_ACCESS_KEY: 874b35b8fc527365bf2ff34b9afe9ea5150df355ac985e63aa4532077893cb81
       R2_TOKEN: VSK0ucuu6CSA_6REmRTWvlRiLAOtYtflhCBnih2S
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    command: npm run dev
     depends_on:
       - mongodb
     networks:
       - mapmark-network
     develop:
       watch:
-        - action: rebuild
+        - action: sync
           path: ./server
+          target: /app
           ignore:
             - node_modules/
             - .git/

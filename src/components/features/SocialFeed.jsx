@@ -25,7 +25,7 @@ const SocialFeed = ({ userLocation, friends = [], onClose }) => {
   const loadFeedItems = async () => {
     setIsLoading(true);
     
-    // Mock feed data - replace with actual API
+    // TODO: Replace with actual API call
     const mockFeedItems = [
       {
         id: 1,
@@ -81,7 +81,7 @@ const SocialFeed = ({ userLocation, friends = [], onClose }) => {
     ];
 
     // Filter based on selected filter
-    let filteredItems = mockFeedItems;
+    let filteredItems = [];
     
     if (filter === 'friends') {
       filteredItems = mockFeedItems.filter(item => 
