@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CountrySelect from '../components/ui/CountrySelect';
+import CustomSelect from '../components/ui/CustomSelect';
+import PasswordStrength from '../components/ui/PasswordStrength';
+import SimpleCaptcha from '../components/ui/SimpleCaptcha';
+import EmailService from '../services/emailService';
 import authService from '../services/authService';
 import { validateRegistrationForm } from '../utils/registerValidation';
 import AuthLoader from '../components/ui/AuthLoader';
@@ -30,6 +34,8 @@ const Register = () => {
   const [nameTouched, setNameTouched] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const [passwordTouched, setPasswordTouched] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -126,7 +132,8 @@ const Register = () => {
            formData.country &&
            formData.role &&
            formData.acceptTerms && 
-           formData.acceptPrivacy;
+           formData.acceptPrivacy &&
+           captchaVerified;
   };
 
   const handleRegister = async (e) => {
@@ -155,6 +162,15 @@ const Register = () => {
         formData.email.trim(), 
         formData.password
       );
+      
+      // Відправляємо email верифікацію
+      try {
+        await EmailService.sendVerificationEmail(formData.email.trim(), 'temp-token');
+        setEmailSent(true);
+      } catch (emailError) {
+        console.warn('Email verification failed:', emailError);
+      }
+      
       // Успішна реєстрація - перенаправляємо на головну
       navigate('/', { replace: true });
     } catch (err) {
@@ -253,7 +269,7 @@ const Register = () => {
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? '👁️' : '👁️‍🗨️'}
+                {showPassword ? '👀' : '🙈'}
               </button>
             </div>
 
@@ -273,9 +289,10 @@ const Register = () => {
                 className="password-toggle"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
-                {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                {showConfirmPassword ? '👀' : '🙈'}
               </button>
             </div>
+            <PasswordStrength password={formData.password} />
 
             <div className="form-group">
               <CountrySelect
@@ -322,6 +339,8 @@ const Register = () => {
                 <Link to="/privacy-policy" target="_blank">{t('register.acceptPrivacy')}</Link>
               </div>
             </div>
+
+            <SimpleCaptcha onVerify={setCaptchaVerified} />
             
             <button type="submit" className="register-btn" disabled={loading || !isFormValid()}>
               {loading ? (
