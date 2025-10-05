@@ -1,56 +1,96 @@
 .simple-captcha {
   margin: 16px 0;
+  padding: 20px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  border: 2px solid rgba(59, 130, 246, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(8px);
+  text-align: center;
+}
+
+.captcha-header {
+  margin-bottom: 16px;
+}
+
+.captcha-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.captcha-actions {
+  margin-top: 16px;
+}
+
+.captcha-label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 16px;
 }
 
 .captcha-question {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
   font-weight: 500;
-  color: #374151;
-}
-
-.refresh-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 4px;
-  border-radius: 4px;
-  transition: background 0.2s;
-}
-
-.refresh-btn:hover {
-  background: #f3f4f6;
+  color: #1f2937;
+  font-size: 14px;
+  min-width: 60px;
 }
 
 .captcha-input {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.captcha-input input {
-  width: 100px;
+  width: 60px;
   padding: 8px 12px;
   border: 2px solid #e5e7eb;
   border-radius: 8px;
   font-size: 14px;
-  transition: border-color 0.2s;
+  text-align: center;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: text;
 }
 
-.captcha-input input:focus {
+.captcha-input:focus {
   outline: none;
   border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  cursor: text;
 }
 
-.captcha-input input.verified {
+.captcha-input.verified {
   border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.refresh-btn {
+  background: #6b7280;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.refresh-btn:hover {
+  background: #4b5563;
+  transform: translateY(-1px);
 }
 
 .verified-icon {
   color: #22c55e;
   font-weight: bold;
-  margin-left: 8px;
+  font-size: 16px;
+}
+
+.captcha-error-inline {
+  color: #dc2626;
+  font-size: 14px;
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: rgba(220, 38, 38, 0.1);
+  border-radius: 6px;
+  text-align: center;
 }

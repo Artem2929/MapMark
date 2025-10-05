@@ -34,8 +34,11 @@ const Register = () => {
   const [nameTouched, setNameTouched] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const [passwordTouched, setPasswordTouched] = useState(false);
+  const [showCaptcha, setShowCaptcha] = useState(false);
+  const [captchaError, setCaptchaError] = useState('');
+  const [captchaAttempts, setCaptchaAttempts] = useState(0);
+  const [captchaAnswer, setCaptchaAnswer] = useState('');
   const [captchaVerified, setCaptchaVerified] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -132,8 +135,7 @@ const Register = () => {
            formData.country &&
            formData.role &&
            formData.acceptTerms && 
-           formData.acceptPrivacy &&
-           captchaVerified;
+           formData.acceptPrivacy;
   };
 
   const handleRegister = async (e) => {
@@ -147,14 +149,21 @@ const Register = () => {
       setFieldErrors(validation.errors);
       const firstError = Object.values(validation.errors)[0];
       setError(firstError);
-      // Фокус на першому полі з помилкою
       const firstErrorField = Object.keys(validation.errors)[0];
       const element = document.getElementById(firstErrorField);
       if (element) element.focus();
       return;
     }
 
+    // Показуємо капчу замість реєстрації
+    setShowCaptcha(true);
+  };
+
+  const handleCaptchaSubmit = async () => {
+    if (!captchaVerified) return;
+
     setLoading(true);
+    setCaptchaError('');
 
     try {
       await authService.register(
@@ -163,19 +172,11 @@ const Register = () => {
         formData.password
       );
       
-      // Відправляємо email верифікацію
-      try {
-        await EmailService.sendVerificationEmail(formData.email.trim(), 'temp-token');
-        setEmailSent(true);
-      } catch (emailError) {
-        console.warn('Email verification failed:', emailError);
-      }
-      
       // Успішна реєстрація - перенаправляємо на головну
       navigate('/', { replace: true });
     } catch (err) {
       setError(err.message);
-      // Очищуємо паролі при помилці
+      setShowCaptcha(false);
       setFormData(prev => ({
         ...prev,
         password: '',
@@ -184,6 +185,14 @@ const Register = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCaptchaVerify = (isCorrect) => {
+    setCaptchaVerified(isCorrect);
+  };
+
+  const handleCaptchaAnswerChange = (answer) => {
+    setCaptchaAnswer(answer);
   };
 
   return (
@@ -201,7 +210,34 @@ const Register = () => {
             )}
           </div>
           
-          <form onSubmit={handleRegister} className="register-form">
+          {showCaptcha ? (
+            <div className="captcha-container">
+              <h2 className="captcha-title">Підтвердіть, що ви не робот</h2>
+              <SimpleCaptcha 
+                onVerify={handleCaptchaVerify} 
+                onAnswerChange={handleCaptchaAnswerChange}
+                key={captchaAttempts} 
+              />
+              {captchaError && (
+                <div className="captcha-error">{captchaError}</div>
+              )}
+              {loading && (
+                <div className="captcha-loading">
+                  <div className="btn-spinner"></div>
+                  Створення акаунту...
+                </div>
+              )}
+              <button 
+                type="button" 
+                className="submit-btn"
+                onClick={handleCaptchaSubmit}
+                disabled={loading || !captchaAnswer.trim() || !captchaVerified}
+              >
+                Підтвердити
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleRegister} className="register-form">
             <div className="form-group">
               <input
                 type="text"
@@ -340,7 +376,7 @@ const Register = () => {
               </div>
             </div>
 
-            <SimpleCaptcha onVerify={setCaptchaVerified} />
+
             
             <button type="submit" className="register-btn" disabled={loading || !isFormValid()}>
               {loading ? (
@@ -353,6 +389,7 @@ const Register = () => {
               )}
             </button>
           </form>
+          )}
           
           <div className="register-footer">
             <p>{t('register.haveAccount')} <Link to="/login">{t('register.loginLink')}</Link></p>

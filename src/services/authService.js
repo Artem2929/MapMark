@@ -23,11 +23,13 @@ class AuthService {
           throw new Error('Забагато спроб входу. Спробуйте пізніше');
         } else if (response.status === 400) {
           throw new Error('Перевірте правильність введених даних');
+        } else if (response.status === 500) {
+          throw new Error('Помилка сервера. Спробуйте пізніше');
         }
         throw new Error(data.message || 'Помилка входу');
       }
 
-      localStorage.setItem('token', data.data.token);
+      localStorage.setItem('accessToken', data.data.token);
       localStorage.setItem('userId', data.data.user.id);
       localStorage.setItem('userEmail', data.data.user.email);
       localStorage.setItem('userName', data.data.user.name);
@@ -67,11 +69,13 @@ class AuthService {
           throw new Error('Перевірте правильність введених даних');
         } else if (response.status === 429) {
           throw new Error('Забагато спроб реєстрації. Спробуйте пізніше');
+        } else if (response.status === 500) {
+          throw new Error('Помилка сервера. Спробуйте пізніше');
         }
         throw new Error(data.message || 'Помилка реєстрації');
       }
 
-      localStorage.setItem('token', data.data.token);
+      localStorage.setItem('accessToken', data.data.token);
       localStorage.setItem('userId', data.data.user.id);
       localStorage.setItem('userEmail', data.data.user.email);
       localStorage.setItem('userName', data.data.user.name);
@@ -119,24 +123,21 @@ class AuthService {
         throw new Error(data.message || 'Google login failed');
       }
 
-      // Зберігаємо токен від сервера якщо є
       if (data.data && data.data.token) {
-        localStorage.setItem('token', data.data.token);
+        localStorage.setItem('accessToken', data.data.token);
       }
 
       return data;
     } catch (error) {
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        // Якщо сервер недоступний, продовжуємо з локальною авторизацією
-        console.warn('Server unavailable, using local Google auth');
-        return { success: true, local: true };
+        throw new Error('Сервер недоступний');
       }
       throw error;
     }
   }
 
   logout() {
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
@@ -146,11 +147,28 @@ class AuthService {
   }
 
   getToken() {
-    return localStorage.getItem('token');
+    return localStorage.getItem('accessToken');
   }
 
   isAuthenticated() {
-    return !!this.getToken();
+    const token = this.getToken();
+    return !!token;
+  }
+
+  async makeAuthenticatedRequest(url, options = {}) {
+    const token = this.getToken();
+    
+    if (!token) {
+      throw new Error('No access token');
+    }
+
+    return fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'Authorization': `Bearer ${token}`,
+      },
+    });
   }
 
   getCurrentUser() {
