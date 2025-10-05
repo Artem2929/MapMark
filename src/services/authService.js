@@ -43,7 +43,7 @@ class AuthService {
     }
   }
 
-  async register(name, email, password) {
+  async register(name, email, password, country, role) {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
@@ -53,7 +53,9 @@ class AuthService {
         body: JSON.stringify({ 
           name: name.trim(), 
           email: email.trim().toLowerCase(), 
-          password 
+          password,
+          country,
+          role
         }),
       });
 
@@ -107,34 +109,7 @@ class AuthService {
     return data;
   }
 
-  async googleLogin(googleData) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/google`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(googleData),
-      });
 
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Google login failed');
-      }
-
-      if (data.data && data.data.token) {
-        localStorage.setItem('accessToken', data.data.token);
-      }
-
-      return data;
-    } catch (error) {
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        throw new Error('Сервер недоступний');
-      }
-      throw error;
-    }
-  }
 
   logout() {
     localStorage.removeItem('accessToken');
@@ -143,7 +118,6 @@ class AuthService {
     localStorage.removeItem('userName');
     localStorage.removeItem('userImage');
     localStorage.removeItem('authProvider');
-    localStorage.removeItem('googleToken');
   }
 
   getToken() {

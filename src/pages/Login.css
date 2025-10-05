@@ -226,38 +226,8 @@
   font-weight: 500;
 }
 
-.google-login-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background: white;
-  color: #1e293b;
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  padding: 12px 20px;
-  border-radius: 16px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
-  letter-spacing: -0.01em;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-}
 
-.google-login-btn:hover {
-  background: #f8f9fa;
-  border-color: rgba(0, 0, 0, 0.2);
- 
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-}
 
-.google-icon {
-  flex-shrink: 0;
-}
 
 .forgot-password-btn {
   background: none;
@@ -414,19 +384,9 @@
   }
 
   .form-group input,
-  .login-btn,
-  .google-login-btn {
+  .login-btn {
     padding: 10px 14px;
     font-size: 14px;
-  }
-}
-
-/* Mobile */
-@media (max-width: 480px) {
-  .login-page {
-    padding: 0;
-    padding-top: 100px;
-    padding-bottom: 20px;
   }
 
   .login-container {
@@ -469,20 +429,10 @@
     border-radius: 16px;
   }
 
-  .login-btn,
-  .google-login-btn {
+  .login-btn {
     padding: 14px 20px;
     font-size: 16px;
     border-radius: 16px;
-  }
-
-  .divider {
-    margin: 16px 0;
-  }
-
-  .divider span {
-    font-size: 14px;
-    padding: 0 16px;
   }
 
   .forgot-password-btn {
@@ -544,17 +494,9 @@
   }
 
   .form-group input,
-  .login-btn,
-  .google-login-btn {
+  .login-btn {
     padding: 12px 14px;
-    font-size: 15px;
-  }
-}
-
-/* Large Desktop */
-@media (min-width: 1440px) {
-  .login-container {
-    max-width: 420px;
+    font-size: 14px;
   }
 
   .login-form-wrapper {

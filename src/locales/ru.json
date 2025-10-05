@@ -16,7 +16,6 @@
     "passwordPlaceholder": "Введите ваш пароль",
     "loginButton": "Войти",
     "loginButtonLoading": "Вход...",
-    "googleLogin": "Войти через Google",
     "forgotPassword": "Забыли пароль?",
     "resetPassword": "Сбросить пароль",
     "resetPasswordLoading": "Отправка...",
@@ -25,8 +24,6 @@
     "noAccount": "Нет аккаунта?",
     "registerLink": "Зарегистрироваться",
     "or": "или",
-    "googleLoginLoading": "Вход через Google...",
-    "googleLoginError": "Ошибка входа через Google. Попробуйте еще раз.",
     "resetPasswordSuccess": "Инструкции для сброса пароля отправлены на {{email}}",
     "validation": {
       "emailRequired": "Email обязателен",

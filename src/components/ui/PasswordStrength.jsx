@@ -1,7 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './PasswordStrength.css';
 
 const PasswordStrength = ({ password }) => {
+  const { t } = useTranslation();
   const getStrength = (pwd) => {
     if (!pwd) return { score: 0, text: '', color: '' };
     
@@ -14,11 +16,11 @@ const PasswordStrength = ({ password }) => {
     
     const levels = [
       { score: 0, text: '', color: '' },
-      { score: 1, text: 'Дуже слабкий', color: '#ef4444' },
-      { score: 2, text: 'Слабкий', color: '#f97316' },
-      { score: 3, text: 'Середній', color: '#eab308' },
-      { score: 4, text: 'Сильний', color: '#22c55e' },
-      { score: 5, text: 'Дуже сильний', color: '#16a34a' }
+      { score: 1, text: t('passwordStrength.veryWeak'), color: '#ef4444' },
+      { score: 2, text: t('passwordStrength.weak'), color: '#f97316' },
+      { score: 3, text: t('passwordStrength.medium'), color: '#eab308' },
+      { score: 4, text: t('passwordStrength.strong'), color: '#22c55e' },
+      { score: 5, text: t('passwordStrength.veryStrong'), color: '#16a34a' }
     ];
     
     return levels[score];

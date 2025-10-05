@@ -137,10 +137,10 @@ router.post('/register', registerValidation, async (req, res) => {
       });
     }
 
-    const { email, password, name } = req.body;
+    const { email, password, name, country, role } = req.body;
 
     // Додаткові перевірки безпеки
-    if (!email || !password || !name) {
+    if (!email || !password || !name || !country) {
       return res.status(400).json({
         success: false,
         message: 'All fields are required'
@@ -166,7 +166,13 @@ router.post('/register', registerValidation, async (req, res) => {
     }
 
     // Створити нового користувача
-    const user = new User({ email, password, name });
+    const user = new User({ 
+      email, 
+      password, 
+      name, 
+      country,
+      role: role || 'user'
+    });
     await user.save();
 
     // Згенерувати токен
@@ -180,7 +186,9 @@ router.post('/register', registerValidation, async (req, res) => {
         user: {
           id: user._id,
           email: user.email,
-          name: user.name
+          name: user.name,
+          country: user.country,
+          role: user.role
         }
       }
     });

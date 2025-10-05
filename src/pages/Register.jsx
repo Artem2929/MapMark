@@ -169,7 +169,9 @@ const Register = () => {
       await authService.register(
         formData.name.trim(), 
         formData.email.trim(), 
-        formData.password
+        formData.password,
+        formData.country,
+        formData.role
       );
       
       // Успішна реєстрація - перенаправляємо на головну
@@ -212,7 +214,7 @@ const Register = () => {
           
           {showCaptcha ? (
             <div className="captcha-container">
-              <h2 className="captcha-title">Підтвердіть, що ви не робот</h2>
+              <h2 className="captcha-title">{t('register.captcha.title')}</h2>
               <SimpleCaptcha 
                 onVerify={handleCaptchaVerify} 
                 onAnswerChange={handleCaptchaAnswerChange}
@@ -224,7 +226,7 @@ const Register = () => {
               {loading && (
                 <div className="captcha-loading">
                   <div className="btn-spinner"></div>
-                  Створення акаунту...
+                  {t('register.captcha.creating')}
                 </div>
               )}
               <button 
@@ -233,7 +235,7 @@ const Register = () => {
                 onClick={handleCaptchaSubmit}
                 disabled={loading || !captchaAnswer.trim() || !captchaVerified}
               >
-                Підтвердити
+                {t('register.captcha.submit')}
               </button>
             </div>
           ) : (

@@ -21,7 +21,6 @@
     "passwordPlaceholder": "Введіть ваш пароль",
     "loginButton": "Увійти",
     "loginButtonLoading": "Вхід...",
-    "googleLogin": "Увійти через Google",
     "forgotPassword": "Забули пароль?",
     "resetPassword": "Скинути пароль",
     "resetPasswordLoading": "Надсилання...",
@@ -30,8 +29,6 @@
     "noAccount": "Немає акаунту?",
     "registerLink": "Зареєструватися",
     "or": "або",
-    "googleLoginLoading": "Вхід через Google...",
-    "googleLoginError": "Помилка входу через Google. Спробуйте ще раз.",
     "resetPasswordSuccess": "Інструкції для скидання паролю надіслані на {{email}}",
     "validation": {
       "emailRequired": "Email обов'язковий",
@@ -68,7 +65,22 @@
       "emailCyrillic": "Email не може містити кириличні символи",
       "passwordRequired": "Пароль обов'язковий",
       "passwordMinLength": "Пароль повинен містити мінімум 6 символів"
+    },
+    "captcha": {
+      "title": "Підтвердіть, що ви не робот",
+      "solve": "Розв'яжіть приклад",
+      "error": "Неправильна відповідь, спробуйте ще раз",
+      "refresh": "Нове завдання",
+      "submit": "Підтвердити",
+      "creating": "Створення акаунту..."
     }
+  },
+  "passwordStrength": {
+    "veryWeak": "Дуже слабкий",
+    "weak": "Слабкий",
+    "medium": "Середній",
+    "strong": "Сильний",
+    "veryStrong": "Дуже сильний"
   },
   "countries": {
     "ukraine": "Україна",

@@ -21,7 +21,6 @@
     "passwordPlaceholder": "Enter your password",
     "loginButton": "Sign In",
     "loginButtonLoading": "Signing in...",
-    "googleLogin": "Sign in with Google",
     "forgotPassword": "Forgot password?",
     "resetPassword": "Reset Password",
     "resetPasswordLoading": "Sending...",
@@ -30,8 +29,6 @@
     "noAccount": "Don't have an account?",
     "registerLink": "Sign up",
     "or": "or",
-    "googleLoginLoading": "Signing in with Google...",
-    "googleLoginError": "Google login error. Please try again.",
     "resetPasswordSuccess": "Password reset instructions sent to {{email}}",
     "validation": {
       "emailRequired": "Email is required",
@@ -68,7 +65,22 @@
       "emailCyrillic": "Email cannot contain Cyrillic characters",
       "passwordRequired": "Password is required",
       "passwordMinLength": "Password must be at least 6 characters"
+    },
+    "captcha": {
+      "title": "Verify you're not a robot",
+      "solve": "Solve the problem",
+      "error": "Incorrect answer, please try again",
+      "refresh": "New challenge",
+      "submit": "Verify",
+      "creating": "Creating account..."
     }
+  },
+  "passwordStrength": {
+    "veryWeak": "Very Weak",
+    "weak": "Weak",
+    "medium": "Medium",
+    "strong": "Strong",
+    "veryStrong": "Very Strong"
   },
   "countries": {
     "ukraine": "Ukraine",

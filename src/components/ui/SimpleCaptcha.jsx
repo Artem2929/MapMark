@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import './SimpleCaptcha.css';
 
 const SimpleCaptcha = ({ onVerify, onAnswerChange }) => {
+  const { t } = useTranslation();
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [userAnswer, setUserAnswer] = useState('');
@@ -55,7 +57,7 @@ const SimpleCaptcha = ({ onVerify, onAnswerChange }) => {
   return (
     <div className="simple-captcha">
       <div className="captcha-header">
-        <span className="captcha-label">Розв'яжіть приклад:</span>
+        <span className="captcha-label">{t('register.captcha.solve')}:</span>
       </div>
       <div className="captcha-content">
         <span className="captcha-question">{question} =</span>
@@ -78,15 +80,15 @@ const SimpleCaptcha = ({ onVerify, onAnswerChange }) => {
             
             onAnswerChange && onAnswerChange(value);
           }}
-          placeholder="?"
+          placeholder=" "
           className={`captcha-input ${isVerified ? 'verified' : ''}`}
         />
         {isVerified && <span className="verified-icon">✓</span>}
       </div>
-      {showError && <div className="captcha-error-inline">Неправильна відповідь, спробуйте ще раз</div>}
+      {showError && <div className="captcha-error-inline">{t('register.captcha.error')}</div>}
       <div className="captcha-actions">
         <button type="button" onClick={handleRefresh} className="refresh-btn">
-          🔄 Нове завдання
+         {t('register.captcha.refresh')}
         </button>
       </div>
     </div>

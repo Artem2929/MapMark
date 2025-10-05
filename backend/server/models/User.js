@@ -37,7 +37,14 @@ const userSchema = new mongoose.Schema({
     type: String
   },
   country: {
-    type: String
+    type: String,
+    required: true
+  },
+  role: {
+    type: String,
+    enum: ['user', 'seller'],
+    default: 'user',
+    required: true
   },
   joinedAt: {
     type: Date,
