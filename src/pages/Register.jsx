@@ -144,7 +144,7 @@ const Register = () => {
     setFieldErrors({});
     
     // Клієнтська валідація
-    const validation = validateRegistrationForm(formData);
+    const validation = validateRegistrationForm(formData, t);
     if (!validation.isValid) {
       setFieldErrors(validation.errors);
       const firstError = Object.values(validation.errors)[0];

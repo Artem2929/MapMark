@@ -36,6 +36,17 @@
       "emailCyrillic": "Email cannot contain Cyrillic characters",
       "passwordRequired": "Enter password",
       "emailForReset": "Please enter email to reset password"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "tooManyAttempts": "Too many login attempts. Please try again later",
+      "invalidData": "Please check the entered data",
+      "serverError": "Server error. Please try again later",
+      "connectionError": "Connection error to server",
+      "loginError": "Login error",
+      "userExists": "User with this email already exists",
+      "validationError": "Validation error",
+      "registrationError": "Registration error"
     }
   },
   "register": {
@@ -64,7 +75,8 @@
       "emailInvalid": "Enter a valid email (e.g., user@example.com)",
       "emailCyrillic": "Email cannot contain Cyrillic characters",
       "passwordRequired": "Password is required",
-      "passwordMinLength": "Password must be at least 6 characters"
+      "passwordMinLength": "Password must be at least 6 characters",
+      "roleRequired": "Please select a user role"
     },
     "captcha": {
       "title": "Verify you're not a robot",

@@ -36,6 +36,17 @@
       "emailCyrillic": "Email не може містити кириличні символи",
       "passwordRequired": "Введіть пароль",
       "emailForReset": "Будь ласка, введіть email для скидання паролю"
+    },
+    "errors": {
+      "invalidCredentials": "Невірний email або пароль",
+      "tooManyAttempts": "Забагато спроб входу. Спробуйте пізніше",
+      "invalidData": "Перевірте правильність введених даних",
+      "serverError": "Помилка сервера. Спробуйте пізніше",
+      "connectionError": "Помилка підключення до сервера",
+      "loginError": "Помилка входу",
+      "userExists": "Користувач з таким email вже існує",
+      "validationError": "Помилка валідації",
+      "registrationError": "Помилка реєстрації"
     }
   },
   "register": {
@@ -64,7 +75,8 @@
       "emailInvalid": "Введіть коректний email (наприклад: user@example.com)",
       "emailCyrillic": "Email не може містити кириличні символи",
       "passwordRequired": "Пароль обов'язковий",
-      "passwordMinLength": "Пароль повинен містити мінімум 6 символів"
+      "passwordMinLength": "Пароль повинен містити мінімум 6 символів",
+      "roleRequired": "Оберіть роль користувача"
     },
     "captcha": {
       "title": "Підтвердіть, що ви не робот",

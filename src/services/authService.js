@@ -1,3 +1,5 @@
+import { translateAuthError } from '../utils/errorTranslations';
+
 const API_BASE_URL = 'http://localhost:3000/api';
 
 class AuthService {
@@ -18,15 +20,25 @@ class AuthService {
       
       if (!response.ok) {
         if (response.status === 401) {
-          throw new Error('Невірний email або пароль');
+          const error = new Error('Невірний email або пароль');
+          error.message = translateAuthError(error);
+          throw error;
         } else if (response.status === 429) {
-          throw new Error('Забагато спроб входу. Спробуйте пізніше');
+          const error = new Error('Забагато спроб входу. Спробуйте пізніше');
+          error.message = translateAuthError(error);
+          throw error;
         } else if (response.status === 400) {
-          throw new Error('Перевірте правильність введених даних');
+          const error = new Error('Перевірте правильність введених даних');
+          error.message = translateAuthError(error);
+          throw error;
         } else if (response.status === 500) {
-          throw new Error('Помилка сервера. Спробуйте пізніше');
+          const error = new Error('Помилка сервера. Спробуйте пізніше');
+          error.message = translateAuthError(error);
+          throw error;
         }
-        throw new Error(data.message || 'Помилка входу');
+        const error = new Error(data.message || 'Помилка входу');
+        error.message = translateAuthError(error);
+        throw error;
       }
 
       localStorage.setItem('accessToken', data.data.token);
@@ -37,7 +49,9 @@ class AuthService {
       return data;
     } catch (error) {
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        throw new Error('Помилка підключення до сервера');
+        const translatedError = new Error('Помилка підключення до сервера');
+        translatedError.message = translateAuthError(translatedError);
+        throw translatedError;
       }
       throw error;
     }
