@@ -147,6 +147,7 @@
   },
   "popup": {
     "addReview": "Додати відгук",
+    "viewReviews": "Переглянути відгуки",
     "location": "Локація",
     "coordinates": "Шир.: {lat}, Довг.: {lng}"
   },

@@ -147,6 +147,7 @@
   },
   "popup": {
     "addReview": "Add Review",
+    "viewReviews": "View Reviews",
     "location": "Location",
     "coordinates": "Lat: {lat}, Lng: {lng}"
   },

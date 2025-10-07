@@ -207,22 +207,36 @@
   padding: 20px;
 }
 
-/* Tile animations */
+/* Disable all animations */
 .world-map-container .leaflet-zoom-animated {
-  transition: transform 0.1s ease;
+  transition: none !important;
+  animation: none !important;
 }
 
 .world-map-container .leaflet-tile {
   border: none;
   filter: contrast(1.1) saturate(1.2);
+  transition: none !important;
+  animation: none !important;
 }
 
 .world-map-container .leaflet-tile-container {
-  will-change: transform;
+  will-change: auto;
 }
 
 .world-map-container .leaflet-zoom-anim .leaflet-tile {
-  transition: none;
+  transition: none !important;
+  animation: none !important;
+}
+
+.world-map-container .leaflet-marker-icon {
+  transition: none !important;
+  animation: none !important;
+}
+
+.world-map-container .game-flag-icon {
+  transition: none !important;
+  animation: none !important;
 }
 
 /* Button styles */
@@ -540,100 +554,47 @@
   position: relative;
   width: 28px;
   height: 28px;
-  animation: badgePulse 3s ease-in-out infinite;
+  animation: none;
+  transform: scale(1) !important;
 }
 
 .badge-circle {
   width: 28px;
   height: 28px;
-  background: transparent;
-  border: none;
+  background: #ffd700;
+  border: 2px solid white;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .badge-circle::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.2) 50%,
-    transparent 70%
-  );
-  animation: badgeShine 4s ease-in-out infinite;
+  display: none;
 }
 
 .badge-icon {
-  color: #ffd700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
-  transition: all 0.3s ease;
+  color: #333;
+  font-size: 16px;
+  text-shadow: none;
+  filter: none;
+  transition: none;
   position: relative;
   z-index: 2;
 }
 
-/* Zoom-responsive sizing */
-.leaflet-zoom-level-3 .badge-icon {
-  font-size: 12px;
-}
-.leaflet-zoom-level-4 .badge-icon {
-  font-size: 14px;
-}
-.leaflet-zoom-level-5 .badge-icon {
-  font-size: 16px;
-}
-.leaflet-zoom-level-6 .badge-icon {
-  font-size: 18px;
-}
-.leaflet-zoom-level-7 .badge-icon {
-  font-size: 20px;
-}
-.leaflet-zoom-level-8 .badge-icon {
-  font-size: 22px;
-}
-.leaflet-zoom-level-9 .badge-icon {
-  font-size: 24px;
-}
-.leaflet-zoom-level-10 .badge-icon {
-  font-size: 26px;
-}
-.leaflet-zoom-level-11 .badge-icon {
-  font-size: 28px;
-}
-.leaflet-zoom-level-12 .badge-icon {
-  font-size: 30px;
-}
-.leaflet-zoom-level-13 .badge-icon {
-  font-size: 32px;
-}
-.leaflet-zoom-level-14 .badge-icon {
-  font-size: 34px;
-}
-.leaflet-zoom-level-15 .badge-icon {
-  font-size: 36px;
-}
-.leaflet-zoom-level-16 .badge-icon {
-  font-size: 38px;
-}
-.leaflet-zoom-level-17 .badge-icon {
-  font-size: 40px;
-}
-.leaflet-zoom-level-18 .badge-icon {
-  font-size: 42px;
+/* Static badge icon size */
+.badge-icon {
+  font-size: 16px !important;
 }
 
 .badge-count {
   position: absolute;
-  top: -25px;
-  right: -16px;
-  background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+  top: -8px;
+  right: -8px;
+  background: #ff4757;
   color: white;
   border-radius: 50%;
   width: 16px;
@@ -644,23 +605,12 @@
   font-size: 10px;
   font-weight: bold;
   border: 2px solid white;
-  box-shadow: 0 2px 6px rgba(255, 71, 87, 0.4);
-  animation: countBounce 2s ease-in-out infinite;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: none;
 }
 
 .badge-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(0, 122, 255, 0.4) 0%,
-    transparent 70%
-  );
-  pointer-events: none;
+  display: none;
 }
 
 @keyframes badgePulse {

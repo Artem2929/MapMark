@@ -1,5 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import authService from '../../services/authService';
 import './MarkerPopup.css';
 
 const MarkerPopup = ({ 
@@ -11,6 +13,8 @@ const MarkerPopup = ({
   onDelete 
 }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const isAuthenticated = authService.isAuthenticated();
   
   const avgRating = reviews.length > 0 
     ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length 
@@ -38,7 +42,7 @@ const MarkerPopup = ({
       <div className="marker-popup-actions">
         <button 
           className="marker-popup-item"
-          onClick={onAddReview}
+          onClick={isAuthenticated || reviews.length > 0 ? onAddReview : () => navigate('/login')}
         >
           <span className="marker-popup-item-icon">📝</span>
           <span className="marker-popup-item-text">{t('popup.addReview')}</span>
@@ -50,26 +54,10 @@ const MarkerPopup = ({
             onClick={onViewReviews}
           >
             <span className="marker-popup-item-icon">👁️</span>
-            <span className="marker-popup-item-text">View Reviews</span>
+            <span className="marker-popup-item-text">{t('popup.viewReviews')}</span>
             <span className="marker-popup-reviews-count">{reviews.length}</span>
           </button>
         )}
-
-        <button 
-          className="marker-popup-item"
-          onClick={onBuildRoute}
-        >
-          <span className="marker-popup-item-icon">🗺️</span>
-          <span className="marker-popup-item-text">Route</span>
-        </button>
-
-        <button 
-          className="marker-popup-item marker-popup-item-danger"
-          onClick={onDelete}
-        >
-          <span className="marker-popup-item-icon">🗑️</span>
-          <span className="marker-popup-item-text">Delete</span>
-        </button>
       </div>
     </div>
   );

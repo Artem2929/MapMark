@@ -29,26 +29,69 @@ const MapClickHandler = ({ onMapClick }) => {
   return null;
 };
 
+const MarkerComponent = React.memo(({ marker, markerReviews, hasReviews, map, setMarkerPopup }) => {
+  return (
+    <Marker 
+      position={marker.position}
+      eventHandlers={{
+        click: () => {
+          if (map) {
+            const markerPoint = map.latLngToContainerPoint(marker.position);
+            const mapContainer = map.getContainer().getBoundingClientRect();
+            
+            const x = mapContainer.left + markerPoint.x + 30;
+            const y = mapContainer.top + markerPoint.y - 10;
+            
+            setMarkerPopup({
+              x,
+              y,
+              marker,
+              reviews: markerReviews
+            });
+          }
+        }
+      }}
+    >
+      <Popup>
+        <div>
+          <strong>{marker.name}</strong><br/>
+          Відгуків: {markerReviews.length}
+        </div>
+      </Popup>
+    </Marker>
+  );
+});
+
 const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onReviewSubmit }) => {
   const { t } = useTranslation();
-  const [markers, setMarkers] = useState([]);
+
   const [map, setMap] = useState(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const { reviews, addReview } = useReviews();
 
-  // Create markers from reviews
-  useEffect(() => {
-    if (reviews.length > 0) {
-      const reviewMarkers = reviews.map(review => ({
-        id: review._id,
-        position: [review.lat, review.lng],
-        name: `Відгук від ${review.username || 'Anonymous'}`,
-        hasReviews: true,
-        isTemp: false
-      }));
-      setMarkers(reviewMarkers);
-    }
+  // Create markers from reviews - group by location
+  const markers = React.useMemo(() => {
+    if (reviews.length === 0) return [];
+    
+    const locationGroups = {};
+    
+    reviews.forEach(review => {
+      const key = `${review.lat.toFixed(4)}_${review.lng.toFixed(4)}`;
+      if (!locationGroups[key]) {
+        locationGroups[key] = {
+          id: key,
+          position: [review.lat, review.lng],
+          name: `Місце з відгуками`,
+          hasReviews: true,
+          isTemp: false,
+          reviewCount: 0
+        };
+      }
+      locationGroups[key].reviewCount++;
+    });
+    
+    return Object.values(locationGroups);
   }, [reviews]);
   const [expandedPopup, setExpandedPopup] = useState(null);
   const [userReviewCount, setUserReviewCount] = useState(0);
@@ -79,24 +122,9 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
       addReview(newReview);
       onReviewSubmit?.();
       
-      // Якщо це тимчасовий маркер, робимо його постійним
+      // Прибираємо тимчасовий маркер
       if (selectedMarker.isTemp) {
-        const permanentMarker = { ...selectedMarker, isTemp: false, hasReviews: true };
-        setMarkers(prev => [...prev, permanentMarker]);
         setTempMarker(null);
-      } else {
-        // Update existing marker to show it has reviews
-        setMarkers(prev => {
-          const existingMarker = prev.find(m => m.id === selectedMarker.id);
-          if (existingMarker) {
-            return prev.map(marker => 
-              marker.id === selectedMarker.id 
-                ? { ...marker, hasReviews: true }
-                : marker
-            );
-          }
-          return prev;
-        });
       }
       
       // Close review form
@@ -446,63 +474,20 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
         
         {/* Постійні маркери */}
         {markers.map((marker) => {
-          const markerReviews = reviews.filter(review => 
-            review._id === marker.id || review.markerId === marker.id
-          );
+          const markerReviews = reviews.filter(review => {
+            const reviewKey = `${review.lat.toFixed(4)}_${review.lng.toFixed(4)}`;
+            return reviewKey === marker.id;
+          });
           const hasReviews = marker.hasReviews || markerReviews.length > 0;
           
-          // Create custom icon for markers with reviews
-          const markerProps = {
-            position: marker.position
-          };
-          
-          if (hasReviews) {
-            const reviewCount = markerReviews.length || 1;
-            let scale = 0.1;
-            if (reviewCount > 80) scale = 1.0;
-            else if (reviewCount > 50) scale = 0.8;
-            else if (reviewCount > 20) scale = 0.5;
-            else if (reviewCount > 5) scale = 0.3;
-            
-            const size = Math.round(28 * scale);
-            markerProps.icon = L.divIcon({
-              html: `
-                <div class="review-badge" style="transform: scale(${scale})">
-                  <div class="badge-circle">
-                    <div class="badge-icon">⭐</div>
-                  </div>
-                  <div class="badge-count">${reviewCount}</div>
-                  <div class="badge-glow"></div>
-                </div>
-              `,
-              className: 'game-flag-icon',
-              iconSize: [size, Math.round(36 * scale)],
-              iconAnchor: [Math.round(3 * scale), Math.round(36 * scale)]
-            });
-          }
-          
           return (
-            <Marker 
+            <MarkerComponent
               key={marker.id}
-              {...markerProps}
-              eventHandlers={{
-                click: () => {
-                  if (map) {
-                    const markerPoint = map.latLngToContainerPoint(marker.position);
-                    const mapContainer = map.getContainer().getBoundingClientRect();
-                    
-                    const x = mapContainer.left + markerPoint.x + 30;
-                    const y = mapContainer.top + markerPoint.y - 10;
-                    
-                    setMarkerPopup({
-                      x,
-                      y,
-                      marker,
-                      reviews: markerReviews
-                    });
-                  }
-                }
-              }}
+              marker={marker}
+              markerReviews={markerReviews}
+              hasReviews={hasReviews}
+              map={map}
+              setMarkerPopup={setMarkerPopup}
             />
           );
         })}
@@ -655,8 +640,7 @@ const WorldMap = ({ searchQuery, onMapReady, filters, onReviewFormToggle, onRevi
               setMarkerPopup(null);
             }}
             onDelete={() => {
-              setMarkers(prev => prev.filter(m => m.id !== markerPopup.marker.id));
-              setReviews(prev => prev.filter(r => r.markerId !== markerPopup.marker.id));
+              // Маркери тепер автоматично оновлюються через useMemo
               setMarkerPopup(null);
             }}
           />

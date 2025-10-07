@@ -31,7 +31,7 @@ class ReviewService {
         formData.append('photos', photo);
       });
 
-      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/reviews`, {
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/review`, {
         method: 'POST',
         body: formData,
       });

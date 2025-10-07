@@ -19,6 +19,7 @@
   width: 100%;
   max-width: 400px;
   min-height: auto;
+  margin-top: 25px;
 }
 
 .login-form-wrapper {
