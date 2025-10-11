@@ -7,51 +7,37 @@
 }
 
 .profile-stat-item {
-  background: linear-gradient(145deg, #3b82f6 0%, #1d4ed8 100%);
+  padding: 0 16px;
+  border-radius: 16px;
   border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.04);
+  color: #1d1d1f;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  display: flex;
+  font-size: 14px;
+  font-weight: 400;
+  height: 32px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
+  text-decoration: none;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  letter-spacing: -0.01em;
   gap: 8px;
   flex: 1;
   white-space: nowrap;
 }
 
-.profile-stat-item::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(59, 130, 246, 0.1),
-    transparent
-  );
-  transition: left 0.6s;
-}
-
 .profile-stat-item:hover {
-  background: linear-gradient(145deg, #1d4ed8 0%, #1e40af 100%);
-
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.profile-stat-item:hover::before {
-  left: 100%;
+  background: rgba(0, 0, 0, 0.08);
+  text-decoration: none;
 }
 
 .profile-stat-icon {
   font-size: 16px;
-  color: white;
+  color: #1d1d1f;
 }
 
 .profile-stat-content {
@@ -62,16 +48,16 @@
 
 .profile-stat-value {
   font-size: 14px;
-  font-weight: 700;
-  color: white;
+  font-weight: 600;
+  color: #1d1d1f;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
     Roboto, sans-serif;
 }
 
 .profile-stat-label {
   font-size: 14px;
-  color: white;
-  font-weight: 500;
+  color: #1d1d1f;
+  font-weight: 400;
 }
 
 @media (max-width: 768px) {

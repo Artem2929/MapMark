@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = 'http://localhost:3000/api';
 
 let categoriesCache = null;
 let categoriesPromise = null;
@@ -31,7 +31,8 @@ export const categoriesService = {
       if (!response.ok) {
         throw new Error('Failed to fetch categories');
       }
-      return await response.json();
+      const result = await response.json();
+      return result.data || [];
     } catch (error) {
       console.error('Error fetching categories:', error);
       throw error;

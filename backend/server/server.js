@@ -13,6 +13,7 @@ const postsRoutes = require('./routes/posts');
 const adsRoutes = require('./routes/ads');
 const categoriesRoutes = require('./routes/categories');
 const countriesRoutes = require('./routes/countries');
+const avatarRoutes = require('./routes/avatar');
 const Ad = require('./models/Ad');
 const path = require('path');
 const fs = require('fs');
@@ -45,6 +46,7 @@ app.use('/api/posts', postsRoutes);
 app.use('/api/ads', adsRoutes);
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/countries', countriesRoutes);
+app.use('/api/avatar', avatarRoutes);
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

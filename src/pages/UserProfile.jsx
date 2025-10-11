@@ -94,13 +94,33 @@ const UserProfile = () => {
         return;
       }
       
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setUserState(prev => ({ ...prev, avatar: e.target.result }));
-        showToast('Аватар оновлено! Не забудьте зберегти зміни.', 'info');
-      };
-      reader.readAsDataURL(file);
-      setAvatarFile(file);
+      try {
+        setSaving(true);
+        showToast('Завантаження аватара...', 'info');
+        
+        const formData = new FormData();
+        formData.append('avatar', file);
+        
+        const response = await fetch(`http://localhost:3000/api/avatar/${targetUserId}`, {
+          method: 'PUT',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          const avatarUrl = `http://localhost:3000${result.data.avatarUrl}`;
+          setUserState(prev => ({ ...prev, avatar: avatarUrl }));
+          showToast('Аватар успішно оновлено!', 'success');
+        } else {
+          showToast('Помилка при завантаженні аватара', 'error');
+        }
+      } catch (error) {
+        console.error('Avatar upload error:', error);
+        showToast('Помилка підключення до сервера', 'error');
+      } finally {
+        setSaving(false);
+      }
     }
   };
 
@@ -235,26 +255,27 @@ const UserProfile = () => {
                       {userState.name.charAt(0).toUpperCase()}
                     </div>
                   )}
-                  <div className="profile-online-indicator">
-                    <div className={`profile-online-dot ${Math.random() > 0.5 ? 'online' : 'offline'}`}></div>
-                    <span className="profile-online-text">
-                      {Math.random() > 0.5 ? 'Онлайн' : 'Був 2 год тому'}
-                    </span>
-                  </div>
-                  {isOwnProfile && (
-                    <>
-                      <input
-                        type="file"
-                        id="avatar-upload"
-                        accept="image/*"
-                        onChange={handleAvatarChange}
-                        className="profile-avatar-input"
-                      />
-                      <label htmlFor="avatar-upload" className="profile-avatar-upload-btn">
-                        📷
-                      </label>
-                    </>
-                  )}
+                <div className="profile-online-indicator">
+                  <div className={`profile-online-dot ${Math.random() > 0.5 ? 'online' : 'offline'}`}></div>
+                  <span className="profile-online-text">
+                    {Math.random() > 0.5 ? 'Онлайн' : 'Був 2 год тому'}
+                  </span>
+                </div>
+                {isOwnProfile && (
+                  <>
+                    <input
+                      type="file"
+                      id="avatar-upload"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={handleAvatarChange}
+                      className="profile-avatar-input"
+                    />
+                    <label htmlFor="avatar-upload" className="profile-avatar-upload-overlay">
+                      <div className="profile-avatar-upload-icon">📷</div>
+                      <div className="profile-avatar-upload-text">Змінити<br/>фото</div>
+                    </label>
+                  </>
+                )}
                 </div>
               </div>
             </div>
