@@ -59,6 +59,8 @@ async function getUserProfileHandler(req, res) {
       city: user.city,
       country: user.country,
       bio: user.bio,
+      gender: user.gender,
+      birthDate: user.birthDate,
       joinedAt: user.joinedAt,
       stats: {
         posts: userReviews.length,
@@ -86,7 +88,7 @@ async function getUserProfileHandler(req, res) {
 async function updateUserProfileHandler(req, res) {
   try {
     const { userId } = req.params;
-    const { name, city, country, bio } = req.body;
+    const { name, city, country, bio, gender, birthDate } = req.body;
 
     const mongoose = require('mongoose');
     let user;
@@ -112,6 +114,8 @@ async function updateUserProfileHandler(req, res) {
     if (city !== undefined) user.city = city.trim();
     if (country !== undefined) user.country = country.trim();
     if (bio !== undefined) user.bio = bio.trim();
+    if (gender !== undefined) user.gender = gender;
+    if (birthDate !== undefined) user.birthDate = new Date(birthDate);
 
     await user.save();
 
@@ -123,7 +127,9 @@ async function updateUserProfileHandler(req, res) {
         name: user.name,
         city: user.city,
         country: user.country,
-        bio: user.bio
+        bio: user.bio,
+        gender: user.gender,
+        birthDate: user.birthDate
       }
     });
   } catch (error) {

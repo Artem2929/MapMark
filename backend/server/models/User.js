@@ -40,6 +40,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  gender: {
+    type: String,
+    enum: ['чоловіча', 'жіноча']
+  },
+  birthDate: {
+    type: Date
+  },
   role: {
     type: String,
     enum: ['user', 'seller'],

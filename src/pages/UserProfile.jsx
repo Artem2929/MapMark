@@ -4,12 +4,15 @@ import { useTranslation } from 'react-i18next';
 import useUserProfile from '../hooks/useUserProfile';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import Footer from '../components/layout/Footer';
-import ProfileStats from '../components/ui/ProfileStats';
+
 import BioSection from '../components/ui/BioSection';
 
 import ActivityStats from '../components/ui/ActivityStats';
 import UserAchievements from '../components/ui/UserAchievements';
 import Wall from '../components/ui/Wall';
+import ProfileAvatar from '../components/Profile/ProfileAvatar';
+import ProfileBasicInfo from '../components/Profile/ProfileBasicInfo';
+
 
 
 import LoadingSpinner from '../components/ui/LoadingSpinner';
@@ -23,7 +26,7 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const currentUserId = localStorage.getItem('userId');
   const targetUserId = userId || currentUserId;
-  const { user, loading } = useUserProfile(targetUserId);
+  const { user, loading, refreshProfile } = useUserProfile(targetUserId);
   const [userState, setUserState] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [showCopyTooltip, setShowCopyTooltip] = useState(false);
@@ -246,158 +249,49 @@ const UserProfile = () => {
         <div className="profile-profile-header">
           <div className="profile-profile-header-top">
             <div className="profile-avatar-section">
-              <div className="profile-avatar-container">
-                <div className="profile-avatar-large">
-                  {userState.avatar ? (
-                    <img src={userState.avatar} alt={userState.name} className="profile-avatar-image" />
-                  ) : (
-                    <div className="profile-avatar-placeholder">
-                      {userState.name.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                <div className="profile-online-indicator">
-                  <div className={`profile-online-dot ${Math.random() > 0.5 ? 'online' : 'offline'}`}></div>
-                  <span className="profile-online-text">
-                    {Math.random() > 0.5 ? 'Онлайн' : 'Був 2 год тому'}
-                  </span>
-                </div>
-                {isOwnProfile && (
-                  <>
-                    <input
-                      type="file"
-                      id="avatar-upload"
-                      accept="image/jpeg,image/png,image/webp"
-                      onChange={handleAvatarChange}
-                      className="profile-avatar-input"
-                    />
-                    <label htmlFor="avatar-upload" className="profile-avatar-upload-overlay">
-                      <div className="profile-avatar-upload-icon">📷</div>
-                      <div className="profile-avatar-upload-text">Змінити<br/>фото</div>
-                    </label>
-                  </>
-                )}
-                </div>
-              </div>
+              <ProfileAvatar 
+                user={{
+                  ...userState,
+                  isOnline: Math.random() > 0.5
+                }}
+                isOwnProfile={isOwnProfile}
+                onAvatarChange={async (formData) => {
+                  try {
+                    const response = await fetch(`http://localhost:3000/api/avatar/${targetUserId}`, {
+                      method: 'PUT',
+                      body: formData
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                      const avatarUrl = `http://localhost:3000${result.data.avatarUrl}`;
+                      setUserState(prev => ({ ...prev, avatar: avatarUrl }));
+                      refreshProfile();
+                      showToast('Аватар успішно оновлено!', 'success');
+                    } else {
+                      showToast('Помилка при завантаженні аватара', 'error');
+                    }
+                  } catch (error) {
+                    showToast('Помилка підключення до сервера', 'error');
+                  }
+                }}
+              />
+
             </div>
             
             <div className="profile-profile-info">
-              <div className="profile-profile-text-info">
-                {isEditing ? (
-                  <div className="profile-profile-name">
-                    <input
-                      type="text"
-                      value={editedName}
-                      onChange={(e) => setEditedName(e.target.value)}
-                      onKeyDown={handleKeyPress}
-                      className="profile-name-input"
-                      placeholder="Введіть ім'я"
-                      style={{flex: 1, margin: 0}}
-                    />
-                    {isOwnProfile && (
-                      <button 
-                        onClick={handleEditToggle} 
-                        className="profile-main-edit-btn"
-                        disabled={saving}
-                      >
-                        {saving ? '⏳' : '✓'}
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <div className="profile-profile-name">
-                    <span>{userState.name}</span>
-                    {isOwnProfile && (
-                      <button 
-                        onClick={handleEditToggle} 
-                        className="profile-main-edit-btn"
-                        disabled={saving}
-                      >
-                        ✏️ Редагувати
-                      </button>
-                    )}
-                  </div>
-                )}
-                
-                <div className="profile-profile-username">{userState.username}</div>
-                
-                <div className="profile-status">
-                  {userState.bio || "Статус не встановлено"}
-                </div>
-                
-                <div className="profile-info-row">
-                  <span className="profile-info-label">Місто:</span>
-                  <span className="profile-info-value">
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={editedCity}
-                        onChange={(e) => setEditedCity(e.target.value)}
-                        onKeyDown={handleKeyPress}
-                        className="profile-city-input"
-                        placeholder="Введіть місто"
-                      />
-                    ) : (
-                      `${editedCity}, ${userState.country}`
-                    )}
-                  </span>
-                </div>
-                
-                <div className="profile-info-row">
-                  <span className="profile-info-label">Дата рег.:</span>
-                  <span className="profile-info-value">{getJoinedDate(userState.joinedAt)}</span>
-                </div>
-                
-                <div className="profile-info-row">
-                  <span className="profile-info-label">Відгуків:</span>
-                  <span className="profile-info-value">{userState.stats.posts}</span>
-                </div>
-                
-                {!isOwnProfile && (
-                  <div className="profile-contact-info">
-                    <div className="profile-contact-row">
-                      <a href="#" className="profile-contact-link">Написати повідомлення</a>
-                    </div>
-                    <div className="profile-contact-row">
-                      <a href="#" className="profile-contact-link">Додати в друзі</a>
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              {!isOwnProfile && (
-                <div className="profile-profile-actions">
-                  <button 
-                    onClick={handleFollowToggle}
-                    className={`profile-follow-btn ${isFollowing ? 'profile-following' : ''}`}
-                  >
-                    {isFollowing ? '✓ Підписано' : 'Підписатися'}
-                  </button>
-                  <button 
-                    onClick={() => navigate('/messages')}
-                    className="profile-message-btn"
-                  >
-                    💬 Повідомлення
-                  </button>
-                </div>
-              )}
+              <ProfileBasicInfo 
+                user={userState}
+                isOwnProfile={isOwnProfile}
+                onUpdate={(data) => {
+                  setUserState(prev => ({ ...prev, ...data }));
+                  refreshProfile();
+                  showToast('Інформацію оновлено', 'success');
+                }}
+              />
             </div>
           </div>
           
-          <ProfileStats 
-          stats={userState.stats}
-          onStatClick={(statType) => {
-            if (statType === 'messages') {
-              navigate('/messages');
-            } else if (statType === 'posts') {
-              // Scroll to reviews section or navigate to reviews page
-              console.log('Show user reviews');
-            } else if (statType === 'followers') {
-              navigate(`/user/${userState.id}/followers`);
-            } else if (statType === 'following') {
-              navigate(`/user/${userState.id}/following`);
-            }
-          }}
-        />
+
         </div>
 
         <ActivityStats userId={targetUserId} />

@@ -1,0 +1,177 @@
+/* ProfileAvatar - компонент аватарки користувача у стилі ВК 2011 */
+.profile-avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-avatar-large {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: #e5e5e5;
+  border: 1px solid #d7d8db;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.profile-avatar-large:hover {
+  border-color: #c0c1c5;
+}
+
+.profile-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: 500;
+  color: #666;
+  background: #e5e5e5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Оверлей для зміни фото */
+.profile-avatar-upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  color: white;
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.profile-avatar-large:hover .profile-avatar-upload-overlay {
+  opacity: 1;
+}
+
+.profile-avatar-upload-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.profile-avatar-upload-text {
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+/* Онлайн індикатор */
+.profile-online-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1px 3px;
+  border-radius: 6px;
+  font-size: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 40px;
+  height: 16px;
+}
+
+.profile-online-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.profile-online-dot.online {
+  background: #44c22b;
+}
+
+.profile-online-dot.offline {
+  background: #aaa;
+}
+
+.profile-online-text {
+  color: #333;
+  font-weight: 500;
+  font-size: 7px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+/* Приховане поле вибору файлу */
+.profile-avatar-input {
+  display: none;
+}
+
+/* Кнопки дій */
+.profile-avatar-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.profile-avatar-actions .btn {
+  flex: 1;
+}
+
+
+
+/* Адаптивність */
+@media (max-width: 480px) {
+  .profile-avatar-large {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .profile-avatar-placeholder {
+    font-size: 36px;
+  }
+  
+  .profile-avatar-upload-icon {
+    font-size: 20px;
+  }
+  
+  .profile-avatar-upload-text {
+    font-size: 12px;
+  }
+  
+  .profile-online-indicator {
+    bottom: 6px;
+    left: 6px;
+    padding: 2px 5px;
+    font-size: 10px;
+  }
+  
+  .profile-online-dot {
+    width: 5px;
+    height: 5px;
+  }
+  
+  .profile-avatar-save-btn,
+  .profile-avatar-cancel-btn {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+}

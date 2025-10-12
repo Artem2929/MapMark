@@ -63,7 +63,7 @@ router.post('/upload', upload.single('avatar'), (req, res) => {
 });
 
 // PUT /api/avatar/:userId - оновлення аватара користувача
-router.put('/:userId', upload.single('avatar'), (req, res) => {
+router.put('/:userId', upload.single('avatar'), async (req, res) => {
   try {
     const { userId } = req.params;
     
@@ -76,8 +76,27 @@ router.put('/:userId', upload.single('avatar'), (req, res) => {
 
     const avatarUrl = `/uploads/avatars/${req.file.filename}`;
     
-    // Тут би мала бути логіка оновлення в базі даних
-    // Поки що повертаємо успішну відповідь
+    // Update avatar in database
+    const User = require('../models/User');
+    const mongoose = require('mongoose');
+    
+    let user;
+    if (mongoose.Types.ObjectId.isValid(userId)) {
+      user = await User.findById(userId);
+    } else {
+      const username = userId.replace('@', '');
+      user = await User.findOne({ username });
+    }
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+    
+    user.avatar = avatarUrl;
+    await user.save();
     
     res.json({
       success: true,

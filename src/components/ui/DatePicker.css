@@ -1,0 +1,20 @@
+/* DatePicker - кастомний компонент для вибору дати */
+.date-picker {
+  width: 100%;
+}
+
+.date-picker__selects {
+  display: flex;
+  gap: 8px;
+}
+
+.date-picker__select {
+  flex: 1;
+}
+
+/* Адаптивність */
+@media (max-width: 480px) {
+  .date-picker__selects {
+    gap: 6px;
+  }
+}

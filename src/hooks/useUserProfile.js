@@ -4,7 +4,13 @@ const profileCache = new Map();
 const loadingStates = new Map();
 const subscribers = new Map();
 
+// Function to clear cache for a specific user
+export const clearUserProfileCache = (userId) => {
+  profileCache.delete(userId);
+};
+
 const useUserProfile = (userId) => {
+  const [forceRefresh, setForceRefresh] = useState(0);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const isMountedRef = useRef(true);
@@ -17,11 +23,13 @@ const useUserProfile = (userId) => {
       return;
     }
 
-    if (profileCache.has(userId)) {
+    if (profileCache.has(userId) && forceRefresh === 0) {
       setUser(profileCache.get(userId));
       setLoading(false);
       return;
     }
+
+
 
     if (loadingStates.get(userId)) {
       if (!subscribers.has(userId)) {
@@ -82,9 +90,14 @@ const useUserProfile = (userId) => {
     return () => {
       isMountedRef.current = false;
     };
-  }, [userId]);
+  }, [userId, forceRefresh]);
 
-  return { user, loading };
+  const refreshProfile = () => {
+    profileCache.delete(userId);
+    setForceRefresh(prev => prev + 1);
+  };
+
+  return { user, loading, refreshProfile };
 };
 
 export default useUserProfile;
