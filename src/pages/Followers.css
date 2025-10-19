@@ -19,7 +19,7 @@
   margin-bottom: 32px;
   background: white;
   padding: 24px;
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
@@ -35,12 +35,12 @@
   color: #64748b;
   background: rgba(59, 130, 246, 0.1);
   padding: 8px 16px;
-  border-radius: 20px;
+  border-radius: 12px;
 }
 
 .followers-list {
   background: white;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
@@ -131,7 +131,7 @@
 
 .follow-btn {
   padding: 8px 20px;
-  border-radius: 20px;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -162,7 +162,7 @@
   text-align: center;
   padding: 80px 20px;
   background: white;
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
@@ -187,7 +187,7 @@
 
 .followers-loading {
   background: white;
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 40px;
   text-align: center;
 }
@@ -197,7 +197,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 @keyframes loading {
@@ -215,7 +215,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .skeleton-count {
@@ -224,7 +224,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 20px;
+  border-radius: 12px;
 }
 
 .skeleton-follower {
@@ -232,7 +232,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 1px;
 }
 

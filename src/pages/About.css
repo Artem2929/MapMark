@@ -14,8 +14,8 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  margin-bottom:40px;
+  border-radius: 12px;
+  margin-bottom: 40px;
   backdrop-filter: blur(10px);
   padding: 20px 0;
 }
@@ -35,7 +35,7 @@
   background-clip: text;
   margin-bottom: 16px;
   letter-spacing: -0.02em;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
     Roboto, sans-serif;
 }
 
@@ -61,7 +61,7 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
+  border-radius: 12px;
   margin-bottom: 40px;
   backdrop-filter: blur(10px);
 }
@@ -76,7 +76,7 @@
   background-clip: text;
   margin-bottom: 40px;
   letter-spacing: -0.02em;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
     Roboto, sans-serif;
 }
 
@@ -93,7 +93,7 @@
     rgba(248, 250, 252, 0.9) 100%
   );
   border: 1px solid rgba(59, 130, 246, 0.1);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 12px;
   text-align: center;
   backdrop-filter: blur(10px);
@@ -105,7 +105,7 @@
   font-size: 18px;
   font-weight: 700;
   color: #1e293b;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
     Roboto, sans-serif;
   line-height: 1;
   margin-bottom: 4px;
@@ -115,7 +115,7 @@
   font-size: 11px;
   color: #64748b;
   font-weight: 500;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
     Roboto, sans-serif;
 }
 
@@ -126,14 +126,18 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
+  border-radius: 12px;
   margin-bottom: 40px;
   backdrop-filter: blur(10px);
 }
 
 .about-mission-content {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
-  border-radius: 20px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
+  border-radius: 12px;
   padding: 20px;
   backdrop-filter: blur(10px);
   display: flex;
@@ -149,7 +153,7 @@
   background-clip: text;
   margin-bottom: 20px;
   letter-spacing: -0.02em;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
     Roboto, sans-serif;
 }
 
@@ -180,8 +184,6 @@
   font-size: 20px;
 }
 
-
-
 /* Team Section */
 .about-team-section {
   padding: 20px 0;
@@ -189,7 +191,7 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
+  border-radius: 12px;
   margin-bottom: 40px;
   backdrop-filter: blur(10px);
 }
@@ -204,7 +206,7 @@
   background-clip: text;
   margin-bottom: 40px;
   letter-spacing: -0.02em;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
     Roboto, sans-serif;
 }
 
@@ -224,7 +226,7 @@
   );
   backdrop-filter: blur(25px) saturate(200%);
   border: 2px solid rgba(59, 130, 246, 0.15);
-  border-radius: 20px;
+  border-radius: 12px;
   padding: 30px;
   text-align: center;
   box-shadow: 0 20px 60px rgba(59, 130, 246, 0.12),
@@ -270,7 +272,7 @@
   color: #1e293b;
   margin-bottom: 8px;
   letter-spacing: -0.01em;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
     Roboto, sans-serif;
 }
 
@@ -296,7 +298,7 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
+  border-radius: 12px;
   backdrop-filter: blur(10px);
 }
 
@@ -310,7 +312,7 @@
   background-clip: text;
   margin-bottom: 40px;
   letter-spacing: -0.02em;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
     Roboto, sans-serif;
 }
 
@@ -321,7 +323,7 @@
     rgba(248, 250, 252, 0.98) 100%
   );
   backdrop-filter: blur(25px) saturate(200%);
-  border-radius: 20px;
+  border-radius: 12px;
   padding: 40px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -335,7 +337,7 @@
   color: #1e293b;
   margin-bottom: 16px;
   letter-spacing: -0.01em;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
     Roboto, sans-serif;
 }
 
@@ -377,7 +379,7 @@
   width: 100%;
   padding: 14px 18px;
   border: 2px solid rgba(59, 130, 246, 0.08);
-  border-radius: 16px;
+  border-radius: 12px;
   font-size: 15px;
   background: linear-gradient(
     145deg,
@@ -385,7 +387,7 @@
     rgba(248, 250, 252, 0.95) 100%
   );
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
     Roboto, sans-serif;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04),
@@ -400,7 +402,6 @@
   box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15),
     0 4px 12px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
   background: rgba(255, 255, 255, 0.98);
- 
 }
 
 .about-form-group input::placeholder,
@@ -414,12 +415,12 @@
   color: white;
   border: 2px solid rgba(59, 130, 246, 0.3);
   padding: 14px 20px;
-  border-radius: 16px;
+  border-radius: 12px;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
     Roboto, sans-serif;
   letter-spacing: -0.01em;
   position: relative;
@@ -456,8 +457,7 @@
 .about-form-group textarea.error:focus {
   border-color: rgba(220, 38, 38, 0.6);
   box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15),
-    0 4px 12px rgba(220, 38, 38, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 4px 12px rgba(220, 38, 38, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .about-field-error {
@@ -475,11 +475,11 @@
     max-width: 700px;
     padding: 0 16px;
   }
-  
+
   .about-hero-title {
     font-size: 42px;
   }
-  
+
   .about-contact-content {
     gap: 30px;
     padding: 32px;
@@ -491,50 +491,50 @@
   .about-page {
     margin-top: 70px;
   }
-  
+
   .about-container {
     max-width: 100%;
     padding: 0 12px;
   }
-  
+
   .about-hero {
     margin: 16px 8px;
     padding: 32px 16px;
   }
-  
+
   .about-hero-title {
     font-size: 36px;
   }
-  
+
   .about-hero-description {
     font-size: 16px;
   }
-  
+
   .about-stats-section h2,
   .about-mission-content h2,
   .about-team-section h2,
   .about-contact-section h2 {
     font-size: 28px;
   }
-  
+
   .about-mission-content,
   .about-contact-content {
     grid-template-columns: 1fr;
     gap: 24px;
     padding: 24px 16px;
   }
-  
+
   .about-stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
   }
-  
+
   .about-team-grid {
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
+
   .about-team-card {
     padding: 20px;
   }
@@ -545,35 +545,35 @@
   .about-page {
     margin-top: 60px;
   }
-  
+
   .about-container {
     max-width: 100%;
     padding: 0 16px;
   }
-  
+
   .about-hero {
     margin: 12px;
     padding: 24px 20px;
-    border-radius: 16px;
+    border-radius: 12px;
   }
-  
+
   .about-hero-title {
     font-size: 28px;
     margin-bottom: 12px;
   }
-  
+
   .about-hero-description {
     font-size: 15px;
     line-height: 1.5;
   }
-  
+
   .about-stats-section,
   .about-mission-section,
   .about-team-section,
   .about-contact-section {
     padding: 16px 0;
   }
-  
+
   .about-stats-section h2,
   .about-mission-content h2,
   .about-team-section h2,
@@ -581,114 +581,114 @@
     font-size: 24px;
     margin-bottom: 20px;
   }
-  
+
   .about-stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
   }
-  
+
   .about-stat-card {
     padding: 12px 8px;
   }
-  
+
   .about-stat-number {
     font-size: 16px;
   }
-  
+
   .about-stat-label {
     font-size: 10px;
   }
-  
+
   .about-mission-content {
     padding: 20px 16px;
-    border-radius: 16px;
+    border-radius: 12px;
   }
-  
+
   .about-mission-content p {
     font-size: 14px;
     margin-bottom: 16px;
   }
-  
+
   .about-features-list {
     gap: 8px;
   }
-  
+
   .about-feature-item {
     font-size: 14px;
     gap: 8px;
   }
-  
+
   .about-feature-icon {
     font-size: 16px;
   }
-  
+
   .about-team-section {
     padding: 16px;
   }
-  
+
   .about-team-grid {
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
+
   .about-team-card {
     padding: 20px 16px;
-    border-radius: 16px;
+    border-radius: 12px;
   }
-  
+
   .about-team-avatar {
     width: 60px;
     height: 60px;
     margin-bottom: 12px;
   }
-  
+
   .about-team-card h3 {
     font-size: 18px;
   }
-  
+
   .about-team-role,
   .about-team-bio {
     font-size: 13px;
   }
-  
+
   .about-contact-section {
     margin-bottom: 40px;
   }
-  
+
   .about-contact-content {
     grid-template-columns: 1fr;
     gap: 20px;
     padding: 20px 16px;
-    border-radius: 16px;
+    border-radius: 12px;
   }
-  
+
   .about-contact-info h3 {
     font-size: 20px;
     margin-bottom: 12px;
   }
-  
+
   .about-contact-info p {
     font-size: 14px;
     margin-bottom: 16px;
   }
-  
+
   .about-contact-item {
     font-size: 14px;
     gap: 8px;
   }
-  
+
   .about-contact-icon {
     font-size: 16px;
   }
-  
+
   .about-form-group input,
   .about-form-group textarea {
     padding: 12px 16px;
     font-size: 16px;
     border-radius: 12px;
   }
-  
+
   .about-contact-form button {
     padding: 12px 20px;
     font-size: 16px;
@@ -701,54 +701,54 @@
   .about-page {
     margin-top: 50px;
   }
-  
+
   .about-container {
     padding: 0 12px;
   }
-  
+
   .about-hero {
     margin: 8px;
     padding: 20px 16px;
   }
-  
+
   .about-hero-title {
     font-size: 24px;
   }
-  
+
   .about-hero-description {
     font-size: 14px;
   }
-  
+
   .about-stats-section h2,
   .about-mission-content h2,
   .about-team-section h2,
   .about-contact-section h2 {
     font-size: 20px;
   }
-  
+
   .about-stats-grid {
     grid-template-columns: 1fr;
     gap: 6px;
   }
-  
+
   .about-stat-card {
     padding: 10px 6px;
   }
-  
+
   .about-mission-content,
   .about-contact-content {
     padding: 16px 12px;
   }
-  
+
   .about-team-card {
     padding: 16px 12px;
   }
-  
+
   .about-team-avatar {
     width: 50px;
     height: 50px;
   }
-  
+
   .about-form-group input,
   .about-form-group textarea {
     padding: 10px 12px;
@@ -761,11 +761,11 @@
   .about-container {
     max-width: 900px;
   }
-  
+
   .about-hero-title {
     font-size: 52px;
   }
-  
+
   .about-contact-content {
     padding: 48px;
   }
@@ -776,7 +776,7 @@
   .about-container {
     max-width: 1000px;
   }
-  
+
   .about-hero {
     padding: 32px 0;
   }
@@ -787,27 +787,27 @@
   .about-page {
     margin-top: 40px;
   }
-  
+
   .about-hero {
     padding: 16px 0;
   }
-  
+
   .about-hero-title {
     font-size: 24px;
     margin-bottom: 8px;
   }
-  
+
   .about-hero-description {
     font-size: 14px;
   }
-  
+
   .about-stats-section,
   .about-mission-section,
   .about-team-section,
   .about-contact-section {
     padding: 12px 0;
   }
-  
+
   .about-mission-content,
   .about-contact-content {
     padding: 16px;

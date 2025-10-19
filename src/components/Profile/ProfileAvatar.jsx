@@ -129,7 +129,7 @@ const ProfileAvatar = ({
                   location.pathname === item.path ? 'active' : ''
                 }`}
               >
-                {item.label} <span className="profile-avatar-menu__count">({item.count})</span>
+                {item.label} <span className="profile-avatar-menu__count">{item.count}</span>
               </Link>
             </li>
           ))}

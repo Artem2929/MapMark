@@ -14,8 +14,12 @@
 }
 
 .analytics-dashboard {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
-  border-radius: 24px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
+  border-radius: 12px;
   padding: 32px;
   max-width: 800px;
   max-height: 90vh;
@@ -61,7 +65,7 @@
   gap: 4px;
   margin-bottom: 24px;
   background: rgba(248, 250, 252, 0.6);
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 4px;
 }
 
@@ -117,7 +121,7 @@
 .stat-card {
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(226, 232, 240, 0.6);
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 20px;
   text-align: center;
   transition: all 0.2s ease;
@@ -148,7 +152,7 @@
 
 .weekly-activity {
   background: rgba(248, 250, 252, 0.8);
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 24px;
   border: 1px solid rgba(226, 232, 240, 0.6);
 }
@@ -223,14 +227,14 @@
   flex: 1;
   height: 8px;
   background: rgba(226, 232, 240, 0.6);
-  border-radius: 4px;
+  border-radius: 12px;
   overflow: hidden;
 }
 
 .pattern-fill {
   height: 100%;
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  border-radius: 4px;
+  border-radius: 12px;
   transition: width 0.3s ease;
 }
 
@@ -274,7 +278,8 @@
   margin-bottom: 4px;
 }
 
-.location-coords, .location-value {
+.location-coords,
+.location-value {
   font-size: 12px;
   color: #64748b;
   font-family: monospace;
@@ -334,7 +339,6 @@
 }
 
 .privacy-btn:hover {
-
   box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
 }
 
@@ -377,8 +381,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 /* Scrollbar */
@@ -388,12 +397,12 @@
 
 .dashboard-content::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
+  border-radius: 12px;
 }
 
 .dashboard-content::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, #3b82f6 0%, #9333ea 100%);
-  border-radius: 4px;
+  border-radius: 12px;
 }
 
 @media (max-width: 768px) {
@@ -402,20 +411,20 @@
     padding: 20px;
     max-width: 100%;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .dashboard-tabs {
     flex-wrap: wrap;
   }
-  
+
   .tab-btn {
     font-size: 12px;
     padding: 8px 12px;
   }
-  
+
   .privacy-actions {
     flex-direction: column;
   }

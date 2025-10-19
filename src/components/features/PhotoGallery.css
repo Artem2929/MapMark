@@ -4,7 +4,7 @@
 
 .main-photo-container {
   background: white;
-  border-radius: 20px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
@@ -66,7 +66,7 @@
   background: rgba(0, 0, 0, 0.7);
   color: white;
   padding: 8px 16px;
-  border-radius: 20px;
+  border-radius: 12px;
   font-size: 14px;
   font-weight: 600;
 }
@@ -85,19 +85,19 @@
 
 .photo-thumbnails::-webkit-scrollbar-track {
   background: #f1f5f9;
-  border-radius: 2px;
+  border-radius: 12px;
 }
 
 .photo-thumbnails::-webkit-scrollbar-thumb {
   background: #3b82f6;
-  border-radius: 2px;
+  border-radius: 12px;
 }
 
 .thumbnail {
   flex-shrink: 0;
   width: 80px;
   height: 60px;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
   border: 3px solid transparent;

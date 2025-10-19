@@ -11,12 +11,12 @@
 
 .messages-page::-webkit-scrollbar-track {
   background: #f1f5f9;
-  border-radius: 4px;
+  border-radius: 12px;
 }
 
 .messages-page::-webkit-scrollbar-thumb {
   background: #94a3b8;
-  border-radius: 4px;
+  border-radius: 12px;
 }
 
 .messages-page::-webkit-scrollbar-thumb:hover {
@@ -39,7 +39,7 @@
   margin-bottom: 32px;
   background: white;
   padding: 24px;
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   animation: fadeInUp 0.4s ease-out;
 }
@@ -56,12 +56,12 @@
   color: #64748b;
   background: rgba(59, 130, 246, 0.1);
   padding: 8px 16px;
-  border-radius: 20px;
+  border-radius: 12px;
 }
 
 .conversations-list {
   background: white;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   flex: 1;
@@ -81,11 +81,21 @@
   animation: fadeInUp 0.3s ease-out both;
 }
 
-.conversation-item:nth-child(1) { animation-delay: 0.1s; }
-.conversation-item:nth-child(2) { animation-delay: 0.2s; }
-.conversation-item:nth-child(3) { animation-delay: 0.3s; }
-.conversation-item:nth-child(4) { animation-delay: 0.4s; }
-.conversation-item:nth-child(5) { animation-delay: 0.5s; }
+.conversation-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.conversation-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.conversation-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.conversation-item:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.conversation-item:nth-child(5) {
+  animation-delay: 0.5s;
+}
 
 .conversation-item:hover {
   background: #f8fafc;
@@ -182,7 +192,7 @@
   text-align: center;
   padding: 80px 20px;
   background: white;
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
@@ -207,7 +217,7 @@
 
 .messages-loading {
   background: white;
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 40px;
   text-align: center;
 }
@@ -217,12 +227,16 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 @keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 @keyframes fadeInUp {
@@ -242,7 +256,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .skeleton-stats {
@@ -251,7 +265,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 20px;
+  border-radius: 12px;
 }
 
 .skeleton-conversation {
@@ -259,7 +273,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 1px;
 }
 
@@ -267,13 +281,13 @@
   .messages-page {
     padding: 16px;
   }
-  
+
   .messages-header {
     flex-direction: column;
     gap: 16px;
     text-align: center;
   }
-  
+
   .conversation-item {
     padding: 16px;
   }

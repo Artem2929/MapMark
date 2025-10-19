@@ -1,7 +1,11 @@
 .user-map {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   border: 2px solid rgba(59, 130, 246, 0.08);
-  border-radius: 20px;
+  border-radius: 12px;
   padding: 24px;
   margin: 20px 0;
   backdrop-filter: blur(10px);
@@ -97,7 +101,7 @@
   .map-legend {
     gap: 12px;
   }
-  
+
   .legend-item {
     font-size: 11px;
   }

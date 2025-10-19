@@ -73,7 +73,7 @@
   border: none;
   box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(20px);
-  border-radius: 20px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   overflow: hidden;
 }
@@ -135,7 +135,7 @@
 .world-map-container .leaflet-control-attribution {
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(20px);
-  border-radius: 15px;
+  border-radius: 12px;
   font-size: 11px;
   margin: 15px;
   padding: 8px 12px;
@@ -244,7 +244,7 @@
   background: linear-gradient(135deg, #34c759 0%, #30d158 50%, #28a745 100%);
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 8px 12px;
   font-size: 12px;
   font-weight: 600;
@@ -289,7 +289,7 @@
   background: linear-gradient(135deg, #007aff 0%, #00c7ff 50%, #0056cc 100%);
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 8px 12px;
   font-size: 12px;
   font-weight: 600;
@@ -334,7 +334,7 @@
   background: linear-gradient(135deg, #ff3b30 0%, #ff6b6b 50%, #d32f2f 100%);
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 8px 12px;
   font-size: 12px;
   font-weight: 600;
@@ -379,7 +379,7 @@
   background: linear-gradient(135deg, #34c759 0%, #30d158 50%, #28a745 100%);
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 8px 12px;
   font-size: 12px;
   font-weight: 600;
@@ -537,7 +537,7 @@
   width: 120px;
   height: 80px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 12px;
   margin: 8px 0 6px 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #e8eaed;
@@ -721,7 +721,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 13px;
@@ -757,7 +757,7 @@
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   padding: 2px 6px;
-  border-radius: 6px;
+  border-radius: 12px;
   font-size: 10px;
   font-weight: 600;
   margin-left: auto;
@@ -773,7 +773,7 @@
   width: 100%;
   padding: 8px 12px;
   border: 1px solid rgba(226, 232, 240, 0.6);
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 13px;
   background: rgba(248, 250, 252, 0.8);
   color: #1e293b;
@@ -808,7 +808,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 14px;

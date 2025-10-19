@@ -8,7 +8,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px) saturate(180%);
-  border-radius: 24px;
+  border-radius: 12px;
   padding: 24px;
   max-width: 420px;
   max-height: calc(70vh - 15px);
@@ -142,7 +142,7 @@
     rgba(147, 51, 234, 0.08) 50%,
     rgba(16, 185, 129, 0.08) 100%
   );
-  border-radius: 24px;
+  border-radius: 12px;
   border: 2px solid rgba(59, 130, 246, 0.2);
   box-shadow: 0 8px 24px rgba(59, 130, 246, 0.08),
     0 4px 12px rgba(59, 130, 246, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8),
@@ -260,7 +260,7 @@
   width: 100%;
   padding: 14px 40px 14px 18px;
   border: 2px solid transparent;
-  border-radius: 16px;
+  border-radius: 12px;
   font-size: 14px;
   font-weight: 500;
   background: linear-gradient(
@@ -353,7 +353,7 @@
     rgba(241, 245, 249, 0.95) 100%
   );
   border: 2px solid rgba(226, 232, 240, 0.5);
-  border-radius: 20px;
+  border-radius: 12px;
   padding: 18px;
   font-size: 26px;
   cursor: pointer;
@@ -468,7 +468,7 @@
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   padding: 4px 8px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 11px;
   font-weight: 500;
 }
@@ -480,12 +480,12 @@
 
 .smart-filters-content::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
+  border-radius: 12px;
 }
 
 .smart-filters-content::-webkit-scrollbar-thumb {
   background: #94a3b8;
-  border-radius: 4px;
+  border-radius: 12px;
 }
 
 .smart-filters-content::-webkit-scrollbar-thumb:hover {

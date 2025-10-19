@@ -20,7 +20,7 @@
   );
   backdrop-filter: blur(15px);
   border: 1px solid rgba(59, 130, 246, 0.12);
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 24px;
   margin-bottom: 20px;
   box-shadow: 0 8px 32px rgba(59, 130, 246, 0.06),
@@ -62,13 +62,11 @@
 .profile-avatar-container {
   position: relative;
   width: 250px;
-  height: 480.profile-avatar-menupx;
+  height: 480profile-avatar-menupx;
   margin: 0 auto;
   cursor: pointer;
   transition: all 0.3s ease;
 }
-
-
 
 .profile-avatar-large {
   width: 250px;
@@ -83,7 +81,6 @@
   transition: all 0.3s ease;
 }
 
-
 .profile-avatar-image {
   width: 100%;
   height: 100%;
@@ -91,13 +88,13 @@
   transition: all 0.3s ease;
 }
 
-
 .profile-avatar-placeholder {
   font-size: 64px;
   font-weight: 500;
   color: white;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   letter-spacing: -0.02em;
 }
 
@@ -113,7 +110,7 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(8px);
-  border-radius: 16px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -146,15 +143,13 @@
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
 }
 
-
-
 .profile-avatar-status {
   position: absolute;
   bottom: 12px;
   left: 12px;
   width: 24px;
   height: 24px;
-  background: #34C759;
+  background: #34c759;
   border-radius: 50%;
   border: 3px solid white;
   box-shadow: 0 3px 8px rgba(52, 199, 89, 0.4);
@@ -162,13 +157,13 @@
 }
 
 .profile-avatar-status.offline {
-  background: #8E8E93;
+  background: #8e8e93;
 }
 
 .profile-online-indicator {
   position: absolute;
   top: 15px;
-  left:20%;
+  left: 20%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
@@ -176,11 +171,10 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(15px);
   padding: 6px 12px;
-  border-radius: 16px;
+  border-radius: 12px;
   font-size: 11px;
   font-weight: 500;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.1);
   z-index: 10;
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -193,11 +187,11 @@
 }
 
 .profile-online-dot.online {
-  background: #34C759;
+  background: #34c759;
 }
 
 .profile-online-dot.offline {
-  background: #8E8E93;
+  background: #8e8e93;
   animation: none;
 }
 
@@ -290,7 +284,7 @@
   font-weight: 700;
   color: #1e293b;
   border: 2px solid rgba(59, 130, 246, 0.3);
-  border-radius: 6px;
+  border-radius: 12px;
   padding: 4px 8px;
   background: rgba(255, 255, 255, 0.9);
   outline: none;
@@ -334,7 +328,7 @@
   font-size: 14px;
   color: #1e293b;
   border: 2px solid rgba(59, 130, 246, 0.3);
-  border-radius: 6px;
+  border-radius: 12px;
   padding: 4px 8px;
   background: rgba(255, 255, 255, 0.9);
   outline: none;
@@ -380,7 +374,7 @@
 .profile-status {
   background: rgba(59, 130, 246, 0.05);
   border: 1px solid rgba(59, 130, 246, 0.1);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 12px 16px;
   margin: 16px 0;
   font-size: 14px;
@@ -417,7 +411,7 @@
 
 .profile-main-edit-btn {
   padding: 0 16px;
-  border-radius: 16px;
+  border-radius: 12px;
   border: none;
   background: rgba(0, 0, 0, 0.04);
   color: #1d1d1f;

@@ -67,7 +67,7 @@
   width: 100%;
   padding: 20px;
   border: 2px solid rgba(0, 0, 0, 0.06);
-  border-radius: 20px;
+  border-radius: 12px;
   font-size: 16px;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui,
     sans-serif;
@@ -96,7 +96,7 @@
 
 .similar-form .submit-btn {
   padding: 14px 28px;
-  border-radius: 16px;
+  border-radius: 12px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;

@@ -7,8 +7,8 @@ import Footer from '../components/layout/Footer';
 
 import BioSection from '../components/ui/BioSection';
 
-import ActivityStats from '../components/ui/ActivityStats';
-import UserAchievements from '../components/ui/UserAchievements';
+
+
 import Wall from '../components/ui/Wall';
 import ProfileAvatar from '../components/Profile/ProfileAvatar';
 import ProfileBasicInfo from '../components/Profile/ProfileBasicInfo';
@@ -297,9 +297,9 @@ const UserProfile = () => {
 
 
 
-        <ActivityStats userId={targetUserId} />
+
         
-        <UserAchievements userId={targetUserId} />
+
         
         <Wall userId={targetUserId} isOwnProfile={isOwnProfile} />
 

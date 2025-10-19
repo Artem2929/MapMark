@@ -69,8 +69,13 @@
   opacity: 1;
 }
 
-.profile-avatar-menu:hover ~ .profile-avatar-large .profile-avatar-upload-overlay,
-.profile-avatar-container:hover .profile-avatar-menu:hover ~ .profile-avatar-large .profile-avatar-upload-overlay {
+.profile-avatar-menu:hover
+  ~ .profile-avatar-large
+  .profile-avatar-upload-overlay,
+.profile-avatar-container:hover
+  .profile-avatar-menu:hover
+  ~ .profile-avatar-large
+  .profile-avatar-upload-overlay {
   opacity: 0 !important;
 }
 
@@ -95,7 +100,7 @@
   gap: 2px;
   background: rgba(255, 255, 255, 0.9);
   padding: 1px 3px;
-  border-radius: 6px;
+  border-radius: 12px;
   font-size: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -145,39 +150,37 @@
   flex: 1;
 }
 
-
-
 /* Адаптивність */
 @media (max-width: 480px) {
   .profile-avatar-large {
     width: 120px;
     height: 120px;
   }
-  
+
   .profile-avatar-placeholder {
     font-size: 36px;
   }
-  
+
   .profile-avatar-upload-icon {
     font-size: 20px;
   }
-  
+
   .profile-avatar-upload-text {
     font-size: 12px;
   }
-  
+
   .profile-online-indicator {
     bottom: 6px;
     left: 6px;
     padding: 2px 5px;
     font-size: 10px;
   }
-  
+
   .profile-online-dot {
     width: 5px;
     height: 5px;
   }
-  
+
   .profile-avatar-save-btn,
   .profile-avatar-cancel-btn {
     font-size: 11px;
@@ -198,10 +201,14 @@
   margin-top: 6px;
   width: 250px;
   flex-shrink: 0;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   backdrop-filter: blur(15px);
   border: 1px solid rgba(59, 130, 246, 0.12);
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
 }
 
@@ -270,7 +277,8 @@
   font-size: 14px;
   color: #64748b;
   font-weight: 500;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
 }
 
 .profile-rating-value {
@@ -282,7 +290,8 @@
 .profile-rating-score {
   font-size: 16px;
   font-weight: 600;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
 }
 
 .profile-rating-star {
@@ -319,7 +328,7 @@
   font-size: 12px;
   cursor: pointer;
   padding: 6px 12px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-weight: 500;
   transition: all 0.2s ease;
   text-decoration: none;
@@ -341,7 +350,7 @@
 
 .profile-photos__grid a {
   display: block;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -378,37 +387,37 @@
 }
 
 @media (max-width: 480px) {
-    .profile-avatar-menu {
-        max-width: 100%;
-        border-radius: 12px;
-    }
+  .profile-avatar-menu {
+    max-width: 100%;
+    border-radius: 12px;
+  }
 
-    .profile-avatar-menu__link {
-        font-size: 13px;
-        padding: 10px 12px;
-    }
+  .profile-avatar-menu__link {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
 
-    .profile-avatar-menu__count {
-        font-size: 12px;
-    }
-    
-    .profile-rating-block {
-        max-width: 100%;
-    }
-    
-    .profile-rating-row {
-        padding: 10px 12px;
-    }
-    
-    .profile-rating-label {
-        font-size: 13px;
-    }
-    
-    .profile-rating-score {
-        font-size: 15px;
-    }
-    
-    .profile-photos {
-        border-radius: 12px;
-    }
+  .profile-avatar-menu__count {
+    font-size: 12px;
+  }
+
+  .profile-rating-block {
+    max-width: 100%;
+  }
+
+  .profile-rating-row {
+    padding: 10px 12px;
+  }
+
+  .profile-rating-label {
+    font-size: 13px;
+  }
+
+  .profile-rating-score {
+    font-size: 15px;
+  }
+
+  .profile-photos {
+    border-radius: 12px;
+  }
 }

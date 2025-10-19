@@ -80,18 +80,26 @@
   font-weight: 500;
   color: #374151;
   transition: all 0.2s ease;
-  border-radius: 8px;
+  border-radius: 12px;
   margin: 4px;
 }
 
 .custom-select-option:hover {
-  background: linear-gradient(145deg, rgba(163, 20, 20, 0.8) 0%, rgba(11, 102, 193, 0.8) 50%);
+  background: linear-gradient(
+    145deg,
+    rgba(163, 20, 20, 0.8) 0%,
+    rgba(11, 102, 193, 0.8) 50%
+  );
   color: white;
   transform: translateX(1px);
 }
 
 .custom-select-option.selected {
- background: linear-gradient(145deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(147, 51, 234, 0.1) 100%
+  );
   color: #374151;
   font-weight: 600;
 }

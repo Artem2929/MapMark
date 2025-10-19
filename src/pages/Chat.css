@@ -111,7 +111,7 @@
 .message-content {
   background: #f1f5f9;
   padding: 12px 16px;
-  border-radius: 18px;
+  border-radius: 12px;
   position: relative;
 }
 
@@ -154,7 +154,7 @@
   flex: 1;
   padding: 12px 16px;
   border: 2px solid #e2e8f0;
-  border-radius: 24px;
+  border-radius: 12px;
   font-size: 15px;
   outline: none;
   transition: border-color 0.2s;
@@ -192,7 +192,7 @@
 
 .chat-loading {
   background: white;
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 40px;
   text-align: center;
   flex: 1;
@@ -203,12 +203,16 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 @keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .skeleton-avatar {
@@ -226,7 +230,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 4px;
+  border-radius: 12px;
   margin-bottom: 8px;
 }
 
@@ -236,7 +240,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 4px;
+  border-radius: 12px;
 }
 
 .skeleton-message {
@@ -244,7 +248,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 18px;
+  border-radius: 12px;
   margin-bottom: 16px;
   max-width: 70%;
 }
@@ -265,7 +269,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 24px;
+  border-radius: 12px;
 }
 
 .skeleton-send-btn {
@@ -281,15 +285,15 @@
   .chat-page {
     padding: 16px;
   }
-  
+
   .chat-container {
     height: calc(100vh - 32px);
   }
-  
+
   .message {
     max-width: 85%;
   }
-  
+
   .chat-input-form {
     padding: 16px;
   }

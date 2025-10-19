@@ -2,17 +2,22 @@
 
 /* Enhanced Glassmorphism Variables */
 :root {
-  --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
+  --glass-bg: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(248, 250, 252, 0.98) 100%
+  );
   --glass-border: rgba(255, 255, 255, 0.4);
-  --glass-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --glass-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
   --glass-blur: blur(24px) saturate(180%);
-  
+
   --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
   --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   --purple-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-  
+
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
@@ -22,8 +27,7 @@
   position: relative;
   overflow: hidden;
   transition: var(--transition-smooth);
-  box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.1),
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
@@ -34,7 +38,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
   transition: left 0.6s;
 }
 
@@ -43,7 +52,6 @@
 }
 
 .enhanced-btn:hover {
-  
 }
 
 .enhanced-btn:active {
@@ -56,7 +64,7 @@
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
-  border-radius: 20px;
+  border-radius: 12px;
   transition: var(--transition-smooth);
   position: relative;
   overflow: hidden;
@@ -69,7 +77,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.05),
+    transparent
+  );
   transition: left 0.8s;
 }
 
@@ -78,39 +91,40 @@
 }
 
 .enhanced-card:hover {
- 
-  box-shadow: 
-    0 24px 70px rgba(0, 0, 0, 0.18),
-    0 12px 40px rgba(0, 0, 0, 0.12),
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18), 0 12px 40px rgba(0, 0, 0, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 /* Enhanced Input Styles */
 .enhanced-input {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
   border: 2px solid rgba(226, 232, 240, 0.6);
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 14px 18px;
   transition: var(--transition-smooth);
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.05),
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .enhanced-input:focus {
   outline: none;
   border-color: #3b82f6;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(248, 250, 252, 1) 100%);
-  box-shadow: 
-    0 0 0 4px rgba(59, 130, 246, 0.1),
-    0 4px 16px rgba(59, 130, 246, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(248, 250, 252, 1) 100%
+  );
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1),
+    0 4px 16px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .enhanced-input:hover {
   border-color: rgba(59, 130, 246, 0.3);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.08),
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
@@ -122,23 +136,21 @@
   border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
-  box-shadow: 
-    0 2px 8px rgba(59, 130, 246, 0.3),
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transition: var(--transition-smooth);
 }
 
 .enhanced-badge:hover {
   transform: scale(1.05);
-  box-shadow: 
-    0 4px 12px rgba(59, 130, 246, 0.4),
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 /* Enhanced Progress Bar */
 .enhanced-progress {
   background: rgba(226, 232, 240, 0.6);
-  border-radius: 8px;
+  border-radius: 12px;
   height: 8px;
   overflow: hidden;
   position: relative;
@@ -147,7 +159,7 @@
 .enhanced-progress-fill {
   background: var(--success-gradient);
   height: 100%;
-  border-radius: 8px;
+  border-radius: 12px;
   transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -160,13 +172,22 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   animation: progressShimmer 2s infinite;
 }
 
 @keyframes progressShimmer {
-  0% { left: -100%; }
-  100% { left: 100%; }
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 /* Enhanced Notification Styles */
@@ -175,7 +196,7 @@
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
-  border-radius: 20px;
+  border-radius: 12px;
   padding: 20px;
   animation: notificationSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -205,7 +226,11 @@
 
 /* Enhanced Modal Styles */
 .enhanced-modal-overlay {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(30, 41, 59, 0.7) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(30, 41, 59, 0.7) 100%
+  );
   backdrop-filter: blur(12px);
   animation: modalFadeIn 0.3s ease-out;
 }
@@ -215,13 +240,17 @@
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
-  border-radius: 24px;
+  border-radius: 12px;
   animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes modalFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes modalSlideIn {
@@ -239,8 +268,6 @@
 .enhanced-floating {
   animation: float 3s ease-in-out infinite;
 }
-
-
 
 /* Enhanced Glow Effects */
 .enhanced-glow {
@@ -273,7 +300,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -314,12 +342,12 @@
 
 .enhanced-scrollbar::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
+  border-radius: 12px;
 }
 
 .enhanced-scrollbar::-webkit-scrollbar-thumb {
   background: var(--primary-gradient);
-  border-radius: 4px;
+  border-radius: 12px;
   transition: all 0.3s ease;
 }
 
@@ -340,22 +368,29 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   animation: loading 1.5s infinite;
 }
 
 @keyframes loading {
-  0% { left: -100%; }
-  100% { left: 100%; }
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 /* Enhanced Focus States */
 .enhanced-focus:focus-visible {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
-  box-shadow: 
-    0 0 0 4px rgba(59, 130, 246, 0.1),
-    var(--glass-shadow);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), var(--glass-shadow);
 }
 
 /* Enhanced Disabled States */
@@ -374,9 +409,15 @@
 }
 
 @keyframes successPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Enhanced Error States */
@@ -387,9 +428,16 @@
 }
 
 @keyframes errorShake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 /* Enhanced Mobile Optimizations */
@@ -397,11 +445,11 @@
   .enhanced-card:hover {
     transform: none;
   }
-  
+
   .enhanced-btn:hover {
     transform: scale(1.02);
   }
-  
+
   .enhanced-modal {
     margin: 10px;
     max-width: calc(100vw - 20px);

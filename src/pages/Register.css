@@ -23,15 +23,18 @@
 }
 
 .register-form-wrapper {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 50%, rgba(241, 245, 249, 0.98) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(248, 250, 252, 0.98) 50%,
+    rgba(241, 245, 249, 0.98) 100%
+  );
   backdrop-filter: blur(25px) saturate(200%);
   border: 2px solid rgba(16, 185, 129, 0.15);
-  border-radius: 20px;
+  border-radius: 12px;
   padding: 24px;
-  box-shadow: 
-    0 20px 60px rgba(16, 185, 129, 0.12),
-    0 10px 30px rgba(16, 185, 129, 0.08),
-    0 4px 16px rgba(0, 0, 0, 0.04),
+  box-shadow: 0 20px 60px rgba(16, 185, 129, 0.12),
+    0 10px 30px rgba(16, 185, 129, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     inset 0 -1px 0 rgba(16, 185, 129, 0.05);
   position: relative;
@@ -45,7 +48,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.08), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(16, 185, 129, 0.08),
+    transparent
+  );
   transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -63,7 +71,8 @@
   text-align: center;
   margin-bottom: 6px;
   letter-spacing: -0.02em;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
 }
 
 .register-subtitle {
@@ -98,26 +107,27 @@
 .form-group input {
   padding: 12px 16px;
   border: 2px solid rgba(16, 185, 129, 0.08);
-  border-radius: 16px;
+  border-radius: 12px;
   font-size: 15px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   backdrop-filter: blur(10px);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.04),
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .form-group input:focus {
   outline: none;
   border-color: rgba(16, 185, 129, 0.4);
-  box-shadow: 
-    0 8px 24px rgba(16, 185, 129, 0.15),
-    0 4px 12px rgba(16, 185, 129, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15),
+    0 4px 12px rgba(16, 185, 129, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
   background: rgba(255, 255, 255, 0.98);
- 
 }
 
 .form-group input::placeholder {
@@ -127,17 +137,14 @@
 
 .form-group input.input-error {
   border-color: rgba(220, 38, 38, 0.4);
-  box-shadow: 
-    0 4px 12px rgba(220, 38, 38, 0.1),
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .form-group input.input-error:focus {
   border-color: rgba(220, 38, 38, 0.6);
-  box-shadow: 
-    0 8px 24px rgba(220, 38, 38, 0.15),
-    0 4px 12px rgba(220, 38, 38, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15),
+    0 4px 12px rgba(220, 38, 38, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .field-error {
@@ -149,27 +156,24 @@
   animation: slideIn 0.3s ease-out;
 }
 
-
-
 .register-btn {
   background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
   color: white;
   border: 2px solid rgba(16, 185, 129, 0.3);
   padding: 12px 20px;
-  border-radius: 16px;
+  border-radius: 12px;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   margin-top: 8px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   letter-spacing: -0.01em;
   position: relative;
   overflow: hidden;
-  box-shadow: 
-    0 8px 24px rgba(16, 185, 129, 0.2),
-    0 4px 12px rgba(16, 185, 129, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2),
+    0 4px 12px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .register-btn::before {
@@ -179,7 +183,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -190,10 +199,8 @@
 .register-btn:hover {
   background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
   transform: translateY(-3px) scale(1.03);
-  box-shadow: 
-    0 16px 40px rgba(16, 185, 129, 0.3),
-    0 8px 20px rgba(16, 185, 129, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 16px 40px rgba(16, 185, 129, 0.3),
+    0 8px 20px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   border-color: rgba(16, 185, 129, 0.4);
 }
 
@@ -230,13 +237,13 @@
   margin-bottom: 6px;
 }
 
-.checkbox-row input[type="checkbox"] {
+.checkbox-row input[type='checkbox'] {
   width: 18px;
   height: 18px;
   margin: 0;
   padding: 0;
   border: 2px solid rgba(16, 185, 129, 0.3);
-  border-radius: 4px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.95);
   cursor: pointer;
   position: relative;
@@ -245,12 +252,12 @@
   -webkit-appearance: none;
 }
 
-.checkbox-row input[type="checkbox"]:checked {
+.checkbox-row input[type='checkbox']:checked {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   border-color: #10b981;
 }
 
-.checkbox-row input[type="checkbox"]:checked::after {
+.checkbox-row input[type='checkbox']:checked::after {
   content: '✓';
   position: absolute;
   top: 50%;
@@ -294,7 +301,7 @@
   cursor: pointer;
   font-size: 16px;
   padding: 4px;
-  border-radius: 4px;
+  border-radius: 12px;
   transition: background-color 0.2s ease;
 }
 
@@ -339,10 +346,8 @@
 
 .register-btn:disabled:hover {
   transform: none;
-  box-shadow: 
-    0 8px 24px rgba(16, 185, 129, 0.2),
-    0 4px 12px rgba(16, 185, 129, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2),
+    0 4px 12px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .btn-loading {
@@ -362,8 +367,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .checkbox-text a {
@@ -380,10 +389,8 @@
 
 .form-group input.error {
   border-color: rgba(220, 38, 38, 0.4);
-  box-shadow: 
-    0 8px 24px rgba(220, 38, 38, 0.15),
-    0 4px 12px rgba(220, 38, 38, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15),
+    0 4px 12px rgba(220, 38, 38, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .field-error {
@@ -399,7 +406,7 @@
   .register-container {
     max-width: 380px;
   }
-  
+
   .register-form-wrapper {
     padding: 20px;
   }
@@ -411,31 +418,31 @@
     padding: 12px;
     padding-top: 120px;
   }
-  
+
   .register-container {
     max-width: 360px;
   }
-  
+
   .register-form-wrapper {
     padding: 18px;
-    border-radius: 16px;
+    border-radius: 12px;
   }
-  
+
   .register-title {
     font-size: 20px;
   }
-  
+
   .form-group input,
   .register-btn {
     padding: 10px 14px;
     font-size: 14px;
   }
-  
+
   .checkbox-row {
     gap: 10px;
   }
-  
-  .checkbox-row input[type="checkbox"] {
+
+  .checkbox-row input[type='checkbox'] {
     width: 16px;
     height: 16px;
   }
@@ -449,100 +456,100 @@
     padding-bottom: 120px;
     min-height: 100vh;
   }
-  
+
   .register-container {
     width: 100%;
     max-width: none;
     margin: 0;
     padding: 0 16px;
   }
-  
+
   .register-form-wrapper {
     padding: 24px 20px;
-    border-radius: 20px;
+    border-radius: 12px;
     border-width: 1px;
     margin: 0;
     width: 100%;
     box-sizing: border-box;
   }
-  
+
   .register-title {
     font-size: 20px;
     margin-bottom: 6px;
   }
-  
+
   .register-subtitle {
     font-size: 14px;
     margin-bottom: 16px;
   }
-  
+
   .register-form {
     gap: 6px;
   }
-  
+
   .form-group {
     gap: 6px;
   }
-  
+
   .form-group label {
     font-size: 14px;
   }
-  
+
   .form-group input {
     padding: 12px 16px;
     font-size: 16px;
-    border-radius: 16px;
+    border-radius: 12px;
   }
-  
+
   .register-btn {
     padding: 14px 20px;
     font-size: 16px;
-    border-radius: 16px;
+    border-radius: 12px;
   }
-  
+
   .checkbox-group {
     margin: 8px 0;
   }
-  
+
   .checkbox-row {
     gap: 10px;
     margin-bottom: 6px;
   }
-  
-  .checkbox-row input[type="checkbox"] {
+
+  .checkbox-row input[type='checkbox'] {
     width: 18px;
     height: 18px;
   }
-  
+
   .checkbox-row a,
   .checkbox-label-text {
     font-size: 14px;
   }
-  
+
   .checkbox-label-text {
     margin-left: 28px;
   }
-  
+
   .register-footer {
     margin-top: 16px;
     padding-top: 12px;
   }
-  
+
   .register-footer p {
     font-size: 14px;
   }
-  
+
   .error-container {
     min-height: 32px;
     margin-bottom: 8px;
   }
-  
+
   .error-message {
     padding: 12px 16px;
     font-size: 14px;
     border-radius: 12px;
   }
-  
+
   .field-error {
     font-size: 12px;
   }
@@ -564,39 +571,39 @@
     padding-top: 15px;
     padding-bottom: 30px;
   }
-  
+
   .register-container {
     padding: 0 12px;
   }
-  
+
   .register-form-wrapper {
     padding: 20px 16px;
   }
-  
+
   .register-title {
     font-size: 18px;
   }
-  
+
   .register-subtitle {
     font-size: 13px;
   }
-  
+
   .form-group input,
   .register-btn {
     padding: 12px 14px;
     font-size: 15px;
   }
-  
-  .checkbox-row input[type="checkbox"] {
+
+  .checkbox-row input[type='checkbox'] {
     width: 16px;
     height: 16px;
   }
-  
+
   .checkbox-row a,
   .checkbox-label-text {
     font-size: 13px;
   }
-  
+
   .checkbox-label-text {
     margin-left: 24px;
   }
@@ -607,11 +614,11 @@
   .register-container {
     max-width: 420px;
   }
-  
+
   .register-form-wrapper {
     padding: 28px;
   }
-  
+
   .register-title {
     font-size: 24px;
   }
@@ -635,7 +642,7 @@
   margin-top: 10px;
   padding: 8px 12px;
   background: rgba(220, 38, 38, 0.1);
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .captcha-loading {
@@ -653,7 +660,7 @@
   color: white;
   border: none;
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   margin-top: 16px;
   font-weight: 600;
@@ -676,7 +683,7 @@
   color: #6b7280;
   border: 1px solid #d1d5db;
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 12px;
   cursor: pointer;
   margin-top: 8px;
   font-size: 14px;
@@ -693,11 +700,11 @@
   .register-page {
     padding-top: 100px;
   }
-  
+
   .register-container {
     max-width: 450px;
   }
-  
+
   .register-form-wrapper {
     padding: 32px;
   }
@@ -709,35 +716,35 @@
     padding-top: 20px;
     align-items: flex-start;
   }
-  
+
   .register-form-wrapper {
     padding: 12px;
   }
-  
+
   .register-title {
     font-size: 16px;
     margin-bottom: 2px;
   }
-  
+
   .register-subtitle {
     font-size: 12px;
     margin-bottom: 8px;
   }
-  
+
   .form-group {
     gap: 2px;
   }
-  
+
   .form-group input,
   .register-btn {
     padding: 6px 8px;
     font-size: 12px;
   }
-  
+
   .checkbox-group {
     margin: 2px 0;
   }
-  
+
   .register-footer {
     margin-top: 8px;
     padding-top: 6px;

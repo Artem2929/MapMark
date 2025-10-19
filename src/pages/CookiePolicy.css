@@ -36,7 +36,7 @@
 
 .cookie-policy-content {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -104,7 +104,7 @@
 
 .cookie-type {
   background: #f8f9fa;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1.5rem;
 }
 
@@ -116,20 +116,20 @@
 
 .service {
   background: #f8f9fa;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1rem;
 }
 
 .browser-instructions {
   background: #f8f9fa;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1.5rem;
   margin-top: 1rem;
 }
 
 .contact-info {
   background: #f8f9fa;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1.5rem;
   margin-top: 1rem;
 }
@@ -142,19 +142,19 @@
   .cookie-policy {
     padding: 1rem 0;
   }
-  
+
   .cookie-policy-header {
     padding: 1.5rem;
   }
-  
+
   .cookie-policy-title {
     font-size: 2rem;
   }
-  
+
   .cookie-policy-content {
     padding: 1.5rem;
   }
-  
+
   .cookie-type,
   .service,
   .browser-instructions,
