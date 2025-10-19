@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { updateAvatar } from '../../api/profileEndpoints';
 import './ProfileAvatar.css';
 
@@ -81,6 +82,62 @@ const ProfileAvatar = ({
   const displayImage = previewUrl || avatarUrl;
   const userInitial = user?.name?.charAt(0)?.toUpperCase() || 'U';
 
+  const ProfileRatingBlock = () => {
+    const rating = 4.7; // Мок даних, потім з API
+    
+    const getRatingColor = (rating) => {
+      if (rating >= 4.5) return '#3b82f6'; // синій
+      if (rating >= 3.0) return '#f59e0b'; // жовтий
+      return '#ef4444'; // червоний
+    };
+
+    return (
+      <div className="profile-rating-block">
+        <div className="profile-rating-row">
+          <span className="profile-rating-label">Рейтинг:</span>
+          <div className="profile-rating-value">
+            <span 
+              className="profile-rating-score" 
+              style={{ color: getRatingColor(rating) }}
+            >
+              {rating}
+            </span>
+            <span className="profile-rating-star">★</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const ProfileAvatarMenu = () => {
+    const location = useLocation();
+    
+    const menuItems = [
+      { path: '/friends', label: 'Мої друзі', count: 12 },
+      { path: '/messages', label: 'Повідомлення', count: 3 },
+      { path: '/photos', label: 'Фото', count: 24 }
+    ];
+
+    return (
+      <nav className="profile-avatar-menu">
+        <ul className="profile-avatar-menu__list">
+          {menuItems.map(item => (
+            <li key={item.path} className="profile-avatar-menu__item">
+              <Link 
+                to={item.path}
+                className={`profile-avatar-menu__link ${
+                  location.pathname === item.path ? 'active' : ''
+                }`}
+              >
+                {item.label} <span className="profile-avatar-menu__count">({item.count})</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    );
+  };
+
   return (
     <div className="profile-avatar-container">
       <div 
@@ -148,6 +205,12 @@ const ProfileAvatar = ({
           </button>
         </div>
       )}
+
+      {/* Блок рейтингу */}
+      <ProfileRatingBlock />
+
+      {/* Вертикальне меню під фото */}
+      <ProfileAvatarMenu />
     </div>
   );
 };

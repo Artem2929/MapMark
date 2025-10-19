@@ -12,6 +12,7 @@ import UserAchievements from '../components/ui/UserAchievements';
 import Wall from '../components/ui/Wall';
 import ProfileAvatar from '../components/Profile/ProfileAvatar';
 import ProfileBasicInfo from '../components/Profile/ProfileBasicInfo';
+import ProfileMenu from '../components/Profile/ProfileMenu';
 
 
 
@@ -293,6 +294,8 @@ const UserProfile = () => {
           
 
         </div>
+
+
 
         <ActivityStats userId={targetUserId} />
         

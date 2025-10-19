@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CustomSelect from '../ui/CustomSelect';
 import DatePicker from '../ui/DatePicker';
 import { updateProfile } from '../../api/profileEndpoints';
+import ProfilePhotos from './ProfilePhotos';
 import './ProfileBasicInfo.css';
 
 const ProfileBasicInfo = ({ user, isOwnProfile = false, onUpdate }) => {
@@ -171,6 +172,7 @@ const ProfileBasicInfo = ({ user, isOwnProfile = false, onUpdate }) => {
           )}
         </div>
 
+        <ProfilePhotos />
 
       </div>
 
