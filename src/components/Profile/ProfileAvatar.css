@@ -65,18 +65,17 @@
   padding: 20px;
 }
 
-.profile-avatar-large:hover .profile-avatar-upload-overlay {
+.profile-avatar-large:hover:not(.menu-hovered) .profile-avatar-upload-overlay {
   opacity: 1;
 }
 
-.profile-avatar-menu:hover
-  ~ .profile-avatar-large
-  .profile-avatar-upload-overlay,
-.profile-avatar-container:hover
-  .profile-avatar-menu:hover
-  ~ .profile-avatar-large
-  .profile-avatar-upload-overlay {
+/* Повне відключення оверлея при hover на меню */
+.profile-avatar-container:has(.profile-avatar-menu:hover) .profile-avatar-upload-overlay,
+.profile-avatar-section:has(.profile-avatar-menu:hover) .profile-avatar-upload-overlay,
+.profile-avatar-container:has(.profile-avatar-menu__link:hover) .profile-avatar-upload-overlay {
   opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .profile-avatar-upload-icon {
