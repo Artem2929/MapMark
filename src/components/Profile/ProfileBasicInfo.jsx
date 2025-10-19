@@ -165,14 +165,16 @@ const ProfileBasicInfo = ({ user, isOwnProfile = false, onUpdate }) => {
               onChange={(e) => setFormData({...formData, about: e.target.value})}
               className="input"
               rows={3}
+              maxLength={200}
               placeholder="Розкажіть про себе"
+              style={{ resize: 'none' }}
             />
           ) : (
             <span className="profile-field__value">{formData.about || 'не вказано'}</span>
           )}
         </div>
 
-        <ProfilePhotos />
+        {!isEditing && <ProfilePhotos />}
 
       </div>
 

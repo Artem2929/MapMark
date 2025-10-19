@@ -240,9 +240,17 @@
 }
 
 .profile-avatar-menu__link:hover {
-  background: rgba(59, 130, 246, 0.08);
-  color: #2563eb;
-  padding-left: 18px;
+  text-decoration: none;
+}
+
+.profile-avatar-menu__link:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(163, 20, 20, 0.8) 0%,
+    rgba(11, 102, 193, 0.8) 50%
+  );
+  color: white;
+  transform: translateX(1px);
 }
 
 .profile-avatar-menu__count {
@@ -303,7 +311,7 @@
 /* Блок із фото */
 .profile-photos {
   width: 800px;
-  height: 145px;
+  height: 150px;
   padding: 10px 14px 14px;
   margin-top: 6px;
 }
