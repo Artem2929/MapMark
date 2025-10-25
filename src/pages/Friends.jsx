@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { debounce } from 'lodash';
+import { friendsService } from '../services/friendsService';
 import './Friends.css';
 
 const Friends = () => {
@@ -13,8 +14,17 @@ const Friends = () => {
   const [requests, setRequests] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [cities, setCities] = useState([]);
+  const [friendsLoading, setFriendsLoading] = useState(false);
+  const [requestsLoading, setRequestsLoading] = useState(false);
+  const dataLoaded = useRef(false);
 
   useEffect(() => {
+    if (dataLoaded.current) return;
+    
+    const currentUserId = localStorage.getItem('userId');
+    if (!currentUserId) return;
+    
+    dataLoaded.current = true;
     loadFriends();
     loadRequests();
     loadSuggestions();
@@ -28,46 +38,44 @@ const Friends = () => {
     }
   }, [filters.country]);
 
-  const loadFriends = () => {
-    // Mock data
-    setFriends([
-      {
-        id: 1,
-        name: 'Марія Іванова',
-        avatar: null,
-        mutualFriends: 5,
-        isOnline: true,
-        lastSeen: null
-      },
-      {
-        id: 2,
-        name: 'Олексій Петров',
-        avatar: null,
-        mutualFriends: 12,
-        isOnline: false,
-        lastSeen: '2 години тому'
-      },
-      {
-        id: 3,
-        name: 'Анна Сидорова',
-        avatar: null,
-        mutualFriends: 8,
-        isOnline: true,
-        lastSeen: null
+  const loadFriends = async () => {
+    if (friendsLoading) return;
+    
+    try {
+      setFriendsLoading(true);
+      const currentUserId = localStorage.getItem('userId');
+      if (!currentUserId) return;
+      
+      const result = await friendsService.getFriends(currentUserId);
+      if (result.success) {
+        setFriends(result.data);
       }
-    ]);
+    } catch (error) {
+      console.error('Error loading friends:', error);
+      setFriends([]);
+    } finally {
+      setFriendsLoading(false);
+    }
   };
 
-  const loadRequests = () => {
-    setRequests([
-      {
-        id: 4,
-        name: 'Дмитро Коваль',
-        avatar: null,
-        mutualFriends: 3,
-        requestDate: '2 дні тому'
+  const loadRequests = async () => {
+    if (requestsLoading) return;
+    
+    try {
+      setRequestsLoading(true);
+      const currentUserId = localStorage.getItem('userId');
+      if (!currentUserId) return;
+      
+      const result = await friendsService.getFriendRequests(currentUserId);
+      if (result.success) {
+        setRequests(result.data);
       }
-    ]);
+    } catch (error) {
+      console.error('Error loading requests:', error);
+      setRequests([]);
+    } finally {
+      setRequestsLoading(false);
+    }
   };
 
   const loadSuggestions = () => {
@@ -122,67 +130,12 @@ const Friends = () => {
     setError('');
 
     try {
-      // Mock API call - replace with real endpoint
-      const mockResults = [
-        {
-          id: 101,
-          firstName: 'Олександр',
-          lastName: 'Петренко',
-          age: 24,
-          country: 'Україна',
-          city: 'Київ',
-          avatar: null,
-          status: 'online',
-          isFriend: false,
-          requestSent: false
-        },
-        {
-          id: 102,
-          firstName: 'Марина',
-          lastName: 'Коваленко',
-          age: 28,
-          country: 'Україна',
-          city: 'Львів',
-          avatar: null,
-          status: 'offline',
-          isFriend: false,
-          requestSent: true
-        },
-        {
-          id: 103,
-          firstName: 'Андрій',
-          lastName: 'Сидоренко',
-          age: 32,
-          country: 'Україна',
-          city: 'Одеса',
-          avatar: null,
-          status: 'online',
-          isFriend: true,
-          requestSent: false
-        }
-      ];
-
-      // Filter results based on search criteria
-      let filtered = mockResults.filter(user => 
-        user.firstName.toLowerCase().includes(query.toLowerCase()) ||
-        user.lastName.toLowerCase().includes(query.toLowerCase())
-      );
-
-      if (searchFilters.country) {
-        const countryMap = { 'ua': 'Україна', 'pl': 'Польща', 'de': 'Німеччина' };
-        filtered = filtered.filter(user => user.country === countryMap[searchFilters.country]);
+      const result = await friendsService.searchUsers(query, searchFilters);
+      if (result.success) {
+        setSearchResults(result.data);
+      } else {
+        setError(result.error || 'Помилка пошуку');
       }
-
-      if (searchFilters.city) {
-        filtered = filtered.filter(user => user.city === searchFilters.city);
-      }
-
-      if (searchFilters.ageRange) {
-        const [min, max] = searchFilters.ageRange.split('-').map(Number);
-        filtered = filtered.filter(user => user.age >= min && user.age <= max);
-      }
-
-      setSearchResults(filtered);
     } catch (err) {
       setError('Помилка пошуку. Спробуйте ще раз.');
     } finally {
@@ -220,10 +173,14 @@ const Friends = () => {
 
   const handleAddFriend = async (userId) => {
     try {
-      // Mock API call
-      setSearchResults(prev => prev.map(user => 
-        user.id === userId ? { ...user, requestSent: true } : user
-      ));
+      const result = await friendsService.sendFriendRequest(userId);
+      if (result.success) {
+        setSearchResults(prev => prev.map(user => 
+          user.id === userId ? { ...user, requestSent: true } : user
+        ));
+      } else {
+        setError(result.error || 'Помилка відправки заявки');
+      }
     } catch (err) {
       setError('Помилка відправки заявки');
     }
@@ -231,10 +188,15 @@ const Friends = () => {
 
   const handleRemoveFriend = async (userId) => {
     try {
-      // Mock API call
-      setSearchResults(prev => prev.map(user => 
-        user.id === userId ? { ...user, isFriend: false } : user
-      ));
+      const result = await friendsService.removeFriend(userId);
+      if (result.success) {
+        setSearchResults(prev => prev.map(user => 
+          user.id === userId ? { ...user, isFriend: false } : user
+        ));
+        await loadFriends(); // Reload friends list
+      } else {
+        setError(result.error || 'Помилка видалення з друзів');
+      }
     } catch (err) {
       setError('Помилка видалення з друзів');
     }
@@ -244,16 +206,31 @@ const Friends = () => {
     friend.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleAcceptRequest = (id) => {
-    const request = requests.find(r => r.id === id);
-    if (request) {
-      setFriends([...friends, { ...request, isOnline: false, lastSeen: 'щойно' }]);
-      setRequests(requests.filter(r => r.id !== id));
+  const handleAcceptRequest = async (id) => {
+    try {
+      const result = await friendsService.acceptFriendRequest(id);
+      if (result.success) {
+        await loadFriends();
+        await loadRequests();
+      } else {
+        setError(result.error || 'Помилка прийняття заявки');
+      }
+    } catch (err) {
+      setError('Помилка прийняття заявки');
     }
   };
 
-  const handleRejectRequest = (id) => {
-    setRequests(requests.filter(r => r.id !== id));
+  const handleRejectRequest = async (id) => {
+    try {
+      const result = await friendsService.rejectFriendRequest(id);
+      if (result.success) {
+        await loadRequests();
+      } else {
+        setError(result.error || 'Помилка відхилення заявки');
+      }
+    } catch (err) {
+      setError('Помилка відхилення заявки');
+    }
   };
 
 

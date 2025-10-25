@@ -47,6 +47,27 @@ const userSchema = new mongoose.Schema({
   birthDate: {
     type: Date
   },
+  age: {
+    type: Number,
+    min: 13,
+    max: 120
+  },
+  firstName: {
+    type: String,
+    trim: true
+  },
+  lastName: {
+    type: String,
+    trim: true
+  },
+  isOnline: {
+    type: Boolean,
+    default: false
+  },
+  lastSeen: {
+    type: Date,
+    default: Date.now
+  },
   role: {
     type: String,
     enum: ['user', 'seller'],

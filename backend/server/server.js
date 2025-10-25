@@ -16,6 +16,7 @@ const countriesRoutes = require('./routes/countries');
 const avatarRoutes = require('./routes/avatar');
 const profileRoutes = require('./routes/profile');
 const wallPostsRoutes = require('./routes/wallPosts');
+const friendsRoutes = require('./routes/friends');
 const Ad = require('./models/Ad');
 const path = require('path');
 const fs = require('fs');
@@ -50,6 +51,7 @@ app.use('/api/categories', categoriesRoutes);
 app.use('/api/countries', countriesRoutes);
 app.use('/api/avatar', avatarRoutes);
 app.use('/api/user', profileRoutes);
+app.use('/api/friends', friendsRoutes);
 app.use('/api', profileRoutes);
 
 // Serve uploaded files
