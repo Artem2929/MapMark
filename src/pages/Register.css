@@ -669,7 +669,6 @@
 
 .submit-btn:hover {
   background: #059669;
-  transform: translateY(-1px);
 }
 
 .submit-btn:disabled {

@@ -1,7 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { wallService } from '../../services/wallService';
 import './Wall.css';
 
-const Wall = ({ userId, isOwnProfile }) => {
+const Wall = ({ userId, isOwnProfile, user }) => {
+  const [loading, setLoading] = useState(false);
   const [postText, setPostText] = useState('');
   const [selectedPhotos, setSelectedPhotos] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -23,41 +25,30 @@ const Wall = ({ userId, isOwnProfile }) => {
     { id: 4, name: 'Анна Сидорова', username: 'anna' },
     { id: 5, name: 'Дмитро Коваль', username: 'dmitro' }
   ];
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      author: 'Артем',
-      date: '19 жовтня о 15:30',
-      content: 'Перша публікація на моїй новій стіні 😎',
-      images: ['https://picsum.photos/400/250?random=1'],
-      likes: 24,
-      dislikes: 2,
-      comments: [
-        { id: 1, author: 'Марія', text: 'Круто! 👍', date: '19 жовтня о 15:45' },
-        { id: 2, author: 'Олексій', text: 'Вітаю з новою стіною!', date: '19 жовтня о 16:00' }
-      ],
-      liked: false,
-      disliked: false
-    },
-    {
-      id: 2,
-      author: 'Артем',
-      date: '18 жовтня о 12:15',
-      content: 'Чудовий день для прогулянки містом! 🌞',
-      images: [
-        'https://picsum.photos/400/250?random=2',
-        'https://picsum.photos/400/250?random=3',
-        'https://picsum.photos/400/250?random=4'
-      ],
-      likes: 12,
-      dislikes: 1,
-      comments: [
-        { id: 3, author: 'Анна', text: 'Гарні фото!', date: '18 жовтня о 13:00' }
-      ],
-      liked: true,
-      disliked: false
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    if (userId) {
+      loadPosts();
     }
-  ]);
+  }, [userId]);
+
+  const loadPosts = async () => {
+    try {
+      setLoading(true);
+      const posts = await wallService.getPosts(userId);
+      console.log('Loaded posts:', posts);
+      posts.forEach(post => {
+        console.log(`Post ${post.id}: likes=${post.likes}, liked=${post.liked}, likedBy=`, post.likedBy);
+      });
+      setPosts(posts);
+    } catch (error) {
+      console.error('Error loading posts:', error);
+      setPosts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleTextChange = (e) => {
     const value = e.target.value;
@@ -197,59 +188,56 @@ const Wall = ({ userId, isOwnProfile }) => {
     setSelectedFiles([]);
   };
 
-  const handlePublish = (e) => {
+  const handlePublish = async (e) => {
     e.preventDefault();
-    if (!postText.trim()) return;
+    if (!postText.trim() || !userId) return;
 
-    const newPost = {
-      id: Date.now(),
-      author: 'Артем',
-      date: new Date().toLocaleString('uk-UA', {
-        day: 'numeric',
-        month: 'long',
-        hour: '2-digit',
-        minute: '2-digit'
-      }),
-      content: postText,
-      images: selectedPhotos.length > 0 ? selectedPhotos : [],
-      files: selectedFiles.length > 0 ? selectedFiles : [],
-      likes: 0,
-      dislikes: 0,
-      comments: [],
-      liked: false,
-      disliked: false
-    };
-
-    setPosts([newPost, ...posts]);
-    handleCancel();
+    try {
+      setLoading(true);
+      const postData = {
+        content: postText,
+        images: selectedPhotos,
+        files: selectedFiles
+      };
+      
+      const result = await wallService.createPost(userId, postData);
+      if (result.success) {
+        await loadPosts();
+        handleCancel();
+      }
+    } catch (error) {
+      console.error('Error creating post:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleLike = (postId) => {
-    setPosts(posts.map(post => 
-      post.id === postId 
-        ? { 
-            ...post, 
-            liked: !post.liked,
-            disliked: false,
-            likes: post.liked ? post.likes - 1 : post.likes + 1,
-            dislikes: post.disliked ? post.dislikes - 1 : post.dislikes
-          }
-        : post
-    ));
+  const handleLike = async (postId) => {
+    try {
+      const currentUserId = localStorage.getItem('userId');
+      console.log('Liking post:', postId, 'by user:', currentUserId);
+      const result = await wallService.toggleLike(postId, currentUserId);
+      console.log('Like result:', result);
+      if (result.success) {
+        await loadPosts();
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    }
   };
   
-  const handleDislike = (postId) => {
-    setPosts(posts.map(post => 
-      post.id === postId 
-        ? { 
-            ...post, 
-            disliked: !post.disliked,
-            liked: false,
-            dislikes: post.disliked ? post.dislikes - 1 : post.dislikes + 1,
-            likes: post.liked ? post.likes - 1 : post.likes
-          }
-        : post
-    ));
+  const handleDislike = async (postId) => {
+    try {
+      const currentUserId = localStorage.getItem('userId');
+      console.log('Disliking post:', postId, 'by user:', currentUserId);
+      const result = await wallService.toggleDislike(postId, currentUserId);
+      console.log('Dislike result:', result);
+      if (result.success) {
+        await loadPosts();
+      }
+    } catch (error) {
+      console.error('Error toggling dislike:', error);
+    }
   };
   
   const handleEditPost = (post) => {
@@ -271,8 +259,16 @@ const Wall = ({ userId, isOwnProfile }) => {
     setEditText('');
   };
   
-  const handleDeletePost = (postId) => {
-    setPosts(posts.filter(post => post.id !== postId));
+  const handleDeletePost = async (postId) => {
+    try {
+      const currentUserId = localStorage.getItem('userId');
+      const result = await wallService.deletePost(postId, currentUserId);
+      if (result.success) {
+        await loadPosts();
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
     setShowPostMenu(null);
   };
   
@@ -295,29 +291,20 @@ const Wall = ({ userId, isOwnProfile }) => {
     }));
   };
   
-  const handleCommentSubmit = (postId) => {
+  const handleCommentSubmit = async (postId) => {
     const text = commentText[postId]?.trim();
     if (!text) return;
     
-    const newComment = {
-      id: Date.now(),
-      author: 'Артем',
-      text: text,
-      date: new Date().toLocaleString('uk-UA', {
-        day: 'numeric',
-        month: 'long',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    };
-    
-    setPosts(posts.map(post => 
-      post.id === postId 
-        ? { ...post, comments: [...post.comments, newComment] }
-        : post
-    ));
-    
-    setCommentText(prev => ({ ...prev, [postId]: '' }));
+    try {
+      const currentUserId = localStorage.getItem('userId');
+      const result = await wallService.addComment(postId, currentUserId, text);
+      if (result.success) {
+        await loadPosts();
+        setCommentText(prev => ({ ...prev, [postId]: '' }));
+      }
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
   };
 
   return (
@@ -332,7 +319,16 @@ const Wall = ({ userId, isOwnProfile }) => {
           <form onSubmit={handlePublish}>
             <div className="creator-header">
               <div className="creator-avatar">
-                <img src="https://picsum.photos/80/80?random=user" alt="Аватар" />
+                {user?.avatar ? (
+                  <img 
+                    src={user.avatar.startsWith('data:') || user.avatar.startsWith('http') 
+                      ? user.avatar 
+                      : `http://localhost:3000${user.avatar}`} 
+                    alt="Аватар" 
+                  />
+                ) : (
+                  <div className="avatar-placeholder">{user?.name?.charAt(0) || 'U'}</div>
+                )}
               </div>
               <div className="input-container">
                 <textarea
@@ -384,16 +380,7 @@ const Wall = ({ userId, isOwnProfile }) => {
                     onChange={handlePhotoSelect}
                   />
                 </label>
-                <label className="tool-btn" title="Додати файл">
-                  📎
-                  <input
-                    accept=".jpg,.png,.gif,.mp4,.webm,.pdf,.doc,.docx,.xlsx,.txt,.zip,.rar"
-                    multiple
-                    type="file"
-                    hidden
-                    onChange={handleFileSelect}
-                  />
-                </label>
+
                 <button 
                   type="button" 
                   className="tool-btn" 
@@ -554,7 +541,16 @@ const Wall = ({ userId, isOwnProfile }) => {
           <div key={post.id} className="post">
             <div className="post-header">
               <div className="post-avatar">
-                <img src="https://picsum.photos/80/80?random=user" alt="Аватар" />
+                {user?.avatar ? (
+                  <img 
+                    src={user.avatar.startsWith('data:') || user.avatar.startsWith('http') 
+                      ? user.avatar 
+                      : `http://localhost:3000${user.avatar}`} 
+                    alt="Аватар" 
+                  />
+                ) : (
+                  <div className="avatar-placeholder">{user?.name?.charAt(0) || 'U'}</div>
+                )}
               </div>
               <div className="post-meta">
                 <div className="post-author">{post.author}</div>
@@ -569,14 +565,14 @@ const Wall = ({ userId, isOwnProfile }) => {
                 </button>
                 {showPostMenu === post.id && (
                   <div className="post-dropdown">
-                    {post.author === 'Артем' ? (
+                    {isOwnProfile ? (
                       <>
                         <button onClick={() => handleEditPost(post)}>Редагувати</button>
                         <button onClick={() => handleDeletePost(post.id)}>Видалити</button>
                       </>
                     ) : (
                       <>
-                        <button onClick={() => handleHidePost(post.id)}>Приховати</button>
+                        <button onClick={() => handleDeletePost(post.id)}>Видалити</button>
                         <button onClick={() => handleReportPost(post.id)}>Поскаржитись</button>
                       </>
                     )}
@@ -658,8 +654,19 @@ const Wall = ({ userId, isOwnProfile }) => {
               <div className="comments-section">
                 <div className="comments-list">
                   {post.comments.map(comment => (
-                    <div key={comment.id} className="comment">
-                      <div className="comment-avatar">А</div>
+                    <div key={comment.id || comment._id} className="comment">
+                      <div className="comment-avatar">
+                        {comment.avatar ? (
+                          <img 
+                            src={comment.avatar.startsWith('data:') || comment.avatar.startsWith('http') 
+                              ? comment.avatar 
+                              : `http://localhost:3000${comment.avatar}`} 
+                            alt="Аватар" 
+                          />
+                        ) : (
+                          <div className="avatar-placeholder">{comment.author?.charAt(0) || 'U'}</div>
+                        )}
+                      </div>
                       <div className="comment-content">
                         <div className="comment-header">
                           <span className="comment-author">{comment.author}</span>

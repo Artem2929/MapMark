@@ -11,6 +11,7 @@ const ProfileAvatar = ({
   const [previewUrl, setPreviewUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleFileSelect = (event) => {
@@ -30,10 +31,16 @@ const ProfileAvatar = ({
       return;
     }
 
+    // Clear previous preview if exists
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    
     // Створення preview
     const url = URL.createObjectURL(file);
     setPreviewUrl(url);
     setSelectedFile(file);
+    setImageError(false);
   };
 
   const handleSave = async () => {
@@ -42,18 +49,23 @@ const ProfileAvatar = ({
     setIsUploading(true);
     
     try {
-      const userId = localStorage.getItem('userId');
-      const result = await updateAvatar(userId, selectedFile);
+      const formData = new FormData();
+      formData.append('avatar', selectedFile);
       
-      if (result.success && onAvatarChange) {
-        const formData = new FormData();
-        formData.append('avatar', selectedFile);
+      if (onAvatarChange) {
         await onAvatarChange(formData);
+        
+        // Clear preview immediately after successful upload
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+        }
+        setPreviewUrl(null);
+        setSelectedFile(null);
+        
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
       }
-      
-      setPreviewUrl(null);
-      setSelectedFile(null);
-      URL.revokeObjectURL(previewUrl);
     } catch (error) {
       console.error('Avatar upload error:', error);
     } finally {
@@ -78,9 +90,16 @@ const ProfileAvatar = ({
     }
   };
 
-  const avatarUrl = user?.avatar ? `http://localhost:3000${user.avatar}` : null;
+  const avatarUrl = user?.avatar 
+    ? (user.avatar.startsWith('data:') || user.avatar.startsWith('http') 
+        ? user.avatar 
+        : `http://localhost:3000${user.avatar}`)
+    : null;
   const displayImage = previewUrl || avatarUrl;
   const userInitial = user?.name?.charAt(0)?.toUpperCase() || 'U';
+  
+  console.log('ProfileAvatar - user.avatar:', user?.avatar);
+  console.log('ProfileAvatar - displayImage:', displayImage);
 
   const ProfileRatingBlock = () => {
     const rating = 4.7; // Мок даних, потім з API
@@ -113,9 +132,9 @@ const ProfileAvatar = ({
     const location = useLocation();
     
     const menuItems = [
-      { path: '/friends', label: 'Мої друзі', count: 12 },
-      { path: '/messages', label: 'Повідомлення', count: 3 },
-      { path: '/photos', label: 'Фото', count: 24 }
+      { path: '/friends', label: 'Мої друзі', count: user?.followers?.length || 0 },
+      { path: '/messages', label: 'Повідомлення', count: 0 },
+      { path: '/photos', label: 'Фото', count: user?.photos?.length || 0 }
     ];
 
     return (
@@ -144,11 +163,13 @@ const ProfileAvatar = ({
         className="profile-avatar-large"
         onClick={handleAvatarClick}
       >
-        {displayImage ? (
+        {displayImage && !imageError ? (
           <img 
             src={displayImage} 
             alt={user?.name || 'Avatar'} 
-            className="profile-avatar-image" 
+            className="profile-avatar-image"
+            onError={() => setImageError(true)}
+            onLoad={() => setImageError(false)}
           />
         ) : (
           <div className="profile-avatar-placeholder">

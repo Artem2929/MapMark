@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import CustomSelect from '../ui/CustomSelect';
 import DatePicker from '../ui/DatePicker';
 import { updateProfile } from '../../api/profileEndpoints';
-import ProfilePhotos from './ProfilePhotos';
+
+import ProfileStats from './ProfileStats';
 import './ProfileBasicInfo.css';
 
 const ProfileBasicInfo = ({ user, isOwnProfile = false, onUpdate }) => {
@@ -174,7 +175,11 @@ const ProfileBasicInfo = ({ user, isOwnProfile = false, onUpdate }) => {
           )}
         </div>
 
-        {!isEditing && <ProfilePhotos />}
+        {!isEditing && (
+          <>
+            <ProfileStats userId={user?._id || user?.id} isOwnProfile={isOwnProfile} />
+          </>
+        )}
 
       </div>
 

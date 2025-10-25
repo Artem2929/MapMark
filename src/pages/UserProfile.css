@@ -5,6 +5,37 @@
   min-height: 100vh;
 }
 
+/* Мобільний адаптив для page-container */
+@media (max-width: 768px) {
+  .page-container.profile-user-profile {
+    padding: 8px 8px 0px 8px;
+  }
+
+  .profile-profile-container {
+    padding: 0px 8px;
+  }
+}
+
+@media (max-width: 550px) {
+  .page-container.profile-user-profile {
+    padding: 4px 4px 0px 4px;
+  }
+
+  .profile-profile-container {
+    padding: 0px 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container.profile-user-profile {
+    padding: 0px 0px 0px 0px;
+  }
+
+  .profile-profile-container {
+    padding: 0px 0px;
+  }
+}
+
 .profile-profile-container {
   max-width: 1200px;
   margin: 0 auto;

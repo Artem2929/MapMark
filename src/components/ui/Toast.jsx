@@ -14,17 +14,19 @@ const Toast = ({ message, type = 'success', onClose, duration = 3000 }) => {
     switch (type) {
       case 'success': return '✅';
       case 'error': return '❌';
-      case 'warning': return '⚠️';
       case 'info': return 'ℹ️';
+      case 'warning': return '⚠️';
       default: return '✅';
     }
   };
 
   return (
-    <div className={`toast toast-${type}`}>
-      <div className="toast-icon">{getIcon()}</div>
-      <div className="toast-message">{message}</div>
-      <button className="toast-close" onClick={onClose}>×</button>
+    <div className={`toast toast--${type}`}>
+      <div className="toast__content">
+        <span className="toast__icon">{getIcon()}</span>
+        <span className="toast__message">{message}</span>
+      </div>
+      <button className="toast__close" onClick={onClose}>×</button>
     </div>
   );
 };

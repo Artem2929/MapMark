@@ -1,213 +1,91 @@
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE = 'http://localhost:3000/api';
 
-class WallService {
-  // Отримати пости користувача
-  async getUserPosts(userId, page = 1, limit = 10) {
+export const wallService = {
+  // Get wall posts
+  getPosts: async (userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/posts/${userId}?page=${page}&limit=${limit}`);
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error);
-      }
-      
-      return data.posts;
+      const currentUserId = localStorage.getItem('userId');
+      const response = await fetch(`${API_BASE}/user/${userId}/wall?currentUserId=${currentUserId}`);
+      const result = await response.json();
+      return result.success ? result.data : [];
     } catch (error) {
       console.error('Error fetching posts:', error);
-      throw error;
+      return [];
     }
-  }
+  },
 
-  // Створити новий пост
-  async createPost(postData) {
+  // Create new post
+  createPost: async (userId, postData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/posts`, {
+      const response = await fetch(`${API_BASE}/user/${userId}/wall`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(postData)
       });
-      
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error);
-      }
-      
-      return data.post;
+      return await response.json();
     } catch (error) {
       console.error('Error creating post:', error);
-      throw error;
+      return { success: false, error: error.message };
     }
-  }
+  },
 
-  // Оновити пост
-  async updatePost(postId, updateData) {
+  // Toggle like on post
+  toggleLike: async (postId, userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updateData)
-      });
-      
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error);
-      }
-      
-      return data.post;
-    } catch (error) {
-      console.error('Error updating post:', error);
-      throw error;
-    }
-  }
-
-  // Видалити пост
-  async deletePost(postId, userId) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch(`${API_BASE}/user/posts/${postId}/like`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId })
       });
-      
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error);
-      }
-      
-      return data;
+      return await response.json();
     } catch (error) {
-      console.error('Error deleting post:', error);
-      throw error;
+      console.error('Error toggling like:', error);
+      return { success: false, error: error.message };
     }
-  }
+  },
 
-  // Додати/змінити реакцію
-  async addReaction(postId, userId, reactionType) {
+  // Toggle dislike on post
+  toggleDislike: async (postId, userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/posts/${postId}/reactions`, {
+      const response = await fetch(`${API_BASE}/user/posts/${postId}/dislike`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId, type: reactionType })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
       });
-      
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error);
-      }
-      
-      return data.reactions;
+      return await response.json();
     } catch (error) {
-      console.error('Error adding reaction:', error);
-      throw error;
+      console.error('Error toggling dislike:', error);
+      return { success: false, error: error.message };
     }
-  }
+  },
 
-  // Додати коментар
-  async addComment(postId, content, authorId) {
+  // Add comment to post
+  addComment: async (postId, userId, text) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, {
+      const response = await fetch(`${API_BASE}/user/posts/${postId}/comments`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content, authorId })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, text })
       });
-      
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error);
-      }
-      
-      return data.comment;
+      return await response.json();
     } catch (error) {
       console.error('Error adding comment:', error);
-      throw error;
+      return { success: false, error: error.message };
     }
-  }
+  },
 
-  // Додати відповідь на коментар
-  async addReply(postId, commentId, content, authorId) {
+  // Delete post
+  deletePost: async (postId, userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments/${commentId}/replies`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content, authorId })
+      const response = await fetch(`${API_BASE}/user/posts/${postId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
       });
-      
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error);
-      }
-      
-      return data.comment;
+      return await response.json();
     } catch (error) {
-      console.error('Error adding reply:', error);
-      throw error;
+      console.error('Error deleting post:', error);
+      return { success: false, error: error.message };
     }
   }
-
-  // Поділитися постом
-  async sharePost(postId) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/posts/${postId}/share`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-      
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error);
-      }
-      
-      return data.shares;
-    } catch (error) {
-      console.error('Error sharing post:', error);
-      throw error;
-    }
-  }
-
-  // Завантажити зображення
-  async uploadImage(file) {
-    try {
-      const formData = new FormData();
-      formData.append('image', file);
-      
-      const response = await fetch(`${API_BASE_URL}/upload/image`, {
-        method: 'POST',
-        body: formData
-      });
-      
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error);
-      }
-      
-      return data.imageUrl;
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      throw error;
-    }
-  }
-}
-
-export default new WallService();
+};

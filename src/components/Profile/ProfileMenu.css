@@ -42,7 +42,6 @@
   background: rgba(59, 130, 246, 0.08);
   color: #3b82f6;
   text-decoration: none;
-  transform: translateY(-1px);
 }
 
 .profile-menu__item.active {

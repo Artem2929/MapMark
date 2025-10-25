@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-const PostCreator = ({ onCreatePost }) => {
+const PostCreator = ({ onCreatePost, user }) => {
   const [content, setContent] = useState('');
   const [images, setImages] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -70,7 +70,16 @@ const PostCreator = ({ onCreatePost }) => {
       <form onSubmit={handleSubmit}>
         <div className="creator-header">
           <div className="creator-avatar">
-            А
+            {user?.avatar ? (
+              <img 
+                src={user.avatar.startsWith('data:') || user.avatar.startsWith('http') 
+                  ? user.avatar 
+                  : `http://localhost:3000${user.avatar}`} 
+                alt="Аватар" 
+              />
+            ) : (
+              <div className="avatar-placeholder">{user?.name?.charAt(0) || 'U'}</div>
+            )}
           </div>
           <textarea
             value={content}

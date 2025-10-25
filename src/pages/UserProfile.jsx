@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import useUserProfile from '../hooks/useUserProfile';
+import useUserProfile, { clearUserProfileCache } from '../hooks/useUserProfile';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import Footer from '../components/layout/Footer';
 
@@ -13,6 +13,8 @@ import Wall from '../components/ui/Wall';
 import ProfileAvatar from '../components/Profile/ProfileAvatar';
 import ProfileBasicInfo from '../components/Profile/ProfileBasicInfo';
 import ProfileMenu from '../components/Profile/ProfileMenu';
+
+import FollowButton from '../components/Profile/FollowButton';
 
 
 
@@ -258,15 +260,14 @@ const UserProfile = () => {
                 isOwnProfile={isOwnProfile}
                 onAvatarChange={async (formData) => {
                   try {
-                    const response = await fetch(`http://localhost:3000/api/avatar/${targetUserId}`, {
+                    const response = await fetch(`http://localhost:3000/api/user/${targetUserId}/avatar`, {
                       method: 'PUT',
                       body: formData
                     });
                     const result = await response.json();
                     if (result.success) {
-                      const avatarUrl = `http://localhost:3000${result.data.avatarUrl}`;
-                      setUserState(prev => ({ ...prev, avatar: avatarUrl }));
-                      refreshProfile();
+                      console.log('Avatar response:', result.data);
+                      setUserState(prev => ({ ...prev, avatar: result.data.avatarUrl }));
                       showToast('Аватар успішно оновлено!', 'success');
                     } else {
                       showToast('Помилка при завантаженні аватара', 'error');
@@ -289,19 +290,22 @@ const UserProfile = () => {
                   showToast('Інформацію оновлено', 'success');
                 }}
               />
+              {!isOwnProfile && currentUserId && (
+                <div style={{ marginTop: '16px', textAlign: 'center' }}>
+                  <FollowButton 
+                    userId={currentUserId} 
+                    targetUserId={targetUserId}
+                  />
+                </div>
+              )}
             </div>
           </div>
           
 
         </div>
 
-
-
-
         
-
-        
-        <Wall userId={targetUserId} isOwnProfile={isOwnProfile} />
+        <Wall userId={targetUserId} isOwnProfile={isOwnProfile} user={userState} />
 
       </div>
       

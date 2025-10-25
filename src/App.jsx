@@ -26,6 +26,7 @@ import Messages from './pages/Messages.jsx'
 import Chat from './pages/Chat.jsx'
 import Followers from './pages/Followers.jsx'
 import Following from './pages/Following.jsx'
+import Friends from './pages/Friends.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import About from './pages/About.jsx'
@@ -170,6 +171,7 @@ const AppContent = () => {
             <Route path="/seller/:sellerId" element={<SellerProfile />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/chat/:userId" element={<Chat />} />
+            <Route path="/friends" element={<Friends />} />
             <Route path="/user/:userId/followers" element={<Followers />} />
             <Route path="/user/:userId/following" element={<Following />} />
             <Route path="/login" element={<Login />} />
