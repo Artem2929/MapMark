@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import useUserProfile, { clearUserProfileCache } from '../hooks/useUserProfile';
@@ -41,6 +41,12 @@ const UserProfile = () => {
   const [avatarFile, setAvatarFile] = useState(null);
   const [toast, setToast] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [photos, setPhotos] = useState([]);
+  const photoInputRef = useRef(null);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [photoDescription, setPhotoDescription] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (!currentUserId) {
@@ -54,8 +60,103 @@ const UserProfile = () => {
       setEditedCity(user.city);
       setEditedBio(user.bio || '');
       setIsOwnProfile(!userId || userId === currentUserId);
+      loadPhotos();
     }
   }, [user, userId, currentUserId, navigate]);
+
+  const loadPhotos = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/photos/user/${targetUserId}`);
+      const result = await response.json();
+      
+      if (result.success) {
+        setPhotos(result.data);
+      }
+    } catch (error) {
+      console.error('Error loading photos:', error);
+    }
+  };
+
+  const handleAddPhotoClick = () => {
+    setShowPhotoModal(true);
+  };
+
+  const handlePhotoSelect = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('Розмір файлу не повинен перевищувати 5MB', 'error');
+      return;
+    }
+    
+    if (!file.type.startsWith('image/')) {
+      showToast('Можна завантажувати тільки зображення', 'error');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setSelectedPhoto({
+        file,
+        preview: e.target.result
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handlePhotoSubmit = async () => {
+    if (!selectedPhoto) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('photo', selectedPhoto.file);
+      formData.append('description', photoDescription);
+      formData.append('userId', targetUserId);
+      
+      const response = await fetch('http://localhost:3000/api/photos/upload', {
+        method: 'POST',
+        body: formData
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        await loadPhotos(); // Reload photos
+        showToast('Фото успішно додано!', 'success');
+        handleCloseModal();
+      } else {
+        showToast(result.message || 'Помилка при додаванні фото', 'error');
+      }
+    } catch (error) {
+      showToast('Помилка при додаванні фото', 'error');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowPhotoModal(false);
+    setSelectedPhoto(null);
+    setPhotoDescription('');
+    if (photoInputRef.current) {
+      photoInputRef.current.value = '';
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      const event = { target: { files: [file] } };
+      handlePhotoSelect(event);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
 
   const getJoinedDate = (dateString) => {
     const date = new Date(dateString);
@@ -304,6 +405,49 @@ const UserProfile = () => {
 
         </div>
 
+        <div className="profile-photos-section">
+          <div className="profile-photos-header">
+            <h3>Фото ({photos.length})</h3>
+            {isOwnProfile && (
+              <>
+                <button 
+                  className="add-photo-btn"
+                  onClick={handleAddPhotoClick}
+                >
+                  <span>+</span> Додати фото
+                </button>
+
+              </>
+            )}
+          </div>
+          <div className="profile-photos-grid">
+            {photos.length > 0 ? (
+              photos.slice(0, 3).map((photo, index) => (
+                <div key={photo._id} className="photo-item" onClick={() => navigate('/photos')}>
+                  <img src={photo.url} alt="Фото" />
+                  {index === 2 && photos.length > 3 && (
+                    <div className="photo-overlay">
+                      <span>+{photos.length - 3}</span>
+                    </div>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className="no-photos">
+                <p>Немає фото</p>
+                {isOwnProfile && (
+                  <button 
+                    className="add-first-photo-btn"
+                    onClick={handleAddPhotoClick}
+                  >
+                    Додати перше фото
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+        </div>
         
         <Wall userId={targetUserId} isOwnProfile={isOwnProfile} user={userState} />
 
@@ -315,6 +459,63 @@ const UserProfile = () => {
           type={toast.type}
           onClose={() => setToast(null)}
         />
+      )}
+      
+      {showPhotoModal && (
+        <div className="photo-upload-modal" onClick={handleCloseModal}>
+          <div className="photo-upload-content" onClick={(e) => e.stopPropagation()}>
+            <div className="photo-upload-header">
+              <h3 className="photo-upload-title">Додати нове фото</h3>
+              <button className="photo-upload-close" onClick={handleCloseModal}>×</button>
+            </div>
+            <div className="photo-upload-body">
+              {!selectedPhoto ? (
+                <div 
+                  className="photo-drop-zone"
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  onClick={() => photoInputRef.current?.click()}
+                >
+                  <p>Перетягніть фото сюди або натисніть для вибору</p>
+                </div>
+              ) : (
+                <>
+                  <img src={selectedPhoto.preview} alt="Попередній перегляд" className="photo-preview" />
+                  <textarea
+                    className="photo-description"
+                    placeholder="Напишіть опис..."
+                    value={photoDescription}
+                    onChange={(e) => setPhotoDescription(e.target.value)}
+                  />
+                </>
+              )}
+              
+              <input
+                ref={photoInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoSelect}
+                style={{ display: 'none' }}
+              />
+              
+              <div className="photo-upload-actions">
+                <button 
+                  className="photo-upload-btn secondary" 
+                  onClick={handleCloseModal}
+                >
+                  Скасувати
+                </button>
+                <button 
+                  className="photo-upload-btn primary" 
+                  onClick={handlePhotoSubmit}
+                  disabled={!selectedPhoto || uploading}
+                >
+                  {uploading ? 'Завантаження...' : 'Опублікувати'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
       </div>
       
