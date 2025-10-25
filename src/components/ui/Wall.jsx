@@ -37,10 +37,6 @@ const Wall = ({ userId, isOwnProfile, user }) => {
     try {
       setLoading(true);
       const posts = await wallService.getPosts(userId);
-      console.log('Loaded posts:', posts);
-      posts.forEach(post => {
-        console.log(`Post ${post.id}: likes=${post.likes}, liked=${post.liked}, likedBy=`, post.likedBy);
-      });
       setPosts(posts);
     } catch (error) {
       console.error('Error loading posts:', error);
@@ -215,9 +211,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
   const handleLike = async (postId) => {
     try {
       const currentUserId = localStorage.getItem('userId');
-      console.log('Liking post:', postId, 'by user:', currentUserId);
       const result = await wallService.toggleLike(postId, currentUserId);
-      console.log('Like result:', result);
       if (result.success) {
         await loadPosts();
       }
@@ -229,9 +223,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
   const handleDislike = async (postId) => {
     try {
       const currentUserId = localStorage.getItem('userId');
-      console.log('Disliking post:', postId, 'by user:', currentUserId);
       const result = await wallService.toggleDislike(postId, currentUserId);
-      console.log('Dislike result:', result);
       if (result.success) {
         await loadPosts();
       }

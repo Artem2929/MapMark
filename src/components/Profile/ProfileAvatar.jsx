@@ -98,9 +98,6 @@ const ProfileAvatar = ({
     : null;
   const displayImage = previewUrl || avatarUrl;
   const userInitial = user?.name?.charAt(0)?.toUpperCase() || 'U';
-  
-  console.log('ProfileAvatar - user.avatar:', user?.avatar);
-  console.log('ProfileAvatar - displayImage:', displayImage);
 
   const ProfileRatingBlock = () => {
     const rating = 4.7; // Мок даних, потім з API

@@ -32,6 +32,7 @@ import Register from './pages/Register.jsx'
 import About from './pages/About.jsx'
 import SellerProfile from './pages/SellerProfile.jsx'
 import Photos from './pages/Photos.jsx'
+import Services from './pages/Services.jsx'
 
 const AppContent = () => {
   const { t, i18n } = useTranslation();
@@ -176,6 +177,7 @@ const AppContent = () => {
             <Route path="/photos" element={<Photos />} />
             <Route path="/user/:userId/followers" element={<Followers />} />
             <Route path="/user/:userId/following" element={<Following />} />
+            <Route path="/services" element={<Services />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>

@@ -13,6 +13,7 @@ import Wall from '../components/ui/Wall';
 import ProfileAvatar from '../components/Profile/ProfileAvatar';
 import ProfileBasicInfo from '../components/Profile/ProfileBasicInfo';
 import ProfileMenu from '../components/Profile/ProfileMenu';
+import ServicesSection from '../components/Profile/ServicesSection';
 
 import FollowButton from '../components/Profile/FollowButton';
 
@@ -428,41 +429,48 @@ const UserProfile = () => {
 
         </div>
 
-        <div className="profile-photos-section">
-          <div className="profile-photos-header">
-            <h3>Фото ({photos.length})</h3>
-            {isOwnProfile && (
-              <>
-                <button 
-                  className="add-photo-btn"
-                  onClick={handleAddPhotoClick}
-                >
-                  <span>+</span> Додати фото
-                </button>
+        {userState.role === 'seller' ? (
+          <ServicesSection 
+            userId={targetUserId}
+            isOwnProfile={isOwnProfile}
+          />
+        ) : (
+          <div className="profile-photos-section">
+            <div className="profile-photos-header">
+              <h3>Фото ({photos.length})</h3>
+              {isOwnProfile && (
+                <>
+                  <button 
+                    className="add-photo-btn"
+                    onClick={handleAddPhotoClick}
+                  >
+                    <span>+</span> Додати фото
+                  </button>
 
-              </>
-            )}
-          </div>
-          <div className="profile-photos-grid">
-            {photos.length > 0 ? (
-              photos.slice(0, 3).map((photo, index) => (
-                <div key={photo._id} className="photo-item" onClick={() => navigate('/photos')}>
-                  <img src={photo.url} alt="Фото" />
-                  {index === 2 && photos.length > 3 && (
-                    <div className="photo-overlay">
-                      <span>+{photos.length - 3}</span>
-                    </div>
-                  )}
+                </>
+              )}
+            </div>
+            <div className="profile-photos-grid">
+              {photos.length > 0 ? (
+                photos.slice(0, 3).map((photo, index) => (
+                  <div key={photo._id} className="photo-item" onClick={() => navigate('/photos')}>
+                    <img src={photo.url} alt="Фото" />
+                    {index === 2 && photos.length > 3 && (
+                      <div className="photo-overlay">
+                        <span>+{photos.length - 3}</span>
+                      </div>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="no-photos">
+                  <p>Немає фото</p>
                 </div>
-              ))
-            ) : (
-              <div className="no-photos">
-                <p>Немає фото</p>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
-        </div>
+          </div>
+        )}
         
         <Wall userId={targetUserId} isOwnProfile={isOwnProfile} user={userState} />
 
