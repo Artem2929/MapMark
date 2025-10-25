@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './ProfileStats.css';
 
-const ProfileStats = ({ userId, isOwnProfile }) => {
+const ProfileStats = ({ userId, isOwnProfile, onRefresh, onStatsReady }) => {
   const [stats, setStats] = useState({
     posts: 0,
     photos: 0,
@@ -17,27 +17,41 @@ const ProfileStats = ({ userId, isOwnProfile }) => {
     }
   }, [userId]);
 
+  useEffect(() => {
+    if (onRefresh) {
+      onRefresh(loadStats);
+    }
+  }, [onRefresh]);
+
+  useEffect(() => {
+    if (onStatsReady) {
+      onStatsReady({ updatePhotoCount });
+    }
+  }, [onStatsReady]);
+
   const loadStats = async () => {
     try {
       setLoading(true);
       
       // Load all stats in parallel
-      const [profileRes, photosRes, followersRes, followingRes] = await Promise.all([
+      const [profileRes, photosRes, postsRes, followersRes, followingRes] = await Promise.all([
         fetch(`http://localhost:3000/api/user/${userId}/profile`),
-        Promise.resolve({ json: () => ({ success: true, data: [] }) }),
+        fetch(`http://localhost:3000/api/photos/user/${userId}`),
+        fetch(`http://localhost:3000/api/posts/${userId}`),
         fetch(`http://localhost:3000/api/user/${userId}/followers`),
         fetch(`http://localhost:3000/api/user/${userId}/following`)
       ]);
 
-      const [profile, photos, followers, following] = await Promise.all([
+      const [profile, photos, posts, followers, following] = await Promise.all([
         profileRes.json(),
         photosRes.json(),
+        postsRes.json(),
         followersRes.json(),
         followingRes.json()
       ]);
 
       setStats({
-        posts: profile.success ? (profile.data.posts?.length || 0) : 0,
+        posts: posts.success ? (posts.posts?.length || 0) : 0,
         photos: photos.success ? (photos.data?.length || 0) : 0,
         followers: followers.success ? (followers.data?.length || 0) : 0,
         following: following.success ? (following.data?.length || 0) : 0,
@@ -49,6 +63,13 @@ const ProfileStats = ({ userId, isOwnProfile }) => {
       setLoading(false);
     }
   };
+
+  const updatePhotoCount = useCallback((increment = 1) => {
+    setStats(prev => ({
+      ...prev,
+      photos: prev.photos + increment
+    }));
+  }, []);
 
   if (loading) {
     return <div className="profile-stats">Завантаження...</div>;

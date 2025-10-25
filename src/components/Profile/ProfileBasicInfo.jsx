@@ -6,7 +6,7 @@ import { updateProfile } from '../../api/profileEndpoints';
 import ProfileStats from './ProfileStats';
 import './ProfileBasicInfo.css';
 
-const ProfileBasicInfo = ({ user, isOwnProfile = false, onUpdate }) => {
+const ProfileBasicInfo = ({ user, isOwnProfile = false, onUpdate, onStatsRefresh }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: user?.name?.split(' ')[0] || 'Артем',
@@ -177,7 +177,11 @@ const ProfileBasicInfo = ({ user, isOwnProfile = false, onUpdate }) => {
 
         {!isEditing && (
           <>
-            <ProfileStats userId={user?._id || user?.id} isOwnProfile={isOwnProfile} />
+            <ProfileStats 
+              userId={user?._id || user?.id} 
+              isOwnProfile={isOwnProfile}
+              onStatsReady={onStatsRefresh}
+            />
           </>
         )}
 

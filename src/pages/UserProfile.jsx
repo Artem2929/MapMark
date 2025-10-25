@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import useUserProfile, { clearUserProfileCache } from '../hooks/useUserProfile';
@@ -47,6 +47,12 @@ const UserProfile = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [photoDescription, setPhotoDescription] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [refreshStats, setRefreshStats] = useState(null);
+  const [statsUpdater, setStatsUpdater] = useState(null);
+
+  const handleStatsRefresh = useCallback((methods) => {
+    setStatsUpdater(methods);
+  }, []);
 
   useEffect(() => {
     if (!currentUserId) {
@@ -120,17 +126,32 @@ const UserProfile = () => {
         body: formData
       });
       
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const result = await response.json();
+      console.log('Photo upload response:', result);
       
       if (result.success) {
         await loadPhotos(); // Reload photos
+        if (refreshStats && typeof refreshStats === 'function') {
+          refreshStats(); // Refresh stats
+        }
+        if (statsUpdater && statsUpdater.updatePhotoCount) {
+          statsUpdater.updatePhotoCount(1); // Increment photo count
+        }
+        // Update user state to trigger re-render of ProfileAvatar
+        setUserState(prev => ({ ...prev, photos: [...photos, result.data] }));
         showToast('Фото успішно додано!', 'success');
         handleCloseModal();
       } else {
+        console.error('Upload failed:', result);
         showToast(result.message || 'Помилка при додаванні фото', 'error');
       }
     } catch (error) {
-      showToast('Помилка при додаванні фото', 'error');
+      console.error('Photo upload error:', error);
+      showToast(`Помилка при додаванні фото: ${error.message}`, 'error');
     } finally {
       setUploading(false);
     }
@@ -356,7 +377,8 @@ const UserProfile = () => {
               <ProfileAvatar 
                 user={{
                   ...userState,
-                  isOnline: Math.random() > 0.5
+                  isOnline: Math.random() > 0.5,
+                  photos: photos
                 }}
                 isOwnProfile={isOwnProfile}
                 onAvatarChange={async (formData) => {
@@ -390,6 +412,7 @@ const UserProfile = () => {
                   refreshProfile();
                   showToast('Інформацію оновлено', 'success');
                 }}
+                onStatsRefresh={handleStatsRefresh}
               />
               {!isOwnProfile && currentUserId && (
                 <div style={{ marginTop: '16px', textAlign: 'center' }}>
@@ -435,14 +458,6 @@ const UserProfile = () => {
             ) : (
               <div className="no-photos">
                 <p>Немає фото</p>
-                {isOwnProfile && (
-                  <button 
-                    className="add-first-photo-btn"
-                    onClick={handleAddPhotoClick}
-                  >
-                    Додати перше фото
-                  </button>
-                )}
               </div>
             )}
           </div>

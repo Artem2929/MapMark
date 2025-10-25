@@ -6,7 +6,8 @@ import './ProfileAvatar.css';
 const ProfileAvatar = ({ 
   user, 
   isOwnProfile = false, 
-  onAvatarChange 
+  onAvatarChange,
+  onPhotoCountChange
 }) => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
