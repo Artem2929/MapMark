@@ -4,7 +4,7 @@
 @import './styles/components.css';
 @import './styles/animations.css';
 @import './styles/responsive.css';
-@import './components/features/GlobalEnhancements.css';
+
 
 /* Additional MapMark Variables */
 :root {

@@ -13,10 +13,5 @@ export {
   usePrefersReducedMotion, 
   usePrefersHighContrast 
 } from './useMediaQuery';
-export { 
-  useFocusTrap, 
-  useAutoFocus, 
-  useFocusRestore, 
-  useFocusManagement 
-} from './useFocusManagement';
+
 export { useCountries } from './useCountries';
