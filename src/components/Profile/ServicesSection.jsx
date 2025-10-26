@@ -240,7 +240,7 @@ const ServicesSection = ({ userId, isOwnProfile }) => {
                       className="photo-upload-zone"
                       onClick={() => fileInputRef.current?.click()}
                     >
-                      <div className="photo-upload-icon">📷</div>
+                      <div className="photo-upload-icon"></div>
                       <p>Натисніть для вибору фото</p>
                       <span className="photo-upload-hint">JPG, PNG до 5MB</span>
                     </div>

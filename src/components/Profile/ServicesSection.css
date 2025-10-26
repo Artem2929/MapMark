@@ -223,8 +223,14 @@
 }
 
 .photo-upload-icon {
-  font-size: 32px;
+  font-size: 48px;
   margin-bottom: 8px;
+  color: #3b82f6;
+  font-weight: 300;
+}
+
+.photo-upload-icon::before {
+  content: '+';
 }
 
 .photo-upload-zone p {
@@ -255,28 +261,41 @@
   object-fit: cover;
   border-radius: 12px;
   border: 2px solid #e5e7eb;
+  transition: none;
+  transform: none;
+}
+
+.photo-preview:hover img {
+  transform: none;
+  filter: none;
 }
 
 .photo-remove-btn {
   position: absolute;
   top: 8px;
   right: 8px;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: rgba(220, 38, 38, 0.9);
+  background: rgba(0, 0, 0, 0.7);
   color: white;
   border: none;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 10;
 }
 
 .photo-remove-btn:hover {
-  background: rgba(220, 38, 38, 1);
+  background: rgba(220, 38, 38, 0.9);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
 }
 
 .profile-service-modal-actions {
@@ -288,35 +307,39 @@
 
 .profile-service-modal-actions button {
   flex: 1;
-  padding: 12px 20px;
+  padding: 6px 12px;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: none;
+  border: 1px solid;
 }
 
 .profile-service-modal-actions button:first-child {
-  background: #f3f4f6;
-  color: #374151;
+  background: rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.2);
+  color: #dc2626;
 }
 
 .profile-service-modal-actions button:first-child:hover {
-  background: #e5e7eb;
+  background: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.3);
 }
 
 .profile-service-modal-actions button:last-child {
-  background: #3b82f6;
-  color: white;
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
 }
 
 .profile-service-modal-actions button:last-child:hover {
-  background: #2563eb;
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
 }
 
 .profile-service-modal-actions button:disabled {
-  background: #9ca3af;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
