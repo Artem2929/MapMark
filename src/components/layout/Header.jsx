@@ -49,18 +49,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
   }, [t]);
 
   const languages = [
-    { code: 'en', name: 'English' },
-    { code: 'ua', name: 'Українська' },
-    // { code: 'es', name: 'Español' },
-    // { code: 'fr', name: 'Français' },
-    // { code: 'de', name: 'Deutsch' },
-    // { code: 'it', name: 'Italiano' },
-    // { code: 'pt', name: 'Português' },
-    // { code: 'ru', name: 'Русский' },
-    // { code: 'ja', name: '日本語' },
-    // { code: 'zh-CN', name: '中文' },
-    // { code: 'ar', name: 'العربية' },
-    // { code: 'hi', name: 'हिन्दी' }
+    { code: 'ua', name: 'Українська' }
   ];
 
   const currentLang = languages.find(lang => lang.code === i18n.language) || languages[0];
