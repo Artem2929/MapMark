@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import useUserPhotos from '../../hooks/useUserPhotos';
+import useUserFollowing from '../../hooks/useUserFollowing';
+import useUserFollowers from '../../hooks/useUserFollowers';
 import './ProfileStats.css';
 
 const ProfileStats = ({ userId, isOwnProfile, onRefresh, onStatsReady }) => {
   const { photos } = useUserPhotos(userId);
+  const { following } = useUserFollowing(userId);
+  const { followers } = useUserFollowers(userId);
   const [stats, setStats] = useState({
     posts: 0,
     photos: 0,
@@ -27,6 +31,22 @@ const ProfileStats = ({ userId, isOwnProfile, onRefresh, onStatsReady }) => {
     }));
   }, [photos.length]);
 
+  // Update following count when following changes
+  useEffect(() => {
+    setStats(prev => ({
+      ...prev,
+      following: following.length || 0
+    }));
+  }, [following.length]);
+
+  // Update followers count when followers change
+  useEffect(() => {
+    setStats(prev => ({
+      ...prev,
+      followers: followers.length || 0
+    }));
+  }, [followers.length]);
+
   useEffect(() => {
     if (onRefresh) {
       onRefresh(loadStats);
@@ -43,24 +63,13 @@ const ProfileStats = ({ userId, isOwnProfile, onRefresh, onStatsReady }) => {
     try {
       setLoading(true);
       
-      // Load stats in parallel (photos are loaded via useUserPhotos hook)
-      const [postsRes, followersRes, followingRes] = await Promise.all([
-        fetch(`http://localhost:3000/api/posts/${userId}`),
-        fetch(`http://localhost:3000/api/user/${userId}/followers`),
-        fetch(`http://localhost:3000/api/user/${userId}/following`)
-      ]);
-
-      const [posts, followers, following] = await Promise.all([
-        postsRes.json(),
-        followersRes.json(),
-        followingRes.json()
-      ]);
+      // Load only posts (photos, following, followers are loaded via hooks)
+      const postsRes = await fetch(`http://localhost:3000/api/posts/${userId}`);
+      const posts = await postsRes.json();
 
       setStats(prev => ({
         ...prev,
         posts: posts.success ? (posts.posts?.length || 0) : 0,
-        followers: followers.success ? (followers.data?.length || 0) : 0,
-        following: following.success ? (following.data?.length || 0) : 0,
         reviews: 0 // Will be implemented later
       }));
     } catch (error) {

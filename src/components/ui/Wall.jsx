@@ -1,8 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { wallService } from '../../services/wallService';
+import useUserWall from '../../hooks/useUserWall';
 import './Wall.css';
 
 const Wall = ({ userId, isOwnProfile, user }) => {
+  const currentUserId = localStorage.getItem('userId');
+  const { posts, loading: wallLoading, refreshWall, addPost } = useUserWall(userId, currentUserId);
   const [loading, setLoading] = useState(false);
   const [postText, setPostText] = useState('');
   const [selectedPhotos, setSelectedPhotos] = useState([]);
@@ -25,26 +28,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
     { id: 4, name: 'Анна Сидорова', username: 'anna' },
     { id: 5, name: 'Дмитро Коваль', username: 'dmitro' }
   ];
-  const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
-    if (userId) {
-      loadPosts();
-    }
-  }, [userId]);
-
-  const loadPosts = async () => {
-    try {
-      setLoading(true);
-      const posts = await wallService.getPosts(userId);
-      setPosts(posts);
-    } catch (error) {
-      console.error('Error loading posts:', error);
-      setPosts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleTextChange = (e) => {
     const value = e.target.value;
@@ -198,7 +182,8 @@ const Wall = ({ userId, isOwnProfile, user }) => {
       
       const result = await wallService.createPost(userId, postData);
       if (result.success) {
-        await loadPosts();
+        addPost(result.data);
+        refreshWall();
         handleCancel();
       }
     } catch (error) {
@@ -213,7 +198,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
       const currentUserId = localStorage.getItem('userId');
       const result = await wallService.toggleLike(postId, currentUserId);
       if (result.success) {
-        await loadPosts();
+        refreshWall();
       }
     } catch (error) {
       console.error('Error toggling like:', error);
@@ -225,7 +210,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
       const currentUserId = localStorage.getItem('userId');
       const result = await wallService.toggleDislike(postId, currentUserId);
       if (result.success) {
-        await loadPosts();
+        refreshWall();
       }
     } catch (error) {
       console.error('Error toggling dislike:', error);
@@ -239,9 +224,8 @@ const Wall = ({ userId, isOwnProfile, user }) => {
   };
   
   const handleSaveEdit = (postId) => {
-    setPosts(posts.map(post => 
-      post.id === postId ? { ...post, content: editText } : post
-    ));
+    // Update via API and refresh
+    refreshWall();
     setEditingPost(null);
     setEditText('');
   };
@@ -256,7 +240,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
       const currentUserId = localStorage.getItem('userId');
       const result = await wallService.deletePost(postId, currentUserId);
       if (result.success) {
-        await loadPosts();
+        refreshWall();
       }
     } catch (error) {
       console.error('Error deleting post:', error);
@@ -265,9 +249,8 @@ const Wall = ({ userId, isOwnProfile, user }) => {
   };
   
   const handleHidePost = (postId) => {
-    setPosts(posts.map(post => 
-      post.id === postId ? { ...post, hidden: true } : post
-    ));
+    // Update via API and refresh
+    refreshWall();
     setShowPostMenu(null);
   };
   
@@ -291,7 +274,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
       const currentUserId = localStorage.getItem('userId');
       const result = await wallService.addComment(postId, currentUserId, text);
       if (result.success) {
-        await loadPosts();
+        refreshWall();
         setCommentText(prev => ({ ...prev, [postId]: '' }));
       }
     } catch (error) {

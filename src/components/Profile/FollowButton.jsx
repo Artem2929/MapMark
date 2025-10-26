@@ -1,25 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import useUserFollowing from '../../hooks/useUserFollowing';
 import './FollowButton.css';
 
 const FollowButton = ({ userId, targetUserId }) => {
+  const { isFollowing: followingStatus, refreshFollowing } = useUserFollowing(userId);
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    checkFollowStatus();
-  }, [userId, targetUserId]);
-
-  const checkFollowStatus = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/user/${userId}/following`);
-      const result = await response.json();
-      if (result.success) {
-        setIsFollowing(result.data.includes(targetUserId));
-      }
-    } catch (error) {
-      console.error('Error checking follow status:', error);
-    }
-  };
+    setIsFollowing(followingStatus(targetUserId));
+  }, [followingStatus, targetUserId]);
 
   const handleFollowToggle = async () => {
     if (loading) return;
@@ -33,6 +23,7 @@ const FollowButton = ({ userId, targetUserId }) => {
       
       if (result.success) {
         setIsFollowing(result.data.isFollowing);
+        refreshFollowing(); // Refresh following cache
       }
     } catch (error) {
       console.error('Error toggling follow:', error);
