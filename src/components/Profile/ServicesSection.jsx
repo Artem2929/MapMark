@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import CustomSelect from '../ui/CustomSelect';
 import './ServicesSection.css';
 
-const ServicesSection = ({ userId, isOwnProfile }) => {
+const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
   const navigate = useNavigate();
-  const [services, setServices] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newService, setNewService] = useState({
     title: '',
@@ -16,26 +16,7 @@ const ServicesSection = ({ userId, isOwnProfile }) => {
   const [photoPreview, setPhotoPreview] = useState(null);
   const fileInputRef = useRef(null);
 
-  useEffect(() => {
-    loadServices();
-  }, [userId]);
 
-  const loadServices = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/services/user/${userId}`);
-      if (response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          setServices(result.data);
-        }
-      } else {
-        setServices([]);
-      }
-    } catch (error) {
-      console.error('Error loading services:', error);
-      setServices([]);
-    }
-  };
 
   const handleAddService = async () => {
     try {
@@ -80,18 +61,7 @@ const ServicesSection = ({ userId, isOwnProfile }) => {
       
       const result = await response.json();
       if (result.success) {
-        setServices([...services, result.data]);
-      } else {
-        // Якщо сервер недоступний, додаємо локально
-        const newServiceWithId = {
-          _id: Date.now().toString(),
-          title: newService.title,
-          description: newService.description,
-          category: newService.category,
-          photo: photoData,
-          userId
-        };
-        setServices([...services, newServiceWithId]);
+        window.location.reload(); // Просте оновлення
       }
       
       setShowAddModal(false);
@@ -102,16 +72,8 @@ const ServicesSection = ({ userId, isOwnProfile }) => {
       }
     } catch (error) {
       console.error('Error adding service:', error);
-      // Додаємо локально при помилці
-      const newServiceWithId = {
-        _id: Date.now().toString(),
-        title: newService.title,
-        description: newService.description,
-        category: newService.category,
-        photo: photoPreview,
-        userId
-      };
-      setServices([...services, newServiceWithId]);
+      // Просте оновлення при помилці
+      window.location.reload();
       setShowAddModal(false);
       setNewService({ title: '', description: '', category: 'service', photo: null });
       setPhotoPreview(null);

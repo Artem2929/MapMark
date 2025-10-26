@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import useUserPhotos from '../../hooks/useUserPhotos';
-import useUserFollowing from '../../hooks/useUserFollowing';
-import useUserFollowers from '../../hooks/useUserFollowers';
 import './ProfileStats.css';
 
-const ProfileStats = ({ userId, isOwnProfile, onRefresh, onStatsReady }) => {
-  const { photos } = useUserPhotos(userId);
-  const { following } = useUserFollowing(userId);
-  const { followers } = useUserFollowers(userId);
+const ProfileStats = ({ 
+  userId, 
+  isOwnProfile, 
+  onRefresh, 
+  onStatsReady, 
+  photos = [], 
+  following = [], 
+  followers = [], 
+  posts = [] 
+}) => {
   const [stats, setStats] = useState({
     posts: 0,
     photos: 0,
@@ -31,21 +34,15 @@ const ProfileStats = ({ userId, isOwnProfile, onRefresh, onStatsReady }) => {
     }));
   }, [photos.length]);
 
-  // Update following count when following changes
+  // Update counts when data changes
   useEffect(() => {
     setStats(prev => ({
       ...prev,
-      following: following.length || 0
+      following: following.length || 0,
+      followers: followers.length || 0,
+      posts: posts.length || 0
     }));
-  }, [following.length]);
-
-  // Update followers count when followers change
-  useEffect(() => {
-    setStats(prev => ({
-      ...prev,
-      followers: followers.length || 0
-    }));
-  }, [followers.length]);
+  }, [following.length, followers.length, posts.length]);
 
   useEffect(() => {
     if (onRefresh) {
@@ -60,23 +57,11 @@ const ProfileStats = ({ userId, isOwnProfile, onRefresh, onStatsReady }) => {
   }, [onStatsReady]);
 
   const loadStats = async () => {
-    try {
-      setLoading(true);
-      
-      // Load only posts (photos, following, followers are loaded via hooks)
-      const postsRes = await fetch(`http://localhost:3000/api/posts/${userId}`);
-      const posts = await postsRes.json();
-
-      setStats(prev => ({
-        ...prev,
-        posts: posts.success ? (posts.posts?.length || 0) : 0,
-        reviews: 0 // Will be implemented later
-      }));
-    } catch (error) {
-      console.error('Error loading stats:', error);
-    } finally {
-      setLoading(false);
-    }
+    // All data is now loaded via hooks, no direct API calls needed
+    setStats(prev => ({
+      ...prev,
+      reviews: 0 // Will be implemented later
+    }));
   };
 
   const updatePhotoCount = useCallback((increment = 1) => {

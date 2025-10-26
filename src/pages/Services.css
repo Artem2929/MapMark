@@ -30,10 +30,17 @@
 
 .service-card {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+.service-card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border-color: rgba(59, 130, 246, 0.2);
 }
 
 .service-image {
@@ -42,6 +49,7 @@
   overflow: hidden;
   cursor: pointer;
   width: 100%;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
 .service-card img {
@@ -49,7 +57,9 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.3s ease;
 }
+
 
 .service-placeholder {
   width: 100%;
@@ -62,27 +72,35 @@
 }
 
 .service-stats {
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: white;
-  border-top: 1px solid #efefef;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  border-top: 1px solid #e2e8f0;
 }
 
 .service-stat-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  color: #262626;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: background 0.2s ease;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  letter-spacing: -0.025em;
 }
 
-.service-stat-item:hover {
-  background: #f5f5f5;
+.service-stat-item.price {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  padding: 10px 16px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+
+.service-stat-item.price:hover {
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
 .service-actions {
@@ -99,19 +117,23 @@
 }
 
 .delete-btn {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(220, 38, 38, 0.9);
   color: white;
   border: none;
-  padding: 6px 10px;
-  border-radius: 3px;
+  padding: 8px 12px;
+  border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
 }
 
 .delete-btn:hover {
-  background: rgba(237, 73, 86, 0.9);
+  background: rgba(220, 38, 38, 1);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
 }
 
 .add-service-card {

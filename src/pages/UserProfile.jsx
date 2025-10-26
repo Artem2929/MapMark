@@ -3,6 +3,10 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import useUserProfile, { clearUserProfileCache } from '../hooks/useUserProfile';
 import useUserPhotos from '../hooks/useUserPhotos';
+import useUserFollowing from '../hooks/useUserFollowing';
+import useUserFollowers from '../hooks/useUserFollowers';
+import useUserWall from '../hooks/useUserWall';
+import useUserServices from '../hooks/useUserServices';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import Footer from '../components/layout/Footer';
 
@@ -33,6 +37,10 @@ const UserProfile = () => {
   const targetUserId = userId || currentUserId;
   const { user, loading, refreshProfile } = useUserProfile(targetUserId);
   const { photos, refreshPhotos, addPhoto } = useUserPhotos(targetUserId);
+  const { following } = useUserFollowing(targetUserId);
+  const { followers } = useUserFollowers(targetUserId);
+  const { posts } = useUserWall(targetUserId, currentUserId);
+  const { services } = useUserServices(targetUserId);
   const [userState, setUserState] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [showCopyTooltip, setShowCopyTooltip] = useState(false);
@@ -402,6 +410,10 @@ const UserProfile = () => {
                   showToast('Інформацію оновлено', 'success');
                 }}
                 onStatsRefresh={handleStatsRefresh}
+                photos={photos}
+                following={following}
+                followers={followers}
+                posts={posts}
               />
               {!isOwnProfile && currentUserId && (
                 <div style={{ marginTop: '16px', textAlign: 'center' }}>
@@ -421,6 +433,7 @@ const UserProfile = () => {
           <ServicesSection 
             userId={targetUserId}
             isOwnProfile={isOwnProfile}
+            services={services}
           />
         ) : (
           <div className="profile-photos-section">

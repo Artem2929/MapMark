@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import useUserServices from '../hooks/useUserServices';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import './Services.css';
 
 const Services = () => {
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category');
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const userId = localStorage.getItem('userId');
+  const { services: allServices, loading, addService } = useUserServices(userId);
   const [showModal, setShowModal] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [formData, setFormData] = useState({
@@ -17,37 +18,10 @@ const Services = () => {
     photo: null
   });
 
-  useEffect(() => {
-    loadServices();
-  }, [category]);
-
-  const loadServices = async () => {
-    try {
-      setLoading(true);
-      const userId = localStorage.getItem('userId');
-      
-      const response = await fetch(`http://localhost:3000/api/services/user/${userId}`);
-      if (response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          let filteredServices = result.data;
-          if (category) {
-            filteredServices = result.data.filter(service => service.category === category);
-          }
-          setServices(filteredServices);
-        }
-      } else {
-        // Якщо сервер не доступний, ставимо порожній масив
-        setServices([]);
-      }
-    } catch (error) {
-      console.error('Error loading services:', error);
-      // При помилці ставимо порожній масив
-      setServices([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const services = useMemo(() => {
+    if (!category) return allServices;
+    return allServices.filter(service => service.category === category && service.title !== 'одяг');
+  }, [allServices, category]);
 
   const getCategoryTitle = () => {
     if (category === 'service') return 'Послуги';
@@ -106,8 +80,8 @@ const Services = () => {
           const result = await response.json();
           console.log('Послуга/товар створено:', result);
           
-          // Оновлюємо список послуг
-          loadServices();
+          // Додаємо нову послугу до кешу
+          addService(result.data);
           
           // Закриваємо модальне вікно
           setShowModal(false);
@@ -134,7 +108,7 @@ const Services = () => {
       
       if (response.ok) {
         // Оновлюємо список після видалення
-        loadServices();
+        window.location.reload(); // Просте оновлення сторінки
       } else {
         console.error('Помилка видалення послуги/товару');
       }
