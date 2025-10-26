@@ -7,7 +7,7 @@ export { default as Hero } from './Hero';
 export { default as Section } from './Section';
 export { default as PostCard } from './PostCard';
 export { default as SearchBar } from './SearchBar';
-export { default as FilterPanel } from './FilterPanel';
+
 export { default as AdCard } from './AdCard';
 export { default as Pagination } from './Pagination';
 
