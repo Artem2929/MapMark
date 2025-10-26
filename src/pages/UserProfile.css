@@ -1,61 +1,25 @@
+/* Base Styles */
 .page-container.profile-user-profile {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 16px 20px 0px 20px;
+  padding: 16px 20px 0;
   min-height: 100vh;
-}
-
-/* Мобільний адаптив для page-container */
-@media (max-width: 768px) {
-  .page-container.profile-user-profile {
-    padding: 8px 8px 0px 8px;
-  }
-
-  .profile-profile-container {
-    padding: 0px 8px;
-  }
-}
-
-@media (max-width: 550px) {
-  .page-container.profile-user-profile {
-    padding: 4px 4px 0px 4px;
-  }
-
-  .profile-profile-container {
-    padding: 0px 4px;
-  }
-}
-
-@media (max-width: 480px) {
-  .page-container.profile-user-profile {
-    padding: 0px 0px 0px 0px;
-  }
-
-  .profile-profile-container {
-    padding: 0px 0px;
-  }
 }
 
 .profile-profile-container {
   max-width: 1200px;
-  margin: 0 auto;
-  margin-bottom: 30px;
+  margin: 0 auto 30px;
   padding: 0 20px;
 }
 
 .profile-profile-header {
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(248, 250, 252, 0.95) 100%
-  );
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(59, 130, 246, 0.12);
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 20px;
-  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.06),
-    0 4px 16px rgba(59, 130, 246, 0.04), 0 2px 8px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.06), 0 4px 16px rgba(59, 130, 246, 0.04), 0 2px 8px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -70,12 +34,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(59, 130, 246, 0.04),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.04), transparent);
   transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -93,7 +52,7 @@
 .profile-avatar-container {
   position: relative;
   width: 250px;
-  height: 480profile-avatar-menupx;
+  height: 480px;
   margin: 0 auto;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -124,8 +83,7 @@
   font-weight: 500;
   color: white;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   letter-spacing: -0.02em;
 }
 
@@ -232,18 +190,6 @@
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
 }
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 4px rgba(52, 199, 89, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(52, 199, 89, 0);
-  }
-}
-
 .profile-profile-info {
   flex: 1;
   display: flex;
@@ -263,17 +209,12 @@
 
 .profile-profile-text-info {
   flex: 1;
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(248, 250, 252, 0.9) 100%
-  );
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
   border: 1px solid rgba(59, 130, 246, 0.1);
   border-radius: 12px;
   padding: 20px;
   backdrop-filter: blur(10px);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.05);
@@ -300,8 +241,7 @@
   font-weight: 700;
   color: #1e293b;
   margin: 0 0 12px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   line-height: 1.3;
   letter-spacing: -0.01em;
   display: flex;
@@ -319,8 +259,7 @@
   padding: 4px 8px;
   background: rgba(255, 255, 255, 0.9);
   outline: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   letter-spacing: -0.01em;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
@@ -337,8 +276,7 @@
   font-size: 14px;
   color: #64748b;
   margin: 0 0 16px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   font-weight: 500;
 }
 
@@ -384,8 +322,7 @@
 .profile-info-row {
   margin: 8px 0;
   font-size: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -410,8 +347,7 @@
   margin: 16px 0;
   font-size: 14px;
   color: #475569;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   font-style: italic;
   line-height: 1.4;
 }
@@ -425,8 +361,7 @@
 .profile-contact-row {
   margin: 8px 0;
   font-size: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
 }
 
 .profile-contact-link {
@@ -451,8 +386,7 @@
   font-weight: 400;
   height: 32px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -490,18 +424,13 @@
   border: none;
   font-size: 14px;
   letter-spacing: -0.01em;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   position: relative;
   overflow: hidden;
 }
 
 .profile-photos-section {
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(248, 250, 252, 0.95) 100%
-  );
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(59, 130, 246, 0.12);
   border-radius: 12px;
@@ -597,10 +526,6 @@
   border-radius: 12px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
-
-
-
-
 
 .no-photos {
   grid-column: 1 / -1;
@@ -797,25 +722,25 @@
 }
 
 .delete-btn {
-  background: rgba(220, 38, 38, 0.1) !important;
-  border: 1px solid rgba(220, 38, 38, 0.2) !important;
-  color: #dc2626 !important;
-  font-size: 12px !important;
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  color: #dc2626;
+  font-size: 12px;
   cursor: pointer;
-  padding: 6px 12px !important;
-  border-radius: 12px !important;
-  font-weight: 500 !important;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
   transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
 }
 
 .delete-btn:hover {
-  background: rgba(220, 38, 38, 0.15) !important;
-  border-color: rgba(220, 38, 38, 0.3) !important;
+  background: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.3);
 }
 
 .photo-upload-actions {
@@ -859,7 +784,29 @@
   background: #e5e7eb;
 }
 
+/* Animations */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 4px rgba(52, 199, 89, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 199, 89, 0);
+  }
+}
+
+/* Mobile */
 @media (max-width: 768px) {
+  .page-container.profile-user-profile {
+    padding: 8px 8px 0;
+  }
+
+  .profile-profile-container {
+    padding: 0 8px;
+  }
+
   .profile-photos-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
@@ -883,5 +830,25 @@
   
   .photo-drop-zone {
     padding: 30px 15px;
+  }
+}
+
+@media (max-width: 550px) {
+  .page-container.profile-user-profile {
+    padding: 4px 4px 0;
+  }
+
+  .profile-profile-container {
+    padding: 0 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container.profile-user-profile {
+    padding: 0;
+  }
+
+  .profile-profile-container {
+    padding: 0;
   }
 }

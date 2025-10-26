@@ -193,13 +193,13 @@ const ServicesSection = ({ userId, isOwnProfile }) => {
       </div>
 
       {showAddModal && (
-        <div className="service-modal" onClick={() => setShowAddModal(false)}>
-          <div className="service-modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="service-modal-header">
+        <div className="profile-service-modal" onClick={() => setShowAddModal(false)}>
+          <div className="profile-service-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="profile-service-modal-header">
               <h3>Додати нову послугу</h3>
               <button onClick={() => setShowAddModal(false)}>×</button>
             </div>
-            <div className="service-modal-body">
+            <div className="profile-service-modal-body">
               <div className="form-field">
                 <label className="form-label">Назва</label>
                 <input
@@ -265,7 +265,7 @@ const ServicesSection = ({ userId, isOwnProfile }) => {
                   />
                 </div>
               </div>
-              <div className="service-modal-actions">
+              <div className="profile-service-modal-actions">
                 <button type="button" onClick={() => setShowAddModal(false)}>Скасувати</button>
                 <button 
                   type="button" 
