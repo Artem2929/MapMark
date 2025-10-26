@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import useUserProfile, { clearUserProfileCache } from '../hooks/useUserProfile';
+import useUserPhotos from '../hooks/useUserPhotos';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import Footer from '../components/layout/Footer';
 
@@ -31,6 +32,7 @@ const UserProfile = () => {
   const currentUserId = localStorage.getItem('userId');
   const targetUserId = userId || currentUserId;
   const { user, loading, refreshProfile } = useUserProfile(targetUserId);
+  const { photos, refreshPhotos, addPhoto } = useUserPhotos(targetUserId);
   const [userState, setUserState] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [showCopyTooltip, setShowCopyTooltip] = useState(false);
@@ -42,7 +44,6 @@ const UserProfile = () => {
   const [avatarFile, setAvatarFile] = useState(null);
   const [toast, setToast] = useState(null);
   const [saving, setSaving] = useState(false);
-  const [photos, setPhotos] = useState([]);
   const photoInputRef = useRef(null);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
@@ -67,22 +68,10 @@ const UserProfile = () => {
       setEditedCity(user.city);
       setEditedBio(user.bio || '');
       setIsOwnProfile(!userId || userId === currentUserId);
-      loadPhotos();
     }
   }, [user, userId, currentUserId, navigate]);
 
-  const loadPhotos = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/photos/user/${targetUserId}`);
-      const result = await response.json();
-      
-      if (result.success) {
-        setPhotos(result.data);
-      }
-    } catch (error) {
-      console.error('Error loading photos:', error);
-    }
-  };
+
 
   const handleAddPhotoClick = () => {
     setShowPhotoModal(true);
@@ -135,15 +124,14 @@ const UserProfile = () => {
       console.log('Photo upload response:', result);
       
       if (result.success) {
-        await loadPhotos(); // Reload photos
+        addPhoto(result.data); // Add photo to cache
+        refreshPhotos(); // Refresh photos
         if (refreshStats && typeof refreshStats === 'function') {
           refreshStats(); // Refresh stats
         }
         if (statsUpdater && statsUpdater.updatePhotoCount) {
           statsUpdater.updatePhotoCount(1); // Increment photo count
         }
-        // Update user state to trigger re-render of ProfileAvatar
-        setUserState(prev => ({ ...prev, photos: [...photos, result.data] }));
         showToast('Фото успішно додано!', 'success');
         handleCloseModal();
       } else {

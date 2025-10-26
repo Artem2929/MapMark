@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import useUserPhotos from '../../hooks/useUserPhotos';
 import './ProfileStats.css';
 
 const ProfileStats = ({ userId, isOwnProfile, onRefresh, onStatsReady }) => {
+  const { photos } = useUserPhotos(userId);
   const [stats, setStats] = useState({
     posts: 0,
     photos: 0,
@@ -16,6 +18,14 @@ const ProfileStats = ({ userId, isOwnProfile, onRefresh, onStatsReady }) => {
       loadStats();
     }
   }, [userId]);
+
+  // Update photo count when photos change
+  useEffect(() => {
+    setStats(prev => ({
+      ...prev,
+      photos: photos.length || 0
+    }));
+  }, [photos.length]);
 
   useEffect(() => {
     if (onRefresh) {
@@ -33,30 +43,26 @@ const ProfileStats = ({ userId, isOwnProfile, onRefresh, onStatsReady }) => {
     try {
       setLoading(true);
       
-      // Load all stats in parallel
-      const [profileRes, photosRes, postsRes, followersRes, followingRes] = await Promise.all([
-        fetch(`http://localhost:3000/api/user/${userId}/profile`),
-        fetch(`http://localhost:3000/api/photos/user/${userId}`),
+      // Load stats in parallel (photos are loaded via useUserPhotos hook)
+      const [postsRes, followersRes, followingRes] = await Promise.all([
         fetch(`http://localhost:3000/api/posts/${userId}`),
         fetch(`http://localhost:3000/api/user/${userId}/followers`),
         fetch(`http://localhost:3000/api/user/${userId}/following`)
       ]);
 
-      const [profile, photos, posts, followers, following] = await Promise.all([
-        profileRes.json(),
-        photosRes.json(),
+      const [posts, followers, following] = await Promise.all([
         postsRes.json(),
         followersRes.json(),
         followingRes.json()
       ]);
 
-      setStats({
+      setStats(prev => ({
+        ...prev,
         posts: posts.success ? (posts.posts?.length || 0) : 0,
-        photos: photos.success ? (photos.data?.length || 0) : 0,
         followers: followers.success ? (followers.data?.length || 0) : 0,
         following: following.success ? (following.data?.length || 0) : 0,
         reviews: 0 // Will be implemented later
-      });
+      }));
     } catch (error) {
       console.error('Error loading stats:', error);
     } finally {
