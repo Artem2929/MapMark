@@ -10,12 +10,12 @@ import BioSection from '../components/ui/BioSection';
 
 
 import Wall from '../components/ui/Wall';
-import ProfileAvatar from '../components/Profile/ProfileAvatar';
-import ProfileBasicInfo from '../components/Profile/ProfileBasicInfo';
-import ProfileMenu from '../components/Profile/ProfileMenu';
-import ServicesSection from '../components/Profile/ServicesSection';
+import ProfileAvatar from '../components/profile/ProfileAvatar';
+import ProfileBasicInfo from '../components/profile/ProfileBasicInfo';
+import ProfileMenu from '../components/profile/ProfileMenu';
+import ServicesSection from '../components/profile/ServicesSection';
 
-import FollowButton from '../components/Profile/FollowButton';
+import FollowButton from '../components/profile/FollowButton';
 
 
 

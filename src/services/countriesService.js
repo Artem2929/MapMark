@@ -21,19 +21,14 @@ class CountriesService {
   }
 
   static async fetchCountries() {
-    try {
-      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/countries`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+    // Повертаємо тільки Україну
+    return [
+      {
+        id: 'ukraine',
+        name: 'Україна',
+        flag: '🇺🇦'
       }
-
-      const result = await response.json();
-      return result.data || [];
-    } catch (error) {
-      console.error('Error fetching countries:', error);
-      throw new Error(`Failed to fetch countries: ${error.message}`);
-    }
+    ];
   }
 }
 

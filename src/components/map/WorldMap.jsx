@@ -8,7 +8,7 @@ import ReviewForm from '../forms/ReviewForm';
 
 import MarkerPopup from '../ui/MarkerPopup';
 import ReviewsList from '../ui/ReviewsList';
-import { getCurrentLocation, getRoute } from './LocationService';
+import { getCurrentLocation, getRoute } from '../../services/mapLocationService';
 import ReviewService from '../../services/reviewService';
 import useReviews from '../../hooks/useReviews';
 
