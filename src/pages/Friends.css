@@ -4,41 +4,7 @@
   min-height: 100vh;
 }
 
-.breadcrumbs {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 16px;
-  font-size: 13px;
-  color: #64748b;
-}
 
-.breadcrumb-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.breadcrumb-link {
-  color: #3b82f6;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.breadcrumb-link:hover {
-  color: #1d4ed8;
-  text-decoration: underline;
-}
-
-.breadcrumb-separator {
-  color: #94a3b8;
-  margin: 0 4px;
-}
-
-.breadcrumb-current {
-  color: #1e293b;
-  font-weight: 500;
-}
 
 .friends-container {
   max-width: 800px;

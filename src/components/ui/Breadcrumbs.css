@@ -89,7 +89,7 @@
 @media (max-width: 768px) {
   .breadcrumbs {
     font-size: 13px;
-    margin: 16px 0;
+    margin: 16px 0 16px 0;
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
