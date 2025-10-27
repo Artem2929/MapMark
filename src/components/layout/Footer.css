@@ -92,7 +92,7 @@
 
 .footer-link:hover {
   color: #007aff;
-  transform: translateX(4px);
+  text-decoration: none;
 }
 
 .footer-link::after {

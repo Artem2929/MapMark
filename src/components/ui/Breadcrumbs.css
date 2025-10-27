@@ -1,12 +1,11 @@
 .breadcrumbs {
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 0;
+  gap: 4px;
+  margin: 26px 0 24px 0;
   font-size: 14px;
-  margin-top: 26px;
-  margin-bottom: 24px;
   font-weight: 500;
+  color: #64748b;
 }
 
 .breadcrumb-item {
@@ -51,6 +50,7 @@
 .breadcrumb-link:hover {
   color: #3b82f6;
   background: rgba(59, 130, 246, 0.05);
+  text-decoration: none;
 }
 
 .breadcrumb-current {
@@ -89,7 +89,7 @@
 @media (max-width: 768px) {
   .breadcrumbs {
     font-size: 13px;
-    margin-bottom: 16px;
+    margin: 16px 0;
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;

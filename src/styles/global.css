@@ -1,5 +1,77 @@
 /* Глобальні стилі для всіх сторінок */
 
+/* Градієнтний колір для всіх заголовків */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* Спільні стилі для секцій */
+.section {
+  padding: 20px 0;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  margin-bottom: 40px;
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 768px) {
+  .section {
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 480px) {
+  body,
+  p,
+  span,
+  div,
+  a,
+  li,
+  td,
+  th {
+    font-size: 16px;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 5px;
+  }
+}
+
+.section-title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 40px;
+  letter-spacing: -0.02em;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+}
+
+.content-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 250, 252, 0.9) 100%
+  );
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+}
+
 /* Базовий контейнер сторінки */
 .page-container {
   max-width: 1200px;
@@ -9,11 +81,7 @@
   min-height: 100vh;
 }
 
-/* Стилі для breadcrumbs на всіх сторінках */
-.page-container .breadcrumbs {
-  margin-top: 26px;
-  margin-bottom: 24px;
-}
+
 
 /* Стилі для footer на всіх сторінках */
 .page-container .footer {
@@ -23,4 +91,14 @@
   width: 100vw;
   margin-bottom: 0;
   padding-bottom: 0;
+}
+
+/* Приховати кнопку мови */
+.lang-dropdown {
+  display: none;
+}
+
+/* Глобальне прибирання підкреслення посилань */
+a {
+  text-decoration: none;
 }

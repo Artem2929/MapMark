@@ -48,12 +48,10 @@
 }
 
 /* Stats Section */
-
-
 .about-stats-grid {
   display: flex;
   gap: 12px;
-  margin-bottom: 20px;
+  margin: 0 20px;
   flex-wrap: wrap;
 }
 
@@ -73,11 +71,8 @@
 }
 
 .about-stat-number {
-  font-size: 18px;
   font-weight: 700;
   color: #1e293b;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
   line-height: 1;
   margin-bottom: 4px;
 }
@@ -86,8 +81,6 @@
   font-size: 11px;
   color: #64748b;
   font-weight: 500;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
 }
 
 /* Mission Section */
@@ -116,20 +109,15 @@
 }
 
 .about-mission-content h2 {
-  font-size: 36px;
   font-weight: 800;
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 20px;
   letter-spacing: -0.02em;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
 }
 
 .about-mission-content p {
-  font-size: 16px;
   line-height: 1.6;
   color: #64748b;
   margin-bottom: 24px;
@@ -138,15 +126,16 @@
 }
 
 .about-features-list {
-  display: grid;
-  gap: 12px;
+  display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
 }
 
 .about-feature-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 16px;
   color: #374151;
   font-weight: 500;
 }
@@ -169,7 +158,6 @@
 
 .about-team-section h2 {
   text-align: center;
-  font-size: 36px;
   font-weight: 800;
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
   -webkit-background-clip: text;
@@ -177,8 +165,6 @@
   background-clip: text;
   margin-bottom: 40px;
   letter-spacing: -0.02em;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
 }
 
 .about-team-grid {
@@ -238,13 +224,10 @@
 }
 
 .about-team-card h3 {
-  font-size: 20px;
   font-weight: 700;
   color: #1e293b;
   margin-bottom: 8px;
   letter-spacing: -0.01em;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
 }
 
 .about-team-role {
@@ -275,7 +258,6 @@
 
 .about-contact-section h2 {
   text-align: center;
-  font-size: 36px;
   font-weight: 800;
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
   -webkit-background-clip: text;
@@ -283,8 +265,6 @@
   background-clip: text;
   margin-bottom: 40px;
   letter-spacing: -0.02em;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
 }
 
 .about-contact-content {
@@ -303,20 +283,16 @@
 }
 
 .about-contact-info h3 {
-  font-size: 24px;
   font-weight: 700;
   color: #1e293b;
   margin-bottom: 16px;
   letter-spacing: -0.01em;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
 }
 
 .about-contact-info p {
   color: #64748b;
   line-height: 1.6;
   margin-bottom: 24px;
-  font-size: 16px;
   font-weight: 400;
 }
 
@@ -331,7 +307,6 @@
   align-items: center;
   gap: 12px;
   color: #374151;
-  font-size: 16px;
   font-weight: 500;
 }
 
@@ -351,15 +326,12 @@
   padding: 14px 18px;
   border: 2px solid rgba(59, 130, 246, 0.08);
   border-radius: 12px;
-  font-size: 15px;
   background: linear-gradient(
     145deg,
     rgba(255, 255, 255, 0.95) 0%,
     rgba(248, 250, 252, 0.95) 100%
   );
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
   backdrop-filter: blur(10px);
   box-sizing: border-box;
 }
@@ -385,12 +357,9 @@
   border: 2px solid rgba(59, 130, 246, 0.3);
   padding: 14px 20px;
   border-radius: 12px;
-  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
   letter-spacing: -0.01em;
   position: relative;
   overflow: hidden;
@@ -438,6 +407,25 @@
   animation: slideIn 0.3s ease-out;
 }
 
+/* Desktop Headings */
+.about-container h1, .about-container h2, .about-container h3, .about-container h4, .about-container h5, .about-container h6 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+/* Desktop Text */
+.about-container p, .about-container span, .about-container div:not(.about-avatar-placeholder), .about-container li, .about-container input, .about-container textarea, .about-container button {
+  font-size: 16px;
+}
+
+.about-container p {
+  text-align: center;
+}
+
+.about-container input, .about-container textarea {
+  padding: 10px 15px;
+}
+
 /* Tablet */
 @media (max-width: 768px) {
   .about-hero-title { font-size: 32px; }
@@ -471,4 +459,6 @@
   .about-container h1, .about-container h2, .about-container h3, .about-container h4, .about-container h5, .about-container h6 { font-size: 24px; margin-bottom: 8px; }
   .about-container p, .about-container span, .about-container div:not(.about-avatar-placeholder), .about-container li { color: #333333; }
   .about-team-bio, .about-contact-info p, .about-feature-item { color: #333333; }
+  .about-features-list { flex-direction: column; align-items: center; }
+  .about-feature-item { justify-content: center; }
 }

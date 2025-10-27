@@ -18,27 +18,41 @@ const About = () => {
   const [touched, setTouched] = useState({});
 
   useEffect(() => {
-    fetchAboutData();
+    let isMounted = true;
+    
+    const fetchData = async () => {
+      try {
+        const [statsRes, teamRes] = await Promise.all([
+          fetch('http://localhost:3000/api/about/stats').catch(() => ({ ok: false })),
+          fetch('http://localhost:3000/api/about/team').catch(() => ({ ok: false }))
+        ]);
+        
+        if (!isMounted) return;
+        
+        if (statsRes.ok) {
+          const statsData = await statsRes.json();
+          if (statsData.success && isMounted) setStats(statsData.data);
+        }
+        
+        if (teamRes.ok) {
+          const teamData = await teamRes.json();
+          if (teamData.success && isMounted) setTeam(teamData.data);
+        }
+      } catch (error) {
+        if (isMounted) console.error('Error fetching about data:', error);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    
+    fetchData();
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const fetchAboutData = async () => {
-    try {
-      const [statsRes, teamRes] = await Promise.all([
-        fetch('http://localhost:3000/api/about/stats'),
-        fetch('http://localhost:3000/api/about/team')
-      ]);
-      
-      const statsData = await statsRes.json();
-      const teamData = await teamRes.json();
-      
-      if (statsData.success) setStats(statsData.data);
-      if (teamData.success) setTeam(teamData.data);
-    } catch (error) {
-      console.error('Error fetching about data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   const validateField = (name, value) => {
     switch (name) {
@@ -138,7 +152,7 @@ const About = () => {
     <div className="page-container about-page">
       <Breadcrumbs />
       {/* Hero Section */}
-      <div className="about-hero">
+      <div className="about-hero section">
         <div className="about-container">
           <div className="about-hero-content">
             <h1 className="about-hero-title">{t('aboutPage.hero.title')}</h1>
@@ -151,9 +165,9 @@ const About = () => {
 
       {/* Stats Section */}
       {stats && (
-        <div className="about-stats-section">
+        <div className="section">
           <div className="about-container">
-            <h2>{t('aboutPage.stats.title')}</h2>
+            <h2 className="section-title">{t('aboutPage.stats.title')}</h2>
             <div className="about-stats-grid">
               <div className="about-stat-card">
                 <div className="about-stat-number">{stats.totalUsers}</div>
@@ -177,10 +191,10 @@ const About = () => {
       )}
 
       {/* Mission Section */}
-      <div className="about-mission-section">
+      <div className="section">
         <div className="about-container">
-          <div className="about-mission-content">
-            <h2>{t('aboutPage.mission.title')}</h2>
+          <div className="content-card">
+            <h2 className="section-title">{t('aboutPage.mission.title')}</h2>
             <p>
               {t('aboutPage.mission.description')}
             </p>
