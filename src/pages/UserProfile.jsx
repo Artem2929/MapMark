@@ -64,6 +64,15 @@ const UserProfile = () => {
     setStatsUpdater(methods);
   }, []);
 
+  // Debug logging
+  console.log('UserProfile Debug:', {
+    currentUserId,
+    targetUserId,
+    userId,
+    isOwnProfile,
+    userRole: userState?.role
+  });
+
   useEffect(() => {
     if (!currentUserId) {
       navigate('/login', { replace: true });
@@ -75,7 +84,7 @@ const UserProfile = () => {
       setEditedName(user.name);
       setEditedCity(user.city);
       setEditedBio(user.bio || '');
-      setIsOwnProfile(!userId || userId === currentUserId);
+      setIsOwnProfile(targetUserId === currentUserId);
     }
   }, [user, userId, currentUserId, navigate]);
 

@@ -5,13 +5,13 @@ const serviceSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    maxlength: 100
+    maxlength: 50
   },
   description: {
     type: String,
     required: true,
     trim: true,
-    maxlength: 500
+    maxlength: 200
   },
   category: {
     type: String,
@@ -22,6 +22,11 @@ const serviceSchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true,
+    index: true
+  },
+  serviceItemId: {
+    type: String,
+    required: false,
     index: true
   },
   photo: {
@@ -40,6 +45,18 @@ const serviceSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
+  },
+  likesCount: {
+    type: Number,
+    default: 0
+  },
+  dislikesCount: {
+    type: Number,
+    default: 0
+  },
+  commentsCount: {
+    type: Number,
+    default: 0
   }
 });
 

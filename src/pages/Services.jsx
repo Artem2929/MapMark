@@ -7,7 +7,12 @@ const Services = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const category = searchParams.get('category');
+  const serviceItemId = searchParams.get('serviceItemId');
   const [showModal, setShowModal] = useState(false);
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showPreview, setShowPreview] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -55,7 +60,8 @@ const Services = () => {
           price: formData.price || null,
           category: category || 'service',
           photo: photoUrl,
-          userId: userId
+          userId: userId,
+          serviceItemId: serviceItemId
         };
         
         const response = await fetch('http://localhost:3000/api/services', {
@@ -69,13 +75,95 @@ const Services = () => {
         if (response.ok) {
           setShowModal(false);
           setFormData({ title: '', description: '', price: '', photo: null });
-          navigate('/profile');
+          loadServices();
         }
       } catch (error) {
         console.error('Error:', error);
       }
     }
   };
+
+  const handleLike = async (serviceId) => {
+    try {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`http://localhost:3000/api/service-likes/${serviceId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, type: 'like' })
+      });
+      
+      if (response.ok) {
+        loadServices();
+      }
+    } catch (error) {
+      console.error('Error liking service:', error);
+    }
+  };
+  
+  const handleDislike = async (serviceId) => {
+    try {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`http://localhost:3000/api/service-likes/${serviceId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, type: 'dislike' })
+      });
+      
+      if (response.ok) {
+        loadServices();
+      }
+    } catch (error) {
+      console.error('Error disliking service:', error);
+    }
+  };
+  
+  const handleComment = (serviceId) => {
+    const comment = prompt('Введіть коментар:');
+    if (comment && comment.trim()) {
+      addComment(serviceId, comment.trim());
+    }
+  };
+  
+  const addComment = async (serviceId, text) => {
+    try {
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`http://localhost:3000/api/service-comments/${serviceId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, text })
+      });
+      
+      if (response.ok) {
+        loadServices();
+      }
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
+  };
+
+  const loadServices = async () => {
+    if (!serviceItemId) {
+      setLoading(false);
+      return;
+    }
+    
+    try {
+      const response = await fetch(`http://localhost:3000/api/services/item/${serviceItemId}`);
+      const result = await response.json();
+      
+      if (result.success) {
+        setServices(result.data);
+      }
+    } catch (error) {
+      console.error('Error loading services:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  React.useEffect(() => {
+    loadServices();
+  }, [serviceItemId]);
 
   const breadcrumbItems = [
     { label: 'Профіль', link: '/profile' },
@@ -94,70 +182,177 @@ const Services = () => {
           </button>
         </div>
         
-        <div className="no-services">
-          <p>Додайте свій перший {category === 'service' ? 'сервіс' : 'товар'}</p>
-        </div>
+        {loading ? (
+          <div className="services-loading">
+            <p>Завантаження...</p>
+          </div>
+        ) : (
+          <div className="services-grid">
+            {services.length > 0 ? (
+              services.map((service) => (
+                <div key={service._id} className="service-card" onClick={() => {
+                  setSelectedService(service);
+                  setShowPreview(true);
+                }}>
+                  <div className="service-image">
+                    {service.photo ? (
+                      <img src={service.photo} alt={service.title} />
+                    ) : (
+                      <div className="service-placeholder">💼</div>
+                    )}
+                  </div>
+                  <div className="service-stats">
+                    <div className="service-header">
+                      <h3 className="service-title">{service.title}</h3>
+                      {service.price && (
+                        <div className="service-price">{service.price} грн</div>
+                      )}
+                    </div>
+                    <p className="service-description">{service.description}</p>
+                    <div className="service-category">
+                      {service.category === 'service' ? 'Послуга' : 'Товар'}
+                    </div>
+                  </div>
+                  <div className="post-actions">
+                    <button className="like-btn" onClick={(e) => {
+                      e.stopPropagation();
+                      handleLike(service._id);
+                    }}>👍 {service.likesCount || 0}</button>
+                    <button className="dislike-btn" onClick={(e) => {
+                      e.stopPropagation();
+                      handleDislike(service._id);
+                    }}>👎 {service.dislikesCount || 0}</button>
+                    <button className="comment-btn" onClick={(e) => {
+                      e.stopPropagation();
+                      handleComment(service._id);
+                    }}>💬 {service.commentsCount || 0}</button>
+                    <button className="share-btn" onClick={(e) => e.stopPropagation()}>↗️</button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="no-services">
+                <p>Немає послуг</p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
       
       {showModal && (
-        <div className="service-modal">
-          <div className="service-modal-content">
-            <button className="service-modal-close" onClick={() => setShowModal(false)}>×</button>
-            <div className="service-modal-image">
-              <div className="simple-drop-zone" onClick={() => document.getElementById('service-photo-input').click()}>
-                {formData.photo ? (
-                  <img src={URL.createObjectURL(formData.photo)} alt="Preview" style={{width: '100%', height: '100%', objectFit: 'cover'}} />
-                ) : (
-                  <>
-                    <div style={{fontSize: '48px', marginBottom: '16px', color: '#3b82f6'}}>+</div>
-                    <p>Перетягніть фото сюди або натисніть для вибору</p>
-                  </>
-                )}
-                <input 
-                  id="service-photo-input" 
-                  accept="image/*" 
-                  type="file" 
-                  style={{display: 'none'}} 
-                  onChange={handlePhotoUpload}
-                />
-              </div>
+        <div className="profile-service-modal" onClick={() => setShowModal(false)}>
+          <div className="profile-service-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="profile-service-modal-header">
+              <h3>Додати {category === 'service' ? 'послугу' : 'товар'}</h3>
+              <button onClick={() => setShowModal(false)}>×</button>
             </div>
-            <div className="service-modal-sidebar">
-              <div className="service-modal-header">
-                <h4>Додати {category === 'service' ? 'послугу' : 'товар'}</h4>
-              </div>
-              <div className="service-modal-form">
-                <input 
-                  type="text" 
-                  placeholder="Назва..." 
+            <div className="profile-service-modal-body">
+              <div className="form-field">
+                <label className="form-label">Назва</label>
+                <input
+                  type="text"
+                  placeholder="Введіть назву послуги або товару"
                   value={formData.title}
+                  maxLength={50}
                   onChange={(e) => setFormData(prev => ({...prev, title: e.target.value}))}
-                  className="service-input"
                 />
-                <textarea 
-                  className="service-textarea" 
-                  placeholder="Опис..." 
-                  rows="3"
+                <div className="char-counter">{formData.title.length}/50</div>
+              </div>
+              
+              <div className="form-field">
+                <label className="form-label">Опис</label>
+                <textarea
+                  placeholder="Детальний опис вашої послуги або товару"
                   value={formData.description}
+                  maxLength={200}
                   onChange={(e) => setFormData(prev => ({...prev, description: e.target.value}))}
                 />
-                <input 
-                  type="number" 
-                  placeholder="Ціна (грн)..." 
+                <div className="char-counter">{formData.description.length}/200</div>
+              </div>
+              
+              <div className="form-field">
+                <label className="form-label">Ціна (необов'язково)</label>
+                <input
+                  type="number"
+                  placeholder="Ціна в гривнях"
                   value={formData.price}
                   onChange={(e) => setFormData(prev => ({...prev, price: e.target.value}))}
-                  className="service-input"
                 />
               </div>
-              <div className="service-modal-actions">
-                <button className="service-modal-btn cancel" onClick={() => setShowModal(false)}>Скасувати</button>
+              
+              <div className="form-field">
+                <label className="form-label">Фото</label>
+                <div className="photo-upload-area">
+                  {!formData.photo ? (
+                    <div 
+                      className="photo-upload-zone"
+                      onClick={() => document.getElementById('service-photo-input').click()}
+                    >
+                      <div className="photo-upload-icon"></div>
+                      <p>Натисніть для вибору фото</p>
+                      <span className="photo-upload-hint">JPG, PNG до 5MB</span>
+                    </div>
+                  ) : (
+                    <div className="photo-preview">
+                      <img src={URL.createObjectURL(formData.photo)} alt="Попередній перегляд" />
+                      <button 
+                        type="button" 
+                        className="photo-remove-btn"
+                        onClick={() => setFormData(prev => ({...prev, photo: null}))}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  )}
+                  <input
+                    id="service-photo-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    style={{ display: 'none' }}
+                  />
+                </div>
+              </div>
+              
+              <div className="profile-service-modal-actions">
+                <button type="button" onClick={() => setShowModal(false)}>Скасувати</button>
                 <button 
-                  className={`service-modal-btn submit ${!formData.title || !formData.description ? 'disabled' : ''}`} 
-                  disabled={!formData.title || !formData.description}
+                  type="button" 
                   onClick={handleSubmit}
+                  disabled={!formData.title || !formData.description || !formData.photo}
                 >
-                  Опублікувати
+                  Додати
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {showPreview && selectedService && (
+        <div className="profile-service-modal" onClick={() => setShowPreview(false)}>
+          <div className="profile-service-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="profile-service-modal-header">
+              <h3>{selectedService.title}</h3>
+              <button onClick={() => setShowPreview(false)}>×</button>
+            </div>
+            <div className="service-preview-body">
+              {selectedService.photo && (
+                <div className="service-preview-image">
+                  <img src={selectedService.photo} alt={selectedService.title} />
+                </div>
+              )}
+              <div className="service-preview-info">
+                <div className="service-preview-header">
+                  <h4>{selectedService.title}</h4>
+                  {selectedService.price && (
+                    <div className="service-price">{selectedService.price} грн</div>
+                  )}
+                </div>
+                <p className="service-preview-description">{selectedService.description}</p>
+                <div className="service-preview-category">
+                  {selectedService.category === 'service' ? 'Послуга' : 'Товар'}
+                </div>
               </div>
             </div>
           </div>

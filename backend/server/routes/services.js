@@ -20,12 +20,35 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Отримати всі сервіси користувача
+// Отримати сервіси по serviceItemId
+router.get('/item/:serviceItemId', async (req, res) => {
+  try {
+    const { serviceItemId } = req.params;
+    
+    const services = await Service.find({ serviceItemId }).sort({ createdAt: -1 });
+    
+    res.json({
+      success: true,
+      data: services
+    });
+  } catch (error) {
+    console.error('Error fetching services by serviceItemId:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Помилка при завантаженні сервісів'
+    });
+  }
+});
+
+// Отримати всі сервіси користувача (тільки основні service-items)
 router.get('/user/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     
-    const services = await Service.find({ userId }).sort({ createdAt: -1 });
+    const services = await Service.find({ 
+      userId, 
+      serviceItemId: { $exists: false } 
+    }).sort({ createdAt: -1 });
     
     res.json({
       success: true,
@@ -43,7 +66,7 @@ router.get('/user/:userId', async (req, res) => {
 // Створити новий сервіс
 router.post('/', async (req, res) => {
   try {
-    const { title, description, category, userId, photo, price } = req.body;
+    const { title, description, category, userId, photo, price, serviceItemId } = req.body;
     
     // Валідація
     if (!title || !description || !userId) {
@@ -53,13 +76,28 @@ router.post('/', async (req, res) => {
       });
     }
     
+    if (title.length > 50) {
+      return res.status(400).json({
+        success: false,
+        message: 'Назва не може перевищувати 50 символів'
+      });
+    }
+    
+    if (description.length > 200) {
+      return res.status(400).json({
+        success: false,
+        message: 'Опис не може перевищувати 200 символів'
+      });
+    }
+    
     const service = new Service({
       title,
       description,
       category: category || 'service',
       userId,
       photo: photo || null,
-      price: price ? Number(price) : null
+      price: price ? Number(price) : null,
+      serviceItemId: serviceItemId || null
     });
     
     await service.save();
@@ -82,6 +120,20 @@ router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description, category, price } = req.body;
+    
+    if (title && title.length > 50) {
+      return res.status(400).json({
+        success: false,
+        message: 'Назва не може перевищувати 50 символів'
+      });
+    }
+    
+    if (description && description.length > 200) {
+      return res.status(400).json({
+        success: false,
+        message: 'Опис не може перевищувати 200 символів'
+      });
+    }
     
     const service = await Service.findByIdAndUpdate(
       id,
