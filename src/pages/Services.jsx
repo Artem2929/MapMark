@@ -13,6 +13,11 @@ const Services = () => {
   const [loading, setLoading] = useState(true);
   const [showPreview, setShowPreview] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [commentingService, setCommentingService] = useState(null);
+  const [commentText, setCommentText] = useState('');
+  const [comments, setComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -83,6 +88,22 @@ const Services = () => {
     }
   };
 
+  const loadComments = async (serviceId) => {
+    try {
+      setLoadingComments(true);
+      const response = await fetch(`http://localhost:3000/api/service-comments/${serviceId}`);
+      const result = await response.json();
+      
+      if (result.success) {
+        setComments(result.data);
+      }
+    } catch (error) {
+      console.error('Error loading comments:', error);
+    } finally {
+      setLoadingComments(false);
+    }
+  };
+
   const handleLike = async (serviceId) => {
     try {
       const userId = localStorage.getItem('userId');
@@ -118,9 +139,16 @@ const Services = () => {
   };
   
   const handleComment = (serviceId) => {
-    const comment = prompt('Введіть коментар:');
-    if (comment && comment.trim()) {
-      addComment(serviceId, comment.trim());
+    setCommentingService(serviceId);
+    setShowCommentModal(true);
+  };
+  
+  const submitComment = () => {
+    if (commentText.trim()) {
+      addComment(commentingService, commentText.trim());
+      setShowCommentModal(false);
+      setCommentText('');
+      setCommentingService(null);
     }
   };
   
@@ -193,6 +221,7 @@ const Services = () => {
                 <div key={service._id} className="service-card" onClick={() => {
                   setSelectedService(service);
                   setShowPreview(true);
+                  loadComments(service._id);
                 }}>
                   <div className="service-image">
                     {service.photo ? (
@@ -353,7 +382,79 @@ const Services = () => {
                 <div className="service-preview-category">
                   {selectedService.category === 'service' ? 'Послуга' : 'Товар'}
                 </div>
+                
+                <div className="preview-actions">
+                  <button className="preview-like-btn" onClick={() => handleLike(selectedService._id)}>
+                    👍 {selectedService.likesCount || 0}
+                  </button>
+                  <button className="preview-dislike-btn" onClick={() => handleDislike(selectedService._id)}>
+                    👎 {selectedService.dislikesCount || 0}
+                  </button>
+                  <button className="preview-comment-btn" onClick={() => handleComment(selectedService._id)}>
+                    💬 Додати коментар
+                  </button>
+                </div>
+                
+                <div className="comments-section">
+                  <h5>Коментарі ({selectedService.commentsCount || 0})</h5>
+                  {loadingComments ? (
+                    <div className="comments-loading">Завантаження...</div>
+                  ) : comments.length > 0 ? (
+                    <div className="comments-list">
+                      {comments.slice(0, 3).map((comment) => (
+                        <div key={comment._id} className="comment-item">
+                          <div className="comment-text">{comment.text}</div>
+                          <div className="comment-date">
+                            {new Date(comment.createdAt).toLocaleDateString('uk-UA')}
+                          </div>
+                        </div>
+                      ))}
+                      {comments.length > 3 && (
+                        <div className="comments-more">+{comments.length - 3} ще...</div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="no-comments">Немає коментарів</div>
+                  )}
+                </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {showCommentModal && (
+        <div className="profile-service-modal" onClick={() => setShowCommentModal(false)}>
+          <div className="comment-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="comment-modal-header">
+              <h3>💬 Додати коментар</h3>
+              <button onClick={() => setShowCommentModal(false)}>×</button>
+            </div>
+            <div className="comment-modal-body">
+              <textarea
+                placeholder="Напишіть ваш коментар..."
+                value={commentText}
+                maxLength={500}
+                onChange={(e) => setCommentText(e.target.value)}
+                rows={4}
+                autoFocus
+              />
+              <div className="comment-char-counter">{commentText.length}/500</div>
+            </div>
+            <div className="comment-modal-actions">
+              <button 
+                className="comment-btn-cancel" 
+                onClick={() => setShowCommentModal(false)}
+              >
+                Скасувати
+              </button>
+              <button 
+                className="comment-btn-submit" 
+                onClick={submitComment}
+                disabled={!commentText.trim()}
+              >
+                Опублікувати
+              </button>
             </div>
           </div>
         </div>
