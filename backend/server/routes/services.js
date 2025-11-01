@@ -2,6 +2,24 @@ const express = require('express');
 const router = express.Router();
 const Service = require('../models/Service');
 
+// Отримати всі сервіси
+router.get('/', async (req, res) => {
+  try {
+    const services = await Service.find().sort({ createdAt: -1 });
+    
+    res.json({
+      success: true,
+      data: services
+    });
+  } catch (error) {
+    console.error('Error fetching all services:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Помилка при завантаженні сервісів'
+    });
+  }
+});
+
 // Отримати всі сервіси користувача
 router.get('/user/:userId', async (req, res) => {
   try {

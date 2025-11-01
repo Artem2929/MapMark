@@ -20,6 +20,7 @@ const friendsRoutes = require('./routes/friends');
 const messagesRoutes = require('./routes/messages');
 const photosRoutes = require('./routes/photos');
 const servicesRoutes = require('./routes/services');
+const filtersRoutes = require('./routes/filters');
 const Ad = require('./models/Ad');
 const path = require('path');
 const fs = require('fs');
@@ -30,16 +31,59 @@ const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/mapmark';
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Connect to MongoDB
 mongoose.connect(DB_URL)
-.then(() => {
+.then(async () => {
   console.log('Connected to MongoDB successfully');
+  
+  // Ініціалізація фільтрів
+  try {
+    const Country = require('./models/Country');
+    const Region = require('./models/Region');
+    
+    const countryExists = await Country.findOne({ value: 'ukraine' });
+    if (!countryExists) {
+      await Country.create({ value: 'ukraine', label: '🇺🇦 Україна', isActive: true });
+      
+      const regions = [
+        { value: 'kyiv-region', label: 'Київська' },
+        { value: 'kharkiv-region', label: 'Харківська' },
+        { value: 'odesa-region', label: 'Одеська' },
+        { value: 'dnipropetrovsk-region', label: 'Дніпропетровська' },
+        { value: 'donetsk-region', label: 'Донецька' },
+        { value: 'zaporizhzhia-region', label: 'Запорізька' },
+        { value: 'lviv-region', label: 'Львівська' },
+        { value: 'poltava-region', label: 'Полтавська' },
+        { value: 'chernihiv-region', label: 'Чернігівська' },
+        { value: 'cherkasy-region', label: 'Черкаська' },
+        { value: 'zhytomyr-region', label: 'Житомирська' },
+        { value: 'sumy-region', label: 'Сумська' },
+        { value: 'rivne-region', label: 'Рівненська' },
+        { value: 'khmelnytskyi-region', label: 'Хмельницька' },
+        { value: 'vinnytsia-region', label: 'Вінницька' },
+        { value: 'ternopil-region', label: 'Тернопільська' },
+        { value: 'ivano-frankivsk-region', label: 'Івано-Франківська' },
+        { value: 'zakarpattia-region', label: 'Закарпатська' },
+        { value: 'chernivtsi-region', label: 'Чернівецька' },
+        { value: 'volyn-region', label: 'Волинська' },
+        { value: 'kirovohrad-region', label: 'Кіровоградська' },
+        { value: 'mykolaiv-region', label: 'Миколаївська' },
+        { value: 'kherson-region', label: 'Херсонська' },
+        { value: 'luhansk-region', label: 'Луганська' }
+      ];
+      
+      await Region.insertMany(regions.map(r => ({ ...r, countryValue: 'ukraine', isActive: true })));
+      console.log('Filters initialized successfully');
+    }
+  } catch (error) {
+    console.error('Error initializing filters:', error);
+  }
 })
 .catch((error) => {
   console.error('MongoDB connection error:', error);
@@ -58,6 +102,7 @@ app.use('/api/friends', friendsRoutes);
 app.use('/api/messages', messagesRoutes);
 app.use('/api/photos', photosRoutes);
 app.use('/api/services', servicesRoutes);
+app.use('/api/filters', filtersRoutes);
 app.use('/api', profileRoutes);
 
 // Serve uploaded files

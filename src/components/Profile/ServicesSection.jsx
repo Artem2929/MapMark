@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import CustomSelect from '../ui/CustomSelect';
+import ServiceItem from './ServiceItem';
 import './ServicesSection.css';
 
 const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
@@ -17,6 +18,10 @@ const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
   const fileInputRef = useRef(null);
 
 
+
+  const handleDeleteService = (serviceId) => {
+    window.location.reload();
+  };
 
   const handleAddService = async () => {
     try {
@@ -61,7 +66,7 @@ const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
       
       const result = await response.json();
       if (result.success) {
-        window.location.reload(); // Просте оновлення
+        window.location.reload();
       }
       
       setShowAddModal(false);
@@ -72,8 +77,6 @@ const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
       }
     } catch (error) {
       console.error('Error adding service:', error);
-      // Просте оновлення при помилці
-      window.location.reload();
       setShowAddModal(false);
       setNewService({ title: '', description: '', category: 'service', photo: null });
       setPhotoPreview(null);
@@ -130,22 +133,11 @@ const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
       <div className="services-grid">
         {services.length > 0 ? (
           services.map((service) => (
-            <div 
+            <ServiceItem 
               key={service._id} 
-              className="service-item"
-              onClick={() => navigate(`/services?category=${service.category}`)}
-            >
-              {service.photo && (
-                <div className="service-photo">
-                  <img src={service.photo} alt={service.title} />
-                </div>
-              )}
-              <div className="service-content">
-                <h4 className="service-title">{service.title}</h4>
-                <p className="service-description">{service.description}</p>
-                <span className="service-category">{service.category === 'service' ? 'Послуга' : 'Товар'}</span>
-              </div>
-            </div>
+              service={service} 
+              onDelete={handleDeleteService}
+            />
           ))
         ) : (
           <div className="no-services">

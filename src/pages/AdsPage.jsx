@@ -8,6 +8,7 @@ import CustomSelect from '../components/ui/CustomSelect';
 import CreateAdForm from '../components/forms/CreateAdForm';
 import AdsService from '../services/adsService';
 import { categoriesService } from '../services/categoriesService.js';
+import { filtersService } from '../services/filtersService.js';
 import './AdsPage.css';
 import './DiscoverPlaces.css';
 
@@ -17,6 +18,7 @@ const AdsPage = () => {
   const [ads, setAds] = useState([]);
   const [filteredAds, setFilteredAds] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filterOptions, setFilterOptions] = useState({ countries: [], regions: [] });
 
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [showCreateAdForm, setShowCreateAdForm] = useState(false);
@@ -60,8 +62,18 @@ const AdsPage = () => {
     }
   };
 
+  const loadFilters = async () => {
+    try {
+      const data = await filtersService.getFilters();
+      setFilterOptions(data);
+    } catch (error) {
+      console.error('Failed to load filters:', error);
+    }
+  };
+
   useEffect(() => {
     loadCategories();
+    loadFilters();
     
     const handleLanguageChange = () => {
       loadCategories();
@@ -360,13 +372,7 @@ const AdsPage = () => {
               value={filters.country}
               onChange={(value) => handleFilterChange('country', value)}
               placeholder="Всі країни"
-              options={[
-                { value: '', label: 'Всі країни' },
-                { value: 'ukraine', label: '🇺🇦 Україна' },
-                { value: 'poland', label: '🇵🇱 Польща' },
-                { value: 'germany', label: '🇩🇪 Німеччина' },
-                { value: 'france', label: '🇫🇷 Франція' }
-              ]}
+              options={filterOptions.countries}
             />
           </div>
 
@@ -375,48 +381,79 @@ const AdsPage = () => {
             <CustomSelect
               value={filters.region}
               onChange={(value) => handleFilterChange('region', value)}
-              placeholder="Всі області/міста"
+              placeholder="Всі області"
+              options={filterOptions.regions}
+            />
+          </div>
+
+          <div className="filter-group">
+            <label>Тип угоди</label>
+            <CustomSelect
+              value={filters.dealType}
+              onChange={(value) => handleFilterChange('dealType', value)}
+              placeholder="Всі типи"
               options={[
-                { value: '', label: 'Всі області/міста' },
-                { value: 'kyiv', label: 'Київ' },
-                { value: 'lviv', label: 'Львів' },
-                { value: 'odesa', label: 'Одеса' },
-                { value: 'kharkiv', label: 'Харків' }
+                { value: '', label: 'Всі типи' },
+                { value: 'sale', label: 'Продаж' },
+                { value: 'rent', label: 'Оренда' }
               ]}
             />
           </div>
 
           <div className="filter-group">
-            <label>Категорія</label>
+            <label>Тип нерухомості</label>
             <CustomSelect
-              value={filters.category}
-              onChange={(value) => handleFilterChange('category', value)}
-              placeholder="Всі категорії"
+              value={filters.propertyType}
+              onChange={(value) => handleFilterChange('propertyType', value)}
+              placeholder="Всі типи"
               options={[
-                { value: '', label: 'Всі категорії' },
-                { value: 'real-estate', label: '🏠 Нерухомість' },
-                { value: 'auto', label: '🚗 Авто' },
-                { value: 'jobs', label: '👔 Вакансії' },
-                { value: 'cafe', label: '☕ Кафе' },
-                { value: 'restaurant', label: '🍽️ Ресторан' },
-                { value: 'park', label: '🌳 Парк' },
-                { value: 'museum', label: '🏛️ Музей' }
+                { value: '', label: 'Всі типи' },
+                { value: 'apartment', label: 'Квартира' },
+                { value: 'house', label: 'Будинок' },
+                { value: 'office', label: 'Офіс / Комерційна нерухомість' },
+                { value: 'land', label: 'Ділянка / Земля' },
+                { value: 'garage', label: 'Гараж / Паркомісце' },
+                { value: 'other', label: 'Інше' }
               ]}
             />
           </div>
 
           <div className="filter-group">
-            <label>Сортування</label>
-            <CustomSelect
-              value={filters.sortBy}
-              onChange={(value) => handleFilterChange('sortBy', value)}
-              placeholder="Сортування"
-              options={[
-                { value: 'distance', label: 'За відстанню' },
-                { value: 'popular', label: 'Популярні' }
-              ]}
+            <label>Загальна (м²)</label>
+            <input
+              type="number"
+              placeholder="Площа м²"
+              value={filters.totalArea || ''}
+              onChange={(e) => handleFilterChange('totalArea', e.target.value)}
+              className="filter-input"
             />
           </div>
+
+          <div className="filter-group">
+            <label>Житлова (м²)</label>
+            <input
+              type="number"
+              placeholder="Площа м²"
+              value={filters.livingArea || ''}
+              onChange={(e) => handleFilterChange('livingArea', e.target.value)}
+              className="filter-input"
+            />
+          </div>
+
+          <div className="filter-group">
+            <label>Кухня (м²)</label>
+            <input
+              type="number"
+              placeholder="Площа м²"
+              value={filters.kitchenArea || ''}
+              onChange={(e) => handleFilterChange('kitchenArea', e.target.value)}
+              className="filter-input"
+            />
+          </div>
+
+
+
+
 
           {/* Додаткові фільтри для нерухомості */}
           {filters.category === 'real-estate' && (
