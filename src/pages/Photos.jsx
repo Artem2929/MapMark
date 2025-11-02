@@ -18,8 +18,11 @@ const Photos = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadDescription, setUploadDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const [visibility, setVisibility] = useState('public');
   const [uploading, setUploading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const navigate = useNavigate();
   const currentUserId = localStorage.getItem('userId');
 
@@ -190,17 +193,48 @@ const Photos = () => {
   const handleUploadSubmit = async () => {
     if (!selectedFile) return;
 
+    // Validate file
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(selectedFile.file.type)) {
+      alert('Дозволені тільки файли JPEG, PNG та WebP');
+      return;
+    }
+
+    if (selectedFile.file.size > 5 * 1024 * 1024) {
+      alert('Розмір файлу не повинен перевищувати 5MB');
+      return;
+    }
+
     setUploading(true);
+    setUploadProgress(0);
+    
     try {
-      const formData = new FormData();
-      formData.append('photo', selectedFile.file);
-      formData.append('description', uploadDescription);
-      formData.append('userId', currentUserId);
-      
-      const response = await fetch('http://localhost:3001/api/photos/upload', {
-        method: 'POST',
-        body: formData
+      // Convert file to base64
+      const base64Data = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(selectedFile.file);
       });
+
+      setUploadProgress(30);
+
+      // Create post with photo
+      const response = await fetch('http://localhost:3001/api/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify({
+          content: uploadDescription || 'Нове фото',
+          images: [{ url: base64Data }],
+          type: 'image',
+          visibility: visibility,
+          category: category
+        })
+      });
+      
+      setUploadProgress(70);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -209,17 +243,30 @@ const Photos = () => {
       const result = await response.json();
       
       if (result.success) {
+        // Also save to photos collection for profile
+        const photoFormData = new FormData();
+        photoFormData.append('photo', selectedFile.file);
+        photoFormData.append('description', uploadDescription);
+        photoFormData.append('userId', currentUserId);
+        
+        await fetch('http://localhost:3001/api/photos/upload', {
+          method: 'POST',
+          body: photoFormData
+        });
+        
+        setUploadProgress(100);
         await loadPhotos();
         handleCloseUploadModal();
         setShowSuccessModal(true);
       } else {
-        alert(result.message || 'Помилка при додаванні фото');
+        throw new Error(result.message || 'Помилка при додаванні фото');
       }
     } catch (error) {
       console.error('Photo upload error:', error);
       alert(`Помилка при додаванні фото: ${error.message}`);
     } finally {
       setUploading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -227,6 +274,9 @@ const Photos = () => {
     setShowUploadModal(false);
     setSelectedFile(null);
     setUploadDescription('');
+    setCategory('');
+    setVisibility('public');
+    setUploadProgress(0);
   };
 
   const handleTextareaChange = (e) => {
@@ -575,6 +625,49 @@ const Photos = () => {
                   placeholder="Напишіть опис..."
                   rows={1}
                 />
+                
+                <div className="upload-form-fields">
+                  <div className="form-field">
+                    <label>Категорія (необов'язково):</label>
+                    <select 
+                      value={category} 
+                      onChange={(e) => setCategory(e.target.value)}
+                      className="category-select"
+                    >
+                      <option value="">Оберіть категорію</option>
+                      <option value="nature">Природа</option>
+                      <option value="city">Місто</option>
+                      <option value="food">Їжа</option>
+                      <option value="travel">Подорожі</option>
+                      <option value="people">Люди</option>
+                      <option value="other">Інше</option>
+                    </select>
+                  </div>
+                  
+                  <div className="form-field">
+                    <label>Видимість:</label>
+                    <select 
+                      value={visibility} 
+                      onChange={(e) => setVisibility(e.target.value)}
+                      className="visibility-select"
+                    >
+                      <option value="public">Публічно</option>
+                      <option value="private">Приватно</option>
+                    </select>
+                  </div>
+                </div>
+                
+                {uploading && uploadProgress > 0 && (
+                  <div className="upload-progress">
+                    <div className="progress-bar">
+                      <div 
+                        className="progress-fill" 
+                        style={{ width: `${uploadProgress}%` }}
+                      ></div>
+                    </div>
+                    <span className="progress-text">{uploadProgress}%</span>
+                  </div>
+                )}
               </div>
               
               <div className="photo-modal-comments">
@@ -604,14 +697,23 @@ const Photos = () => {
           <div className="delete-confirmation-content" onClick={(e) => e.stopPropagation()}>
             <h3 className="delete-confirmation-title">Успіх!</h3>
             <p className="delete-confirmation-message">
-              Фото успішно додано до вашої галереї.
+              Фото успішно опубліковано! Воно тепер відображається у вашому профілі та стрічці огляду місць.
             </p>
             <div className="delete-confirmation-actions">
               <button 
-                className="delete-confirmation-btn delete single"
+                className="delete-confirmation-btn cancel"
                 onClick={() => setShowSuccessModal(false)}
               >
-                Ок
+                Залишитися
+              </button>
+              <button 
+                className="delete-confirmation-btn delete"
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  navigate(`/profile/${currentUserId}`);
+                }}
+              >
+                Перейти до профілю
               </button>
             </div>
           </div>

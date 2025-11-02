@@ -84,6 +84,16 @@ const postSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean,
     default: false
+  },
+  visibility: {
+    type: String,
+    enum: ['public', 'private'],
+    default: 'public'
+  },
+  category: {
+    type: String,
+    enum: ['nature', 'city', 'food', 'travel', 'people', 'other', ''],
+    default: ''
   }
 }, { 
   timestamps: true,

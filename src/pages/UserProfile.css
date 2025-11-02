@@ -452,6 +452,13 @@
   color: #1e293b;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.photos-icon {
+  font-size: 18px;
 }
 
 .add-photo-btn {
@@ -477,35 +484,131 @@
 
 .profile-photos-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  max-height: 160px;
-  overflow: hidden;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 16px;
 }
 
-.photo-item {
+.photo-gallery-item {
   position: relative;
-  aspect-ratio: 1;
-  border-radius: 8px;
+  aspect-ratio: 4/3;
+  border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  background: #f8fafc;
 }
 
-.photo-item:hover {
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+.photo-gallery-item:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.photo-item img {
+.photo-gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: all 0.3s ease;
+  transition: all 0.15s ease;
+  display: block;
 }
 
-.photo-item:hover img {
-  filter: brightness(1.1);
+.photo-gallery-item:hover img {
+  transform: scale(1.03);
+}
+
+.photo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-gallery-item:hover .photo-overlay {
+  opacity: 1;
+}
+
+.photo-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.photo-action-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.photo-action-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.photo-action-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.photo-action-btn.view-btn:hover {
+  color: #3b82f6;
+}
+
+.photo-action-btn.delete-btn:hover {
+  color: #ef4444;
+}
+
+/* Стилі для завантаження фото */
+.photo-skeleton {
+  aspect-ratio: 4/3;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #f0f2f5 25%, #e4e6ea 50%, #f0f2f5 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.photo-gallery-item.loading {
+  background: linear-gradient(90deg, #f0f2f5 25%, #e4e6ea 50%, #f0f2f5 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .photo-overlay {
@@ -530,34 +633,51 @@
 .no-photos {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
   color: #64748b;
+  background: linear-gradient(145deg, rgba(248, 250, 252, 0.5) 0%, rgba(241, 245, 249, 0.5) 100%);
+  border: 1px dashed rgba(59, 130, 246, 0.2);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
 .no-photos p {
   font-size: 16px;
-  margin: 0 0 16px 0;
+  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-weight: 500;
 }
 
 .add-first-photo-btn {
   background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 12px 20px;
+  border-radius: 12px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  letter-spacing: -0.01em;
 }
 
 .add-first-photo-btn:hover {
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+}
+
+.add-first-photo-btn span {
+  font-size: 18px;
+  font-weight: 300;
 }
 
 .photo-upload-modal {
@@ -798,7 +918,7 @@
 }
 
 /* Mobile */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .page-container.profile-user-profile {
     padding: 8px 8px 0;
   }
@@ -808,9 +928,8 @@
   }
 
   .profile-photos-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    max-height: 120px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
   
   .profile-photos-header {
@@ -831,6 +950,131 @@
   .photo-drop-zone {
     padding: 30px 15px;
   }
+
+  .photo-gallery-item {
+    border-radius: 8px;
+  }
+
+  .photo-gallery-item:hover {
+    transform: scale(1.02);
+  }
+
+  .photo-action-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .photo-action-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .photo-actions {
+    gap: 8px;
+  }
+
+  /* На мобільних показувати overlay по тапу */
+  .photo-gallery-item:active .photo-overlay {
+    opacity: 1;
+  }
+}
+
+/* Модальне вікно підтвердження видалення */
+.delete-confirmation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1002;
+  backdrop-filter: blur(4px);
+}
+
+.delete-confirmation-content {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.delete-confirmation-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 16px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+
+.delete-confirmation-message {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+
+.delete-confirmation-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.delete-confirmation-btn {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  border: none;
+  letter-spacing: -0.01em;
+}
+
+.delete-confirmation-btn.cancel {
+  background: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+}
+
+.delete-confirmation-btn.cancel:hover {
+  background: rgba(107, 114, 128, 0.15);
+  color: #4b5563;
+}
+
+.delete-confirmation-btn.delete {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.delete-confirmation-btn.delete:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Desktop large */
+@media (min-width: 1024px) {
+  .profile-photos-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .profile-photos-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 11px;
+  }
 }
 
 @media (max-width: 550px) {
@@ -840,6 +1084,14 @@
 
   .profile-profile-container {
     padding: 0 4px;
+  }
+
+  .profile-photos-grid {
+    gap: 4px;
+  }
+
+  .no-photos {
+    padding: 40px 16px;
   }
 }
 

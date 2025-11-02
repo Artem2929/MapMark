@@ -78,7 +78,10 @@ router.get('/', optionalAuth, async (req, res) => {
     const limitNum = Math.min(parseInt(limit) || 10, 20);
     const pageNum = Math.max(parseInt(page) || 1, 1);
 
-    const posts = await Post.find({ isDeleted: false })
+    const posts = await Post.find({ 
+      isDeleted: false,
+      visibility: 'public'
+    })
       .populate('author', 'name avatar')
       .sort({ createdAt: -1 })
       .limit(limitNum + 1)
@@ -124,7 +127,7 @@ router.get('/', optionalAuth, async (req, res) => {
 // POST /api/posts - Створити новий пост
 router.post('/', authenticateToken, postRateLimit, validateInput, sanitizeInput, async (req, res) => {
   try {
-    const { content, images, type, location, mood } = req.body;
+    const { content, images, type, location, mood, visibility, category } = req.body;
 
     const post = new Post({
       author: req.user._id,
@@ -132,7 +135,9 @@ router.post('/', authenticateToken, postRateLimit, validateInput, sanitizeInput,
       images: images || [],
       type: type || 'text',
       location,
-      mood
+      mood,
+      visibility: visibility || 'public',
+      category: category || ''
     });
 
     await post.save();
