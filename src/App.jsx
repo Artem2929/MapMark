@@ -20,6 +20,7 @@ import HelpCenter from './pages/HelpCenter.jsx'
 import ContactUs from './pages/ContactUs.jsx'
 import DiscoverPlaces from './pages/DiscoverPlaces.jsx'
 import PostDetail from './pages/PostDetail.jsx'
+import SavedPlaces from './pages/SavedPlaces.jsx'
 import UserProfile from './pages/UserProfile.jsx'
 
 import QuickReviewForm from './components/forms/QuickReviewForm.jsx'
@@ -169,6 +170,7 @@ const AppContent = () => {
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/discover-places" element={<DiscoverPlaces />} />
             <Route path="/posts/:postId" element={<PostDetail />} />
+            <Route path="/saved-places" element={<SavedPlaces />} />
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/profile/:userId" element={<UserProfile />} />
             <Route path="/user/:userId" element={<UserProfile />} />

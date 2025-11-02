@@ -71,6 +71,26 @@ const DiscoverPlaces = () => {
     console.log('Share post:', postId);
   };
 
+  const handleSave = async (postId, shouldSave) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/posts/${postId}/save`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: 'temp-user-id' // TODO: замінити на реальний ID користувача
+        })
+      });
+      
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error saving post:', error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem('savedPosts') || '[]');
     setSavedPosts(saved);
@@ -218,6 +238,7 @@ const DiscoverPlaces = () => {
                     onReaction={handleReaction}
                     onComment={handleComment}
                     onShare={handleShare}
+                    onSave={handleSave}
                   />
                 ))}
                 

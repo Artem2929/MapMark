@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import Comments from './Comments';
 import './PostCard.css';
 
-const PostCard = ({ post, onReaction, onComment, onShare }) => {
+const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved = false }) => {
   const navigate = useNavigate();
   const [localStats, setLocalStats] = useState(post.stats);
   const [userReaction, setUserReaction] = useState(null); // 'like', 'dislike', або null
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isSaved, setIsSaved] = useState(initialSaved);
+  const [isSaving, setIsSaving] = useState(false);
 
   const getTimeAgo = (timestamp) => {
     const now = new Date();
@@ -78,6 +80,29 @@ const PostCard = ({ post, onReaction, onComment, onShare }) => {
 
   const handleShare = () => {
     onShare?.(post.id);
+  };
+
+  const handleSave = async () => {
+    if (isSaving) return;
+    
+    const previousSaved = isSaved;
+    
+    // Оптимістичне оновлення
+    setIsSaved(!isSaved);
+    setIsSaving(true);
+    
+    try {
+      const response = await onSave?.(post.id, !isSaved);
+      if (response?.success) {
+        setIsSaved(response.saved);
+      }
+    } catch (error) {
+      // Відкат при помилці
+      setIsSaved(previousSaved);
+      console.error('Error saving post:', error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -151,6 +176,14 @@ const PostCard = ({ post, onReaction, onComment, onShare }) => {
             <span className="post-card__icon">↗️</span>
           </button>
         </div>
+        <button 
+          className={`post-card__save-btn ${isSaved ? 'saved' : ''}`}
+          onClick={handleSave}
+          disabled={isSaving}
+          title={isSaved ? 'Видалити зі збережених' : 'Зберегти пост'}
+        >
+          <span className="post-card__save-icon">{isSaved ? '🔖' : '🔖'}</span>
+        </button>
       </div>
 
       <Comments postId={post.id} initialCount={localStats.comments} />

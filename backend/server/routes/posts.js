@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
 const User = require('../models/User');
+const SavedPost = require('../models/SavedPost');
 
 // GET /api/posts/:postId - Отримати деталі поста
 router.get('/:postId', async (req, res) => {
@@ -344,6 +345,97 @@ router.post('/:postId/share', async (req, res) => {
     res.json({ success: true, shares: post.shares });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
+  }
+});
+
+// POST /api/posts/:postId/save - Зберегти/видалити пост
+router.post('/:postId/save', async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ success: false, error: 'Не вказано ID користувача' });
+    }
+
+    const post = await Post.findById(postId);
+    if (!post || post.isDeleted) {
+      return res.status(404).json({ success: false, error: 'Пост не знайдено' });
+    }
+
+    const existingSave = await SavedPost.findOne({ userId, postId });
+    
+    if (existingSave) {
+      // Видаляємо зі збережених
+      await SavedPost.deleteOne({ userId, postId });
+      res.json({ success: true, saved: false });
+    } else {
+      // Додаємо до збережених
+      await SavedPost.create({ userId, postId });
+      res.json({ success: true, saved: true });
+    }
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+});
+
+// GET /api/users/:userId/saved-posts - Отримати збережені пости
+router.get('/users/:userId/saved-posts', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+    const limitNum = parseInt(limit);
+    const pageNum = parseInt(page);
+
+    const savedPosts = await SavedPost.find({ userId })
+      .populate({
+        path: 'postId',
+        populate: {
+          path: 'author',
+          select: 'name avatar'
+        }
+      })
+      .sort({ createdAt: -1 })
+      .limit(limitNum + 1)
+      .skip((pageNum - 1) * limitNum);
+
+    const hasMore = savedPosts.length > limitNum;
+    const postsToReturn = hasMore ? savedPosts.slice(0, limitNum) : savedPosts;
+
+    const formattedPosts = postsToReturn
+      .filter(savedPost => savedPost.postId && !savedPost.postId.isDeleted)
+      .map(savedPost => {
+        const post = savedPost.postId;
+        return {
+          id: post._id,
+          image: post.images?.[0]?.url || null,
+          title: post.content.substring(0, 100) + (post.content.length > 100 ? '...' : ''),
+          description: post.content,
+          location: post.location || 'Невідоме місце',
+          author: {
+            id: post.author._id,
+            name: post.author.name,
+            avatar: post.author.avatar
+          },
+          stats: {
+            likes: post.reactions.filter(r => r.type === 'like').length,
+            dislikes: post.reactions.filter(r => r.type === 'dislike').length,
+            comments: post.comments.length
+          },
+          createdAt: post.createdAt,
+          savedAt: savedPost.createdAt
+        };
+      });
+
+    res.json({ 
+      success: true, 
+      posts: formattedPosts,
+      hasMore,
+      page: pageNum,
+      total: formattedPosts.length
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
