@@ -4,7 +4,7 @@ import { usePhotoUpload } from '../../hooks/usePhotoUpload';
 import Toast from '../ui/Toast';
 
 const PhotoUploadModal = ({ onClose }) => {
-  const { targetUserId, photos } = useProfile();
+  const { targetUserId, refreshPhotos, addPhoto } = useProfile();
   const { uploadPhoto, uploading } = usePhotoUpload();
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [description, setDescription] = useState('');
@@ -29,11 +29,16 @@ const PhotoUploadModal = ({ onClose }) => {
     if (!selectedPhoto) return;
 
     try {
-      await uploadPhoto(selectedPhoto.file, description, targetUserId);
+      const newPhoto = await uploadPhoto(selectedPhoto.file, description, targetUserId);
+      if (addPhoto) {
+        addPhoto(newPhoto);
+      }
+      if (refreshPhotos) {
+        refreshPhotos();
+      }
       setToast({ message: 'Фото успішно додано!', type: 'success' });
       setTimeout(() => {
         onClose();
-        photos.refreshPhotos?.();
       }, 1000);
     } catch (error) {
       setToast({ message: error.message, type: 'error' });

@@ -43,7 +43,6 @@ const useUserPhotos = (userId) => {
     
     const fetchPhotos = async () => {
       try {
-
         const response = await apiGet(`/photos/user/${userId}`);
         const result = await response.json();
         

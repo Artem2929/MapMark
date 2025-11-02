@@ -20,7 +20,10 @@ export const ProfileProvider = ({ children, userId }) => {
 
   const value = useMemo(() => ({
     ...profile,
-    photos,
+    photos: photos.photos || [],
+    photosLoading: photos.loading,
+    refreshPhotos: photos.refreshPhotos,
+    addPhoto: photos.addPhoto,
     following,
     followers,
     posts,
