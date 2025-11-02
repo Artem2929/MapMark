@@ -817,6 +817,54 @@
   gap: 16px;
 }
 
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  gap: 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.error-message p {
+  color: #dc2626;
+  font-weight: 500;
+  margin: 0;
+}
+
+.retry-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.retry-btn:hover {
+  background: #b91c1c;
+}
+
+.empty-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #64748b;
+}
+
+.empty-feed p {
+  font-size: 16px;
+  margin: 0;
+}
+
 .category-placeholder {
   display: flex;
   flex-direction: column;

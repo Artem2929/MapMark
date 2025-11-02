@@ -3,8 +3,8 @@ const router = express.Router();
 const Post = require('../models/Post');
 const User = require('../models/User');
 
-// GET /api/posts/:userId - Отримати пости користувача
-router.get('/:userId', async (req, res) => {
+// GET /api/posts/user/:userId - Отримати пости користувача
+router.get('/user/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     const { page = 1, limit = 10 } = req.query;
@@ -25,6 +25,43 @@ router.get('/:userId', async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
+// GET /api/posts - Отримати стрічку постів
+router.get('/', async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+
+    const posts = await Post.find({ isDeleted: false })
+      .populate('author', 'name avatar')
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+
+    const formattedPosts = posts.map(post => ({
+      id: post._id,
+      image: post.images?.[0]?.url || null,
+      title: post.content.substring(0, 100) + (post.content.length > 100 ? '...' : ''),
+      description: post.content,
+      location: post.location || 'Невідоме місце',
+      author: {
+        id: post.author._id,
+        name: post.author.name,
+        avatar: post.author.avatar
+      },
+      stats: {
+        likes: post.reactions.length,
+        comments: post.comments.length
+      },
+      createdAt: post.createdAt
+    }));
+
+    res.json({ success: true, posts: formattedPosts });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+
 
 // POST /api/posts - Створити новий пост
 router.post('/', async (req, res) => {
