@@ -30,14 +30,19 @@ router.get('/user/:userId', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
+    const limitNum = parseInt(limit);
+    const pageNum = parseInt(page);
 
     const posts = await Post.find({ isDeleted: false })
       .populate('author', 'name avatar')
       .sort({ createdAt: -1 })
-      .limit(limit * 1)
-      .skip((page - 1) * limit);
+      .limit(limitNum + 1) // +1 для перевірки hasMore
+      .skip((pageNum - 1) * limitNum);
 
-    const formattedPosts = posts.map(post => ({
+    const hasMore = posts.length > limitNum;
+    const postsToReturn = hasMore ? posts.slice(0, limitNum) : posts;
+
+    const formattedPosts = postsToReturn.map(post => ({
       id: post._id,
       image: post.images?.[0]?.url || null,
       title: post.content.substring(0, 100) + (post.content.length > 100 ? '...' : ''),
@@ -49,13 +54,20 @@ router.get('/', async (req, res) => {
         avatar: post.author.avatar
       },
       stats: {
-        likes: post.reactions.length,
+        likes: post.reactions.filter(r => r.type === 'like').length,
+        dislikes: post.reactions.filter(r => r.type === 'dislike').length,
         comments: post.comments.length
       },
       createdAt: post.createdAt
     }));
 
-    res.json({ success: true, posts: formattedPosts });
+    res.json({ 
+      success: true, 
+      posts: formattedPosts,
+      hasMore,
+      page: pageNum,
+      total: formattedPosts.length
+    });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -142,7 +154,7 @@ router.delete('/:postId', async (req, res) => {
 router.post('/:postId/reactions', async (req, res) => {
   try {
     const { postId } = req.params;
-    const { userId, type } = req.body;
+    const { userId, type } = req.body; // type: 'like', 'dislike', або null для видалення
 
     const post = await Post.findById(postId);
     if (!post) {
@@ -152,13 +164,23 @@ router.post('/:postId/reactions', async (req, res) => {
     // Видалити попередню реакцію користувача
     post.reactions = post.reactions.filter(r => r.userId.toString() !== userId);
 
-    // Додати нову реакцію
-    if (type) {
+    // Додати нову реакцію якщо type не null
+    if (type && ['like', 'dislike'].includes(type)) {
       post.reactions.push({ userId, type });
     }
 
     await post.save();
-    res.json({ success: true, reactions: post.reactions });
+    
+    // Підрахунок лайків та дизлайків
+    const likes = post.reactions.filter(r => r.type === 'like').length;
+    const dislikes = post.reactions.filter(r => r.type === 'dislike').length;
+    const userReaction = post.reactions.find(r => r.userId.toString() === userId)?.type || null;
+    
+    res.json({ 
+      success: true, 
+      stats: { likes, dislikes },
+      userReaction
+    });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
   }

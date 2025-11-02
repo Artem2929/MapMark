@@ -162,8 +162,27 @@
   color: #475569;
 }
 
-.post-card__action-btn.liked {
+.post-card__action-btn.active {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+}
+
+.post-card__action-btn.like-btn.active {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+.post-card__action-btn.dislike-btn.active {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
   color: #ef4444;
+}
+
+.post-card__action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .post-card__icon {

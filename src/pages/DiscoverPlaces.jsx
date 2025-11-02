@@ -4,13 +4,15 @@ import i18n from "../i18n";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../components/ui/Breadcrumbs.jsx";
 import PostCard from "../components/ui/PostCard.jsx";
+import InfiniteScroll from "../components/ui/InfiniteScroll.jsx";
+import LoadingSkeleton from "../components/ui/LoadingSkeleton.jsx";
 import usePosts from "../hooks/usePosts.js";
 import { categoriesService } from "../services/categoriesService.js";
 import "./DiscoverPlaces.css";
 
 const DiscoverPlaces = () => {
   const { t } = useTranslation();
-  const { posts, loading, error, hasMore, loadMore, refresh } = usePosts();
+  const { posts, loading, error, hasMore, initialLoading, loadMore, refresh } = usePosts();
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
@@ -40,8 +42,25 @@ const DiscoverPlaces = () => {
 
 
 
-  const handleLike = (postId) => {
-    console.log('Like post:', postId);
+  const handleReaction = async (postId, reactionType) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/posts/${postId}/reactions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: 'temp-user-id', // TODO: замінити на реальний ID користувача
+          type: reactionType
+        })
+      });
+      
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error handling reaction:', error);
+      throw error;
+    }
   };
 
   const handleComment = (postId, comment) => {
@@ -66,18 +85,7 @@ const DiscoverPlaces = () => {
     return () => i18n.off('languageChanged', handleLanguageChange);
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 1000) {
-        if (!loading && hasMore) {
-          loadMore();
-        }
-      }
-    };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading, hasMore, loadMore]);
 
   const scrollCategories = (direction) => {
     const container = scrollRef.current;
@@ -180,67 +188,6 @@ const DiscoverPlaces = () => {
           </button>
         )}
         <div className="discover-content-container">
-          {/* Бічна панель фільтрів */}
-          <div className="sidebar-filters">
-            <h3>Фільтри</h3>
-            
-            <div className="filter-group">
-              <label>Категорія</label>
-              <select 
-                value={selectedCategory} 
-                onChange={(e) => {
-                  setSelectedCategory(e.target.value);
-                  setSelectedSubcategory('');
-                }}
-                className="filter-select"
-              >
-                {Array.isArray(categories) && categories.map(category => (
-                  <option key={category.id} value={category.id}>
-                    {category.emoji} {category.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            {showSubcategories && categories.find(cat => cat.id === selectedCategory)?.subcategories?.length > 0 && (
-              <div className="filter-group">
-                <label>Підкатегорія</label>
-                <select 
-                  value={selectedSubcategory} 
-                  onChange={(e) => setSelectedSubcategory(e.target.value)}
-                  className="filter-select"
-                >
-                  <option value="">Всі підкатегорії</option>
-                  {categories.find(cat => cat.id === selectedCategory)?.subcategories.map(subcategory => (
-                    <option key={subcategory.id} value={subcategory.id}>
-                      {subcategory.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            <div className="filter-group">
-              <label>Рейтинг</label>
-              <select className="filter-select">
-                <option value="">Всі рейтинги</option>
-                <option value="4.5">4.5+ зірок</option>
-                <option value="4.0">4.0+ зірок</option>
-                <option value="3.5">3.5+ зірок</option>
-              </select>
-            </div>
-
-            <div className="filter-group">
-              <label>Відстань</label>
-              <select className="filter-select">
-                <option value="">Будь-яка відстань</option>
-                <option value="5">До 5 км</option>
-                <option value="10">До 10 км</option>
-                <option value="25">До 25 км</option>
-              </select>
-            </div>
-          </div>
-
           <div className="places-feed">
             {error && (
               <div className="error-message">
@@ -249,27 +196,39 @@ const DiscoverPlaces = () => {
               </div>
             )}
             
-            {!error && posts.length === 0 && !loading && (
+            {!error && posts.length === 0 && !initialLoading && (
               <div className="empty-feed">
                 <p>Поки що немає постів</p>
               </div>
             )}
             
-            {posts.map(post => (
-              <PostCard
-                key={post.id}
-                post={post}
-                onLike={handleLike}
-                onComment={handleComment}
-                onShare={handleShare}
-              />
-            ))}
-            
-            {loading && (
-              <div className="loading-spinner">
-                <div className="spinner"></div>
-                <p>Завантаження...</p>
-              </div>
+            {initialLoading ? (
+              <LoadingSkeleton count={3} />
+            ) : (
+              <InfiniteScroll
+                hasMore={hasMore}
+                loading={loading}
+                onLoadMore={loadMore}
+                threshold={200}
+              >
+                {posts.map(post => (
+                  <PostCard
+                    key={post.id}
+                    post={post}
+                    onReaction={handleReaction}
+                    onComment={handleComment}
+                    onShare={handleShare}
+                  />
+                ))}
+                
+                {loading && <LoadingSkeleton count={2} />}
+                
+                {!hasMore && posts.length > 0 && (
+                  <div className="no-more-posts">
+                    <p>Всі пости завантажені</p>
+                  </div>
+                )}
+              </InfiniteScroll>
             )}
           </div>
         </div>

@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './PostCard.css';
 
-const PostCard = ({ post, onLike, onComment, onShare }) => {
+const PostCard = ({ post, onReaction, onComment, onShare }) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
-  const [isLiked, setIsLiked] = useState(false);
+  const [localStats, setLocalStats] = useState(post.stats);
+  const [userReaction, setUserReaction] = useState(null); // 'like', 'dislike', або null
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const getTimeAgo = (timestamp) => {
     const now = new Date();
@@ -18,9 +20,58 @@ const PostCard = ({ post, onLike, onComment, onShare }) => {
     return `${Math.floor(diffInMinutes / 1440)} дн тому`;
   };
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    onLike?.(post.id);
+  const handleReaction = async (type) => {
+    if (isUpdating) return;
+    
+    const previousStats = { ...localStats };
+    const previousReaction = userReaction;
+    
+    // Оптимістичне оновлення UI
+    let newStats = { ...localStats };
+    let newReaction = type;
+    
+    // Якщо клікнули на ту ж кнопку - видаляємо реакцію
+    if (userReaction === type) {
+      newReaction = null;
+      if (type === 'like') {
+        newStats.likes = Math.max(0, newStats.likes - 1);
+      } else if (type === 'dislike') {
+        newStats.dislikes = Math.max(0, newStats.dislikes - 1);
+      }
+    } else {
+      // Змінюємо реакцію
+      if (userReaction === 'like') {
+        newStats.likes = Math.max(0, newStats.likes - 1);
+      } else if (userReaction === 'dislike') {
+        newStats.dislikes = Math.max(0, newStats.dislikes - 1);
+      }
+      
+      if (type === 'like') {
+        newStats.likes += 1;
+      } else if (type === 'dislike') {
+        newStats.dislikes += 1;
+      }
+    }
+    
+    setLocalStats(newStats);
+    setUserReaction(newReaction);
+    setIsUpdating(true);
+    
+    try {
+      const response = await onReaction?.(post.id, newReaction);
+      if (response?.success) {
+        // Підтверджуємо дані з сервера
+        setLocalStats(response.stats);
+        setUserReaction(response.userReaction);
+      }
+    } catch (error) {
+      // Відкатуємо зміни при помилці
+      setLocalStats(previousStats);
+      setUserReaction(previousReaction);
+      console.error('Error updating reaction:', error);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   const handleComment = () => {
@@ -75,24 +126,33 @@ const PostCard = ({ post, onLike, onComment, onShare }) => {
       <div className="post-card__actions">
         <div className="post-card__action-buttons">
           <button 
-            className={`post-card__action-btn ${isLiked ? 'liked' : ''}`}
-            onClick={handleLike}
+            className={`post-card__action-btn like-btn ${userReaction === 'like' ? 'active' : ''}`}
+            onClick={() => handleReaction('like')}
+            disabled={isUpdating}
           >
-            <span className="post-card__icon">❤️</span>
-            <span className="post-card__count">{post.stats.likes + (isLiked ? 1 : 0)}</span>
+            <span className="post-card__icon">👍</span>
+            <span className="post-card__count">{localStats.likes}</span>
           </button>
           <button 
-            className="post-card__action-btn"
+            className={`post-card__action-btn dislike-btn ${userReaction === 'dislike' ? 'active' : ''}`}
+            onClick={() => handleReaction('dislike')}
+            disabled={isUpdating}
+          >
+            <span className="post-card__icon">👎</span>
+            <span className="post-card__count">{localStats.dislikes}</span>
+          </button>
+          <button 
+            className="post-card__action-btn comment-btn"
             onClick={() => setShowComments(!showComments)}
           >
             <span className="post-card__icon">💬</span>
-            <span className="post-card__count">{post.stats.comments}</span>
+            <span className="post-card__count">{localStats.comments}</span>
           </button>
           <button 
-            className="post-card__action-btn"
+            className="post-card__action-btn share-btn"
             onClick={handleShare}
           >
-            <span className="post-card__icon">📤</span>
+            <span className="post-card__icon">↗️</span>
           </button>
         </div>
       </div>
