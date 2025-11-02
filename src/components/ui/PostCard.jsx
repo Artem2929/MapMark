@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Comments from './Comments';
 import './PostCard.css';
 
 const PostCard = ({ post, onReaction, onComment, onShare }) => {
-  const [showComments, setShowComments] = useState(false);
-  const [commentText, setCommentText] = useState('');
+  const navigate = useNavigate();
   const [localStats, setLocalStats] = useState(post.stats);
   const [userReaction, setUserReaction] = useState(null); // 'like', 'dislike', або null
   const [isUpdating, setIsUpdating] = useState(false);
@@ -74,12 +74,7 @@ const PostCard = ({ post, onReaction, onComment, onShare }) => {
     }
   };
 
-  const handleComment = () => {
-    if (commentText.trim()) {
-      onComment?.(post.id, commentText);
-      setCommentText('');
-    }
-  };
+
 
   const handleShare = () => {
     onShare?.(post.id);
@@ -107,12 +102,12 @@ const PostCard = ({ post, onReaction, onComment, onShare }) => {
       </div>
 
       {post.image && (
-        <div className="post-card__media">
+        <div className="post-card__media" onClick={() => navigate(`/posts/${post.id}`)}>
           <img src={post.image} alt={post.title} className="post-card__image" />
         </div>
       )}
 
-      <div className="post-card__content">
+      <div className="post-card__content" onClick={() => navigate(`/posts/${post.id}`)}>
         <h3 className="post-card__title">{post.title}</h3>
         <p className="post-card__description">{post.description}</p>
         {post.location && (
@@ -143,7 +138,8 @@ const PostCard = ({ post, onReaction, onComment, onShare }) => {
           </button>
           <button 
             className="post-card__action-btn comment-btn"
-            onClick={() => setShowComments(!showComments)}
+            onClick={() => {}}
+            disabled
           >
             <span className="post-card__icon">💬</span>
             <span className="post-card__count">{localStats.comments}</span>
@@ -157,29 +153,7 @@ const PostCard = ({ post, onReaction, onComment, onShare }) => {
         </div>
       </div>
 
-      {showComments && (
-        <div className="post-card__comments">
-          <div className="post-card__comment-form">
-            <textarea
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              placeholder="Напишіть коментар..."
-              maxLength={500}
-              className="post-card__comment-input"
-            />
-            <div className="post-card__comment-controls">
-              <span className="post-card__char-count">{commentText.length}/500</span>
-              <button 
-                className="post-card__submit-btn"
-                onClick={handleComment}
-                disabled={!commentText.trim()}
-              >
-                Надіслати
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Comments postId={post.id} initialCount={localStats.comments} />
     </div>
   );
 };

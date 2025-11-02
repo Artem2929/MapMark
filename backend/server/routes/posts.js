@@ -3,6 +3,48 @@ const router = express.Router();
 const Post = require('../models/Post');
 const User = require('../models/User');
 
+// GET /api/posts/:postId - Отримати деталі поста
+router.get('/:postId', async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await Post.findById(postId)
+      .populate('author', 'name avatar')
+      .populate('comments.author', 'name avatar');
+
+    if (!post || post.isDeleted) {
+      return res.status(404).json({ success: false, error: 'Пост не знайдено' });
+    }
+
+    const formattedPost = {
+      id: post._id,
+      content: post.content,
+      images: post.images || [],
+      type: post.type,
+      location: post.location,
+      mood: post.mood,
+      author: {
+        id: post.author._id,
+        name: post.author.name,
+        avatar: post.author.avatar
+      },
+      stats: {
+        likes: post.reactions.filter(r => r.type === 'like').length,
+        dislikes: post.reactions.filter(r => r.type === 'dislike').length,
+        comments: post.comments.length,
+        shares: post.shares,
+        views: post.views
+      },
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt
+    };
+
+    res.json({ success: true, post: formattedPost });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // GET /api/posts/user/:userId - Отримати пости користувача
 router.get('/user/:userId', async (req, res) => {
   try {
@@ -186,11 +228,50 @@ router.post('/:postId/reactions', async (req, res) => {
   }
 });
 
+// GET /api/posts/:postId/comments - Отримати коментарі поста
+router.get('/:postId/comments', async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { offset = 0, limit = 10 } = req.query;
+    const offsetNum = parseInt(offset);
+    const limitNum = parseInt(limit);
+
+    const post = await Post.findById(postId)
+      .populate({
+        path: 'comments.author',
+        select: 'name avatar'
+      });
+
+    if (!post) {
+      return res.status(404).json({ success: false, error: 'Пост не знайдено' });
+    }
+
+    // Сортуємо коментарі за датою (найновіші спочатку)
+    const sortedComments = post.comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const totalComments = sortedComments.length;
+    const paginatedComments = sortedComments.slice(offsetNum, offsetNum + limitNum);
+    const hasMore = offsetNum + limitNum < totalComments;
+
+    res.json({
+      success: true,
+      comments: paginatedComments,
+      hasMore,
+      total: totalComments
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // POST /api/posts/:postId/comments - Додати коментар
 router.post('/:postId/comments', async (req, res) => {
   try {
     const { postId } = req.params;
     const { content, authorId } = req.body;
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({ success: false, error: 'Коментар не може бути порожнім' });
+    }
 
     const post = await Post.findById(postId);
     if (!post) {
@@ -199,15 +280,18 @@ router.post('/:postId/comments', async (req, res) => {
 
     post.comments.push({
       author: authorId,
-      content
+      content: content.trim()
     });
 
     await post.save();
     await post.populate('comments.author', 'name avatar');
 
+    const newComment = post.comments[post.comments.length - 1];
+    
     res.status(201).json({ 
       success: true, 
-      comment: post.comments[post.comments.length - 1] 
+      comment: newComment,
+      totalComments: post.comments.length
     });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
