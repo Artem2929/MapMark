@@ -1,6 +1,8 @@
 import { translateAuthError } from '../utils/errorTranslations';
+import { API_ENDPOINTS } from '../constants';
+import { makeAuthenticatedRequest } from '../utils/apiUtils';
 
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = API_ENDPOINTS.BASE_URL;
 
 class AuthService {
   async login(email, password) {
@@ -14,6 +16,7 @@ class AuthService {
           email: email.trim().toLowerCase(), 
           password 
         }),
+        credentials: 'include',
       });
 
       const data = await response.json();
@@ -71,6 +74,7 @@ class AuthService {
           country,
           role
         }),
+        credentials: 'include',
       });
 
       const data = await response.json();
@@ -112,6 +116,7 @@ class AuthService {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email }),
+      credentials: 'include',
     });
 
     const data = await response.json();
@@ -144,19 +149,7 @@ class AuthService {
   }
 
   async makeAuthenticatedRequest(url, options = {}) {
-    const token = this.getToken();
-    
-    if (!token) {
-      throw new Error('No access token');
-    }
-
-    return fetch(url, {
-      ...options,
-      headers: {
-        ...options.headers,
-        'Authorization': `Bearer ${token}`,
-      },
-    });
+    return makeAuthenticatedRequest(url, options);
   }
 
   getCurrentUser() {

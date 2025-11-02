@@ -16,7 +16,7 @@ const FollowButton = ({ userId, targetUserId }) => {
     
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/user/${userId}/follow/${targetUserId}`, {
+      const response = await fetch(`http://localhost:3001/api/user/${userId}/follow/${targetUserId}`, {
         method: 'POST'
       });
       const result = await response.json();

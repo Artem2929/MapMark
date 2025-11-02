@@ -1,8 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const multer = require("multer");
+const multer = require('multer');
+const { securityMiddleware, generalLimiter } = require('./middleware/security');
+const errorHandler = require('./middleware/errorHandler');
 const { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler, getUserStatsHandler, likeReviewHandler, dislikeReviewHandler, addCommentHandler } = require('./services/ReviewService');
 const { getReviews } = require('./Repositories/ReviewRepository');
 const { getUserStatsHandler: userStatsHandler, getUserFollowersHandler, getUserFollowingHandler, followUserHandler, unfollowUserHandler } = require('./services/UserStatsService');
@@ -28,13 +31,31 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/mapmark';
+const PORT = process.env.PORT || 3001;
+const DB_URL = process.env.DB_URL;
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+if (!DB_URL) {
+  console.error('DB_URL environment variable is required');
+  process.exit(1);
+}
+
+// Security middleware
+app.use(securityMiddleware);
+app.use(generalLimiter);
+
+// CORS configuration
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://yourdomain.com'] 
+    : ['http://localhost:5173', 'http://localhost:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Body parsing middleware
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -109,8 +130,20 @@ app.use('/api/service-comments', serviceCommentsRoutes);
 app.use('/api/filters', filtersRoutes);
 app.use('/api', profileRoutes);
 
-// Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve uploaded files with CORS headers
+app.use('/uploads', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+  
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+}, express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', (req, res) => {
   res.json({ 
@@ -533,14 +566,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    success: false,
-    message: 'Something went wrong!',
-    error: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
-  });
-});
+app.use(errorHandler);
 
 // 404 handler
 app.use('*', (req, res) => {

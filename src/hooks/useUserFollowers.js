@@ -1,3 +1,4 @@
+import { apiGet } from '../utils/apiUtils';
 import { useState, useEffect, useRef } from 'react';
 
 const followersCache = new Map();
@@ -42,7 +43,7 @@ const useUserFollowers = (userId) => {
     
     const fetchFollowers = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/user/${userId}/followers`);
+        const response = await apiGet(`/user/${userId}/followers`);
         const result = await response.json();
         
         const followersData = result.success ? result.data : [];

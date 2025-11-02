@@ -23,8 +23,8 @@ const About = () => {
     const fetchData = async () => {
       try {
         const [statsRes, teamRes] = await Promise.all([
-          fetch('http://localhost:3000/api/about/stats').catch(() => ({ ok: false })),
-          fetch('http://localhost:3000/api/about/team').catch(() => ({ ok: false }))
+          fetch('http://localhost:3001/api/about/stats').catch(() => ({ ok: false })),
+          fetch('http://localhost:3001/api/about/team').catch(() => ({ ok: false }))
         ]);
         
         if (!isMounted) return;
@@ -109,7 +109,7 @@ const About = () => {
     setSubmitting(true);
     
     try {
-      const response = await fetch('http://localhost:3000/api/about/contact', {
+      const response = await fetch('http://localhost:3001/api/about/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

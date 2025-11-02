@@ -1,3 +1,4 @@
+import { apiGet } from '../utils/apiUtils';
 import { useState, useEffect, useRef } from 'react';
 
 const wallCache = new Map();
@@ -45,8 +46,8 @@ const useUserWall = (userId, currentUserId) => {
     const fetchWall = async () => {
       try {
         const url = currentUserId 
-          ? `http://localhost:3000/api/user/${userId}/wall?currentUserId=${currentUserId}`
-          : `http://localhost:3000/api/user/${userId}/wall`;
+          ? `http://localhost:3001/api/user/${userId}/wall?currentUserId=${currentUserId}`
+          : `http://localhost:3001/api/user/${userId}/wall`;
           
         const response = await fetch(url);
         const result = await response.json();

@@ -298,7 +298,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                   <img 
                     src={user.avatar.startsWith('data:') || user.avatar.startsWith('http') 
                       ? user.avatar 
-                      : `http://localhost:3000${user.avatar}`} 
+                      : `http://localhost:3001${user.avatar}`} 
                     alt="Аватар" 
                   />
                 ) : (
@@ -520,7 +520,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                   <img 
                     src={user.avatar.startsWith('data:') || user.avatar.startsWith('http') 
                       ? user.avatar 
-                      : `http://localhost:3000${user.avatar}`} 
+                      : `http://localhost:3001${user.avatar}`} 
                     alt="Аватар" 
                   />
                 ) : (
@@ -635,7 +635,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                           <img 
                             src={comment.avatar.startsWith('data:') || comment.avatar.startsWith('http') 
                               ? comment.avatar 
-                              : `http://localhost:3000${comment.avatar}`} 
+                              : `http://localhost:3001${comment.avatar}`} 
                             alt="Аватар" 
                           />
                         ) : (

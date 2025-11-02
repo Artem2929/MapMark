@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { apiGet } from '../utils/apiUtils';
 
 const profileCache = new Map();
 const loadingStates = new Map();
@@ -43,7 +44,7 @@ const useUserProfile = (userId) => {
     
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/user/${userId}/profile`);
+        const response = await apiGet(`/user/${userId}/profile`);
         const data = await response.json();
         
         const userData = data.success ? data.data : null;

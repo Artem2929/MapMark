@@ -1,3 +1,4 @@
+import { apiGet } from '../utils/apiUtils';
 import { useState, useEffect, useRef } from 'react';
 
 const postsCache = new Map();
@@ -42,7 +43,7 @@ const useUserPosts = (userId) => {
     
     const fetchPosts = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/posts/${userId}`);
+        const response = await apiGet(`/posts/${userId}`);
         const result = await response.json();
         
         const postsData = result.success ? (result.posts || []) : [];

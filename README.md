@@ -8,6 +8,12 @@ A modern React application for discovering and reviewing places on an interactiv
 # Install dependencies
 npm install
 
+# Install security dependencies
+./install-security-deps.sh
+
+# Configure environment (generates secure secrets)
+./setup-env.sh
+
 # Start development server
 npm run dev
 
@@ -72,6 +78,16 @@ src/
 - **Prettier** - Code formatting
 - **Stylelint** - CSS linting with BEM enforcement
 - **EditorConfig** - Consistent editor settings
+
+## 🔒 Security Features
+
+- **Backend Security** - Helmet, rate limiting, input validation
+- **Authentication** - JWT tokens, bcrypt password hashing
+- **Data Protection** - XSS prevention, MongoDB injection protection
+- **File Upload Security** - Type validation, size limits
+- **Frontend Security** - DOMPurify, form validation, secure API calls
+
+See [SECURITY.md](./SECURITY.md) for detailed security guidelines.
 
 ## 📚 Key Features
 

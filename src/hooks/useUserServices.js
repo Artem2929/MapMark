@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { apiGet } from '../utils/apiUtils';
 
 const servicesCache = new Map();
 const loadingStates = new Map();
@@ -24,7 +25,6 @@ const useUserServices = (userId) => {
 
     // Check cache first
     if (servicesCache.has(userId) && forceRefresh === 0) {
-      console.log('useUserServices: Using cached data for userId:', userId);
       setServices(servicesCache.get(userId));
       setLoading(false);
       return;
@@ -32,7 +32,6 @@ const useUserServices = (userId) => {
 
     // Check if already loading
     if (loadingStates.get(userId)) {
-      console.log('useUserServices: Already loading, subscribing for userId:', userId);
       if (!subscribers.has(userId)) {
         subscribers.set(userId, []);
       }
@@ -40,12 +39,11 @@ const useUserServices = (userId) => {
       return;
     }
 
-    console.log('useUserServices: Starting fetch for userId:', userId);
     loadingStates.set(userId, true);
     
     const fetchServices = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/services/user/${userId}`);
+        const response = await apiGet(`/services/user/${userId}`);
         const result = await response.json();
         
         const servicesData = result.success ? result.data : [];

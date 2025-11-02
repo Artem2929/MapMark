@@ -18,7 +18,7 @@ export const STORAGE_KEYS = {
 
 // API endpoints (when backend is implemented)
 export const API_ENDPOINTS = {
-  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
   AUTH: '/auth',
   USERS: '/users',
   PLACES: '/places',

@@ -5,16 +5,11 @@ import './ServiceItem.css';
 const ServiceItem = ({ service, onDelete, onEdit, isOwnProfile = false }) => {
   const navigate = useNavigate();
   
-  // Debug logging
-  console.log('ServiceItem Debug:', {
-    serviceId: service._id,
-    isOwnProfile,
-    serviceTitle: service.title
-  });
+
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/services/${service._id}`, {
+      const response = await fetch(`http://localhost:3001/api/services/${service._id}`, {
         method: 'DELETE'
       });
       

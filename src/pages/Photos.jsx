@@ -33,7 +33,7 @@ const Photos = () => {
 
   const loadPhotos = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/photos/user/${currentUserId}`);
+      const response = await fetch(`http://localhost:3001/api/photos/user/${currentUserId}`);
       const result = await response.json();
       
       if (result.success) {
@@ -56,7 +56,7 @@ const Photos = () => {
     if (!photoToDelete) return;
     
     try {
-      const response = await fetch(`http://localhost:3000/api/photos/${photoToDelete}`, {
+      const response = await fetch(`http://localhost:3001/api/photos/${photoToDelete}`, {
         method: 'DELETE'
       });
       
@@ -83,7 +83,7 @@ const Photos = () => {
     setSelectedPhoto(photo);
     // Load comments for selected photo
     try {
-      const response = await fetch(`http://localhost:3000/api/photos/${photo._id}/comments`);
+      const response = await fetch(`http://localhost:3001/api/photos/${photo._id}/comments`);
       const result = await response.json();
       if (result.success) {
         setComments(prev => ({
@@ -102,7 +102,7 @@ const Photos = () => {
     let newState = currentState === action ? null : action;
     
     try {
-      const response = await fetch(`http://localhost:3000/api/photos/${photoId}/like`, {
+      const response = await fetch(`http://localhost:3001/api/photos/${photoId}/like`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: currentUserId, type: newState })
@@ -137,7 +137,7 @@ const Photos = () => {
 
   const handleSaveDescription = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/photos/${selectedPhoto._id}`, {
+      const response = await fetch(`http://localhost:3001/api/photos/${selectedPhoto._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ description: newDescription })
@@ -197,7 +197,7 @@ const Photos = () => {
       formData.append('description', uploadDescription);
       formData.append('userId', currentUserId);
       
-      const response = await fetch('http://localhost:3000/api/photos/upload', {
+      const response = await fetch('http://localhost:3001/api/photos/upload', {
         method: 'POST',
         body: formData
       });
@@ -252,7 +252,7 @@ const Photos = () => {
     let newState = currentState === action ? null : action;
     
     try {
-      const response = await fetch(`http://localhost:3000/api/photos/comments/${commentId}/like`, {
+      const response = await fetch(`http://localhost:3001/api/photos/comments/${commentId}/like`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: currentUserId, type: newState })
@@ -280,7 +280,7 @@ const Photos = () => {
   const handleCommentSubmit = async () => {
     if (comment.trim() && selectedPhoto) {
       try {
-        const response = await fetch(`http://localhost:3000/api/photos/${selectedPhoto._id}/comments`, {
+        const response = await fetch(`http://localhost:3001/api/photos/${selectedPhoto._id}/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: currentUserId, text: comment.trim() })

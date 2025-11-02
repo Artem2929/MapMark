@@ -1,3 +1,4 @@
+import { apiGet } from '../utils/apiUtils';
 import { useState, useEffect, useRef } from 'react';
 
 const photosCache = new Map();
@@ -44,7 +45,7 @@ const useUserPhotos = (userId) => {
     const fetchPhotos = async () => {
       try {
         console.log('Fetching photos for userId:', userId);
-        const response = await fetch(`http://localhost:3000/api/photos/user/${userId}`);
+        const response = await apiGet(`/photos/user/${userId}`);
         const result = await response.json();
         
         const photosData = result.success ? result.data : [];

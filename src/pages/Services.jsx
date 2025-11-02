@@ -48,7 +48,7 @@ const Services = () => {
           const photoFormData = new FormData();
           photoFormData.append('photo', formData.photo);
           
-          const photoResponse = await fetch('http://localhost:3000/api/upload/photo', {
+          const photoResponse = await fetch('http://localhost:3001/api/upload/photo', {
             method: 'POST',
             body: photoFormData
           });
@@ -69,7 +69,7 @@ const Services = () => {
           serviceItemId: serviceItemId
         };
         
-        const response = await fetch('http://localhost:3000/api/services', {
+        const response = await fetch('http://localhost:3001/api/services', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -91,7 +91,7 @@ const Services = () => {
   const loadComments = async (serviceId) => {
     try {
       setLoadingComments(true);
-      const response = await fetch(`http://localhost:3000/api/service-comments/${serviceId}`);
+      const response = await fetch(`http://localhost:3001/api/service-comments/${serviceId}`);
       const result = await response.json();
       
       if (result.success) {
@@ -107,7 +107,7 @@ const Services = () => {
   const handleLike = async (serviceId) => {
     try {
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`http://localhost:3000/api/service-likes/${serviceId}`, {
+      const response = await fetch(`http://localhost:3001/api/service-likes/${serviceId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, type: 'like' })
@@ -124,7 +124,7 @@ const Services = () => {
   const handleDislike = async (serviceId) => {
     try {
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`http://localhost:3000/api/service-likes/${serviceId}`, {
+      const response = await fetch(`http://localhost:3001/api/service-likes/${serviceId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, type: 'dislike' })
@@ -155,7 +155,7 @@ const Services = () => {
   const addComment = async (serviceId, text) => {
     try {
       const userId = localStorage.getItem('userId');
-      const response = await fetch(`http://localhost:3000/api/service-comments/${serviceId}`, {
+      const response = await fetch(`http://localhost:3001/api/service-comments/${serviceId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, text })
@@ -176,7 +176,7 @@ const Services = () => {
     }
     
     try {
-      const response = await fetch(`http://localhost:3000/api/services/item/${serviceItemId}`);
+      const response = await fetch(`http://localhost:3001/api/services/item/${serviceItemId}`);
       const result = await response.json();
       
       if (result.success) {

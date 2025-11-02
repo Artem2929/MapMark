@@ -45,7 +45,7 @@ const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
         const formData = new FormData();
         formData.append('photo', newService.photo);
         
-        const photoResponse = await fetch('http://localhost:3000/api/upload/photo', {
+        const photoResponse = await fetch('http://localhost:3001/api/upload/photo', {
           method: 'POST',
           body: formData
         });
@@ -58,7 +58,7 @@ const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
         }
       }
       
-      const response = await fetch(`http://localhost:3000/api/services/${editingService._id}`, {
+      const response = await fetch(`http://localhost:3001/api/services/${editingService._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
           const formData = new FormData();
           formData.append('photo', newService.photo);
           
-          const photoResponse = await fetch('http://localhost:3000/api/upload/photo', {
+          const photoResponse = await fetch('http://localhost:3001/api/upload/photo', {
             method: 'POST',
             body: formData
           });
@@ -122,7 +122,7 @@ const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
         }
       }
       
-      const response = await fetch('http://localhost:3000/api/services', {
+      const response = await fetch('http://localhost:3001/api/services', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

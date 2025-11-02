@@ -94,7 +94,7 @@ const ProfileAvatar = ({
   const avatarUrl = user?.avatar 
     ? (user.avatar.startsWith('data:') || user.avatar.startsWith('http') 
         ? user.avatar 
-        : `http://localhost:3000${user.avatar}`)
+        : `http://localhost:3001${user.avatar}`)
     : null;
   const displayImage = previewUrl || avatarUrl;
   const userInitial = user?.name?.charAt(0)?.toUpperCase() || 'U';
