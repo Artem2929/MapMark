@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import apiClient from '../utils/apiClient.js';
 
 const usePosts = () => {
   const [posts, setPosts] = useState([]);
@@ -8,6 +9,7 @@ const usePosts = () => {
   const [hasMore, setHasMore] = useState(true);
   const [initialLoading, setInitialLoading] = useState(true);
   const loadingRef = useRef(false);
+  const retryCountRef = useRef(0);
 
   const fetchPosts = useCallback(async (pageNum = 1, reset = false) => {
     if (loadingRef.current) return;
@@ -17,27 +19,42 @@ const usePosts = () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`http://localhost:3001/api/posts?page=${pageNum}&limit=5`);
-      const data = await response.json();
+      const timeoutId = setTimeout(() => {
+        throw new Error('Запит перервано через тайм-аут');
+      }, 10000);
+
+      const data = await apiClient.get('/posts', {
+        page: pageNum,
+        limit: 5
+      });
+      
+      clearTimeout(timeoutId);
 
       if (data.success) {
         if (reset) {
           setPosts(data.posts);
         } else {
           setPosts(prev => {
-            // Уникаємо дублювання
             const existingIds = new Set(prev.map(p => p.id));
             const newPosts = data.posts.filter(p => !existingIds.has(p.id));
             return [...prev, ...newPosts];
           });
         }
         setHasMore(data.hasMore);
+        retryCountRef.current = 0;
       } else {
-        setError(data.error || 'Помилка завантаження постів');
+        throw new Error(data.error || 'Помилка завантаження постів');
       }
     } catch (err) {
-      setError('Помилка мережі');
-      console.error('Error fetching posts:', err);
+      if (err.name === 'AbortError') {
+        setError('Запит перервано через тайм-аут');
+      } else if (retryCountRef.current < 3) {
+        retryCountRef.current += 1;
+        setTimeout(() => fetchPosts(pageNum, reset), 1000 * retryCountRef.current);
+        return;
+      } else {
+        setError(err.message || 'Помилка мережі');
+      }
     } finally {
       setLoading(false);
       setInitialLoading(false);

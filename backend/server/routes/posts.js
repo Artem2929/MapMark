@@ -3,6 +3,8 @@ const router = express.Router();
 const Post = require('../models/Post');
 const User = require('../models/User');
 const SavedPost = require('../models/SavedPost');
+const { authenticateToken, optionalAuth } = require('../middleware/auth');
+const { postRateLimit, reactionRateLimit, commentRateLimit, validateInput, sanitizeInput } = require('../middleware/security');
 
 // GET /api/posts/:postId - Отримати деталі поста
 router.get('/:postId', async (req, res) => {
@@ -70,17 +72,18 @@ router.get('/user/:userId', async (req, res) => {
 });
 
 // GET /api/posts - Отримати стрічку постів
-router.get('/', async (req, res) => {
+router.get('/', optionalAuth, async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
-    const limitNum = parseInt(limit);
-    const pageNum = parseInt(page);
+    const limitNum = Math.min(parseInt(limit) || 10, 20);
+    const pageNum = Math.max(parseInt(page) || 1, 1);
 
     const posts = await Post.find({ isDeleted: false })
       .populate('author', 'name avatar')
       .sort({ createdAt: -1 })
-      .limit(limitNum + 1) // +1 для перевірки hasMore
-      .skip((pageNum - 1) * limitNum);
+      .limit(limitNum + 1)
+      .skip((pageNum - 1) * limitNum)
+      .lean();
 
     const hasMore = posts.length > limitNum;
     const postsToReturn = hasMore ? posts.slice(0, limitNum) : posts;
@@ -119,12 +122,12 @@ router.get('/', async (req, res) => {
 
 
 // POST /api/posts - Створити новий пост
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, postRateLimit, validateInput, sanitizeInput, async (req, res) => {
   try {
-    const { content, images, type, location, mood, authorId } = req.body;
+    const { content, images, type, location, mood } = req.body;
 
     const post = new Post({
-      author: authorId,
+      author: req.user._id,
       content,
       images: images || [],
       type: type || 'text',
@@ -142,17 +145,17 @@ router.post('/', async (req, res) => {
 });
 
 // PUT /api/posts/:postId - Оновити пост
-router.put('/:postId', async (req, res) => {
+router.put('/:postId', authenticateToken, validateInput, sanitizeInput, async (req, res) => {
   try {
     const { postId } = req.params;
-    const { content, location, mood, userId } = req.body;
+    const { content, location, mood } = req.body;
 
     const post = await Post.findById(postId);
-    if (!post) {
+    if (!post || post.isDeleted) {
       return res.status(404).json({ success: false, error: 'Пост не знайдено' });
     }
 
-    if (post.author.toString() !== userId) {
+    if (post.author.toString() !== req.user._id.toString()) {
       return res.status(403).json({ success: false, error: 'Немає прав для редагування' });
     }
 
@@ -170,17 +173,16 @@ router.put('/:postId', async (req, res) => {
 });
 
 // DELETE /api/posts/:postId - Видалити пост
-router.delete('/:postId', async (req, res) => {
+router.delete('/:postId', authenticateToken, async (req, res) => {
   try {
     const { postId } = req.params;
-    const { userId } = req.body;
 
     const post = await Post.findById(postId);
-    if (!post) {
+    if (!post || post.isDeleted) {
       return res.status(404).json({ success: false, error: 'Пост не знайдено' });
     }
 
-    if (post.author.toString() !== userId) {
+    if (post.author.toString() !== req.user._id.toString()) {
       return res.status(403).json({ success: false, error: 'Немає прав для видалення' });
     }
 
@@ -194,10 +196,11 @@ router.delete('/:postId', async (req, res) => {
 });
 
 // POST /api/posts/:postId/reactions - Додати/змінити реакцію
-router.post('/:postId/reactions', async (req, res) => {
+router.post('/:postId/reactions', optionalAuth, reactionRateLimit, async (req, res) => {
   try {
     const { postId } = req.params;
-    const { userId, type } = req.body; // type: 'like', 'dislike', або null для видалення
+    const { type } = req.body;
+    const userId = req.user?._id || new require('mongoose').Types.ObjectId('507f1f77bcf86cd799439011');
 
     const post = await Post.findById(postId);
     if (!post) {
@@ -205,7 +208,7 @@ router.post('/:postId/reactions', async (req, res) => {
     }
 
     // Видалити попередню реакцію користувача
-    post.reactions = post.reactions.filter(r => r.userId.toString() !== userId);
+    post.reactions = post.reactions.filter(r => r.userId.toString() !== userId.toString());
 
     // Додати нову реакцію якщо type не null
     if (type && ['like', 'dislike'].includes(type)) {
@@ -217,7 +220,7 @@ router.post('/:postId/reactions', async (req, res) => {
     // Підрахунок лайків та дизлайків
     const likes = post.reactions.filter(r => r.type === 'like').length;
     const dislikes = post.reactions.filter(r => r.type === 'dislike').length;
-    const userReaction = post.reactions.find(r => r.userId.toString() === userId)?.type || null;
+    const userReaction = post.reactions.find(r => r.userId.toString() === userId.toString())?.type || null;
     
     res.json({ 
       success: true, 
@@ -265,10 +268,11 @@ router.get('/:postId/comments', async (req, res) => {
 });
 
 // POST /api/posts/:postId/comments - Додати коментар
-router.post('/:postId/comments', async (req, res) => {
+router.post('/:postId/comments', authenticateToken, commentRateLimit, validateInput, sanitizeInput, async (req, res) => {
   try {
     const { postId } = req.params;
-    const { content, authorId } = req.body;
+    const { content } = req.body;
+    const authorId = req.user._id;
 
     if (!content || !content.trim()) {
       return res.status(400).json({ success: false, error: 'Коментар не може бути порожнім' });
@@ -349,14 +353,10 @@ router.post('/:postId/share', async (req, res) => {
 });
 
 // POST /api/posts/:postId/save - Зберегти/видалити пост
-router.post('/:postId/save', async (req, res) => {
+router.post('/:postId/save', authenticateToken, async (req, res) => {
   try {
     const { postId } = req.params;
-    const { userId } = req.body;
-
-    if (!userId) {
-      return res.status(400).json({ success: false, error: 'Не вказано ID користувача' });
-    }
+    const userId = req.user._id;
 
     const post = await Post.findById(postId);
     if (!post || post.isDeleted) {
@@ -376,6 +376,37 @@ router.post('/:postId/save', async (req, res) => {
     }
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
+  }
+});
+
+// GET /api/posts/stats - Отримати актуальну статистику постів
+router.get('/stats', async (req, res) => {
+  try {
+    const { postIds } = req.query; // Масив ID постів
+    
+    if (!postIds) {
+      return res.status(400).json({ success: false, error: 'Не вказано ID постів' });
+    }
+
+    const idsArray = Array.isArray(postIds) ? postIds : postIds.split(',');
+    
+    const posts = await Post.find({ 
+      _id: { $in: idsArray },
+      isDeleted: false 
+    }).select('_id reactions comments');
+
+    const stats = {};
+    posts.forEach(post => {
+      stats[post._id] = {
+        likes: post.reactions.filter(r => r.type === 'like').length,
+        dislikes: post.reactions.filter(r => r.type === 'dislike').length,
+        comments: post.comments.length
+      };
+    });
+
+    res.json({ success: true, stats });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

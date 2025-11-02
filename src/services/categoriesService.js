@@ -1,11 +1,15 @@
-const API_BASE_URL = 'http://localhost:3001/api';
+import apiClient from '../utils/apiClient.js';
 
 let categoriesCache = null;
 let categoriesPromise = null;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 хвилин
+let cacheTimestamp = null;
 
 export const categoriesService = {
   async getCategories() {
-    if (categoriesCache) {
+    const now = Date.now();
+    
+    if (categoriesCache && cacheTimestamp && (now - cacheTimestamp < CACHE_DURATION)) {
       return categoriesCache;
     }
     
@@ -14,28 +18,27 @@ export const categoriesService = {
     }
     
     categoriesPromise = this._fetchCategories();
-    categoriesCache = await categoriesPromise;
-    categoriesPromise = null;
-    
-    return categoriesCache;
+    try {
+      categoriesCache = await categoriesPromise;
+      cacheTimestamp = now;
+      return categoriesCache;
+    } catch (error) {
+      categoriesCache = null;
+      cacheTimestamp = null;
+      throw error;
+    } finally {
+      categoriesPromise = null;
+    }
   },
   
   clearCache() {
     categoriesCache = null;
     categoriesPromise = null;
+    cacheTimestamp = null;
   },
   
   async _fetchCategories() {
-    try {
-      const response = await fetch(`${API_BASE_URL}/categories`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch categories');
-      }
-      const result = await response.json();
-      return result.data || [];
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-      throw error;
-    }
+    const result = await apiClient.get('/categories');
+    return result.data || [];
   }
 };

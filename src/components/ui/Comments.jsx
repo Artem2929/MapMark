@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
+import apiClient from '../../utils/apiClient.js';
 import './Comments.css';
 
 const Comments = ({ postId, initialCount = 0 }) => {
@@ -8,15 +9,17 @@ const Comments = ({ postId, initialCount = 0 }) => {
   const [newComment, setNewComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
-  const [showComments, setShowComments] = useState(false);
 
-  const fetchComments = async (offset = 0) => {
+
+  const fetchComments = useCallback(async (offset = 0) => {
     try {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`http://localhost:3001/api/posts/${postId}/comments?offset=${offset}&limit=5`);
-      const data = await response.json();
+      const data = await apiClient.get(`/posts/${postId}/comments`, {
+        offset,
+        limit: 5
+      });
       
       if (data.success) {
         if (offset === 0) {
@@ -26,15 +29,14 @@ const Comments = ({ postId, initialCount = 0 }) => {
         }
         setHasMore(data.hasMore);
       } else {
-        setError(data.error || 'Помилка завантаження коментарів');
+        throw new Error(data.error || 'Помилка завантаження коментарів');
       }
     } catch (err) {
-      setError('Помилка мережі');
-      console.error('Error fetching comments:', err);
+      setError(err.message || 'Помилка мережі');
     } finally {
       setLoading(false);
     }
-  };
+  }, [postId]);
 
   const handleSubmitComment = async (e) => {
     e.preventDefault();
@@ -59,18 +61,9 @@ const Comments = ({ postId, initialCount = 0 }) => {
       setComments(prev => [tempComment, ...prev]);
       setNewComment('');
 
-      const response = await fetch(`http://localhost:3001/api/posts/${postId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: newComment.trim(),
-          authorId: 'temp-user-id' // TODO: замінити на реальний ID користувача
-        })
+      const data = await apiClient.post(`/posts/${postId}/comments`, {
+        content: newComment.trim()
       });
-
-      const data = await response.json();
 
       if (data.success) {
         // Замінюємо тимчасовий коментар на реальний
@@ -103,24 +96,11 @@ const Comments = ({ postId, initialCount = 0 }) => {
     return `${Math.floor(diffInMinutes / 1440)} дн тому`;
   };
 
-  const toggleComments = () => {
-    setShowComments(!showComments);
-    if (!showComments && comments.length === 0) {
-      fetchComments(0);
-    }
-  };
+
 
   return (
     <div className="comments-section">
-      <button 
-        className="comments-toggle"
-        onClick={toggleComments}
-      >
-        💬 {initialCount} коментарів
-      </button>
-
-      {showComments && (
-        <div className="comments-container">
+      <div className="comments-container">
           {/* Форма додавання коментаря */}
           <form onSubmit={handleSubmitComment} className="comment-form">
             <div className="comment-input-container">
@@ -197,7 +177,6 @@ const Comments = ({ postId, initialCount = 0 }) => {
             )}
           </div>
         </div>
-      )}
     </div>
   );
 };

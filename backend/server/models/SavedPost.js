@@ -15,7 +15,8 @@ const savedPostSchema = new mongoose.Schema({
   timestamps: true 
 });
 
-// Унікальний індекс для запобігання дублюванню
+// Унікальний індекс для запобігання дублювання
 savedPostSchema.index({ userId: 1, postId: 1 }, { unique: true });
+savedPostSchema.index({ userId: 1, createdAt: -1 });
 
 module.exports = mongoose.model('SavedPost', savedPostSchema);

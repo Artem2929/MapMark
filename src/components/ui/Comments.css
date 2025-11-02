@@ -37,6 +37,8 @@
   border-radius: 12px;
   padding: 12px;
   transition: border-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .comment-input-container:focus-within {

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 const InfiniteScroll = ({ 
   hasMore, 
@@ -9,23 +9,31 @@ const InfiniteScroll = ({
 }) => {
   const sentinelRef = useRef(null);
   const observerRef = useRef(null);
+  const loadingRef = useRef(false);
+
+  const handleIntersection = useCallback((entries) => {
+    const [entry] = entries;
+    if (entry.isIntersecting && hasMore && !loading && !loadingRef.current) {
+      loadingRef.current = true;
+      onLoadMore();
+      setTimeout(() => {
+        loadingRef.current = false;
+      }, 1000);
+    }
+  }, [hasMore, loading, onLoadMore]);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting && hasMore && !loading) {
-          onLoadMore();
-        }
-      },
-      {
-        rootMargin: `${threshold}px`,
-        threshold: 0.1
-      }
-    );
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    const observer = new IntersectionObserver(handleIntersection, {
+      rootMargin: `${threshold}px`,
+      threshold: 0.1
+    });
 
     observer.observe(sentinel);
     observerRef.current = observer;
@@ -35,7 +43,7 @@ const InfiniteScroll = ({
         observerRef.current.disconnect();
       }
     };
-  }, [hasMore, loading, onLoadMore, threshold]);
+  }, [handleIntersection, threshold]);
 
   return (
     <>

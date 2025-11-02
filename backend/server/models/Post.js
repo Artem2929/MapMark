@@ -99,8 +99,12 @@ postSchema.virtual('commentsCount').get(function() {
   return this.comments.length;
 });
 
+// Індекси для продуктивності
 postSchema.index({ author: 1, createdAt: -1 });
 postSchema.index({ createdAt: -1 });
+postSchema.index({ isDeleted: 1, createdAt: -1 });
 postSchema.index({ 'reactions.userId': 1 });
+postSchema.index({ location: 'text' });
+postSchema.index({ content: 'text' });
 
 module.exports = mongoose.model('Post', postSchema);

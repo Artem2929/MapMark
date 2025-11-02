@@ -10,6 +10,7 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
   const [isUpdating, setIsUpdating] = useState(false);
   const [isSaved, setIsSaved] = useState(initialSaved);
   const [isSaving, setIsSaving] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   const getTimeAgo = (timestamp) => {
     const now = new Date();
@@ -78,8 +79,22 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
 
 
 
-  const handleShare = () => {
-    onShare?.(post.id);
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: post.title,
+          text: post.description,
+          url: `${window.location.origin}/posts/${post.id}`
+        });
+      } else {
+        await navigator.clipboard.writeText(`${window.location.origin}/posts/${post.id}`);
+        alert('Посилання скопійовано в буфер обміну!');
+      }
+      onShare?.(post.id);
+    } catch (error) {
+      console.error('Error sharing:', error);
+    }
   };
 
   const handleSave = async () => {
@@ -123,7 +138,6 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
             <span className="post-card__time">{getTimeAgo(post.createdAt)}</span>
           </div>
         </Link>
-        <button className="post-card__menu">⋯</button>
       </div>
 
       {post.image && (
@@ -163,8 +177,7 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
           </button>
           <button 
             className="post-card__action-btn comment-btn"
-            onClick={() => {}}
-            disabled
+            onClick={() => setShowComments(!showComments)}
           >
             <span className="post-card__icon">💬</span>
             <span className="post-card__count">{localStats.comments}</span>
@@ -186,7 +199,9 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
         </button>
       </div>
 
-      <Comments postId={post.id} initialCount={localStats.comments} />
+      {showComments && (
+        <Comments postId={post.id} initialCount={localStats.comments} />
+      )}
     </div>
   );
 };
