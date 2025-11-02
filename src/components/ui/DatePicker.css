@@ -6,15 +6,36 @@
 .date-picker__selects {
   display: flex;
   gap: 8px;
+  width: 100%;
 }
 
 .date-picker__select {
   flex: 1;
+  min-width: 0;
+}
+
+.date-picker__select .custom-select {
+  min-width: auto;
+  width: 100%;
 }
 
 /* Адаптивність */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .date-picker__selects {
     gap: 6px;
+  }
+  
+  .date-picker__select .custom-select {
+    min-width: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .date-picker__selects {
+    gap: 4px;
+  }
+  
+  .date-picker__select .custom-select {
+    min-width: 50px;
   }
 }

@@ -480,30 +480,7 @@
   letter-spacing: 0.5px;
 }
 
-.post-actions {
-  display: flex;
-  justify-content: space-around;
-  padding: 6px 12px;
-  border-top: 1px solid #e5e7eb;
-  background: #f9fafb;
-}
-
-.post-actions button {
-  background: none;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.post-actions button:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
+/* Removed duplicate .post-actions - using PostActions.css instead */
 
 .like-btn:hover {
   background: rgba(34, 197, 94, 0.1);

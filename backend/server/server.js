@@ -39,19 +39,22 @@ if (!DB_URL) {
   process.exit(1);
 }
 
-// Security middleware
-app.use(securityMiddleware);
-app.use(generalLimiter);
+// CORS configuration - FIRST
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || 'http://localhost:5173');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
-// CORS configuration
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.com'] 
-    : ['http://localhost:5173', 'http://localhost:3000'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// Security middleware (without rate limiting for development)
+app.use(securityMiddleware);
+// app.use(generalLimiter); // Disabled for development
 
 // Body parsing middleware
 app.use(bodyParser.json({ limit: '10mb' }));

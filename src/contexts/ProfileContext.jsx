@@ -16,7 +16,7 @@ export const ProfileProvider = ({ children, userId }) => {
   const following = useUserFollowing(userId);
   const followers = useUserFollowers(userId);
   const posts = useUserWall(userId, currentUserId);
-  const services = useUserServices(userId);
+  const { services, addService } = useUserServices(userId);
 
   const value = useMemo(() => ({
     ...profile,
@@ -25,10 +25,11 @@ export const ProfileProvider = ({ children, userId }) => {
     followers,
     posts,
     services,
+    addService,
     isOwnProfile: userId === currentUserId,
     currentUserId,
     targetUserId: userId
-  }), [profile, photos, following, followers, posts, services, userId, currentUserId]);
+  }), [profile, photos, following, followers, posts, services, addService, userId, currentUserId]);
 
   return (
     <ProfileContext.Provider value={value}>

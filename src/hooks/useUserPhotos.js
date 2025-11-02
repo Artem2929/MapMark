@@ -10,7 +10,6 @@ export const clearUserPhotosCache = (userId) => {
 };
 
 const useUserPhotos = (userId) => {
-  console.log('useUserPhotos called for userId:', userId);
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [forceRefresh, setForceRefresh] = useState(0);
@@ -44,7 +43,7 @@ const useUserPhotos = (userId) => {
     
     const fetchPhotos = async () => {
       try {
-        console.log('Fetching photos for userId:', userId);
+
         const response = await apiGet(`/photos/user/${userId}`);
         const result = await response.json();
         

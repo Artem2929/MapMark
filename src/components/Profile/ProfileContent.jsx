@@ -4,7 +4,7 @@ import ServicesSection from './ServicesSection';
 import PhotosSection from './PhotosSection';
 
 const ProfileContent = () => {
-  const { user, services, isOwnProfile, targetUserId } = useProfile();
+  const { user, services, isOwnProfile, targetUserId, addService } = useProfile();
 
   if (!user) return null;
 
@@ -13,6 +13,7 @@ const ProfileContent = () => {
       userId={targetUserId}
       isOwnProfile={isOwnProfile}
       services={services}
+      onServiceAdded={addService}
     />
   ) : (
     <PhotosSection />

@@ -4,17 +4,17 @@
 
 .post-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  padding: 12px 16px;
+  padding: 12px 16px 12px 16px;
   backdrop-filter: blur(20px);
   border-top: 1px solid rgba(0, 0, 0, 0.04);
-  gap: 8px;
+  gap: 16px;
 }
 
 .post-action-buttons {
   display: flex;
-  gap: 12px;
+  gap: 18px;
 }
 
 .post-action-btn {

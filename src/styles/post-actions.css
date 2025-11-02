@@ -1,10 +1,4 @@
-.post-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  border-top: 1px solid #efefef;
-}
+/* Removed duplicate - using PostActions.css instead */
 
 .post-actions button {
   background: none;

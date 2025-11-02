@@ -2,7 +2,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 export const updateAvatar = async (formData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/profile/avatar`, {
+    const response = await fetch(`${API_BASE_URL}/user/avatar`, {
       method: 'POST',
       body: formData,
       credentials: 'include'
@@ -21,7 +21,7 @@ export const updateAvatar = async (formData) => {
 
 export const updateProfile = async (userId, profileData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/profile/${userId}`, {
+    const response = await fetch(`${API_BASE_URL}/user/${userId}/profile`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

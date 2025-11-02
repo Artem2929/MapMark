@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { apiPost } from '../../utils/apiUtils';
 
 import CustomSelect from '../ui/CustomSelect';
 import ServiceItem from './ServiceItem';
 import './ServicesSection.css';
 
-const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
+const ServicesSection = ({ userId, isOwnProfile, services = [], onServiceAdded }) => {
   const navigate = useNavigate();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -96,8 +97,10 @@ const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
   };
 
   const handleAddService = async () => {
+    console.log('Starting to add service...', { newService, userId });
+    
     try {
-      let photoData = null;
+      let photoData = photoPreview; // Використовуємо preview як fallback
       
       // Завантажуємо фото якщо воно є
       if (newService.photo) {
@@ -105,6 +108,7 @@ const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
           const formData = new FormData();
           formData.append('photo', newService.photo);
           
+          console.log('Uploading photo...');
           const photoResponse = await fetch('http://localhost:3001/api/upload/photo', {
             method: 'POST',
             body: formData
@@ -112,43 +116,56 @@ const ServicesSection = ({ userId, isOwnProfile, services = [] }) => {
           
           if (photoResponse.ok) {
             const photoResult = await photoResponse.json();
+            console.log('Photo upload result:', photoResult);
             if (photoResult.success) {
               photoData = photoResult.photoUrl;
             }
+          } else {
+            console.error('Photo upload failed:', photoResponse.status);
           }
         } catch (photoError) {
-          // Якщо фото не завантажилося, використовуємо preview
-          photoData = photoPreview;
+          console.error('Photo upload error:', photoError);
         }
       }
       
-      const response = await fetch('http://localhost:3001/api/services', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: newService.title,
-          description: newService.description,
-          category: newService.category,
-          photo: photoData,
-          userId
-        })
-      });
+      const serviceData = {
+        title: newService.title,
+        description: newService.description,
+        category: newService.category,
+        photo: photoData,
+        userId
+      };
       
+      console.log('Sending service data:', serviceData);
+      
+      const response = await apiPost('/services', serviceData);
       const result = await response.json();
-      if (result.success) {
-        window.location.reload();
-      }
       
-      setShowAddModal(false);
-      setNewService({ title: '', description: '', category: 'service', photo: null });
-      setPhotoPreview(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+      console.log('Service creation response:', result);
+      
+      if (result.success) {
+        console.log('Service created successfully!');
+        // Додаємо нову послугу до списку
+        if (onServiceAdded) {
+          onServiceAdded(result.data);
+        }
+        // Закриваємо модал
+        setShowAddModal(false);
+        setNewService({ title: '', description: '', category: 'service', photo: null });
+        setPhotoPreview(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+        // Показуємо повідомлення про успіх
+        alert('Послугу успішно додано!');
+        return;
+      } else {
+        console.error('Service creation failed:', result.message);
+        alert('Помилка: ' + (result.message || 'Не вдалося додати послугу'));
       }
     } catch (error) {
       console.error('Error adding service:', error);
+      alert('Помилка при додаванні послуги: ' + error.message);
       setShowAddModal(false);
       setNewService({ title: '', description: '', category: 'service', photo: null });
       setPhotoPreview(null);
