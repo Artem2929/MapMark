@@ -179,7 +179,7 @@
 
 .filter-select {
   padding: 12px 40px 12px 16px;
-  border: 2px solid #e2e8f0;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
   background: linear-gradient(
     145deg,
@@ -273,7 +273,7 @@
 
 .tag-filter {
   background: rgba(255, 255, 255, 0.9);
-  border: 2px solid #e5e7eb;
+  border: 1px solid #e5e7eb;
   color: #475569;
   padding: 8px 16px;
   border-radius: 12px;
@@ -687,7 +687,7 @@
     rgba(255, 255, 255, 0.9) 0%,
     rgba(248, 250, 252, 0.9) 100%
   );
-  border: 2px solid #e5e7eb;
+  border: 1px solid #e5e7eb;
   color: #374151;
   padding: 12px 20px;
   border-radius: 12px;
@@ -714,7 +714,7 @@
 
 .page-number {
   background: rgba(255, 255, 255, 0.9);
-  border: 2px solid #e5e7eb;
+  border: 1px solid #e5e7eb;
   color: #374151;
   padding: 10px 16px;
   border-radius: 12px;

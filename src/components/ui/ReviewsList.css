@@ -116,7 +116,7 @@ body:has(.reviews-list.visible) .notification-item {
     rgba(255, 255, 255, 0.9) 0%,
     rgba(248, 250, 252, 0.9) 100%
   );
-  border: 2px solid rgba(226, 232, 240, 0.5);
+  border: 1px solid rgba(226, 232, 240, 0.5);
   color: #64748b;
   width: 40px;
   height: 40px;

@@ -56,7 +56,6 @@
   transition: transform 0.2s ease;
 }
 
-
 .photo-image {
   position: relative;
   aspect-ratio: 1;
@@ -168,7 +167,8 @@
   border-radius: 12px;
   font-weight: 500;
   transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -255,8 +255,6 @@
   margin-top: 24px;
 }
 
-
-
 .comment-avatar {
   width: 40px;
   height: 40px;
@@ -270,7 +268,7 @@
   font-size: 14px;
   flex-shrink: 0;
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
 
@@ -301,8 +299,6 @@
   font-size: 14px;
   line-height: 1.5;
 }
-
-
 
 .comment-actions {
   display: flex;
@@ -406,7 +402,8 @@
   border-radius: 12px;
   font-weight: 500;
   transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -471,7 +468,8 @@
   border-radius: 12px;
   font-weight: 500;
   transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -528,7 +526,8 @@
   border-radius: 12px;
   font-weight: 500;
   transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -584,7 +583,8 @@
   font-size: 14px;
   resize: none;
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   outline: none;
   transition: all 0.2s ease;
   background: rgba(255, 255, 255, 0.9);
@@ -627,33 +627,34 @@
   font-size: 16px;
   color: #6b7280;
   text-align: center;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
 }
 
 @media (max-width: 735px) {
   .photos-page {
     padding: 0;
   }
-  
+
   .photos-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 1px;
     margin-top: 0;
   }
-  
+
   .photos-header {
     padding: 0 16px;
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
   }
-  
+
   .photo-modal-content {
     flex-direction: column;
     height: 90vh;
     max-height: 600px;
   }
-  
+
   .photo-modal-sidebar {
     width: 100%;
     border-left: none;
@@ -699,7 +700,8 @@
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
 }
 
 .add-photo-grid-btn:hover {
@@ -743,7 +745,8 @@
   color: #1e293b;
   outline: none;
   transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
 }
 
 .category-select:focus,

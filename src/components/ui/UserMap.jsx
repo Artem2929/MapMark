@@ -5,7 +5,8 @@ import L from 'leaflet';
 import './UserMap.css';
 
 const UserMap = ({ userId }) => {
-  const reviews = []; const reviewsLoading = false;
+  const reviews = [];
+  const reviewsLoading = false;
   const [loading, setLoading] = useState(true);
   const [mapCenter, setMapCenter] = useState([50.4501, 30.5234]); // Київ за замовчуванням
 
@@ -18,12 +19,12 @@ const UserMap = ({ userId }) => {
     if (reviews.length > 0 && reviews[0].lat && reviews[0].lng) {
       setMapCenter([reviews[0].lat, reviews[0].lng]);
     }
-    
+
     setLoading(false);
   }, [reviews, reviewsLoading]);
 
   // Створюємо кастомну іконку для маркерів
-  const createCustomIcon = (rating) => {
+  const createCustomIcon = rating => {
     const color = rating >= 4 ? '#10b981' : rating >= 3 ? '#f59e0b' : '#ef4444';
     return L.divIcon({
       html: `
@@ -32,7 +33,7 @@ const UserMap = ({ userId }) => {
           width: 20px;
           height: 20px;
           border-radius: 50%;
-          border: 2px solid white;
+          border: 1px solid white;
           box-shadow: 0 2px 4px rgba(0,0,0,0.3);
           display: flex;
           align-items: center;
@@ -46,7 +47,7 @@ const UserMap = ({ userId }) => {
       `,
       className: 'custom-marker',
       iconSize: [24, 24],
-      iconAnchor: [12, 12]
+      iconAnchor: [12, 12],
     });
   };
 
@@ -71,7 +72,7 @@ const UserMap = ({ userId }) => {
   return (
     <div className="user-map">
       <h3>Карта відвіданих місць ({reviews.length})</h3>
-      
+
       <div className="map-container">
         <MapContainer
           center={mapCenter}
@@ -82,31 +83,33 @@ const UserMap = ({ userId }) => {
             url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           />
-          
-          {reviews.map((review) => (
-            review.lat && review.lng && (
-              <Marker
-                key={review._id}
-                position={[review.lat, review.lng]}
-                icon={createCustomIcon(review.rating)}
-              >
-                <Popup>
-                  <div className="review-popup">
-                    <div className="popup-rating">
-                      {'⭐'.repeat(review.rating)}
+
+          {reviews.map(
+            review =>
+              review.lat &&
+              review.lng && (
+                <Marker
+                  key={review._id}
+                  position={[review.lat, review.lng]}
+                  icon={createCustomIcon(review.rating)}
+                >
+                  <Popup>
+                    <div className="review-popup">
+                      <div className="popup-rating">
+                        {'⭐'.repeat(review.rating)}
+                      </div>
+                      <div className="popup-text">{review.text}</div>
+                      <div className="popup-date">
+                        {new Date(review.createdAt).toLocaleDateString('uk-UA')}
+                      </div>
                     </div>
-                    <div className="popup-text">{review.text}</div>
-                    <div className="popup-date">
-                      {new Date(review.createdAt).toLocaleDateString('uk-UA')}
-                    </div>
-                  </div>
-                </Popup>
-              </Marker>
-            )
-          ))}
+                  </Popup>
+                </Marker>
+              )
+          )}
         </MapContainer>
       </div>
-      
+
       <div className="map-legend">
         <div className="legend-item">
           <div className="legend-color" style={{ background: '#10b981' }}></div>

@@ -21,10 +21,18 @@
   margin: 0;
   width: 100%;
   box-sizing: border-box;
-  box-shadow: 0 20px 60px rgba(59, 130, 246, 0.12), 0 10px 30px rgba(59, 130, 246, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(59, 130, 246, 0.05);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 50%, rgba(241, 245, 249, 0.98) 100%);
+  box-shadow: 0 20px 60px rgba(59, 130, 246, 0.12),
+    0 10px 30px rgba(59, 130, 246, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(59, 130, 246, 0.05);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(248, 250, 252, 0.98) 50%,
+    rgba(241, 245, 249, 0.98) 100%
+  );
   backdrop-filter: blur(25px) saturate(200%);
-  border: 2px solid rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.15);
 }
 
 .register-title {
@@ -146,7 +154,7 @@
   height: 16px;
   margin: 0;
   padding: 0;
-  border: 2px solid rgba(16, 185, 129, 0.3);
+  border: 1px solid rgba(16, 185, 129, 0.3);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.95);
   cursor: pointer;
@@ -311,7 +319,7 @@
 .btn-spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-top: 2px solid white;
   border-radius: 50%;
   animation: spin 1s linear infinite;

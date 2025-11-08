@@ -234,7 +234,7 @@
   max-width: 100%;
   padding: 14px 18px;
   box-sizing: border-box;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   border-radius: 12px;
   font-size: 14px;
   font-weight: 500;
@@ -258,7 +258,7 @@
 .filter-group select {
   width: 100%;
   padding: 14px 40px 14px 18px;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   border-radius: 12px;
   font-size: 14px;
   font-weight: 500;

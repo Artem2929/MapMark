@@ -42,7 +42,7 @@
   );
   color: white;
   z-index: 10;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 12px 32px rgba(99, 102, 241, 0.4),
     0 6px 16px rgba(99, 102, 241, 0.25), 0 2px 8px rgba(99, 102, 241, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1);

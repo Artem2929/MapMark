@@ -1,10 +1,4 @@
-/* Base Styles */
-.page-container.profile-user-profile {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px 20px 0;
-  min-height: 100vh;
-}
+/* Profile-specific styles - base styles are in global.css */
 
 .profile-profile-container {
   max-width: 1200px;
@@ -38,7 +32,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.04), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.04),
+    transparent
+  );
   transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -49,12 +48,6 @@
 .profile-avatar-section {
   flex-shrink: 0;
 }
-
-
-
-
-
-
 
 .profile-avatar-image {
   width: 100%;
@@ -67,15 +60,14 @@
   font-weight: 500;
   color: white;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   letter-spacing: -0.02em;
 }
 
 .profile-avatar-input {
   display: none;
 }
-
-
 
 .profile-avatar-container:hover .profile-avatar-upload-overlay {
   opacity: 1;
@@ -112,8 +104,6 @@
 .profile-avatar-status.offline {
   background: #8e8e93;
 }
-
-
 
 .profile-online-dot {
   width: 6px;
@@ -156,12 +146,17 @@
 
 .profile-profile-text-info {
   flex: 1;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   border: 1px solid rgba(59, 130, 246, 0.1);
   border-radius: 12px;
   padding: 20px;
   backdrop-filter: blur(10px);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.05);
@@ -188,7 +183,8 @@
   font-weight: 700;
   color: #1e293b;
   margin: 0 0 12px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   line-height: 1.3;
   letter-spacing: -0.01em;
   display: flex;
@@ -201,12 +197,13 @@
   font-size: 22px;
   font-weight: 700;
   color: #1e293b;
-  border: 2px solid rgba(59, 130, 246, 0.3);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 12px;
   padding: 4px 8px;
   background: rgba(255, 255, 255, 0.9);
   outline: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   letter-spacing: -0.01em;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
@@ -223,7 +220,8 @@
   font-size: 14px;
   color: #64748b;
   margin: 0 0 16px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   font-weight: 500;
 }
 
@@ -243,7 +241,7 @@
 .profile-city-input {
   font-size: 14px;
   color: #1e293b;
-  border: 2px solid rgba(59, 130, 246, 0.3);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 12px;
   padding: 4px 8px;
   background: rgba(255, 255, 255, 0.9);
@@ -269,7 +267,8 @@
 .profile-info-row {
   margin: 8px 0;
   font-size: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -294,7 +293,8 @@
   margin: 16px 0;
   font-size: 14px;
   color: #475569;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   font-style: italic;
   line-height: 1.4;
 }
@@ -308,7 +308,8 @@
 .profile-contact-row {
   margin: 8px 0;
   font-size: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
 }
 
 .profile-contact-link {
@@ -333,7 +334,8 @@
   font-weight: 400;
   height: 32px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -371,13 +373,18 @@
   border: none;
   font-size: 14px;
   letter-spacing: -0.01em;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   position: relative;
   overflow: hidden;
 }
 
 .profile-photos-section {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   backdrop-filter: blur(15px);
   border: 1px solid rgba(59, 130, 246, 0.12);
   border-top: none;
@@ -399,7 +406,8 @@
   font-weight: 600;
   color: #1e293b;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -408,8 +416,6 @@
 .photos-icon {
   font-size: 18px;
 }
-
-
 
 .profile-photos-grid {
   display: grid;
@@ -534,14 +540,16 @@
   }
 }
 
-
-
 .no-photos {
   grid-column: 1 / -1;
   text-align: center;
   padding: 60px 20px;
   color: #64748b;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   border: 1px dashed rgba(59, 130, 246, 0.2);
   border-radius: 12px;
   display: flex;
@@ -553,12 +561,17 @@
 .no-photos p {
   font-size: 16px;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   font-weight: 500;
 }
 
 .add-first-photo-btn {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-dark) 100%
+  );
   color: var(--color-text-inverse);
   border: none;
   padding: var(--space-3) var(--space-5);
@@ -578,7 +591,11 @@
 .add-first-photo-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
-  background: linear-gradient(135deg, var(--color-primary-dark) 0%, #1e40af 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-dark) 0%,
+    #1e40af 100%
+  );
 }
 
 .add-first-photo-btn span {
@@ -601,7 +618,11 @@
 }
 
 .photo-upload-content {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   backdrop-filter: blur(15px);
   border-radius: 12px;
   width: 90%;
@@ -617,7 +638,11 @@
   justify-content: space-between;
   padding: 16px 20px;
   border-bottom: 1px solid rgba(59, 130, 246, 0.12);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
 }
 
 .photo-upload-title {
@@ -718,7 +743,11 @@
   position: absolute;
   bottom: 100%;
   right: 0;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   backdrop-filter: blur(15px);
   border: 1px solid rgba(59, 130, 246, 0.12);
   border-radius: 8px;
@@ -760,7 +789,8 @@
   border-radius: 12px;
   font-weight: 500;
   transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -885,7 +915,7 @@
 /* Tablet Large - 768px to 1023px */
 @media (max-width: 1023px) and (min-width: 768px) {
   .page-container.profile-user-profile {
-    padding: 12px 16px 0;
+    padding: 10px 0px;
   }
 
   .profile-profile-container {
@@ -1199,7 +1229,11 @@
 }
 
 .delete-confirmation-content {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.95) 100%
+  );
   backdrop-filter: blur(15px);
   border-radius: 16px;
   padding: 32px;
@@ -1214,7 +1248,8 @@
   font-weight: 600;
   color: #1e293b;
   margin: 0 0 16px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
 }
 
 .delete-confirmation-message {
@@ -1222,7 +1257,8 @@
   color: #64748b;
   margin: 0 0 32px 0;
   line-height: 1.5;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
 }
 
 .delete-confirmation-actions {
@@ -1239,7 +1275,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   border: none;
   letter-spacing: -0.01em;
 }
@@ -1265,8 +1302,6 @@
   box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
   transform: translateY(-1px);
 }
-
-
 
 /* Landscape orientation adjustments */
 @media (max-height: 600px) and (orientation: landscape) {

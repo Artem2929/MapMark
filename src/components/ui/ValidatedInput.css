@@ -6,7 +6,7 @@
 .validated-input {
   width: 100%;
   padding: 8px 12px;
-  border: 2px solid #e0e0e0;
+  border: 1px solid #e0e0e0;
   border-radius: 6px;
   font-size: 14px;
   transition: all 0.2s ease;
@@ -14,12 +14,12 @@
 }
 
 .validated-input:focus {
-  border-color: #2196F3;
+  border-color: #2196f3;
   box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
 }
 
 .validated-input.valid {
-  border-color: #4CAF50;
+  border-color: #4caf50;
   background-color: #f8fff8;
 }
 
@@ -66,7 +66,7 @@
   border-radius: 3px;
 }
 
-.validated-input[type="textarea"] {
+.validated-input[type='textarea'] {
   resize: vertical;
   min-height: 80px;
 }

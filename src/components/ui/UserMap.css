@@ -4,7 +4,7 @@
     rgba(255, 255, 255, 0.95) 0%,
     rgba(248, 250, 252, 0.95) 100%
   );
-  border: 2px solid rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.08);
   border-radius: 12px;
   padding: 24px;
   margin: 20px 0;

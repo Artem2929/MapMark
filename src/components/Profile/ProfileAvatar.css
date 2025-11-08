@@ -5,7 +5,6 @@
   align-items: center;
   gap: var(--space-3);
   width: 100%;
-  max-width: 250px;
   margin: 0 auto;
   cursor: pointer;
   transition: var(--transition-normal);

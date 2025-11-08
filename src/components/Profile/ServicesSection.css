@@ -234,7 +234,7 @@
 .profile-service-modal-body textarea {
   width: 100%;
   padding: 10px 14px;
-  border: 2px solid #e5e7eb;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
   font-size: 14px;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
@@ -320,7 +320,7 @@
   height: 200px;
   object-fit: cover;
   border-radius: 8px;
-  border: 2px solid #e5e7eb;
+  border: 1px solid #e5e7eb;
 }
 
 .photo-remove-btn {
@@ -422,28 +422,28 @@
   .services-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .services-header {
     flex-direction: column;
     gap: 12px;
     align-items: stretch;
   }
-  
+
   .add-service-btn {
     justify-content: center;
   }
-  
+
   .profile-service-modal-content {
     width: 95%;
     margin: 20px;
   }
-  
+
   .profile-service-modal-header,
   .profile-service-modal-body,
   .profile-service-modal-actions {
     padding: 16px;
   }
-  
+
   .photo-upload-zone {
     padding: 24px 12px;
   }
