@@ -58,6 +58,8 @@ const UserProfile = () => {
   const { userId } = useParams();
   const currentUserId = authService.getCurrentUser().id;
   const targetUserId = userId || currentUserId;
+  
+  console.log('UserProfile - params userId:', userId, 'currentUserId:', currentUserId, 'targetUserId:', targetUserId);
 
   if (!currentUserId) {
     return <Navigate to="/login" replace />;

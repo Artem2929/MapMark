@@ -1,7 +1,6 @@
 import React from 'react';
 import { useProfile } from '../../contexts/ProfileContext';
 import ServicesSection from './ServicesSection';
-import PhotosSection from './PhotosSection';
 
 const ProfileContent = () => {
   const { user, services, isOwnProfile, targetUserId, addService } = useProfile();
@@ -15,9 +14,7 @@ const ProfileContent = () => {
       services={services}
       onServiceAdded={addService}
     />
-  ) : (
-    <PhotosSection />
-  );
+  ) : null;
 };
 
 export default ProfileContent;

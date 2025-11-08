@@ -52,6 +52,7 @@ const useUserWall = (userId, currentUserId) => {
         const response = await fetch(url);
         const result = await response.json();
         
+        console.log('Wall API response:', result);
         const wallData = result.success ? result.data : [];
         
         // Cache the result
@@ -59,6 +60,7 @@ const useUserWall = (userId, currentUserId) => {
         
         // Update current component
         if (isMountedRef.current) {
+          console.log('Setting posts:', wallData);
           setPosts(wallData);
           setLoading(false);
         }
@@ -102,7 +104,12 @@ const useUserWall = (userId, currentUserId) => {
   }, [userId, currentUserId, forceRefresh, cacheKey]);
 
   const refreshWall = () => {
-    wallCache.delete(cacheKey);
+    // Clear all related cache entries
+    for (const key of wallCache.keys()) {
+      if (key.startsWith(userId)) {
+        wallCache.delete(key);
+      }
+    }
     setForceRefresh(prev => prev + 1);
   };
 

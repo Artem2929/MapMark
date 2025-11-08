@@ -5,6 +5,7 @@ import './Wall.css';
 
 const Wall = ({ userId, isOwnProfile, user }) => {
   const currentUserId = localStorage.getItem('userId');
+  console.log('Wall component - userId:', userId, 'currentUserId:', currentUserId);
   const { posts, loading: wallLoading, refreshWall, addPost } = useUserWall(userId, currentUserId);
   const [loading, setLoading] = useState(false);
   const [postText, setPostText] = useState('');
@@ -182,9 +183,8 @@ const Wall = ({ userId, isOwnProfile, user }) => {
       
       const result = await wallService.createPost(userId, postData);
       if (result.success) {
-        addPost(result.data);
-        refreshWall();
         handleCancel();
+        refreshWall();
       }
     } catch (error) {
       console.error('Error creating post:', error);
@@ -286,7 +286,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
     <div className="wall-container">
       <div className="wall-header">
         <h3>Стіна</h3>
-        <span className="posts-count">{posts.length} записи</span>
+        <span className="posts-count">{posts.length} записів</span>
       </div>
 
       {isOwnProfile && (

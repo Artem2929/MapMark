@@ -15,7 +15,7 @@ export const ProfileProvider = ({ children, userId }) => {
   const photos = useUserPhotos(userId);
   const following = useUserFollowing(userId);
   const followers = useUserFollowers(userId);
-  const posts = useUserWall(userId, currentUserId);
+  const wallData = useUserWall(userId, currentUserId);
   const { services, addService } = useUserServices(userId);
 
   const value = useMemo(() => ({
@@ -26,13 +26,16 @@ export const ProfileProvider = ({ children, userId }) => {
     addPhoto: photos.addPhoto,
     following,
     followers,
-    posts,
+    posts: wallData.posts || [],
+    wallLoading: wallData.loading,
+    refreshWall: wallData.refreshWall,
+    addPost: wallData.addPost,
     services,
     addService,
     isOwnProfile: userId === currentUserId,
     currentUserId,
     targetUserId: userId
-  }), [profile, photos, following, followers, posts, services, addService, userId, currentUserId]);
+  }), [profile, photos, following, followers, wallData, services, addService, userId, currentUserId]);
 
   return (
     <ProfileContext.Provider value={value}>

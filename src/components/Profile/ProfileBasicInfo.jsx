@@ -4,6 +4,7 @@ import DatePicker from '../ui/DatePicker';
 import { updateProfile } from '../../api/profileEndpoints';
 
 import ProfileStats from './ProfileStats';
+import PhotosSection from './PhotosSection';
 import './ProfileBasicInfo.css';
 
 const ProfileBasicInfo = ({ 
@@ -195,6 +196,7 @@ const ProfileBasicInfo = ({
               followers={followers}
               posts={posts}
             />
+            <PhotosSection />
           </>
         )}
 
