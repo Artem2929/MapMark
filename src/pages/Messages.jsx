@@ -26,62 +26,27 @@ const Messages = () => {
   }, [messages]);
 
   const loadConversations = () => {
-    const mockConversations = [
-      {
-        id: 1,
-        name: 'Олександр Коваленко',
-        avatar: null,
-        lastMessage: 'Привіт! Як справи?',
-        lastMessageTime: '14:30',
-        unreadCount: 2,
-        isOnline: true
-      },
-      {
-        id: 2,
-        name: 'Марина Петренко',
-        avatar: null,
-        lastMessage: 'Дякую за допомогу!',
-        lastMessageTime: '12:15',
-        unreadCount: 0,
-        isOnline: false
-      },
-      {
-        id: 3,
-        name: 'Ірина Мельник',
-        avatar: null,
-        lastMessage: 'До зустрічі завтра',
-        lastMessageTime: 'Вчора',
-        unreadCount: 1,
-        isOnline: true
-      }
-    ];
-    setConversations(mockConversations);
-    if (mockConversations.length > 0) {
-      setActiveChat(mockConversations[0]);
-    }
+    const mockConversation = {
+      id: 1,
+      name: 'Підтримка MapMark',
+      avatar: null,
+      lastMessage: 'Вітаємо в MapMark! Як справи?',
+      lastMessageTime: '14:30',
+      unreadCount: 1,
+      isOnline: true
+    };
+    setConversations([mockConversation]);
+    setActiveChat(mockConversation);
   };
 
   const loadMessages = (chatId) => {
-    const mockMessages = {
-      1: [
-        { id: 1, text: 'Привіт!', sender: 'other', time: '14:25', name: 'Олександр' },
-        { id: 2, text: 'Привіт! Як справи?', sender: 'me', time: '14:26' },
-        { id: 3, text: 'Все добре, дякую! А у тебе?', sender: 'other', time: '14:27', name: 'Олександр' },
-        { id: 4, text: 'Теж все гаразд 😊', sender: 'me', time: '14:28' },
-        { id: 5, text: 'Як справи?', sender: 'other', time: '14:30', name: 'Олександр' }
-      ],
-      2: [
-        { id: 1, text: 'Дякую за допомогу з проектом!', sender: 'other', time: '12:10', name: 'Марина' },
-        { id: 2, text: 'Будь ласка! Завжди радий допомогти', sender: 'me', time: '12:12' },
-        { id: 3, text: 'Дякую за допомогу!', sender: 'other', time: '12:15', name: 'Марина' }
-      ],
-      3: [
-        { id: 1, text: 'Не забудь про зустріч завтра', sender: 'other', time: 'Вчора 18:00', name: 'Ірина' },
-        { id: 2, text: 'Звичайно, буду о 10:00', sender: 'me', time: 'Вчора 18:05' },
-        { id: 3, text: 'До зустрічі завтра', sender: 'other', time: 'Вчора 18:10', name: 'Ірина' }
-      ]
-    };
-    setMessages(mockMessages[chatId] || []);
+    if (chatId === 1) {
+      setMessages([
+        { id: 1, text: 'Вітаємо в MapMark! Як справи?', sender: 'other', time: '14:30', name: 'Підтримка' }
+      ]);
+    } else {
+      setMessages([]);
+    }
   };
 
   const scrollToBottom = () => {
@@ -161,34 +126,40 @@ const Messages = () => {
             </div>
 
             <div className="conversations-list">
-              {filteredConversations.map(conversation => (
-                <div
-                  key={conversation.id}
-                  className={`conversation-item ${activeChat?.id === conversation.id ? 'active' : ''}`}
-                  onClick={() => setActiveChat(conversation)}
-                >
-                  <div className="conversation-avatar">
-                    {conversation.avatar ? (
-                      <img src={conversation.avatar} alt={conversation.name} />
-                    ) : (
-                      <div className="avatar-placeholder">
-                        {conversation.name.charAt(0)}
-                      </div>
-                    )}
-                    {conversation.isOnline && <div className="online-indicator"></div>}
+              {filteredConversations.length > 0 ? (
+                filteredConversations.map(conversation => (
+                  <div
+                    key={conversation.id}
+                    className={`conversation-item ${activeChat?.id === conversation.id ? 'active' : ''}`}
+                    onClick={() => setActiveChat(conversation)}
+                  >
+                    <div className="conversation-avatar">
+                      {conversation.avatar ? (
+                        <img src={conversation.avatar} alt={conversation.name} />
+                      ) : (
+                        <div className="avatar-placeholder">
+                          {conversation.name.charAt(0)}
+                        </div>
+                      )}
+                      {conversation.isOnline && <div className="online-indicator"></div>}
+                    </div>
+                    <div className="conversation-info">
+                      <div className="conversation-name">{conversation.name}</div>
+                      <div className="conversation-last-message">{conversation.lastMessage}</div>
+                    </div>
+                    <div className="conversation-meta">
+                      <div className="conversation-time">{conversation.lastMessageTime}</div>
+                      {conversation.unreadCount > 0 && (
+                        <div className="unread-badge">{conversation.unreadCount}</div>
+                      )}
+                    </div>
                   </div>
-                  <div className="conversation-info">
-                    <div className="conversation-name">{conversation.name}</div>
-                    <div className="conversation-last-message">{conversation.lastMessage}</div>
-                  </div>
-                  <div className="conversation-meta">
-                    <div className="conversation-time">{conversation.lastMessageTime}</div>
-                    {conversation.unreadCount > 0 && (
-                      <div className="unread-badge">{conversation.unreadCount}</div>
-                    )}
-                  </div>
+                ))
+              ) : (
+                <div className="no-conversations">
+                  <p>Поки що немає розмов</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 

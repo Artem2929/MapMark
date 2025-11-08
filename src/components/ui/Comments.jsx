@@ -1,89 +1,14 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import apiClient from '../../utils/apiClient.js';
 import './Comments.css';
 
-const Comments = ({ postId, initialCount = 0 }) => {
+const Comments = ({ postId }) => {
   const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
   const [newComment, setNewComment] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState(null);
-
-
-  const fetchComments = useCallback(async (offset = 0) => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const data = await apiClient.get(`/posts/${postId}/comments`, {
-        offset,
-        limit: 5
-      });
-      
-      if (data.success) {
-        if (offset === 0) {
-          setComments(data.comments);
-        } else {
-          setComments(prev => [...prev, ...data.comments]);
-        }
-        setHasMore(data.hasMore);
-      } else {
-        throw new Error(data.error || 'Помилка завантаження коментарів');
-      }
-    } catch (err) {
-      setError(err.message || 'Помилка мережі');
-    } finally {
-      setLoading(false);
-    }
-  }, [postId]);
-
-  const handleSubmitComment = async (e) => {
-    e.preventDefault();
-    if (!newComment.trim() || submitting) return;
-
-    try {
-      setSubmitting(true);
-      setError(null);
-
-      // Оптимістичне оновлення
-      const tempComment = {
-        _id: `temp-${Date.now()}`,
-        content: newComment.trim(),
-        author: {
-          name: 'Ви',
-          avatar: null
-        },
-        createdAt: new Date().toISOString(),
-        isTemp: true
-      };
-
-      setComments(prev => [tempComment, ...prev]);
-      setNewComment('');
-
-      const data = await apiClient.post(`/posts/${postId}/comments`, {
-        content: newComment.trim()
-      });
-
-      if (data.success) {
-        // Замінюємо тимчасовий коментар на реальний
-        setComments(prev => prev.map(comment => 
-          comment.isTemp ? data.comment : comment
-        ));
-      } else {
-        // Видаляємо тимчасовий коментар при помилці
-        setComments(prev => prev.filter(comment => !comment.isTemp));
-        setError(data.error || 'Помилка додавання коментаря');
-      }
-    } catch (err) {
-      // Видаляємо тимчасовий коментар при помилці
-      setComments(prev => prev.filter(comment => !comment.isTemp));
-      setError('Помилка мережі');
-      console.error('Error submitting comment:', err);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  const [showAllComments, setShowAllComments] = useState(false);
+  const [commentReactions, setCommentReactions] = useState({});
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyText, setReplyText] = useState('');
 
   const getTimeAgo = (timestamp) => {
     const now = new Date();
@@ -93,90 +18,214 @@ const Comments = ({ postId, initialCount = 0 }) => {
     if (diffInMinutes < 1) return 'щойно';
     if (diffInMinutes < 60) return `${diffInMinutes} хв тому`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} год тому`;
-    return `${Math.floor(diffInMinutes / 1440)} дн тому`;
+    if (diffInMinutes < 10080) return `${Math.floor(diffInMinutes / 1440)} дн тому`;
+    return `${Math.floor(diffInMinutes / 10080)} тиж тому`;
   };
 
+  useEffect(() => {
+    fetchComments();
+  }, [postId]);
 
+  const fetchComments = async () => {
+    try {
+      const data = await apiClient.get(`/posts/${postId}/comments`);
+      if (data.success) {
+        setComments(data.comments || []);
+      }
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
+
+    try {
+      const data = await apiClient.post(`/posts/${postId}/comments`, {
+        content: newComment.trim()
+      });
+      
+      if (data.success) {
+        setComments(prev => [data.comment, ...prev]);
+        setNewComment('');
+      }
+    } catch (error) {
+      console.error('Error posting comment:', error);
+    }
+  };
+
+  const handleCommentReaction = async (commentId, reactionType) => {
+    const currentReaction = commentReactions[commentId];
+    const newReaction = currentReaction === reactionType ? null : reactionType;
+    
+    // Оптимістичне оновлення
+    setCommentReactions(prev => ({
+      ...prev,
+      [commentId]: newReaction
+    }));
+
+    setComments(prev => prev.map(comment => {
+      if (comment._id === commentId) {
+        const updatedComment = { ...comment };
+        
+        // Видаляємо попередню реакцію
+        if (currentReaction === 'like') {
+          updatedComment.likes = Math.max(0, (updatedComment.likes || 0) - 1);
+        } else if (currentReaction === 'dislike') {
+          updatedComment.dislikes = Math.max(0, (updatedComment.dislikes || 0) - 1);
+        }
+        
+        // Додаємо нову реакцію
+        if (newReaction === 'like') {
+          updatedComment.likes = (updatedComment.likes || 0) + 1;
+        } else if (newReaction === 'dislike') {
+          updatedComment.dislikes = (updatedComment.dislikes || 0) + 1;
+        }
+        
+        return updatedComment;
+      }
+      return comment;
+    }));
+
+    try {
+      await apiClient.post(`/posts/${postId}/comments/${commentId}/reactions`, {
+        type: newReaction
+      });
+    } catch (error) {
+      console.error('Error updating comment reaction:', error);
+      // Відкат при помилці
+      setCommentReactions(prev => ({
+        ...prev,
+        [commentId]: currentReaction
+      }));
+    }
+  };
+
+  const handleReplySubmit = async (commentId) => {
+    if (!replyText.trim()) return;
+
+    try {
+      const data = await apiClient.post(`/posts/${postId}/comments/${commentId}/replies`, {
+        content: replyText.trim()
+      });
+      
+      if (data.success) {
+        // Оновлюємо коментар з новою відповіддю
+        setComments(prev => prev.map(comment => 
+          comment._id === commentId 
+            ? { ...comment, replies: [...(comment.replies || []), data.reply] }
+            : comment
+        ));
+        setReplyText('');
+        setReplyingTo(null);
+      }
+    } catch (error) {
+      console.error('Error posting reply:', error);
+    }
+  };
+
+  const displayedComments = showAllComments ? comments : comments.slice(0, 2);
+  const hasMoreComments = comments.length > 2;
+
+  // Закриваємо форму відповіді при кліку поза нею
+  const handleClickOutside = (e) => {
+    if (!e.target.closest('.reply-form') && !e.target.closest('.comment-reply-btn')) {
+      setReplyingTo(null);
+      setReplyText('');
+    }
+  };
+
+  React.useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   return (
     <div className="comments-section">
-      <div className="comments-container">
-          {/* Форма додавання коментаря */}
-          <form onSubmit={handleSubmitComment} className="comment-form">
-            <div className="comment-input-container">
-              <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Напишіть коментар..."
-                className="comment-input"
-                maxLength={500}
-                rows={2}
-              />
-              <div className="comment-form-actions">
-                <span className="char-count">{newComment.length}/500</span>
+      {/* Показати всі коментарі */}
+      {hasMoreComments && !showAllComments && (
+        <button 
+          className="view-all-comments"
+          onClick={() => setShowAllComments(true)}
+        >
+          Переглянути всі коментарі ({comments.length})
+        </button>
+      )}
+
+      {/* Список коментарів */}
+      <div className="comments-list">
+        {displayedComments.map((comment) => (
+          <div key={comment._id} className="comment-item">
+            <div className="comment-avatar">
+              {comment.author.avatar ? (
+                <img src={`http://localhost:3001${comment.author.avatar}`} alt={comment.author.name} />
+              ) : (
+                <div className="comment-avatar-placeholder">
+                  {comment.author.name.charAt(0).toUpperCase()}
+                </div>
+              )}
+            </div>
+            <div className="comment-content">
+              <div className="comment-main">
+                <span className="comment-author">{comment.author.name}</span>
+                <span className="comment-text">{comment.content}</span>
+              </div>
+              <div className="comment-actions">
+                <span className="comment-time">{getTimeAgo(comment.createdAt)}</span>
+                <div className="comment-reaction-buttons">
+                  <button 
+                    className={`comment-action-btn like-btn ${commentReactions[comment._id] === 'like' ? 'active' : ''}`}
+                    onClick={() => handleCommentReaction(comment._id, 'like')}
+                  >
+                    <span className="comment-icon">👍</span>
+                    <span className="comment-count">{comment.likes || 0}</span>
+                  </button>
+                  <button 
+                    className={`comment-action-btn dislike-btn ${commentReactions[comment._id] === 'dislike' ? 'active' : ''}`}
+                    onClick={() => handleCommentReaction(comment._id, 'dislike')}
+                  >
+                    <span className="comment-icon">👎</span>
+                    <span className="comment-count">{comment.dislikes || 0}</span>
+                  </button>
+                </div>
                 <button 
-                  type="submit" 
-                  className="comment-submit-btn"
-                  disabled={!newComment.trim() || submitting}
+                  className="comment-reply-btn"
+                  onClick={() => setReplyingTo(replyingTo === comment._id ? null : comment._id)}
                 >
-                  {submitting ? 'Відправка...' : 'Відправити'}
+                  Відповісти
                 </button>
               </div>
             </div>
-          </form>
 
-          {error && (
-            <div className="comments-error">
-              {error}
-            </div>
-          )}
-
-          {/* Список коментарів */}
-          <div className="comments-list">
-            {comments.map((comment) => (
-              <div key={comment._id} className={`comment-item ${comment.isTemp ? 'temp' : ''}`}>
-                <div className="comment-avatar">
-                  {comment.author.avatar ? (
-                    <img src={comment.author.avatar} alt={comment.author.name} />
-                  ) : (
-                    <div className="comment-avatar-placeholder">
-                      {comment.author.name.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </div>
-                <div className="comment-content">
-                  <div className="comment-header">
-                    <span className="comment-author">{comment.author.name}</span>
-                    <span className="comment-time">{getTimeAgo(comment.createdAt)}</span>
-                  </div>
-                  <div className="comment-text">{comment.content}</div>
-                </div>
-              </div>
-            ))}
-
-            {loading && (
-              <div className="comments-loading">
-                <div className="spinner"></div>
-                <span>Завантаження коментарів...</span>
-              </div>
-            )}
-
-            {hasMore && !loading && (
-              <button 
-                className="load-more-comments"
-                onClick={() => fetchComments(comments.length)}
-              >
-                Завантажити ще
-              </button>
-            )}
-
-            {comments.length === 0 && !loading && (
-              <div className="no-comments">
-                Поки що немає коментарів. Будьте першим!
-              </div>
-            )}
           </div>
-        </div>
+        ))}
+      </div>
+
+      {/* Форма додавання коментаря */}
+      <form onSubmit={replyingTo ? (e) => { e.preventDefault(); handleReplySubmit(replyingTo); } : handleSubmit} className="add-comment">
+        <input
+          type="text"
+          value={replyingTo ? replyText : newComment}
+          onChange={(e) => replyingTo ? setReplyText(e.target.value) : setNewComment(e.target.value)}
+          placeholder={replyingTo ? `Відповісти ${comments.find(c => c._id === replyingTo)?.author.name}...` : "Додати коментар..."}
+          className="comment-input"
+        />
+        {(replyingTo ? replyText.trim() : newComment.trim()) && (
+          <button type="submit" className="post-btn">
+            {replyingTo ? "Відповісти" : "Опублікувати"}
+          </button>
+        )}
+        {replyingTo && (
+          <button 
+            type="button" 
+            onClick={() => { setReplyingTo(null); setReplyText(''); }}
+            className="cancel-reply-btn"
+          >
+            Скасувати
+          </button>
+        )}
+      </form>
     </div>
   );
 };

@@ -308,6 +308,53 @@ router.post('/:postId/comments', authenticateToken, commentRateLimit, validateIn
   }
 });
 
+// POST /api/posts/:postId/comments/:commentId/reactions - Додати/змінити реакцію на коментар
+router.post('/:postId/comments/:commentId/reactions', optionalAuth, reactionRateLimit, async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+    const { type } = req.body;
+    const userId = req.user?._id || new require('mongoose').Types.ObjectId('507f1f77bcf86cd799439011');
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ success: false, error: 'Пост не знайдено' });
+    }
+
+    const comment = post.comments.id(commentId);
+    if (!comment) {
+      return res.status(404).json({ success: false, error: 'Коментар не знайдено' });
+    }
+
+    // Ініціалізуємо reactions якщо їх немає
+    if (!comment.reactions) {
+      comment.reactions = [];
+    }
+
+    // Видалити попередню реакцію користувача
+    comment.reactions = comment.reactions.filter(r => r.userId.toString() !== userId.toString());
+
+    // Додати нову реакцію якщо type не null
+    if (type && ['like', 'dislike'].includes(type)) {
+      comment.reactions.push({ userId, type });
+    }
+
+    await post.save();
+    
+    // Підрахунок лайків та дизлайків
+    const likes = comment.reactions.filter(r => r.type === 'like').length;
+    const dislikes = comment.reactions.filter(r => r.type === 'dislike').length;
+    const userReaction = comment.reactions.find(r => r.userId.toString() === userId.toString())?.type || null;
+    
+    res.json({ 
+      success: true, 
+      stats: { likes, dislikes },
+      userReaction
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+});
+
 // POST /api/posts/:postId/comments/:commentId/replies - Додати відповідь
 router.post('/:postId/comments/:commentId/replies', async (req, res) => {
   try {

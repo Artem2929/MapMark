@@ -24,6 +24,7 @@ const commentSchema = new mongoose.Schema({
     required: true,
     maxlength: 1000
   },
+  reactions: [reactionSchema],
   replies: [{
     author: {
       type: mongoose.Schema.Types.ObjectId,

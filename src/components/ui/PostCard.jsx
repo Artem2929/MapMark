@@ -126,12 +126,22 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
         <Link to={`/profile/${post.author.id}`} className="post-card__author">
           <div className="post-card__avatar">
             {post.author.avatar ? (
-              <img src={post.author.avatar} alt={post.author.name} />
-            ) : (
-              <div className="post-card__avatar-placeholder">
-                {post.author.name.charAt(0).toUpperCase()}
-              </div>
-            )}
+              <img 
+                src={`http://localhost:3001${post.author.avatar}`} 
+                alt={post.author.name} 
+                onError={(e) => {
+                  console.log('Avatar failed to load:', post.author.avatar);
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+            ) : null}
+            <div 
+              className="post-card__avatar-placeholder"
+              style={{ display: post.author.avatar ? 'none' : 'flex' }}
+            >
+              {post.author.name.charAt(0).toUpperCase()}
+            </div>
           </div>
           <div className="post-card__author-info">
             <span className="post-card__author-name">{post.author.name}</span>
@@ -186,7 +196,7 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
             className="post-card__action-btn share-btn"
             onClick={handleShare}
           >
-            <span className="post-card__icon">↗️</span>
+            <span className="post-card__icon">📤</span>
           </button>
         </div>
         <button 
@@ -195,7 +205,7 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
           disabled={isSaving}
           title={isSaved ? 'Видалити зі збережених' : 'Зберегти пост'}
         >
-          <span className="post-card__save-icon">{isSaved ? '🔖' : '🔖'}</span>
+          <span className="post-card__save-icon">{isSaved ? '★' : '☆'}</span>
         </button>
       </div>
 

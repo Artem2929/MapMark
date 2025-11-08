@@ -599,19 +599,7 @@
   border-top: 1px solid #e9ecef;
 }
 
-.comment-input {
-  width: 100%;
-  min-height: 80px;
-  padding: 12px;
-  border: 1px solid #dee2e6;
-  border-radius: 12px;
-  font-family: inherit;
-  font-size: 14px;
-  resize: vertical;
-  background: white;
-  margin-bottom: 8px;
-  box-sizing: border-box;
-}
+/* Comment input styles consolidated in comment-input-optimized.css */
 
 .comment-input:focus {
   outline: none;
@@ -647,23 +635,9 @@
   cursor: not-allowed;
 }
 
-.comments-list {
-  padding: 16px 20px;
-  border-top: 1px solid #e9ecef;
-}
 
-.comment-item {
-  background: white;
-  padding: 12px;
-  border-radius: 12px;
-  margin-bottom: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
 
-.comment-item:last-child {
-  margin-bottom: 0;
-}
+
 
 .comment-header {
   display: flex;
@@ -779,20 +753,7 @@
 }
 
 .post-bookmark-btn {
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 12px;
   font-size: 16px;
-  color: #1d1d1f;
-  font-weight: 400;
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.8);
-}
-
-.post-bookmark-btn:hover {
-  background: rgba(248, 249, 250, 0.95);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .post-bookmark-btn.saved {
@@ -968,7 +929,7 @@
   }
 
   .discover-container {
-    padding: 0 16px;
+    padding: 0 8px;
   }
 
   .places-feed {

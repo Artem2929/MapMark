@@ -46,13 +46,15 @@ const Comment = ({ comment, postId, onReply, canReply }) => {
         </div>
         
         <div className="comment-content">
-          <div className="comment-bubble">
-            <div className="comment-author">{comment.author?.name || 'Невідомий користувач'}</div>
-            <div className="comment-text">{comment.content}</div>
+          <div className="comment-header">
+            <div className="comment-bubble">
+              <div className="comment-author">{comment.author?.name || 'Невідомий користувач'}</div>
+              <div className="comment-text">{comment.content}</div>
+            </div>
+            <span className="comment-time">{formatDate(comment.date)}</span>
           </div>
           
           <div className="comment-actions">
-            <span className="comment-date">{formatDate(comment.date)}</span>
             {canReply && (
               <button
                 onClick={toggleReplyForm}

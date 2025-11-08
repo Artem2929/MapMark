@@ -663,9 +663,7 @@
   border-color: #2563eb;
 }
 
-.comments-section {
-  margin-top: 16px;
-}
+/* Comments section styles moved to Comments.css */
 
 .comments-section h5 {
   margin: 0 0 12px 0;
@@ -681,17 +679,9 @@
   padding: 12px;
 }
 
-.comments-list {
-  max-height: 200px;
-  overflow-y: auto;
-}
 
-.comment-item {
-  padding: 8px 12px;
-  background: #f9fafb;
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
+
+
 
 .comment-text {
   font-size: 13px;

@@ -685,18 +685,9 @@
 
 /* Removed duplicate .post-actions - using PostActions.css instead */
 
-.comments-section {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(59, 130, 246, 0.1);
-}
+/* Comments section styles moved to Comments.css */
 
-.comments-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 16px;
-}
+
 
 .comment {
   display: flex;
@@ -784,14 +775,7 @@
   align-items: center;
 }
 
-.comment-input {
-  flex: 1;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 14px;
-  color: #1e293b;
-}
+/* Comment input styles consolidated in comment-input-optimized.css */
 
 .comment-input::placeholder {
   color: #94a3b8;

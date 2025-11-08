@@ -566,6 +566,7 @@ body:has(.reviews-list.visible) .notification-item {
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid rgba(226, 232, 240, 0.4);
+  /* Specific styles for reviews context */
 }
 
 .reviews-list .comments-list {

@@ -162,9 +162,11 @@
 }
 
 /* Input Component */
-.input {
-  width: 100%;
-  padding: var(--space-3) var(--space-4);
+.input,
+.custom-select-trigger,
+textarea.input {
+  width: 86%;
+  padding: 8px 12px;
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
@@ -173,7 +175,7 @@
   color: var(--color-text-primary);
   transition: var(--transition-normal);
   outline: none;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 .input:focus {
@@ -193,6 +195,19 @@
 .input--error:focus {
   border-color: var(--color-danger);
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Date Picker Component */
+.date-picker__selects {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.date-picker__selects .custom-select-trigger {
+  width: 86%;
+  margin-bottom: 0;
 }
 
 /* Badge Component */
@@ -331,4 +346,84 @@
 
 .h-full {
   height: 100%;
+}
+
+/* Avatar Component - Large Desktop Profile Avatar */
+.profile-avatar-large {
+  position: relative;
+  width: 280px;
+  height: 350px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--color-bg-muted);
+  border: 2px solid var(--color-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-online-indicator {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.profile-online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #44c22b;
+}
+
+.profile-online-text {
+  color: #333;
+  font-weight: 500;
+}
+
+.profile-avatar-upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profile-avatar-large:hover .profile-avatar-upload-overlay {
+  opacity: 1;
+}
+
+.profile-avatar-upload-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.profile-avatar-upload-text {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
 }

@@ -41,6 +41,10 @@
   border-radius: 12px;
   font-weight: 500;
   transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .profile-basic-info__edit-btn:hover {
@@ -59,33 +63,34 @@
 .profile-field {
   display: flex;
   align-items: center;
+  padding: 8px 16px;
+  border-radius: 8px;
   transition: background-color 0.15s ease;
 }
 
 .profile-field:hover {
-  background: rgba(59, 130, 246, 0.03);
+  background: rgba(59, 130, 246, 0.05);
 }
 
 .profile-field:last-child {
-  border-bottom: none;
+  margin-bottom: 0;
 }
 
 .profile-field__label {
   color: #64748b;
   font-size: 14px;
-  font-weight: 500;
-  min-width: 150px;
-  width: 150px;
+  font-weight: 600;
+  min-width: 140px;
+  width: 140px;
   flex-shrink: 0;
   padding-right: 16px;
   line-height: 1.4;
-  white-space: nowrap;
 }
 
 .profile-field__value {
   color: #1e293b;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   flex: 1;
   line-height: 1.4;
 }
@@ -106,47 +111,47 @@
 .profile-basic-info__actions .btn {
   flex: 0 0 auto;
   width: 30%;
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-  font-size: 12px;
+  background: rgba(var(--color-primary-rgb), 0.1);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.2);
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition-normal);
+  font-family: var(--font-family-sans);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--space-2);
 }
 
 .profile-basic-info__actions .btn:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(var(--color-primary-rgb), 0.15);
+  border-color: rgba(var(--color-primary-rgb), 0.3);
 }
 
 .profile-basic-info__actions .btn--secondary {
-  background: rgba(220, 38, 38, 0.1);
-  border: 1px solid rgba(220, 38, 38, 0.2);
-  color: #dc2626;
+  background: rgba(var(--color-danger-rgb), 0.1);
+  border: 1px solid rgba(var(--color-danger-rgb), 0.2);
+  color: var(--color-danger);
 }
 
 .profile-basic-info__actions .btn--secondary:hover {
-  background: rgba(220, 38, 38, 0.15);
-  border-color: rgba(220, 38, 38, 0.3);
+  background: rgba(var(--color-danger-rgb), 0.15);
+  border-color: rgba(var(--color-danger-rgb), 0.3);
 }
 
 .profile-basic-info__actions .btn--primary {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
+  background: rgba(var(--color-primary-rgb), 0.1);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.2);
+  color: var(--color-primary);
 }
 
 .profile-basic-info__actions .btn--primary:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(var(--color-primary-rgb), 0.15);
+  border-color: rgba(var(--color-primary-rgb), 0.3);
 }
 
 /* Адаптивність */
@@ -158,6 +163,19 @@
 
   .profile-basic-info__header {
     padding: 12px 16px;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .profile-basic-info__title {
+    width: 100%;
+  }
+
+  .profile-basic-info__edit-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .profile-field {
