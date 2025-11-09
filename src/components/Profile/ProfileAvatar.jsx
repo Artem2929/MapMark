@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { updateAvatar } from '../../api/profileEndpoints';
+import useOnlineStatus from '../../hooks/useOnlineStatus';
+import OnlineIndicator from '../ui/OnlineIndicator';
 import './ProfileAvatar.css';
 
 const ProfileAvatar = ({ 
@@ -9,6 +11,7 @@ const ProfileAvatar = ({
   onAvatarChange,
   onPhotoCountChange
 }) => {
+  const { isOnline } = useOnlineStatus(user?.id);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -176,12 +179,7 @@ const ProfileAvatar = ({
         )}
 
         {/* Онлайн індикатор */}
-        <div className="profile-online-indicator">
-          <div className={`profile-online-dot ${user?.isOnline ? 'online' : 'offline'}`}></div>
-          <span className="profile-online-text">
-            {user?.isOnline ? 'Онлайн' : 'Офлайн'}
-          </span>
-        </div>
+        <OnlineIndicator userId={user?.id} size="md" />
 
         {/* Оверлей для зміни фото */}
         {isOwnProfile && (

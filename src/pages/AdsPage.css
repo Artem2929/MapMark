@@ -246,7 +246,6 @@
 .filter-select option:disabled {
   background: #f1f5f9;
   color: #94a3b8;
-  cursor: not-allowed;
 }
 
 .clear-filters-btn {
@@ -704,7 +703,6 @@
 
 .page-btn:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .page-numbers {

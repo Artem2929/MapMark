@@ -1,13 +1,20 @@
 import React, { useState, useRef } from 'react';
 import { useProfile } from '../../contexts/ProfileContext';
 import { usePhotoUpload } from '../../hooks/usePhotoUpload';
+import PhotoTagger from '../ui/PhotoTagger';
+import HashtagInput from '../ui/HashtagInput';
+import LocationPicker from '../ui/LocationPicker';
 import Toast from '../ui/Toast';
+import './PhotoUploadModal.css';
 
 const PhotoUploadModal = ({ onClose }) => {
   const { targetUserId, refreshPhotos, addPhoto } = useProfile();
   const { uploadPhoto, uploading } = usePhotoUpload();
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [description, setDescription] = useState('');
+  const [photoTags, setPhotoTags] = useState([]);
+  const [hashtags, setHashtags] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const [toast, setToast] = useState(null);
   const fileInputRef = useRef(null);
 
@@ -29,7 +36,13 @@ const PhotoUploadModal = ({ onClose }) => {
     if (!selectedPhoto) return;
 
     try {
-      const newPhoto = await uploadPhoto(selectedPhoto.file, description, targetUserId);
+      const photoData = {
+        description,
+        tags: photoTags,
+        hashtags,
+        location: selectedLocation
+      };
+      const newPhoto = await uploadPhoto(selectedPhoto.file, photoData, targetUserId);
       if (addPhoto) {
         addPhoto(newPhoto);
       }
@@ -75,10 +88,22 @@ const PhotoUploadModal = ({ onClose }) => {
           ) : (
             <>
               <img src={selectedPhoto.preview} alt="Попередній перегляд" className="photo-preview" />
+              
               <textarea
                 placeholder="Напишіть опис..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+              />
+              
+              <HashtagInput 
+                value={hashtags}
+                onChange={setHashtags}
+                placeholder="Хештеги... #nature #photography"
+              />
+              
+              <LocationPicker 
+                onLocationSelect={setSelectedLocation}
+                selectedLocation={selectedLocation}
               />
             </>
           )}

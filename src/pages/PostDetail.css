@@ -212,7 +212,6 @@
 
 .post-detail-action-btn:disabled {
   opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .action-icon {

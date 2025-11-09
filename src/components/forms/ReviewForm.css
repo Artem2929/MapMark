@@ -800,7 +800,7 @@ body:has(.review-form-overlay) .filter-header {
 
 .review-form-publish-btn:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
+
   transform: none;
   box-shadow: none;
 }

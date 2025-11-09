@@ -1,6 +1,7 @@
 import './App.css'
 import './styles/global.css'
 import './styles/micro-interactions.css'
+import './styles/tagging.css'
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'

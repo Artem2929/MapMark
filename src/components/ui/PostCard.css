@@ -197,7 +197,6 @@
 
 .post-card__action-btn:disabled {
   opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .post-card__save-btn {
@@ -228,7 +227,6 @@
 
 .post-card__save-btn:disabled {
   opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .post-card__save-icon {

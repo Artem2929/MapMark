@@ -305,7 +305,7 @@
   color: #9ca3af;
 }
 
-.photo-preview {
+.services-section .photo-preview {
   position: relative;
   display: block;
   border-radius: 8px;
@@ -315,7 +315,7 @@
   margin: 0 auto;
 }
 
-.photo-preview img {
+.services-section .photo-preview img {
   width: 100%;
   height: 200px;
   object-fit: cover;
@@ -393,7 +393,6 @@
 
 .profile-service-modal-actions button:disabled {
   opacity: 0.6;
-  cursor: not-allowed;
 }
 
 /* Animations */

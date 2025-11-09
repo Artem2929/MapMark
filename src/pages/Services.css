@@ -363,7 +363,6 @@
 
 .service-modal-btn.disabled {
   opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .char-counter {
@@ -613,7 +612,6 @@
 
 .comment-btn-submit:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .preview-actions {

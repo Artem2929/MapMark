@@ -1,15 +1,19 @@
 import React, { useState, useRef } from 'react';
 import { wallService } from '../../services/wallService';
 import useUserWall from '../../hooks/useUserWall';
+import useOnlineStatus from '../../hooks/useOnlineStatus';
 import EmptyState from './EmptyState';
 import ProfileBadge from './ProfileBadge';
 import ActivityIndicator from './ActivityIndicator';
+import HashtagInput from './HashtagInput';
+import LocationPicker from './LocationPicker';
 import './Wall.css';
 
 const Wall = ({ userId, isOwnProfile, user }) => {
   const currentUserId = localStorage.getItem('userId');
   console.log('Wall component - userId:', userId, 'currentUserId:', currentUserId);
   const { posts, loading: wallLoading, refreshWall, addPost } = useUserWall(userId, currentUserId);
+  const { isOnline } = useOnlineStatus(userId);
   const [loading, setLoading] = useState(false);
   const [postText, setPostText] = useState('');
   const [selectedPhotos, setSelectedPhotos] = useState([]);
@@ -23,6 +27,8 @@ const Wall = ({ userId, isOwnProfile, user }) => {
   const [showPostMenu, setShowPostMenu] = useState(null);
   const [showComments, setShowComments] = useState({});
   const [commentText, setCommentText] = useState({});
+  const [hashtags, setHashtags] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const textareaRef = useRef(null);
   
   const mockUsers = [
@@ -170,6 +176,8 @@ const Wall = ({ userId, isOwnProfile, user }) => {
     setPostText('');
     setSelectedPhotos([]);
     setSelectedFiles([]);
+    setHashtags('');
+    setSelectedLocation(null);
   };
 
   const handlePublish = async (e) => {
@@ -181,7 +189,9 @@ const Wall = ({ userId, isOwnProfile, user }) => {
       const postData = {
         content: postText,
         images: selectedPhotos,
-        files: selectedFiles
+        files: selectedFiles,
+        hashtags: hashtags,
+        location: selectedLocation
       };
       
       const result = await wallService.createPost(userId, postData);
@@ -236,11 +246,9 @@ const Wall = ({ userId, isOwnProfile, user }) => {
         refreshWall();
       } else {
         console.error('Failed to update post:', result.error);
-        alert('Помилка при оновленні поста');
       }
     } catch (error) {
       console.error('Error updating post:', error);
-      alert('Помилка при оновленні поста');
     }
   };
   
@@ -378,6 +386,11 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                 >
                   😊
                 </button>
+                
+                <LocationPicker 
+                  onLocationSelect={setSelectedLocation}
+                  selectedLocation={selectedLocation}
+                />
               </div>
               <div className="creator-buttons">
                 <button 
@@ -484,11 +497,25 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                 ))}
               </div>
             )}
+            
+            <HashtagInput 
+              value={hashtags}
+              onChange={setHashtags}
+              placeholder="Додати хештеги... #travel #ukraine"
+            />
 
             {selectedPhotos.length > 0 && (
               <div className="photo-preview">
                 {selectedPhotos.map((photo, index) => (
-                  <img key={index} src={photo} alt={`Preview ${index + 1}`} />
+                  <img 
+                    key={index} 
+                    src={photo} 
+                    alt={`Preview ${index + 1}`}
+                    onError={(e) => {
+                      console.error('Preview image error:', photo);
+                      e.target.style.display = 'none';
+                    }}
+                  />
                 ))}
               </div>
             )}
@@ -595,12 +622,33 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                     className="edit-textarea"
                   />
                   <div className="edit-buttons">
-                    <button onClick={() => handleSaveEdit(post.id)} className="save-btn">Зберегти</button>
+                    <button 
+                      onClick={() => handleSaveEdit(post.id)} 
+                      className="save-btn"
+                      disabled={!editText.trim()}
+                    >
+                      Зберегти
+                    </button>
                     <button onClick={handleCancelEdit} className="cancel-edit-btn">Скасувати</button>
                   </div>
                 </div>
               ) : (
-                <p dangerouslySetInnerHTML={{ __html: renderPostContent(post.content) }}></p>
+                <>
+                  <p dangerouslySetInnerHTML={{ __html: renderPostContent(post.content) }}></p>
+                  {console.log('Post data:', post)}
+                  {post.hashtags && post.hashtags.trim() && (
+                    <div className="post-hashtags">
+                      {post.hashtags.split(' ').filter(tag => tag.trim()).map((tag, index) => (
+                        <span key={index} className="hashtag">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                  {post.location && post.location.name && (
+                    <div className="post-location">
+                      📍 {post.location.name}
+                    </div>
+                  )}
+                </>
               )}
               {post.images && post.images.length > 0 && (
                 <div className={`post-photos ${
@@ -608,7 +656,15 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                   post.images.length === 2 ? 'double' : 'triple'
                 }`}>
                   {post.images.map((image, index) => (
-                    <img key={index} src={image} alt={`Фото ${index + 1}`} />
+                    <img 
+                      key={index} 
+                      src={image.startsWith('http') || image.startsWith('data:') ? image : `http://localhost:3001${image}`} 
+                      alt={`Фото ${index + 1}`} 
+                      onError={(e) => {
+                        console.error('Image load error:', image);
+                        e.target.style.display = 'none';
+                      }}
+                    />
                   ))}
                 </div>
               )}

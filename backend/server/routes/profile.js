@@ -155,7 +155,7 @@ router.get('/:userId/wall', async (req, res) => {
 router.post('/:userId/wall', async (req, res) => {
   try {
     const { userId } = req.params;
-    const { content, images, files } = req.body;
+    const { content, images, files, hashtags, location } = req.body;
     
     const user = await User.findById(userId);
     if (!user) {
@@ -170,7 +170,9 @@ router.post('/:userId/wall', async (req, res) => {
       userId,
       content,
       images: images || [],
-      files: files || []
+      files: files || [],
+      hashtags: hashtags || '',
+      location: location || null
     });
     
     await newPost.save();

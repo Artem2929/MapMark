@@ -10,6 +10,8 @@ const PhotosSection = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [photoToDelete, setPhotoToDelete] = useState(null);
+  
+  console.log('PhotosSection - isOwnProfile:', isOwnProfile, 'photos.length:', photos.length);
 
   const handleDeletePhoto = (photoId) => {
     setPhotoToDelete(photoId);
@@ -111,21 +113,7 @@ const PhotosSection = () => {
               </div>
             </div>
           ))
-        ) : (
-          <EmptyState
-            icon="📷"
-            title="Немає фото"
-            description={isOwnProfile ? "Додайте своє перше фото!" : "Тут з'являться фото користувача"}
-            action={isOwnProfile ? (
-              <button 
-                className="empty-action-btn"
-                onClick={() => setShowModal(true)}
-              >
-                Додати фото
-              </button>
-            ) : null}
-          />
-        )}
+        ) : null}
       </div>
 
       {showModal && (

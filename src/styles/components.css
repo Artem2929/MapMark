@@ -27,7 +27,7 @@
 
 .btn:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
+
   pointer-events: none;
 }
 
@@ -185,7 +185,6 @@ textarea.input {
 .input:disabled {
   background: var(--color-bg-muted);
   color: var(--color-text-muted);
-  cursor: not-allowed;
 }
 
 .input--error {

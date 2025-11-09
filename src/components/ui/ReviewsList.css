@@ -666,7 +666,6 @@ body:has(.reviews-list.visible) .notification-item {
 
 .reviews-list .add-comment button:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
 }
 
 /* Empty State */

@@ -5,11 +5,13 @@ import ProfileBasicInfo from './ProfileBasicInfo';
 import FollowButton from './FollowButton';
 import ProfileBadge from '../ui/ProfileBadge';
 import ActivityIndicator from '../ui/ActivityIndicator';
+import useOnlineStatus from '../../hooks/useOnlineStatus';
 import { useProfileActions } from '../../hooks/useProfileActions';
 
 const ProfileHeader = () => {
   const { user, isOwnProfile, currentUserId, targetUserId, photos, following, followers, posts } = useProfile();
   const { updateAvatar } = useProfileActions();
+  const { isOnline, lastSeen } = useOnlineStatus(targetUserId);
 
   const handleAvatarChange = async (formData) => {
     try {
@@ -44,8 +46,8 @@ const ProfileHeader = () => {
               {user.premium && <ProfileBadge type="premium" size="md" />}
             </h1>
             <ActivityIndicator 
-              status={user.isOnline ? 'online' : 'offline'} 
-              lastSeen={user.lastSeen}
+              status={isOnline ? 'online' : 'offline'} 
+              lastSeen={lastSeen || user.lastSeen}
             />
           </div>
           <ProfileBasicInfo 

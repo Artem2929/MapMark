@@ -15,6 +15,12 @@ const wallPostSchema = new mongoose.Schema({
   content: { type: String, required: true },
   images: [String],
   files: [String],
+  hashtags: { type: String },
+  location: {
+    name: String,
+    lat: Number,
+    lng: Number
+  },
   likes: { type: Number, default: 0 },
   dislikes: { type: Number, default: 0 },
   likedBy: [String],

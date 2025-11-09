@@ -565,7 +565,6 @@
   background: rgba(156, 163, 175, 0.1);
   border: 1px solid rgba(156, 163, 175, 0.2);
   color: #9ca3af;
-  cursor: not-allowed;
 }
 
 .upload-modal-btn.submit:disabled:hover {

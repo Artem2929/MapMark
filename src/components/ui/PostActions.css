@@ -110,7 +110,6 @@
 
 .post-submit-btn:disabled {
   background: #6c757d;
-  cursor: not-allowed;
 }
 
 .post-comments-list {
