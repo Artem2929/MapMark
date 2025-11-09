@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProfile } from '../../contexts/ProfileContext';
 import PhotoUploadModal from './PhotoUploadModal';
+import EmptyState from '../ui/EmptyState';
 
 const PhotosSection = () => {
   const navigate = useNavigate();
@@ -111,17 +112,19 @@ const PhotosSection = () => {
             </div>
           ))
         ) : (
-          <div className="no-photos">
-            <p>Немає фото</p>
-            {isOwnProfile && (
+          <EmptyState
+            icon="📷"
+            title="Немає фото"
+            description={isOwnProfile ? "Додайте своє перше фото!" : "Тут з'являться фото користувача"}
+            action={isOwnProfile ? (
               <button 
-                className="add-first-photo-btn"
+                className="empty-action-btn"
                 onClick={() => setShowModal(true)}
               >
-                <span>+</span> Додати перше фото
+                Додати фото
               </button>
-            )}
-          </div>
+            ) : null}
+          />
         )}
       </div>
 

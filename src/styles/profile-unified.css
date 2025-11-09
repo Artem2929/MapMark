@@ -50,34 +50,83 @@
   border-color: var(--color-border-dark);
 }
 
-/* Common spacing utilities */
+/* Enhanced Spacing System */
 .profile-section {
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-8);
 }
 
 .profile-section:last-child {
   margin-bottom: 0;
 }
 
-/* Common text styles */
+.profile-section--compact {
+  margin-bottom: var(--space-4);
+}
+
+.profile-section--spacious {
+  margin-bottom: var(--space-12);
+}
+
+/* Consistent padding classes */
+.profile-padding {
+  padding: var(--space-4);
+}
+
+.profile-padding--sm {
+  padding: var(--space-2);
+}
+
+.profile-padding--lg {
+  padding: var(--space-6);
+}
+
+.profile-padding--xl {
+  padding: var(--space-8);
+}
+
+/* Enhanced Typography Hierarchy */
+.profile-name {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.profile-name-section {
+  margin-bottom: var(--space-3);
+}
+
 .profile-title {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
-  margin: 0 0 var(--space-4) 0;
+  line-height: var(--line-height-snug);
+  margin: 0 0 var(--space-2) 0;
 }
 
 .profile-subtitle {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
-  margin: 0 0 var(--space-3) 0;
+  line-height: var(--line-height-normal);
+  margin: 0 0 var(--space-2) 0;
 }
 
 .profile-text {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   color: var(--color-text-secondary);
-  line-height: 1.5;
+  line-height: var(--line-height-relaxed);
+}
+
+.profile-text--small {
+  font-size: var(--font-size-sm);
+}
+
+.profile-text--muted {
+  color: var(--color-text-muted);
 }
 
 /* Common grid layouts */

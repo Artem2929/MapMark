@@ -4,6 +4,7 @@ import { ProfileProvider } from '../contexts/ProfileContext';
 import ProfileBreadcrumbs from '../components/profile/ProfileBreadcrumbs';
 import ProfileHeader from '../components/profile/ProfileHeader';
 import ProfileContent from '../components/profile/ProfileContent';
+import ProfileSkeleton from '../components/profile/ProfileSkeleton';
 import Wall from '../components/ui/Wall';
 import Footer from '../components/layout/Footer';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
@@ -19,9 +20,7 @@ const UserProfileContent = () => {
   if (loading) {
     return (
       <div className="profile-user-profile">
-        <div className="profile-profile-container">
-          <LoadingSpinner message="Завантаження профілю..." />
-        </div>
+        <ProfileSkeleton />
       </div>
     );
   }

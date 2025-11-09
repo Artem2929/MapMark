@@ -3,6 +3,8 @@ import { useProfile } from '../../contexts/ProfileContext';
 import ProfileAvatar from './ProfileAvatar';
 import ProfileBasicInfo from './ProfileBasicInfo';
 import FollowButton from './FollowButton';
+import ProfileBadge from '../ui/ProfileBadge';
+import ActivityIndicator from '../ui/ActivityIndicator';
 import { useProfileActions } from '../../hooks/useProfileActions';
 
 const ProfileHeader = () => {
@@ -35,6 +37,17 @@ const ProfileHeader = () => {
         </div>
         
         <div className="profile-profile-info">
+          <div className="profile-name-section">
+            <h1 className="profile-name">
+              {user.name}
+              {user.verified && <ProfileBadge type="verified" size="md" />}
+              {user.premium && <ProfileBadge type="premium" size="md" />}
+            </h1>
+            <ActivityIndicator 
+              status={user.isOnline ? 'online' : 'offline'} 
+              lastSeen={user.lastSeen}
+            />
+          </div>
           <ProfileBasicInfo 
             user={user}
             isOwnProfile={isOwnProfile}

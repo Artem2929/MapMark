@@ -1,0 +1,27 @@
+.profile-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: white;
+  font-weight: 600;
+  margin-left: var(--spacing-xs);
+}
+
+.profile-badge--sm {
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+}
+
+.profile-badge--md {
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+}
+
+.profile-badge--lg {
+  width: 24px;
+  height: 24px;
+  font-size: 14px;
+}

@@ -1,0 +1,127 @@
+/* Micro-interactions */
+
+/* Button hover effects */
+.btn, button {
+  transition: all 0.2s ease;
+}
+
+.btn:hover, button:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active, button:active {
+  transform: translateY(0);
+}
+
+/* Card hover effects */
+.post, .photo-gallery-item, .comment {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.photo-gallery-item:hover {
+  transform: scale(1.02);
+}
+
+/* Input focus effects */
+input, textarea {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Icon animations */
+.like-btn, .dislike-btn, .comment-btn, .share-btn {
+  transition: transform 0.15s ease;
+}
+
+.like-btn:hover, .dislike-btn:hover, .comment-btn:hover, .share-btn:hover {
+  transform: scale(1.1);
+}
+
+.like-btn.liked {
+  animation: bounce 0.3s ease;
+}
+
+.dislike-btn.disliked {
+  animation: bounce 0.3s ease;
+}
+
+@keyframes bounce {
+  0%, 20%, 60%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-3px);
+  }
+  80% {
+    transform: translateY(-1px);
+  }
+}
+
+/* Loading animations */
+.skeleton {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Fade in animations */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Empty action button */
+.empty-action-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.empty-action-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+/* Apply fade-in to new content */
+.post, .photo-gallery-item, .comment {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Smooth transitions for dynamic content */
+.posts-list, .profile-photos-grid {
+  transition: all 0.3s ease;
+}

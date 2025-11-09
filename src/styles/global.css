@@ -1,18 +1,45 @@
 /* Глобальні стилі для всіх сторінок */
 @import './profile-unified.css';
 
-/* Градієнтний колір для всіх заголовків */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
+/* Visual Hierarchy - Typography Scale */
+h1 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  margin-bottom: var(--space-6);
+  color: var(--color-text-primary);
+}
+
+h2 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  margin-bottom: var(--space-5);
+  color: var(--color-text-primary);
+}
+
+h3 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.4;
+  margin-bottom: var(--space-4);
+  color: var(--color-text-primary);
+}
+
+h4 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.4;
+  margin-bottom: var(--space-3);
+  color: var(--color-text-primary);
+}
+
+h5, h6 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.5;
+  margin-bottom: var(--space-2);
+  color: var(--color-text-secondary);
 }
 
 /* Спільні стилі для секцій */

@@ -1,6 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { wallService } from '../../services/wallService';
 import useUserWall from '../../hooks/useUserWall';
+import EmptyState from './EmptyState';
+import ProfileBadge from './ProfileBadge';
+import ActivityIndicator from './ActivityIndicator';
 import './Wall.css';
 
 const Wall = ({ userId, isOwnProfile, user }) => {
@@ -523,7 +526,22 @@ const Wall = ({ userId, isOwnProfile, user }) => {
       )}
 
       <div className="posts-list">
-        {posts.map(post => (
+        {posts.length === 0 ? (
+          <EmptyState
+            icon="📝"
+            title="Поки що немає записів"
+            description={isOwnProfile ? "Створіть свій перший пост!" : "Тут з'являться записи користувача"}
+            action={isOwnProfile ? (
+              <button 
+                className="empty-action-btn"
+                onClick={() => textareaRef.current?.focus()}
+              >
+                Написати пост
+              </button>
+            ) : null}
+          />
+        ) : (
+          posts.map(post => (
           <div key={post.id} className="post">
             <div className="post-header">
               <div className="post-avatar">
@@ -539,7 +557,10 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                 )}
               </div>
               <div className="post-meta">
-                <div className="post-author">{post.author}</div>
+                <div className="post-author">
+                  {post.author}
+                  {post.verified && <ProfileBadge type="verified" size="sm" />}
+                </div>
                 <div className="post-date">{post.date}</div>
               </div>
               <div className="post-menu">
@@ -703,7 +724,8 @@ const Wall = ({ userId, isOwnProfile, user }) => {
               </div>
             )}
           </div>
-        ))}
+        ))
+        )}
       </div>
     </div>
   );
