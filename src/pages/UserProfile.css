@@ -913,6 +913,7 @@
 
   .profile-profile-header {
     padding: 32px;
+    border-radius: 12px;
   }
 
   .profile-photos-section {
@@ -944,6 +945,7 @@
 
   .profile-profile-header {
     padding: 24px;
+    border-radius: 12px;
   }
 
   .profile-photos-section {
@@ -970,6 +972,7 @@
     padding: 20px;
     flex-direction: column;
     gap: 20px;
+    border-radius: 12px;
   }
 
   .profile-profile-header-top {
@@ -1025,6 +1028,7 @@
     padding: 16px;
     flex-direction: column;
     gap: 16px;
+    border-radius: 12px;
   }
 
   .profile-profile-header-top {
