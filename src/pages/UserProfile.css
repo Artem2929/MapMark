@@ -1,28 +1,27 @@
-/* Profile-specific styles - base styles are in global.css */
+/* Profile-specific styles - unified design system */
 
 .profile-profile-container {
   max-width: 1200px;
-  margin: 0 auto 30px;
-  padding: 0 20px;
+  margin: 0 auto var(--space-8);
+  padding: 0 var(--space-5);
 }
 
 .profile-profile-header {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(59, 130, 246, 0.12);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   padding: var(--space-6);
   margin-bottom: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
   position: relative;
-  overflow: hidden;
   width: 100%;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
+  box-shadow: var(--shadow-sm);
 }
 
 .profile-profile-header::before {
@@ -146,20 +145,14 @@
 
 .profile-profile-text-info {
   flex: 1;
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(248, 250, 252, 0.95) 100%
-  );
-  border: 1px solid rgba(59, 130, 246, 0.1);
-  border-radius: 12px;
-  padding: 20px;
-  backdrop-filter: blur(10px);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
-  font-size: 14px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-size: var(--font-size-sm);
   line-height: 1.5;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.05);
+  box-shadow: var(--shadow-sm);
 }
 
 .profile-name-section {
@@ -179,18 +172,17 @@
 }
 
 .profile-profile-name {
-  font-size: 22px;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 12px 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-3) 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   line-height: 1.3;
   letter-spacing: -0.01em;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .profile-name-input {
@@ -380,18 +372,13 @@
 }
 
 .profile-photos-section {
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(248, 250, 252, 0.95) 100%
-  );
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(59, 130, 246, 0.12);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-light);
   border-top: none;
-  border-radius: 0 0 12px 12px;
-  padding: 24px;
-  margin-bottom: 20px;
-  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.06);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  padding: var(--space-6);
+  margin-bottom: var(--space-5);
+  box-shadow: var(--shadow-sm);
 }
 
 .profile-photos-header {

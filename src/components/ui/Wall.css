@@ -1,49 +1,42 @@
 /* Wall - сучасна стіна у стилі VK × Facebook */
 .wall-container {
-  margin: 20px 0;
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(248, 250, 252, 0.95) 100%
-  );
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(59, 130, 246, 0.12);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.06);
-  padding: 24px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
+  margin: var(--space-5) 0;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-6);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
 }
 
 .wall-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(59, 130, 246, 0.1);
-  padding-bottom: 12px;
-  margin-bottom: 20px;
+  border-bottom: 1px solid var(--color-border-light);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-5);
 }
 
 .wall-header h3 {
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #1e293b;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 
 .posts-count {
-  font-size: 14px;
-  color: #64748b;
-  font-weight: 500;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
 }
 
 .post-creator {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(59, 130, 246, 0.15);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 24px;
-  backdrop-filter: blur(10px);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
 }
 
 .creator-header {
@@ -106,27 +99,27 @@
 }
 
 .tool-btn {
-  background: rgba(59, 130, 246, 0.08);
-  border: 1px solid rgba(59, 130, 246, 0.15);
-  font-size: 18px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  font-size: var(--font-size-lg);
   cursor: pointer;
-  transition: all 0.25s ease;
-  border-radius: 12px;
+  transition: var(--transition-fast);
+  border-radius: var(--radius-xl);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  font-weight: 500;
-  color: #3b82f6;
+  gap: var(--space-2);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
   min-width: 44px;
   height: 44px;
 }
 
 .tool-btn:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.25);
-
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  background: var(--color-bg-muted);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .tool-btn:active {
@@ -179,13 +172,15 @@
 }
 
 .publish-btn {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-md);
 }
 
 .publish-btn:hover:not(:disabled) {
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-1px);
 }
 
 .publish-btn:disabled {
@@ -465,17 +460,17 @@
 }
 
 .post {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(59, 130, 246, 0.12);
-  border-radius: 12px;
-  padding: 16px;
-  backdrop-filter: blur(10px);
-  transition: all 0.2s ease;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  transition: var(--transition-fast);
+  box-shadow: var(--shadow-sm);
 }
 
 .post:hover {
-  border-color: rgba(59, 130, 246, 0.2);
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
 }
 
 .post-header {
