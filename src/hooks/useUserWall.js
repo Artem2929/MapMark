@@ -45,9 +45,10 @@ const useUserWall = (userId, currentUserId) => {
     
     const fetchWall = async () => {
       try {
+        const timestamp = Date.now();
         const url = currentUserId 
-          ? `http://localhost:3001/api/user/${userId}/wall?currentUserId=${currentUserId}`
-          : `http://localhost:3001/api/user/${userId}/wall`;
+          ? `http://localhost:3001/api/user/${userId}/wall?currentUserId=${currentUserId}&t=${timestamp}`
+          : `http://localhost:3001/api/user/${userId}/wall?t=${timestamp}`;
           
         const response = await fetch(url);
         const result = await response.json();

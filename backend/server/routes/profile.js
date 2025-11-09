@@ -289,6 +289,42 @@ router.post('/posts/:postId/dislike', async (req, res) => {
   }
 });
 
+// Update post
+router.put('/posts/:postId', async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId, content } = req.body;
+    
+    const post = await WallPost.findById(postId);
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+    
+    if (post.userId !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to edit this post'
+      });
+    }
+    
+    post.content = content;
+    await post.save();
+    
+    res.json({
+      success: true,
+      data: post
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
+
 // Delete post
 router.delete('/posts/:postId', async (req, res) => {
   try {

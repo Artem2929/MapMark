@@ -74,6 +74,21 @@ export const wallService = {
     }
   },
 
+  // Update post
+  updatePost: async (postId, userId, content) => {
+    try {
+      const response = await fetch(`${API_BASE}/user/posts/${postId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, content })
+      });
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating post:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
   // Delete post
   deletePost: async (postId, userId) => {
     try {

@@ -223,11 +223,22 @@ const Wall = ({ userId, isOwnProfile, user }) => {
     setShowPostMenu(null);
   };
   
-  const handleSaveEdit = (postId) => {
-    // Update via API and refresh
-    refreshWall();
-    setEditingPost(null);
-    setEditText('');
+  const handleSaveEdit = async (postId) => {
+    try {
+      const currentUserId = localStorage.getItem('userId');
+      const result = await wallService.updatePost(postId, currentUserId, editText);
+      if (result.success) {
+        setEditingPost(null);
+        setEditText('');
+        refreshWall();
+      } else {
+        console.error('Failed to update post:', result.error);
+        alert('Помилка при оновленні поста');
+      }
+    } catch (error) {
+      console.error('Error updating post:', error);
+      alert('Помилка при оновленні поста');
+    }
   };
   
   const handleCancelEdit = () => {
@@ -547,7 +558,6 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                       </>
                     ) : (
                       <>
-                        <button onClick={() => handleDeletePost(post.id)}>Видалити</button>
                         <button onClick={() => handleReportPost(post.id)}>Поскаржитись</button>
                       </>
                     )}
@@ -653,22 +663,41 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                   ))}
                 </div>
                 <div className="comment-form">
-                  <div className="comment-input-wrapper">
-                    <input
-                      type="text"
-                      placeholder="Написати коментар..."
-                      value={commentText[post.id] || ''}
-                      onChange={(e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value }))}
-                      onKeyPress={(e) => e.key === 'Enter' && handleCommentSubmit(post.id)}
-                      className="comment-input"
-                    />
-                    <button 
-                      onClick={() => handleCommentSubmit(post.id)}
-                      disabled={!commentText[post.id]?.trim()}
-                      className="comment-submit"
-                    >
-                      ➤
-                    </button>
+                  <div className="comment-item">
+                    <div className="comment-avatar">
+                      {user?.avatar ? (
+                        <img 
+                          src={user.avatar.startsWith('data:') || user.avatar.startsWith('http') 
+                            ? user.avatar 
+                            : `http://localhost:3001${user.avatar}`} 
+                          alt={user.name || 'User'} 
+                        />
+                      ) : (
+                        <div className="avatar-placeholder">{user?.name?.charAt(0) || 'U'}</div>
+                      )}
+                    </div>
+                    <div className="comment-content">
+                      <div className="comment-input-wrapper">
+                        <input
+                          type="text"
+                          placeholder="Написати коментар..."
+                          value={commentText[post.id] || ''}
+                          onChange={(e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value }))}
+                          onKeyPress={(e) => e.key === 'Enter' && handleCommentSubmit(post.id)}
+                          className="comment-input"
+                        />
+                        <button 
+                          onClick={() => handleCommentSubmit(post.id)}
+                          disabled={!commentText[post.id]?.trim()}
+                          className="comment-submit"
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="22" y1="2" x2="11" y2="13"/>
+                            <polygon points="22,2 15,22 11,13 2,9 22,2"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
