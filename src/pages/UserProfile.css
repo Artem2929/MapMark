@@ -655,7 +655,6 @@
 }
 
 .add-first-photo-btn:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
   background: linear-gradient(
     135deg,
@@ -669,19 +668,7 @@
   font-weight: 300;
 }
 
-.photo-upload-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(4px);
-}
+
 
 .photo-upload-content {
   background: linear-gradient(
@@ -733,9 +720,7 @@
   background: #f3f4f6;
 }
 
-.photo-upload-body {
-  padding: 20px;
-}
+
 
 .photo-drop-zone {
   border: 2px dashed #d1d5db;
@@ -1030,6 +1015,28 @@
   }
 }
 
+/* Mobile styles for profile-photos-header */
+@media (max-width: 767px) {
+  .profile-photos-header {
+    flex-direction: row !important;
+    gap: 8px !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  .profile-photos-header h3 {
+    flex: 1 !important;
+    text-align: left !important;
+    font-size: 16px !important;
+  }
+
+  .add-photo-btn {
+    flex-shrink: 0 !important;
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+  }
+}
+
 /* Mobile Large - 480px to 767px */
 @media (max-width: 767px) and (min-width: 480px) {
   .page-container.profile-user-profile {
@@ -1082,14 +1089,22 @@
   }
 
   .profile-photos-header {
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .profile-photos-header h3 {
-    font-size: 18px;
-    text-align: center;
+    font-size: 16px;
+    flex: 1;
+    text-align: left;
+  }
+
+  .add-photo-btn {
+    flex-shrink: 0;
+    padding: 4px 8px;
+    font-size: 11px;
   }
 
   .photo-upload-content {

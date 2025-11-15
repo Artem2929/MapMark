@@ -9,6 +9,7 @@ const Followers = () => {
   const [user, setUser] = useState(null);
   const [followers, setFollowers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     // Mock API call
@@ -27,7 +28,8 @@ const Followers = () => {
           avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop',
           bio: 'Фотограф та мандрівник 📸',
           isFollowing: true,
-          mutualFollowers: 5
+          mutualFollowers: 5,
+          isOnline: true
         },
         {
           id: 2,
@@ -36,7 +38,8 @@ const Followers = () => {
           avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop',
           bio: 'Люблю гори та екстремальні види спорту 🏔️',
           isFollowing: false,
-          mutualFollowers: 12
+          mutualFollowers: 12,
+          isOnline: false
         },
         {
           id: 3,
@@ -45,7 +48,8 @@ const Followers = () => {
           avatar: null,
           bio: 'Завжди в пошуках нових пригод! ✈️',
           isFollowing: true,
-          mutualFollowers: 3
+          mutualFollowers: 3,
+          isOnline: true
         }
       ];
 
@@ -93,8 +97,20 @@ const Followers = () => {
               <div className="followers-count">{followers.length} підписників</div>
             </div>
 
+            <div className="followers-search">
+              <input
+                type="text"
+                placeholder="Пошук підписників..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+            </div>
+
             <div className="followers-list">
-          {followers.map(follower => (
+          {followers.filter(follower => 
+            follower.name.toLowerCase().includes(searchQuery.toLowerCase())
+          ).map(follower => (
             <div key={follower.id} className="follower-item">
               <Link to={`/user/${follower.id}`} className="follower-info">
                 <div className="follower-avatar">
@@ -105,6 +121,7 @@ const Followers = () => {
                       {follower.name.charAt(0).toUpperCase()}
                     </div>
                   )}
+                  <div className={`status-indicator ${follower.isOnline ? 'online' : 'offline'}`}></div>
                 </div>
                 
                 <div className="follower-details">
@@ -129,7 +146,17 @@ const Followers = () => {
           ))}
         </div>
 
-            {followers.length === 0 && (
+            {followers.filter(follower => 
+              follower.name.toLowerCase().includes(searchQuery.toLowerCase())
+            ).length === 0 && searchQuery && (
+              <div className="empty-followers">
+                <div>🔍</div>
+                <h3>Нічого не знайдено</h3>
+                <p>Спробуйте змінити пошуковий запит</p>
+              </div>
+            )}
+
+            {followers.length === 0 && !searchQuery && (
               <div className="empty-followers">
                 <div>👥</div>
                 <h3>Поки що немає підписників</h3>

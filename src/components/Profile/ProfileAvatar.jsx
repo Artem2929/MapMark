@@ -103,26 +103,41 @@ const ProfileAvatar = ({
   const userInitial = user?.name?.charAt(0)?.toUpperCase() || 'U';
 
   const ProfileRatingBlock = () => {
-    const rating = 4.7; // Мок даних, потім з API
+    const ratingPoints = 2300; // Мок даних, потім з API (1000 балів = 1 зірка)
     
-    const getRatingColor = (rating) => {
-      if (rating >= 4.5) return '#3b82f6'; // синій
-      if (rating >= 3.0) return '#f59e0b'; // жовтий
-      return '#ef4444'; // червоний
+    const renderStars = () => {
+      const stars = [];
+      const maxStars = 5;
+      
+      for (let i = 0; i < maxStars; i++) {
+        const starPoints = ratingPoints - (i * 1000);
+        let fillPercentage = 0;
+        
+        if (starPoints >= 1000) {
+          fillPercentage = 100;
+        } else if (starPoints > 0) {
+          fillPercentage = (starPoints / 1000) * 100;
+        }
+        
+        stars.push(
+          <div key={i} className="rating-star" style={{
+            background: `linear-gradient(90deg, #fbbf24 ${fillPercentage}%, #e5e7eb ${fillPercentage}%)`
+          }}>
+            ★
+          </div>
+        );
+      }
+      
+      return stars;
     };
 
     return (
       <div className="profile-rating-block">
         <div className="profile-rating-row">
           <span className="profile-rating-label">Рейтинг:</span>
-          <div className="profile-rating-value">
-            <span 
-              className="profile-rating-score" 
-              style={{ color: getRatingColor(rating) }}
-            >
-              {rating}
-            </span>
-            <span className="profile-rating-star">★</span>
+          <div className="profile-rating-stars">
+            {renderStars()}
+            <span className="profile-rating-points">({ratingPoints})</span>
           </div>
         </div>
       </div>
@@ -184,7 +199,6 @@ const ProfileAvatar = ({
         {/* Оверлей для зміни фото */}
         {isOwnProfile && (
           <div className="profile-avatar-upload-overlay">
-            <div className="profile-avatar-upload-icon">📷</div>
             <div className="profile-avatar-upload-text">
               Змінити<br/>фото
             </div>

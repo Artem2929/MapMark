@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ProfileStats.css';
 
 const ProfileStats = ({ 
@@ -16,6 +17,7 @@ const ProfileStats = ({
     photos: 0,
     followers: 0,
     following: 0,
+    messages: 0,
     reviews: 0
   });
   const [loading, setLoading] = useState(false);
@@ -64,6 +66,8 @@ const ProfileStats = ({
     }));
   };
 
+  const navigate = useNavigate();
+
   const updatePhotoCount = useCallback((increment = 1) => {
     setStats(prev => ({
       ...prev,
@@ -71,17 +75,32 @@ const ProfileStats = ({
     }));
   }, []);
 
+  const handlePostsClick = () => {
+    const wallElement = document.querySelector('.wall-container');
+    if (wallElement) {
+      wallElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handlePhotosClick = () => {
+    navigate('/photos');
+  };
+
+  const handleMessagesClick = () => {
+    navigate('/messages');
+  };
+
   if (loading) {
     return <div className="profile-stats">Завантаження...</div>;
   }
 
   return (
     <div className="profile-stats">
-      <div className="profile-stats__item">
+      <div className="profile-stats__item" onClick={handlePostsClick}>
         <span className="profile-stats__number">{stats.posts}</span>
         <span className="profile-stats__label">постів</span>
       </div>
-      <div className="profile-stats__item">
+      <div className="profile-stats__item" onClick={handlePhotosClick}>
         <span className="profile-stats__number">{stats.photos}</span>
         <span className="profile-stats__label">фото</span>
       </div>
@@ -92,6 +111,10 @@ const ProfileStats = ({
       <div className="profile-stats__item">
         <span className="profile-stats__number">{stats.following}</span>
         <span className="profile-stats__label">підписок</span>
+      </div>
+      <div className="profile-stats__item" onClick={handleMessagesClick}>
+        <span className="profile-stats__number">{stats.messages}</span>
+        <span className="profile-stats__label">повідомлення</span>
       </div>
     </div>
   );

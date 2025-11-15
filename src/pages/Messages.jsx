@@ -2,107 +2,190 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Messages.css';
 
 const Messages = () => {
-  const [conversations, setConversations] = useState([]);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState([]);
+  const [activeChat, setActiveChat] = useState(1);
+  const [messages, setMessages] = useState([
+    { id: 1, text: 'Привіт! Як справи?', sender: 'other', time: '14:30', name: 'Олексій', status: 'read', reactions: [] },
+    { id: 2, text: 'Привіт! Все добре, дякую', sender: 'me', time: '14:32', status: 'read', reactions: [{ emoji: '👍', count: 1 }] },
+    { id: 3, text: 'Що робиш сьогодні?', sender: 'other', time: '14:33', name: 'Олексій', status: 'delivered', reactions: [] }
+  ]);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showNewChatModal, setShowNewChatModal] = useState(false);
+  const [followerSearchQuery, setFollowerSearchQuery] = useState('');
+  const [contextMenu, setContextMenu] = useState(null);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [showAttachMenu, setShowAttachMenu] = useState(false);
+  const [showReactionPicker, setShowReactionPicker] = useState(null);
+  const [conversations, setConversations] = useState([
+    { id: 1, name: 'Олексій Петренко', lastMessage: 'Що робиш сьогодні?', time: '14:33', unread: 0, online: true },
+    { id: 2, name: 'Марія Іванова', lastMessage: 'Дякую за допомогу!', time: '12:15', unread: 2, online: false },
+    { id: 3, name: 'Андрій Коваль', lastMessage: 'До зустрічі завтра', time: 'Вчора', unread: 0, online: true }
+  ]);
   const messagesEndRef = useRef(null);
-  const fileInputRef = useRef(null);
 
-  useEffect(() => {
-    loadConversations();
-  }, []);
 
-  useEffect(() => {
-    if (activeChat) {
-      loadMessages(activeChat.id);
-    }
-  }, [activeChat]);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const loadConversations = () => {
-    const mockConversation = {
-      id: 1,
-      name: 'Підтримка MapMark',
-      avatar: null,
-      lastMessage: 'Вітаємо в MapMark! Як справи?',
-      lastMessageTime: '14:30',
-      unreadCount: 1,
-      isOnline: true
-    };
-    setConversations([mockConversation]);
-    setActiveChat(mockConversation);
-  };
-
-  const loadMessages = (chatId) => {
-    if (chatId === 1) {
-      setMessages([
-        { id: 1, text: 'Вітаємо в MapMark! Як справи?', sender: 'other', time: '14:30', name: 'Підтримка' }
-      ]);
-    } else {
-      setMessages([]);
-    }
-  };
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleSendMessage = (messageContent = newMessage, type = 'text') => {
-    if ((!messageContent.trim() && type === 'text') || !activeChat) return;
+  const handleSendMessage = () => {
+    if (!newMessage.trim()) return;
 
     const message = {
       id: messages.length + 1,
-      text: messageContent,
-      type: type,
+      text: newMessage,
       sender: 'me',
-      time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' })
+      time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),
+      status: 'sent',
+      reactions: []
     };
 
     setMessages(prev => [...prev, message]);
     setNewMessage('');
-    setShowEmojiPicker(false);
-
-    // Update conversation last message
-    const lastMessageText = type === 'photo' ? '📷 Фото' : messageContent;
-    setConversations(prev => prev.map(conv => 
-      conv.id === activeChat.id 
-        ? { ...conv, lastMessage: lastMessageText, lastMessageTime: message.time }
-        : conv
-    ));
+    
+    // Симуляція доставки та прочитання
+    setTimeout(() => {
+      setMessages(prev => prev.map(msg => 
+        msg.id === message.id ? { ...msg, status: 'delivered' } : msg
+      ));
+    }, 1000);
+    
+    setTimeout(() => {
+      setMessages(prev => prev.map(msg => 
+        msg.id === message.id ? { ...msg, status: 'read' } : msg
+      ));
+    }, 3000);
   };
 
-  const handleEmojiClick = (emoji) => {
-    setNewMessage(prev => prev + emoji);
-    setShowEmojiPicker(false);
+  const handleMessageRightClick = (e, message) => {
+    e.preventDefault();
+    setContextMenu({
+      x: e.clientX,
+      y: e.clientY,
+      messageId: message.id
+    });
+    setSelectedMessage(message);
   };
 
-  const handlePhotoUpload = (event) => {
-    const file = event.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        handleSendMessage(e.target.result, 'photo');
-      };
-      reader.readAsDataURL(file);
+  const handleDeleteMessage = () => {
+    if (selectedMessage) {
+      setMessages(prev => prev.filter(msg => msg.id !== selectedMessage.id));
+      setContextMenu(null);
+      setSelectedMessage(null);
     }
+  };
+
+  const closeContextMenu = () => {
+    setContextMenu(null);
+    setSelectedMessage(null);
+  };
+
+  const handleDeleteChat = (chatId, e) => {
+    e.stopPropagation();
+    setConversations(prev => prev.filter(conv => conv.id !== chatId));
+    if (activeChat === chatId) {
+      setActiveChat(conversations.find(conv => conv.id !== chatId)?.id || null);
+      setMessages([]);
+    }
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const message = {
+        id: messages.length + 1,
+        type: file.type.startsWith('image/') ? 'image' : 'file',
+        fileName: file.name,
+        fileSize: (file.size / 1024 / 1024).toFixed(2) + ' MB',
+        fileUrl: URL.createObjectURL(file),
+        sender: 'me',
+        time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),
+        status: 'sent',
+        reactions: []
+      };
+      setMessages(prev => [...prev, message]);
+    }
+    setShowAttachMenu(false);
+  };
+
+  const handleVoiceRecord = () => {
+    if (!isRecording) {
+      setIsRecording(true);
+      // Симуляція запису
+      setTimeout(() => {
+        const message = {
+          id: messages.length + 1,
+          type: 'voice',
+          duration: '0:05',
+          sender: 'me',
+          time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),
+          status: 'sent',
+          reactions: []
+        };
+        setMessages(prev => [...prev, message]);
+        setIsRecording(false);
+      }, 2000);
+    }
+  };
+
+  const handleTyping = (e) => {
+    setNewMessage(e.target.value);
+    if (!isTyping) {
+      setIsTyping(true);
+      setTimeout(() => setIsTyping(false), 2000);
+    }
+  };
+
+  const handleAddReaction = (messageId, emoji) => {
+    setMessages(prev => prev.map(msg => {
+      if (msg.id === messageId) {
+        const existingReaction = msg.reactions.find(r => r.emoji === emoji);
+        if (existingReaction) {
+          return {
+            ...msg,
+            reactions: msg.reactions.map(r => 
+              r.emoji === emoji ? { ...r, count: r.count + 1 } : r
+            )
+          };
+        } else {
+          return {
+            ...msg,
+            reactions: [...msg.reactions, { emoji, count: 1 }]
+          };
+        }
+      }
+      return msg;
+    }));
+    setShowReactionPicker(null);
+  };
+
+  const toggleReactionPicker = (messageId) => {
+    setShowReactionPicker(showReactionPicker === messageId ? null : messageId);
   };
 
   const filteredConversations = conversations.filter(conv =>
     conv.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const activeConversation = conversations.find(conv => conv.id === activeChat);
+
+  const followers = [
+    { id: 4, name: 'Катерина Сидорова', online: true },
+    { id: 5, name: 'Дмитро Мельник', online: false },
+    { id: 6, name: 'Світлана Бондар', online: true }
+  ];
+
+  const startNewChat = (user) => {
+    setShowNewChatModal(false);
+    // Логіка створення нового чату
+    console.log('Розпочати чат з:', user.name);
+  };
+
   return (
-    <div className="page-container messages-page">
+    <div className="messages-page">
       <div className="messages-container">
         <nav className="breadcrumbs">
           <span className="breadcrumb-item">
-            <a className="breadcrumb-link" href="/profile/68fca6b223ea8d70a8da03d8" data-discover="true">Профіль</a>
+            <a className="breadcrumb-link" href="/profile/68fca6b223ea8d70a8da03d8">Профіль</a>
           </span>
           <span className="breadcrumb-item">
             <span className="breadcrumb-separator">›</span>
@@ -110,167 +193,321 @@ const Messages = () => {
           </span>
         </nav>
 
+        <div className="messages-header">
+          <h1>Повідомлення</h1>
+        </div>
+
         <div className="messages-layout">
+          {/* Sidebar */}
           <div className="conversations-sidebar">
-            <div className="conversations-header">
-              <h2>Повідомлення</h2>
-              <div className="search-container">
+            <div className="sidebar-header">
+              <div className="search-box">
                 <input
                   type="text"
                   placeholder="Пошук розмов..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="search-input"
                 />
               </div>
+              <button 
+                className="new-chat-btn"
+                onClick={() => setShowNewChatModal(true)}
+                title="Новий чат"
+              >
+                +
+              </button>
             </div>
 
             <div className="conversations-list">
-              {filteredConversations.length > 0 ? (
-                filteredConversations.map(conversation => (
-                  <div
-                    key={conversation.id}
-                    className={`conversation-item ${activeChat?.id === conversation.id ? 'active' : ''}`}
-                    onClick={() => setActiveChat(conversation)}
-                  >
-                    <div className="conversation-avatar">
-                      {conversation.avatar ? (
-                        <img src={conversation.avatar} alt={conversation.name} />
-                      ) : (
-                        <div className="avatar-placeholder">
-                          {conversation.name.charAt(0)}
-                        </div>
-                      )}
-                      {conversation.isOnline && <div className="online-indicator"></div>}
-                    </div>
-                    <div className="conversation-info">
-                      <div className="conversation-name">{conversation.name}</div>
-                      <div className="conversation-last-message">{conversation.lastMessage}</div>
-                    </div>
-                    <div className="conversation-meta">
-                      <div className="conversation-time">{conversation.lastMessageTime}</div>
-                      {conversation.unreadCount > 0 && (
-                        <div className="unread-badge">{conversation.unreadCount}</div>
-                      )}
-                    </div>
+              {filteredConversations.map(conv => (
+                <div
+                  key={conv.id}
+                  className={`conversation ${activeChat === conv.id ? 'active' : ''}`}
+                  onClick={() => setActiveChat(conv.id)}
+                >
+                  <div className="conv-avatar">
+                    {conv.name.charAt(0)}
+                    {conv.online && <div className="online-dot"></div>}
                   </div>
-                ))
-              ) : (
-                <div className="no-conversations">
-                  <p>Поки що немає розмов</p>
+                  <div className="conv-info">
+                    <div className="conv-name">{conv.name}</div>
+                    <div className="conv-last">{conv.lastMessage}</div>
+                  </div>
+                  <div className="conv-meta">
+                    <div className="conv-time">{conv.time}</div>
+                    {conv.unread > 0 && <div className="unread-count">{conv.unread}</div>}
+                  </div>
+                  <button 
+                    className="chat-delete-btn"
+                    onClick={(e) => handleDeleteChat(conv.id, e)}
+                    title="Видалити чат"
+                  >
+                    ×
+                  </button>
                 </div>
-              )}
+              ))}
             </div>
           </div>
 
+          {/* Chat Area */}
           <div className="chat-area">
-            {activeChat ? (
-              <>
-                <div className="chat-header">
-                  <div className="chat-user-info">
-                    <div className="chat-avatar">
-                      {activeChat.avatar ? (
-                        <img src={activeChat.avatar} alt={activeChat.name} />
-                      ) : (
-                        <div className="avatar-placeholder">
-                          {activeChat.name.charAt(0)}
+            <div className="chat-header">
+              <div className="chat-user">
+                <div className="chat-avatar">
+                  {activeConversation?.name.charAt(0)}
+                  {activeConversation?.online && <div className="online-dot"></div>}
+                </div>
+                <div className="chat-info">
+                  <div className="chat-name">{activeConversation?.name}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="messages-area" onClick={() => { closeContextMenu(); setShowReactionPicker(null); }}>
+              {messages.map(message => (
+                <div 
+                  key={message.id} 
+                  className={`message ${message.sender}`}
+                  onContextMenu={(e) => handleMessageRightClick(e, message)}
+                >
+                  <div className="message-bubble">
+                    <button 
+                      className="reaction-btn"
+                      onClick={() => toggleReactionPicker(message.id)}
+                      title="Додати реакцію"
+                    >
+                      😊
+                    </button>
+                    {message.type === 'image' ? (
+                      <div className="message-image">
+                        <img src={message.fileUrl} alt={message.fileName} />
+                        <div className="message-time">
+                          {message.time}
+                          {message.sender === 'me' && (
+                            <span className={`message-status ${message.status}`}>
+                              {message.status === 'sent' && '✓'}
+                              {message.status === 'delivered' && '✓✓'}
+                              {message.status === 'read' && '✓✓'}
+                            </span>
+                          )}
                         </div>
-                      )}
-                      {activeChat.isOnline && <div className="online-indicator"></div>}
-                    </div>
-                    <div>
-                      <div className="chat-user-name">{activeChat.name}</div>
-                      <div className="chat-user-status">
-                        {activeChat.isOnline ? 'В мережі' : 'Не в мережі'}
                       </div>
-                    </div>
+                    ) : message.type === 'file' ? (
+                      <div className="message-file">
+                        <div className="file-icon">📄</div>
+                        <div className="file-info">
+                          <div className="file-name">{message.fileName}</div>
+                          <div className="file-size">{message.fileSize}</div>
+                        </div>
+                        <div className="message-time">
+                          {message.time}
+                          {message.sender === 'me' && (
+                            <span className={`message-status ${message.status}`}>
+                              {message.status === 'sent' && '✓'}
+                              {message.status === 'delivered' && '✓✓'}
+                              {message.status === 'read' && '✓✓'}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ) : message.type === 'voice' ? (
+                      <div className="message-voice">
+                        <button className="voice-play-btn">▶️</button>
+                        <div className="voice-duration">{message.duration}</div>
+                        <div className="message-time">
+                          {message.time}
+                          {message.sender === 'me' && (
+                            <span className={`message-status ${message.status}`}>
+                              {message.status === 'sent' && '✓'}
+                              {message.status === 'delivered' && '✓✓'}
+                              {message.status === 'read' && '✓✓'}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="message-text">{message.text}</div>
+                        <div className="message-time">
+                          {message.time}
+                          {message.sender === 'me' && (
+                            <span className={`message-status ${message.status}`}>
+                              {message.status === 'sent' && '✓'}
+                              {message.status === 'delivered' && '✓✓'}
+                              {message.status === 'read' && '✓✓'}
+                            </span>
+                          )}
+                        </div>
+                      </>
+                    )}
+                    {message.sender === 'me' && (
+                      <button 
+                        className="message-delete-btn"
+                        onClick={() => {
+                          setSelectedMessage(message);
+                          handleDeleteMessage();
+                        }}
+                        title="Видалити повідомлення"
+                      >
+                        ×
+                      </button>
+                    )}
+                    
+                    {message.reactions && message.reactions.length > 0 && (
+                      <div className="message-reactions">
+                        {message.reactions.map((reaction, index) => (
+                          <span key={index} className="reaction-item">
+                            {reaction.emoji} {reaction.count}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {showReactionPicker === message.id && (
+                      <div className="reaction-picker">
+                        {['👍', '❤️', '😂', '😢', '😡', '😮'].map(emoji => (
+                          <button
+                            key={emoji}
+                            className="reaction-option"
+                            onClick={() => handleAddReaction(message.id, emoji)}
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
+              ))}
+              {isTyping && (
+                <div className="typing-indicator">
+                  <div className="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <span className="typing-text">Друкує...</span>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
 
-                <div className="messages-container-inner">
-                  {messages.map(message => (
-                    <div
-                      key={message.id}
-                      className={`message ${message.sender === 'me' ? 'message-sent' : 'message-received'}`}
+            <div className="message-input">
+              <button 
+                className="attach-btn"
+                onClick={() => setShowAttachMenu(!showAttachMenu)}
+                title="Прикріпити файл"
+              >
+                📎
+              </button>
+              {showAttachMenu && (
+                <div className="attach-menu">
+                  <label className="attach-option">
+                    <input type="file" accept="image/*" onChange={handleFileUpload} hidden />
+                    🖼️ Фото
+                  </label>
+                  <label className="attach-option">
+                    <input type="file" onChange={handleFileUpload} hidden />
+                    📄 Файл
+                  </label>
+                </div>
+              )}
+              
+              <div className="message-input-wrapper">
+                <div className="input-actions">
+                  <button 
+                    className={`voice-btn ${isRecording ? 'recording' : ''}`}
+                    onClick={handleVoiceRecord}
+                    title="Голосове повідомлення"
+                  >
+                    {isRecording ? '⏹️' : '🎤'}
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Напишіть повідомлення..."
+                  value={newMessage}
+                  onChange={handleTyping}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                />
+              </div>
+              
+              <button 
+                className="send-btn"
+                onClick={handleSendMessage} 
+                disabled={!newMessage.trim()}
+              >
+                ↑
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {contextMenu && (
+          <div 
+            className="context-menu"
+            style={{ left: contextMenu.x, top: contextMenu.y }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="context-menu-item delete" onClick={handleDeleteMessage}>
+              🗑️ Видалити повідомлення
+            </button>
+          </div>
+        )}
+
+        {showNewChatModal && (
+          <div className="new-chat-modal" onClick={() => setShowNewChatModal(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>Новий чат</h3>
+                <button 
+                  className="modal-close-btn"
+                  onClick={() => setShowNewChatModal(false)}
+                >
+                  ×
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>Оберіть користувача зі списку ваших підписників:</p>
+                <div className="modal-search">
+                  <input
+                    type="text"
+                    placeholder="Пошук користувачів..."
+                    value={followerSearchQuery}
+                    onChange={(e) => setFollowerSearchQuery(e.target.value)}
+                    className="modal-search-input"
+                  />
+                </div>
+                <div className="followers-list">
+                  {followers.filter(user => 
+                    user.name.toLowerCase().includes(followerSearchQuery.toLowerCase())
+                  ).map(user => (
+                    <div 
+                      key={user.id} 
+                      className="follower-item"
+                      onClick={() => startNewChat(user)}
                     >
-                      <div className="message-content">
-                        {message.type === 'photo' ? (
-                          <div className="message-photo">
-                            <img src={message.text} alt="Повідомлення" />
-                          </div>
-                        ) : (
-                          <div className="message-text">{message.text}</div>
-                        )}
-                        <div className="message-time">{message.time}</div>
+                      <div className="follower-avatar">
+                        {user.name.charAt(0)}
+                        {user.online && <div className="online-dot"></div>}
+                      </div>
+                      <div className="follower-info">
+                        <div className="follower-name">{user.name}</div>
                       </div>
                     </div>
                   ))}
-                  <div ref={messagesEndRef} />
-                </div>
-
-                <div className="message-input-container">
-                  <div className="message-input-wrapper">
-                    <div className="input-actions">
-                      <button 
-                        className="emoji-button"
-                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                      >
-                        😊
-                      </button>
-                      <button 
-                        className="photo-button"
-                        onClick={() => fileInputRef.current?.click()}
-                      >
-                        📷
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Напишіть повідомлення..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                      className="message-input"
-                    />
-                    <button
-                      onClick={() => handleSendMessage()}
-                      className="send-button"
-                      disabled={!newMessage.trim()}
-                    >
-                      ➤
-                    </button>
-                  </div>
-                  
-                  {showEmojiPicker && (
-                    <div className="emoji-picker">
-                      {['😊', '😂', '😍', '😘', '😎', '😉', '😋', '😜', '🙄', '😭', '😱', '😡', '😏', '😴', '😇', '😌', '😤', '😒', '😳', '😵', '😷', '😲', '😚', '😐'].map(emoji => (
-                        <button
-                          key={emoji}
-                          className="emoji-option"
-                          onClick={() => handleEmojiClick(emoji)}
-                        >
-                          {emoji}
-                        </button>
-                      ))}
+                  {followers.filter(user => 
+                    user.name.toLowerCase().includes(followerSearchQuery.toLowerCase())
+                  ).length === 0 && followerSearchQuery && (
+                    <div className="no-results">
+                      <p>Нічого не знайдено</p>
                     </div>
                   )}
-                  
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handlePhotoUpload}
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                  />
                 </div>
-              </>
-            ) : (
-              <div className="no-chat-selected">
-                <p>Оберіть розмову для початку спілкування</p>
               </div>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
