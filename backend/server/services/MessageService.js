@@ -9,7 +9,7 @@ class MessageService {
       const conversations = await Conversation.find({
         participants: userId
       })
-      .populate('participants', 'username email avatar isOnline lastSeen')
+      .populate('participants', 'username email firstName lastName avatar isOnline lastSeen')
       .populate('lastMessage')
       .sort({ lastActivity: -1 });
 
@@ -55,14 +55,14 @@ class MessageService {
     try {
       let conversation = await Conversation.findOne({
         participants: { $all: [userId, otherUserId] }
-      }).populate('participants', 'username email avatar isOnline lastSeen');
+      }).populate('participants', 'username email firstName lastName avatar isOnline lastSeen');
 
       if (!conversation) {
         conversation = new Conversation({
           participants: [userId, otherUserId]
         });
         await conversation.save();
-        await conversation.populate('participants', 'username email avatar isOnline lastSeen');
+        await conversation.populate('participants', 'username email firstName lastName avatar isOnline lastSeen');
       }
 
       return conversation;

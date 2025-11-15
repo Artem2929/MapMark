@@ -34,7 +34,6 @@ export const friendsService = {
       });
       return await response.json();
     } catch (error) {
-      console.error('Error searching users:', error);
       return { success: false, error: error.message };
     }
   },

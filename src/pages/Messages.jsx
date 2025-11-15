@@ -29,10 +29,8 @@ const Messages = () => {
         
         // Отримання токена та ініціалізація
         const authToken = localStorage.getItem('accessToken');
-        console.log('Auth token found:', authToken ? 'yes' : 'no');
         
         if (!authToken) {
-          console.error('No access token found');
           setLoading(false);
           return;
         }
@@ -43,10 +41,8 @@ const Messages = () => {
         // Завантаження розмов
         try {
           const conversationsData = await messagesService.getConversations();
-          console.log('Loaded conversations:', conversationsData);
           setConversations(conversationsData || []);
         } catch (error) {
-          console.error('Failed to load conversations:', error);
           setConversations([]);
         }
         
@@ -66,7 +62,7 @@ const Messages = () => {
         messagesService.onUserOffline(handleUserOffline);
         
       } catch (error) {
-        console.error('Error initializing messages:', error);
+        // Error handled
       } finally {
         setLoading(false);
       }
@@ -108,7 +104,7 @@ const Messages = () => {
       const messagesData = await messagesService.getMessages(conversationId);
       setMessages(messagesData);
     } catch (error) {
-      console.error('Error loading messages:', error);
+      // Error handled
     }
   };
   
@@ -127,7 +123,7 @@ const Messages = () => {
           : conv
       ));
     } catch (error) {
-      console.error('Error sending message:', error);
+      // Error handled
     }
   };
   
@@ -196,7 +192,7 @@ const Messages = () => {
         setContextMenu(null);
         setSelectedMessage(null);
       } catch (error) {
-        console.error('Error deleting message:', error);
+        // Error handled
       }
     }
   };
@@ -216,7 +212,7 @@ const Messages = () => {
         setMessages([]);
       }
     } catch (error) {
-      console.error('Error deleting conversation:', error);
+      // Error handled
     }
   };
 
@@ -241,8 +237,6 @@ const Messages = () => {
 
   // Пошук користувачів
   const searchUsers = async (query) => {
-    console.log('Searching for users with query:', query);
-    
     if (query.trim().length < 2) {
       setSearchResults([]);
       setSearchLoading(false);
@@ -252,22 +246,14 @@ const Messages = () => {
     setSearchLoading(true);
     
     try {
-      const token = localStorage.getItem('accessToken');
-      console.log('Token available for search:', token ? 'yes' : 'no');
-      
       // Спочатку спробуємо messagesService
       try {
-        console.log('Trying messagesService.searchUsers...');
         const users = await messagesService.searchUsers(query);
-        console.log('messagesService search result:', users);
         
-        // Якщо messagesService повертає порожній масив або помилку, спробуємо friendsService
         if (!users || users.length === 0) {
-          console.log('messagesService returned empty results, trying friendsService');
           throw new Error('No users found in messagesService');
         }
         
-        // Перевіряємо формат даних від messagesService
         const formattedUsers = users.map(user => ({
           _id: user._id,
           username: user.username || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.lastName || 'Unknown'),
@@ -277,17 +263,11 @@ const Messages = () => {
         }));
         
         setSearchResults(formattedUsers);
-        
-        setSearchResults(users);
         return;
       } catch (messagesError) {
-        console.log('messagesService failed or empty, trying friendsService:', messagesError.message);
-        // Якщо messagesService не працює або порожній, спробуємо friendsService
         const friendsResult = await friendsService.searchUsers(query);
-        console.log('friendsService search result:', friendsResult);
         
         if (friendsResult.success) {
-          // Перетворюємо формат даних з friendsService
           const formattedUsers = friendsResult.data.map(user => ({
             _id: user.id || user._id,
             username: user.username || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.lastName || 'Unknown'),
@@ -295,20 +275,13 @@ const Messages = () => {
             avatar: user.avatar,
             isOnline: user.isOnline || user.status === 'online'
           }));
-          console.log('Formatted users:', formattedUsers);
           setSearchResults(formattedUsers);
         } else {
           throw new Error(friendsResult.error || 'Friends search failed');
         }
       }
     } catch (error) {
-      console.error('Error searching users:', error);
       setSearchResults([]);
-      
-      // Показати повідомлення про помилку користувачу
-      if (error.message.includes('No authentication token')) {
-        console.error('User not authenticated');
-      }
     } finally {
       setSearchLoading(false);
     }
@@ -323,8 +296,6 @@ const Messages = () => {
   }, [followerSearchQuery]);
 
   const startNewChat = async (user) => {
-    console.log('Starting new chat with user:', user);
-    
     try {
       const token = localStorage.getItem('accessToken');
       
@@ -333,27 +304,18 @@ const Messages = () => {
         return;
       }
       
-      // Оновлюємо токен в messagesService
       messagesService.setToken(token);
       
-      console.log('Creating conversation with userId:', user._id);
       const conversation = await messagesService.createConversation(user._id);
-      console.log('Created conversation:', conversation);
       
-      // Активуємо чат одразу
       setActiveChat(conversation._id);
       
-      // Оновлюємо список розмов через API
       const updatedConversations = await messagesService.getConversations();
       setConversations(updatedConversations);
-      console.log('Conversations updated:', updatedConversations);
       setShowNewChatModal(false);
       setFollowerSearchQuery('');
       setSearchResults([]);
-      
-      console.log('Chat created successfully');
     } catch (error) {
-      console.error('Error creating conversation:', error);
       if (error.message.includes('No authentication token')) {
         alert('Помилка авторизації. Будь ласка, перезавантажте сторінку та увійдіть знову.');
       } else {
@@ -362,9 +324,18 @@ const Messages = () => {
     }
   };
 
-  const filteredConversations = conversations.filter(conv =>
-    conv.participant?.username?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredConversations = conversations.filter(conv => {
+    const searchLower = searchQuery.toLowerCase();
+    const participant = conv.participant;
+    
+    return (
+      participant?.username?.toLowerCase().includes(searchLower) ||
+      participant?.firstName?.toLowerCase().includes(searchLower) ||
+      participant?.lastName?.toLowerCase().includes(searchLower) ||
+      participant?.email?.toLowerCase().includes(searchLower) ||
+      `${participant?.firstName || ''} ${participant?.lastName || ''}`.toLowerCase().includes(searchLower)
+    );
+  });
 
   const activeConversation = conversations.find(conv => conv._id === activeChat);
 
@@ -411,8 +382,6 @@ const Messages = () => {
                 <div className="loading">Завантаження...</div>
               ) : (
                 <>
-                  {console.log('Rendering conversations:', conversations)}
-                  {console.log('Filtered conversations:', filteredConversations)}
                   {filteredConversations.length === 0 ? (
                     <div className="no-results">
                       <p>Немає розмов</p>
@@ -436,7 +405,12 @@ const Messages = () => {
                     {conv.participant?.isOnline && <div className="online-dot"></div>}
                   </div>
                   <div className="conv-info">
-                    <div className="conv-name">{conv.participant?.username || 'Невідомий користувач'}</div>
+                    <div className="conv-name">
+                      {conv.participant?.username || 
+                       (conv.participant?.firstName && conv.participant?.lastName 
+                         ? `${conv.participant.firstName} ${conv.participant.lastName}` 
+                         : conv.participant?.firstName || conv.participant?.lastName || 'Невідомий користувач')}
+                    </div>
                     <div className="conv-last">
                       {conv.lastMessage?.content || 'Немає повідомлень'}
                     </div>
@@ -482,7 +456,12 @@ const Messages = () => {
                     {activeConversation.participant?.isOnline && <div className="online-dot"></div>}
                   </div>
                   <div className="chat-info">
-                    <div className="chat-name">{activeConversation.participant?.username || 'Невідомий користувач'}</div>
+                    <div className="chat-name">
+                      {activeConversation.participant?.username || 
+                       (activeConversation.participant?.firstName && activeConversation.participant?.lastName 
+                         ? `${activeConversation.participant.firstName} ${activeConversation.participant.lastName}` 
+                         : activeConversation.participant?.firstName || activeConversation.participant?.lastName || 'Невідомий користувач')}
+                    </div>
                     <div className="chat-status">
                       {isTyping ? (
                         <div className="typing-status">
