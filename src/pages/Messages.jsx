@@ -22,6 +22,12 @@ const Messages = () => {
   const [editText, setEditText] = useState('');
   const [pinnedMessages, setPinnedMessages] = useState([]);
   const [dragOver, setDragOver] = useState(false);
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [selectedMessages, setSelectedMessages] = useState([]);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [blockedUsers, setBlockedUsers] = useState([]);
+  const [touchStart, setTouchStart] = useState(null);
+  const [longPressTimer, setLongPressTimer] = useState(null);
   const [conversations, setConversations] = useState([
     { id: 1, name: 'Олексій Петренко', lastMessage: 'Що робиш сьогодні?', time: '14:33', unread: 0, online: true },
     { id: 2, name: 'Марія Іванова', lastMessage: 'Дякую за допомогу!', time: '12:15', unread: 2, online: false },
@@ -40,11 +46,15 @@ const Messages = () => {
       sender: 'me',
       time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),
       status: 'sent',
-      reactions: []
+      reactions: [],
+      replyTo: replyingTo,
+      encrypted: true,
+      selfDestruct: null
     };
 
     setMessages(prev => [...prev, message]);
     setNewMessage('');
+    setReplyingTo(null);
     
     // Симуляція доставки та прочитання
     setTimeout(() => {
@@ -245,6 +255,80 @@ const Messages = () => {
     });
   };
 
+  const handleReplyToMessage = (message) => {
+    setReplyingTo(message);
+    closeContextMenu();
+  };
+
+  const handleCopyText = (text) => {
+    navigator.clipboard.writeText(text);
+    closeContextMenu();
+  };
+
+  const handleBlockUser = (userId) => {
+    setBlockedUsers(prev => [...prev, userId]);
+    closeContextMenu();
+  };
+
+  const toggleMessageSelection = (messageId) => {
+    setSelectedMessages(prev => 
+      prev.includes(messageId) 
+        ? prev.filter(id => id !== messageId)
+        : [...prev, messageId]
+    );
+  };
+
+  const deleteSelectedMessages = () => {
+    setMessages(prev => prev.filter(msg => !selectedMessages.includes(msg.id)));
+    setSelectedMessages([]);
+    setSelectionMode(false);
+  };
+
+  const handleSelfDestructMessage = (messageId, seconds) => {
+    setTimeout(() => {
+      setMessages(prev => prev.filter(msg => msg.id !== messageId));
+    }, seconds * 1000);
+  };
+
+  const handleTouchStart = (e, message) => {
+    const touch = e.touches[0];
+    setTouchStart({ x: touch.clientX, y: touch.clientY, time: Date.now() });
+    
+    const timer = setTimeout(() => {
+      setContextMenu({
+        x: touch.clientX,
+        y: touch.clientY,
+        messageId: message.id
+      });
+      setSelectedMessage(message);
+    }, 500);
+    setLongPressTimer(timer);
+  };
+
+  const handleTouchEnd = (e, message) => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+    
+    if (!touchStart) return;
+    
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - touchStart.x;
+    const deltaY = Math.abs(touch.clientY - touchStart.y);
+    const deltaTime = Date.now() - touchStart.time;
+    
+    if (deltaTime < 500 && deltaY < 50) {
+      if (deltaX > 100) {
+        handleReplyToMessage(message);
+      } else if (deltaX < -100 && message.sender === 'me') {
+        setMessages(prev => prev.filter(msg => msg.id !== message.id));
+      }
+    }
+    
+    setTouchStart(null);
+  };
+
   return (
     <div className="messages-page">
       <div className="messages-container">
@@ -360,8 +444,11 @@ const Messages = () => {
               {messages.map(message => (
                 <div 
                   key={message.id} 
-                  className={`message ${message.sender}`}
+                  className={`message ${message.sender} ${selectedMessages.includes(message.id) ? 'selected' : ''}`}
                   onContextMenu={(e) => handleMessageRightClick(e, message)}
+                  onTouchStart={(e) => handleTouchStart(e, message)}
+                  onTouchEnd={(e) => handleTouchEnd(e, message)}
+                  onClick={() => selectionMode && toggleMessageSelection(message.id)}
                 >
                   <div 
                     className="message-bubble"
@@ -435,9 +522,17 @@ const Messages = () => {
                       </div>
                     ) : (
                       <>
+                        {message.replyTo && (
+                          <div className="reply-quote">
+                            <div className="reply-author">{message.replyTo.sender === 'me' ? 'Ви' : message.replyTo.name || 'Користувач'}</div>
+                            <div className="reply-text">{message.replyTo.text}</div>
+                          </div>
+                        )}
                         <div className="message-text">
+                          {message.encrypted && <span className="encryption-icon">🔒</span>}
                           {message.text}
                           {message.edited && <span className="edited-label"> (ред.)</span>}
+                          {message.selfDestruct && <span className="self-destruct-timer">⏱️ {message.selfDestruct}s</span>}
                         </div>
                         <div className="message-time">
                           {message.time}
@@ -481,6 +576,35 @@ const Messages = () => {
 
               <div ref={messagesEndRef} />
             </div>
+
+            {replyingTo && (
+              <div className="reply-preview">
+                <div className="reply-preview-content">
+                  <div className="reply-preview-header">
+                    <span className="reply-preview-author">Відповідь {replyingTo.sender === 'me' ? 'собі' : replyingTo.name || 'користувачу'}</span>
+                    <button className="reply-cancel" onClick={() => setReplyingTo(null)}>×</button>
+                  </div>
+                  <div className="reply-preview-text">{replyingTo.text}</div>
+                </div>
+              </div>
+            )}
+
+            {selectionMode && (
+              <div className="selection-toolbar">
+                <span className="selection-count">Вибрано: {selectedMessages.length}</span>
+                <div className="selection-actions">
+                  <button onClick={deleteSelectedMessages} className="selection-btn delete">
+                    🗑️ Видалити
+                  </button>
+                  <button onClick={() => {
+                    setSelectedMessages([]);
+                    setSelectionMode(false);
+                  }} className="selection-btn cancel">
+                    × Скасувати
+                  </button>
+                </div>
+              </div>
+            )}
 
             <div className="message-input">
               <button 
@@ -549,15 +673,41 @@ const Messages = () => {
                 ✏️ Редагувати
               </button>
             )}
+            <button className="context-menu-item" onClick={() => handleReplyToMessage(selectedMessage)}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/>
+              </svg>
+              Відповісти
+            </button>
+
+            <button className="context-menu-item" onClick={() => {
+              setSelectionMode(true);
+              toggleMessageSelection(selectedMessage.id);
+              closeContextMenu();
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+              Вибрати
+            </button>
             <button className="context-menu-item" onClick={() => {
               handlePinMessage(selectedMessage.id);
               closeContextMenu();
             }}>
-              📌 Закріпити
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16,12V4H17V2H7V4H8V12L6,14V16H11.2V22H12.8V16H18V14L16,12Z"/>
+              </svg>
+              Закріпити
             </button>
-            <button className="context-menu-item delete" onClick={handleDeleteMessage}>
-              🗑️ Видалити повідомлення
-            </button>
+            {selectedMessage?.sender !== 'me' && (
+              <button className="context-menu-item" onClick={() => handleBlockUser(selectedMessage.sender)}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L19,5.5C19,5.33 19,5.17 19,5A7,7 0 0,0 12,12A7,7 0 0,0 5,5C5,5.17 5,5.33 5,5.5L3,7V9H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V9H21M12,13.5L7,18.5H17L12,13.5Z"/>
+                </svg>
+                Блокувати
+              </button>
+            )}
+
           </div>
         )}
 
