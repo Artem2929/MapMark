@@ -1,209 +1,140 @@
 const express = require('express');
 const router = express.Router();
+const MessageService = require('../services/MessageService');
+const auth = require('../middleware/auth');
 
-// Mock data for conversations and messages
-let conversations = [
-  {
-    id: 1,
-    participants: ['68fca6b223ea8d70a8da03d8', '507f1f77bcf86cd799439011'],
-    lastMessage: 'Привіт! Як справи?',
-    lastMessageTime: new Date().toISOString(),
-    unreadCount: 2
-  },
-  {
-    id: 2,
-    participants: ['68fca6b223ea8d70a8da03d8', '507f1f77bcf86cd799439012'],
-    lastMessage: 'Дякую за допомогу!',
-    lastMessageTime: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    unreadCount: 0
-  }
-];
-
-let messages = {
-  1: [
-    {
-      id: 1,
-      conversationId: 1,
-      senderId: '507f1f77bcf86cd799439011',
-      text: 'Привіт!',
-      timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString()
-    },
-    {
-      id: 2,
-      conversationId: 1,
-      senderId: '68fca6b223ea8d70a8da03d8',
-      text: 'Привіт! Як справи?',
-      timestamp: new Date(Date.now() - 4 * 60 * 1000).toISOString()
-    }
-  ],
-  2: [
-    {
-      id: 3,
-      conversationId: 2,
-      senderId: '507f1f77bcf86cd799439012',
-      text: 'Дякую за допомогу!',
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
-    }
-  ]
-};
-
-// Mock users data
-const users = {
-  '507f1f77bcf86cd799439011': {
-    id: '507f1f77bcf86cd799439011',
-    firstName: 'Олександр',
-    lastName: 'Коваленко',
-    avatar: null,
-    isOnline: true
-  },
-  '507f1f77bcf86cd799439012': {
-    id: '507f1f77bcf86cd799439012',
-    firstName: 'Марина',
-    lastName: 'Петренко',
-    avatar: null,
-    isOnline: false
-  }
-};
-
-// Get conversations for a user
-router.get('/:userId/conversations', (req, res) => {
+// Отримати всі розмови користувача
+router.get('/conversations', auth, async (req, res) => {
   try {
-    const { userId } = req.params;
-    
-    const userConversations = conversations
-      .filter(conv => conv.participants.includes(userId))
-      .map(conv => {
-        const otherUserId = conv.participants.find(id => id !== userId);
-        const otherUser = users[otherUserId];
-        
-        return {
-          id: conv.id,
-          name: otherUser ? `${otherUser.firstName} ${otherUser.lastName}` : 'Unknown User',
-          avatar: otherUser?.avatar || null,
-          lastMessage: conv.lastMessage,
-          lastMessageTime: new Date(conv.lastMessageTime).toLocaleTimeString('uk-UA', { 
-            hour: '2-digit', 
-            minute: '2-digit' 
-          }),
-          unreadCount: conv.unreadCount,
-          isOnline: otherUser?.isOnline || false
-        };
-      });
-
-    res.json(userConversations);
+    const conversations = await MessageService.getUserConversations(req.user.id);
+    res.json({ success: true, data: conversations });
   } catch (error) {
-    console.error('Error fetching conversations:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ success: false, message: error.message });
   }
 });
 
-// Get messages for a conversation
-router.get('/:conversationId', (req, res) => {
+// Отримати повідомлення розмови
+router.get('/conversations/:conversationId/messages', auth, async (req, res) => {
   try {
     const { conversationId } = req.params;
-    const conversationMessages = messages[conversationId] || [];
+    const { page = 1, limit = 50 } = req.query;
     
-    const formattedMessages = conversationMessages.map(msg => {
-      const sender = users[msg.senderId];
-      return {
-        id: msg.id,
-        text: msg.text,
-        sender: msg.senderId === req.query.currentUserId ? 'me' : 'other',
-        time: new Date(msg.timestamp).toLocaleTimeString('uk-UA', { 
-          hour: '2-digit', 
-          minute: '2-digit' 
-        }),
-        name: sender ? sender.firstName : 'Unknown'
-      };
-    });
-
-    res.json(formattedMessages);
-  } catch (error) {
-    console.error('Error fetching messages:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-// Send a message
-router.post('/:conversationId', (req, res) => {
-  try {
-    const { conversationId } = req.params;
-    const { text, senderId } = req.body;
-
-    if (!text || !senderId) {
-      return res.status(400).json({ error: 'Text and senderId are required' });
-    }
-
-    const newMessage = {
-      id: Date.now(),
-      conversationId: parseInt(conversationId),
-      senderId,
-      text,
-      timestamp: new Date().toISOString()
-    };
-
-    if (!messages[conversationId]) {
-      messages[conversationId] = [];
-    }
-    
-    messages[conversationId].push(newMessage);
-
-    // Update conversation last message
-    const conversation = conversations.find(conv => conv.id === parseInt(conversationId));
-    if (conversation) {
-      conversation.lastMessage = text;
-      conversation.lastMessageTime = newMessage.timestamp;
-    }
-
-    res.json({
-      id: newMessage.id,
-      text: newMessage.text,
-      sender: 'me',
-      time: new Date(newMessage.timestamp).toLocaleTimeString('uk-UA', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
-      })
-    });
-  } catch (error) {
-    console.error('Error sending message:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-// Create a new conversation
-router.post('/conversations', (req, res) => {
-  try {
-    const { participants } = req.body;
-
-    if (!participants || participants.length !== 2) {
-      return res.status(400).json({ error: 'Two participants are required' });
-    }
-
-    // Check if conversation already exists
-    const existingConversation = conversations.find(conv => 
-      conv.participants.includes(participants[0]) && 
-      conv.participants.includes(participants[1])
+    const messages = await MessageService.getConversationMessages(
+      conversationId, 
+      parseInt(page), 
+      parseInt(limit)
     );
-
-    if (existingConversation) {
-      return res.json({ id: existingConversation.id });
-    }
-
-    const newConversation = {
-      id: conversations.length + 1,
-      participants,
-      lastMessage: '',
-      lastMessageTime: new Date().toISOString(),
-      unreadCount: 0
-    };
-
-    conversations.push(newConversation);
-    messages[newConversation.id] = [];
-
-    res.json({ id: newConversation.id });
+    
+    res.json({ success: true, data: messages });
   } catch (error) {
-    console.error('Error creating conversation:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Створити або знайти розмову
+router.post('/conversations', auth, async (req, res) => {
+  try {
+    const { otherUserId } = req.body;
+    
+    if (!otherUserId) {
+      return res.status(400).json({ success: false, message: 'Other user ID is required' });
+    }
+    
+    const conversation = await MessageService.findOrCreateConversation(req.user.id, otherUserId);
+    res.json({ success: true, data: conversation });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Надіслати повідомлення
+router.post('/conversations/:conversationId/messages', auth, async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const { content } = req.body;
+    
+    if (!content || !content.trim()) {
+      return res.status(400).json({ success: false, message: 'Message content is required' });
+    }
+    
+    const message = await MessageService.sendMessage(conversationId, req.user.id, content);
+    
+    // Відправити через WebSocket
+    const io = req.app.get('io');
+    if (io) {
+      io.to(conversationId).emit('newMessage', message);
+    }
+    
+    res.json({ success: true, data: message });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Позначити повідомлення як прочитані
+router.put('/conversations/:conversationId/read', auth, async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    
+    await MessageService.markMessagesAsRead(conversationId, req.user.id);
+    
+    // Відправити через WebSocket
+    const io = req.app.get('io');
+    if (io) {
+      io.to(conversationId).emit('messagesRead', { userId: req.user.id });
+    }
+    
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Видалити повідомлення
+router.delete('/messages/:messageId', auth, async (req, res) => {
+  try {
+    const { messageId } = req.params;
+    
+    await MessageService.deleteMessage(messageId, req.user.id);
+    
+    // Відправити через WebSocket
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('messageDeleted', { messageId });
+    }
+    
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Видалити розмову
+router.delete('/conversations/:conversationId', auth, async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    
+    await MessageService.deleteConversation(conversationId, req.user.id);
+    
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Пошук користувачів
+router.get('/users/search', auth, async (req, res) => {
+  try {
+    const { q } = req.query;
+    
+    if (!q || q.trim().length < 2) {
+      return res.json({ success: true, data: [] });
+    }
+    
+    const users = await MessageService.searchUsers(q.trim(), req.user.id);
+    res.json({ success: true, data: users });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 });
 

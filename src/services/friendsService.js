@@ -4,14 +4,34 @@ export const friendsService = {
   // Search users
   searchUsers: async (query, filters = {}) => {
     try {
-      const currentUserId = localStorage.getItem('userId');
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        throw new Error('No authentication token');
+      }
+      
+      // Отримуємо userId з токена
+      let currentUserId = localStorage.getItem('userId');
+      if (!currentUserId && token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          currentUserId = payload.id;
+        } catch (e) {
+          console.error('Error parsing token:', e);
+        }
+      }
+      
       const params = new URLSearchParams({
         query,
-        currentUserId,
+        ...(currentUserId && { currentUserId }),
         ...filters
       });
 
-      const response = await fetch(`${API_BASE}/friends/search?${params}`);
+      const response = await fetch(`${API_BASE}/friends/search?${params}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
       return await response.json();
     } catch (error) {
       console.error('Error searching users:', error);

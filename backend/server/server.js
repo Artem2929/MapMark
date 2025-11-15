@@ -1,9 +1,12 @@
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const multer = require('multer');
+const SocketService = require('./services/SocketService');
 const { securityMiddleware, generalLimiter } = require('./middleware/security');
 const errorHandler = require('./middleware/errorHandler');
 const { createReviewHandler, getReviewsHandler, getReviewsByLocationHandler, getPhotoHandler, deleteReviewHandler, deletePhotoHandler, getUserStatsHandler, likeReviewHandler, dislikeReviewHandler, addCommentHandler } = require('./services/ReviewService');
@@ -31,8 +34,21 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 const DB_URL = process.env.DB_URL;
+
+// Ініціалізація WebSocket сервісу
+const socketService = new SocketService(io);
+app.set('io', io);
 
 if (!DB_URL) {
   console.error('DB_URL environment variable is required');
@@ -541,10 +557,11 @@ app.use('*', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/api/health`);
-  console.log(`Locations API: http://localhost:${PORT}/api/locations`);
+  console.log(`WebSocket server is running`);
+  console.log(`Messages API: http://localhost:${PORT}/api/messages`);
 });
 
 // Graceful shutdown

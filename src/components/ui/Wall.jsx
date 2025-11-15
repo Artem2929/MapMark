@@ -554,19 +554,9 @@ const Wall = ({ userId, isOwnProfile, user }) => {
 
       <div className="posts-list">
         {posts.length === 0 ? (
-          <EmptyState
-            icon="📝"
-            title="Поки що немає записів"
-            description={isOwnProfile ? "Створіть свій перший пост!" : "Тут з'являться записи користувача"}
-            action={isOwnProfile ? (
-              <button 
-                className="empty-action-btn"
-                onClick={() => textareaRef.current?.focus()}
-              >
-                Написати пост
-              </button>
-            ) : null}
-          />
+          <div className="no-posts">
+            <p>Немає записів</p>
+          </div>
         ) : (
           posts.map(post => (
           <div key={post.id} className="post">

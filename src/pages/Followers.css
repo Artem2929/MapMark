@@ -70,7 +70,7 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
-.follower-item {
+.followers-page .follower-item {
   display: flex;
   align-items: center;
   padding: 20px 24px;
@@ -78,11 +78,11 @@
   transition: all 0.2s ease;
 }
 
-.follower-item:hover {
+.followers-page .follower-item:hover {
   background: #f8fafc;
 }
 
-.follower-item:last-child {
+.followers-page .follower-item:last-child {
   border-bottom: none;
 }
 

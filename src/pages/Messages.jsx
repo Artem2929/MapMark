@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import messagesService from '../services/messagesService';
+import { friendsService } from '../services/friendsService';
 import './Messages.css';
 
 const Messages = () => {
-  const [activeChat, setActiveChat] = useState(1);
-  const [messages, setMessages] = useState([
-    { id: 1, text: 'Привіт! Як справи?', sender: 'other', time: '14:30', name: 'Олексій', status: 'read', reactions: [] },
-    { id: 2, text: 'Привіт! Все добре, дякую', sender: 'me', time: '14:32', status: 'read', reactions: [{ emoji: '👍', count: 1 }] },
-    { id: 3, text: 'Що робиш сьогодні?', sender: 'other', time: '14:33', name: 'Олексій', status: 'delivered', reactions: [] }
-  ]);
+  const [activeChat, setActiveChat] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewChatModal, setShowNewChatModal] = useState(false);
@@ -15,59 +13,163 @@ const Messages = () => {
   const [contextMenu, setContextMenu] = useState(null);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [showAttachMenu, setShowAttachMenu] = useState(false);
-  const [showReactionPicker, setShowReactionPicker] = useState(null);
-  const [editingMessage, setEditingMessage] = useState(null);
-  const [editText, setEditText] = useState('');
-  const [pinnedMessages, setPinnedMessages] = useState([]);
-  const [dragOver, setDragOver] = useState(false);
-  const [replyingTo, setReplyingTo] = useState(null);
-  const [selectedMessages, setSelectedMessages] = useState([]);
-  const [selectionMode, setSelectionMode] = useState(false);
-  const [blockedUsers, setBlockedUsers] = useState([]);
-  const [touchStart, setTouchStart] = useState(null);
-  const [longPressTimer, setLongPressTimer] = useState(null);
-  const [conversations, setConversations] = useState([
-    { id: 1, name: 'Олексій Петренко', lastMessage: 'Що робиш сьогодні?', time: '14:33', unread: 0, online: true },
-    { id: 2, name: 'Марія Іванова', lastMessage: 'Дякую за допомогу!', time: '12:15', unread: 2, online: false },
-    { id: 3, name: 'Андрій Коваль', lastMessage: 'До зустрічі завтра', time: 'Вчора', unread: 0, online: true }
-  ]);
+  const [conversations, setConversations] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const messagesEndRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
 
-
-
-  const handleSendMessage = () => {
-    if (!newMessage.trim()) return;
-
-    const message = {
-      id: messages.length + 1,
-      text: newMessage,
-      sender: 'me',
-      time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),
-      status: 'sent',
-      reactions: [],
-      replyTo: replyingTo,
-      encrypted: true,
-      selfDestruct: null
+  // Ініціалізація
+  useEffect(() => {
+    const initializeMessages = async () => {
+      try {
+        setLoading(true);
+        
+        // Отримання токена та ініціалізація
+        const authToken = localStorage.getItem('accessToken');
+        console.log('Auth token found:', authToken ? 'yes' : 'no');
+        
+        if (!authToken) {
+          console.error('No access token found');
+          setLoading(false);
+          return;
+        }
+        
+        messagesService.setToken(authToken);
+        messagesService.initSocket();
+        
+        // Завантаження розмов
+        const conversationsData = await messagesService.getConversations();
+        setConversations(conversationsData);
+        
+        // Встановлення поточного користувача
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          setCurrentUser({ id: payload.id });
+        }
+        
+        // Підписка на WebSocket події
+        messagesService.onNewMessage(handleNewMessage);
+        messagesService.onMessageDeleted(handleMessageDeleted);
+        messagesService.onMessagesRead(handleMessagesRead);
+        messagesService.onUserTyping(handleUserTyping);
+        messagesService.onUserOnline(handleUserOnline);
+        messagesService.onUserOffline(handleUserOffline);
+        
+      } catch (error) {
+        console.error('Error initializing messages:', error);
+      } finally {
+        setLoading(false);
+      }
     };
+    
+    initializeMessages();
+    
+    return () => {
+      messagesService.disconnect();
+    };
+  }, []);
+  
+  // Завантаження повідомлень при зміні активного чату
+  useEffect(() => {
+    if (activeChat) {
+      loadMessages(activeChat);
+      messagesService.joinConversation(activeChat);
+      messagesService.markAsRead(activeChat);
+    }
+    
+    return () => {
+      if (activeChat) {
+        messagesService.leaveConversation(activeChat);
+      }
+    };
+  }, [activeChat]);
+  
+  // Прокрутка до останнього повідомлення
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+  
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  
+  const loadMessages = async (conversationId) => {
+    try {
+      const messagesData = await messagesService.getMessages(conversationId);
+      setMessages(messagesData);
+    } catch (error) {
+      console.error('Error loading messages:', error);
+    }
+  };
+  
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !activeChat) return;
 
-    setMessages(prev => [...prev, message]);
-    setNewMessage('');
-    setReplyingTo(null);
-    
-    // Симуляція доставки та прочитання
-    setTimeout(() => {
-      setMessages(prev => prev.map(msg => 
-        msg.id === message.id ? { ...msg, status: 'delivered' } : msg
+    try {
+      const message = await messagesService.sendMessage(activeChat, newMessage.trim());
+      setMessages(prev => [...prev, message]);
+      setNewMessage('');
+      
+      // Оновити останнє повідомлення в розмові
+      setConversations(prev => prev.map(conv => 
+        conv._id === activeChat 
+          ? { ...conv, lastMessage: message, lastActivity: new Date() }
+          : conv
       ));
-    }, 1000);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
+  
+  // WebSocket обробники
+  const handleNewMessage = (message) => {
+    if (message.conversation === activeChat) {
+      setMessages(prev => [...prev, message]);
+    }
     
-    setTimeout(() => {
-      setMessages(prev => prev.map(msg => 
-        msg.id === message.id ? { ...msg, status: 'read' } : msg
-      ));
-    }, 3000);
+    // Оновити розмову
+    setConversations(prev => prev.map(conv => 
+      conv._id === message.conversation
+        ? { ...conv, lastMessage: message, lastActivity: new Date(), unreadCount: conv.unreadCount + 1 }
+        : conv
+    ));
+  };
+  
+  const handleMessageDeleted = ({ messageId }) => {
+    setMessages(prev => prev.filter(msg => msg._id !== messageId));
+  };
+  
+  const handleMessagesRead = ({ userId }) => {
+    setMessages(prev => prev.map(msg => 
+      msg.sender._id !== currentUser?.id ? { ...msg, status: 'read' } : msg
+    ));
+  };
+  
+  const handleUserTyping = ({ userId, isTyping }) => {
+    setIsTyping(isTyping);
+    if (isTyping) {
+      setTimeout(() => setIsTyping(false), 3000);
+    }
+  };
+  
+  const handleUserOnline = ({ userId }) => {
+    setConversations(prev => prev.map(conv => 
+      conv.participant._id === userId
+        ? { ...conv, participant: { ...conv.participant, isOnline: true } }
+        : conv
+    ));
+  };
+  
+  const handleUserOffline = ({ userId }) => {
+    setConversations(prev => prev.map(conv => 
+      conv.participant._id === userId
+        ? { ...conv, participant: { ...conv.participant, isOnline: false } }
+        : conv
+    ));
   };
 
   const handleMessageRightClick = (e, message) => {
@@ -75,16 +177,21 @@ const Messages = () => {
     setContextMenu({
       x: e.clientX,
       y: e.clientY,
-      messageId: message.id
+      messageId: message._id
     });
     setSelectedMessage(message);
   };
 
-  const handleDeleteMessage = () => {
+  const handleDeleteMessage = async () => {
     if (selectedMessage) {
-      setMessages(prev => prev.filter(msg => msg.id !== selectedMessage.id));
-      setContextMenu(null);
-      setSelectedMessage(null);
+      try {
+        await messagesService.deleteMessage(selectedMessage._id);
+        setMessages(prev => prev.filter(msg => msg._id !== selectedMessage._id));
+        setContextMenu(null);
+        setSelectedMessage(null);
+      } catch (error) {
+        console.error('Error deleting message:', error);
+      }
     }
   };
 
@@ -93,241 +200,155 @@ const Messages = () => {
     setSelectedMessage(null);
   };
 
-  const handleDeleteChat = (chatId, e) => {
+  const handleDeleteChat = async (chatId, e) => {
     e.stopPropagation();
-    setConversations(prev => prev.filter(conv => conv.id !== chatId));
-    if (activeChat === chatId) {
-      setActiveChat(conversations.find(conv => conv.id !== chatId)?.id || null);
-      setMessages([]);
-    }
-  };
-
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const message = {
-        id: messages.length + 1,
-        type: file.type.startsWith('image/') ? 'image' : 'file',
-        fileName: file.name,
-        fileSize: (file.size / 1024 / 1024).toFixed(2) + ' MB',
-        fileUrl: URL.createObjectURL(file),
-        sender: 'me',
-        time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),
-        status: 'sent',
-        reactions: []
-      };
-      setMessages(prev => [...prev, message]);
-    }
-    setShowAttachMenu(false);
-  };
-
-  const handleVoiceRecord = () => {
-    if (!isRecording) {
-      setIsRecording(true);
-      // Симуляція запису
-      setTimeout(() => {
-        const message = {
-          id: messages.length + 1,
-          type: 'voice',
-          duration: '0:05',
-          sender: 'me',
-          time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),
-          status: 'sent',
-          reactions: []
-        };
-        setMessages(prev => [...prev, message]);
-        setIsRecording(false);
-      }, 2000);
+    try {
+      await messagesService.deleteConversation(chatId);
+      setConversations(prev => prev.filter(conv => conv._id !== chatId));
+      if (activeChat === chatId) {
+        setActiveChat(null);
+        setMessages([]);
+      }
+    } catch (error) {
+      console.error('Error deleting conversation:', error);
     }
   };
 
   const handleTyping = (e) => {
     setNewMessage(e.target.value);
-    if (!isTyping) {
-      setIsTyping(true);
-      setTimeout(() => setIsTyping(false), 2000);
+    
+    // Відправити подію друкування
+    if (activeChat) {
+      messagesService.sendTyping(activeChat, true);
+      
+      // Скасувати попередній таймер
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      
+      // Встановити новий таймер
+      typingTimeoutRef.current = setTimeout(() => {
+        messagesService.sendTyping(activeChat, false);
+      }, 1000);
     }
   };
 
-  const handleAddReaction = (messageId, emoji) => {
-    console.log('Adding reaction:', emoji, 'to message:', messageId);
-    setMessages(prev => {
-      const updated = prev.map(msg => {
-        if (msg.id === messageId) {
-          const existingReaction = msg.reactions.find(r => r.emoji === emoji);
-          if (existingReaction) {
-            const newReactions = msg.reactions.map(r => 
-              r.emoji === emoji ? { ...r, count: r.count + 1 } : r
-            );
-            console.log('Updated existing reaction:', newReactions);
-            return { ...msg, reactions: newReactions };
-          } else {
-            const newReactions = [...msg.reactions, { emoji, count: 1 }];
-            console.log('Added new reaction:', newReactions);
-            return { ...msg, reactions: newReactions };
-          }
+  // Пошук користувачів
+  const searchUsers = async (query) => {
+    console.log('Searching for users with query:', query);
+    
+    if (query.trim().length < 2) {
+      setSearchResults([]);
+      setSearchLoading(false);
+      return;
+    }
+    
+    setSearchLoading(true);
+    
+    try {
+      const token = localStorage.getItem('accessToken');
+      console.log('Token available for search:', token ? 'yes' : 'no');
+      
+      // Спочатку спробуємо messagesService
+      try {
+        console.log('Trying messagesService.searchUsers...');
+        const users = await messagesService.searchUsers(query);
+        console.log('messagesService search result:', users);
+        
+        // Якщо messagesService повертає порожній масив, спробуємо friendsService
+        if (!users || users.length === 0) {
+          throw new Error('No users found in messagesService');
         }
-        return msg;
-      });
-      console.log('All messages after reaction:', updated);
-      return updated;
-    });
-    setShowReactionPicker(null);
+        
+        setSearchResults(users);
+        return;
+      } catch (messagesError) {
+        console.log('messagesService failed or empty, trying friendsService:', messagesError.message);
+        // Якщо messagesService не працює або порожній, спробуємо friendsService
+        const friendsResult = await friendsService.searchUsers(query);
+        console.log('friendsService search result:', friendsResult);
+        
+        if (friendsResult.success) {
+          // Перетворюємо формат даних з friendsService
+          const formattedUsers = friendsResult.data.map(user => ({
+            _id: user.id,
+            username: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.lastName || 'Unknown',
+            email: user.email || '',
+            avatar: user.avatar,
+            isOnline: user.isOnline || user.status === 'online'
+          }));
+          console.log('Formatted users:', formattedUsers);
+          setSearchResults(formattedUsers);
+        } else {
+          throw new Error(friendsResult.error || 'Friends search failed');
+        }
+      }
+    } catch (error) {
+      console.error('Error searching users:', error);
+      setSearchResults([]);
+      
+      // Показати повідомлення про помилку користувачу
+      if (error.message.includes('No authentication token')) {
+        console.error('User not authenticated');
+      }
+    } finally {
+      setSearchLoading(false);
+    }
   };
+  
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      searchUsers(followerSearchQuery);
+    }, 300);
+    
+    return () => clearTimeout(timeoutId);
+  }, [followerSearchQuery]);
 
-  const toggleReactionPicker = (messageId) => {
-    setShowReactionPicker(showReactionPicker === messageId ? null : messageId);
+  const startNewChat = async (user) => {
+    console.log('Starting new chat with user:', user);
+    
+    try {
+      const token = localStorage.getItem('accessToken');
+      
+      if (!token) {
+        alert('Ви не авторизовані. Будь ласка, увійдіть в систему.');
+        return;
+      }
+      
+      // Оновлюємо токен в messagesService
+      messagesService.setToken(token);
+      
+      console.log('Creating conversation with userId:', user._id);
+      const conversation = await messagesService.createConversation(user._id);
+      console.log('Created conversation:', conversation);
+      
+      // Активуємо чат одразу
+      setActiveChat(conversation._id);
+      
+      // Оновлюємо список розмов через API
+      const updatedConversations = await messagesService.getConversations();
+      setConversations(updatedConversations);
+      console.log('Conversations updated:', updatedConversations);
+      setShowNewChatModal(false);
+      setFollowerSearchQuery('');
+      setSearchResults([]);
+      
+      console.log('Chat created successfully');
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+      if (error.message.includes('No authentication token')) {
+        alert('Помилка авторизації. Будь ласка, перезавантажте сторінку та увійдіть знову.');
+      } else {
+        alert('Помилка при створенні чату: ' + error.message);
+      }
+    }
   };
 
   const filteredConversations = conversations.filter(conv =>
-    conv.name.toLowerCase().includes(searchQuery.toLowerCase())
+    conv.participant?.username?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const activeConversation = conversations.find(conv => conv.id === activeChat);
-
-  const followers = [
-    { id: 4, name: 'Катерина Сидорова', online: true },
-    { id: 5, name: 'Дмитро Мельник', online: false },
-    { id: 6, name: 'Світлана Бондар', online: true }
-  ];
-
-  const startNewChat = (user) => {
-    setShowNewChatModal(false);
-    console.log('Розпочати чат з:', user.name);
-  };
-
-  const handleEditMessage = (message) => {
-    setEditingMessage(message.id);
-    setEditText(message.text);
-  };
-
-  const saveEditMessage = () => {
-    setMessages(prev => prev.map(msg => 
-      msg.id === editingMessage ? { ...msg, text: editText, edited: true } : msg
-    ));
-    setEditingMessage(null);
-    setEditText('');
-  };
-
-  const cancelEdit = () => {
-    setEditingMessage(null);
-    setEditText('');
-  };
-
-  const handlePinMessage = (messageId) => {
-    const message = messages.find(msg => msg.id === messageId);
-    if (message && !pinnedMessages.find(pin => pin.id === messageId)) {
-      setPinnedMessages(prev => [...prev, message]);
-    }
-  };
-
-  const handleUnpinMessage = (messageId) => {
-    setPinnedMessages(prev => prev.filter(pin => pin.id !== messageId));
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setDragOver(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    setDragOver(false);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setDragOver(false);
-    const files = Array.from(e.dataTransfer.files);
-    files.forEach(file => {
-      const message = {
-        id: messages.length + Date.now(),
-        type: file.type.startsWith('image/') ? 'image' : 'file',
-        fileName: file.name,
-        fileSize: (file.size / 1024 / 1024).toFixed(2) + ' MB',
-        fileUrl: URL.createObjectURL(file),
-        sender: 'me',
-        time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),
-        status: 'sent',
-        reactions: []
-      };
-      setMessages(prev => [...prev, message]);
-    });
-  };
-
-  const handleReplyToMessage = (message) => {
-    setReplyingTo(message);
-    closeContextMenu();
-  };
-
-  const handleCopyText = (text) => {
-    navigator.clipboard.writeText(text);
-    closeContextMenu();
-  };
-
-  const handleBlockUser = (userId) => {
-    setBlockedUsers(prev => [...prev, userId]);
-    closeContextMenu();
-  };
-
-  const toggleMessageSelection = (messageId) => {
-    setSelectedMessages(prev => 
-      prev.includes(messageId) 
-        ? prev.filter(id => id !== messageId)
-        : [...prev, messageId]
-    );
-  };
-
-  const deleteSelectedMessages = () => {
-    setMessages(prev => prev.filter(msg => !selectedMessages.includes(msg.id)));
-    setSelectedMessages([]);
-    setSelectionMode(false);
-  };
-
-  const handleSelfDestructMessage = (messageId, seconds) => {
-    setTimeout(() => {
-      setMessages(prev => prev.filter(msg => msg.id !== messageId));
-    }, seconds * 1000);
-  };
-
-  const handleTouchStart = (e, message) => {
-    const touch = e.touches[0];
-    setTouchStart({ x: touch.clientX, y: touch.clientY, time: Date.now() });
-    
-    const timer = setTimeout(() => {
-      setContextMenu({
-        x: touch.clientX,
-        y: touch.clientY,
-        messageId: message.id
-      });
-      setSelectedMessage(message);
-    }, 500);
-    setLongPressTimer(timer);
-  };
-
-  const handleTouchEnd = (e, message) => {
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      setLongPressTimer(null);
-    }
-    
-    if (!touchStart) return;
-    
-    const touch = e.changedTouches[0];
-    const deltaX = touch.clientX - touchStart.x;
-    const deltaY = Math.abs(touch.clientY - touchStart.y);
-    const deltaTime = Date.now() - touchStart.time;
-    
-    if (deltaTime < 500 && deltaY < 50) {
-      if (deltaX > 100) {
-        handleReplyToMessage(message);
-      } else if (deltaX < -100 && message.sender === 'me') {
-        setMessages(prev => prev.filter(msg => msg.id !== message.id));
-      }
-    }
-    
-    setTouchStart(null);
-  };
+  const activeConversation = conversations.find(conv => conv._id === activeChat);
 
   return (
     <div className="messages-page">
@@ -368,294 +389,169 @@ const Messages = () => {
             </div>
 
             <div className="conversations-list">
-              {filteredConversations.map(conv => (
+              {loading ? (
+                <div className="loading">Завантаження...</div>
+              ) : (
+                <>
+                  {console.log('Rendering conversations:', conversations)}
+                  {console.log('Filtered conversations:', filteredConversations)}
+                  {filteredConversations.length === 0 ? (
+                    <div className="no-results">
+                      <p>Немає розмов</p>
+                    </div>
+                  ) : (
+                    filteredConversations.map(conv => (
                 <div
-                  key={conv.id}
-                  className={`conversation ${activeChat === conv.id ? 'active' : ''}`}
-                  onClick={() => setActiveChat(conv.id)}
+                  key={conv._id}
+                  className={`conversation ${activeChat === conv._id ? 'active' : ''}`}
+                  onClick={() => setActiveChat(conv._id)}
                 >
                   <div className="conv-avatar">
-                    {conv.name.charAt(0)}
-                    {conv.online && <div className="online-dot"></div>}
+                    {conv.participant?.avatar ? (
+                      <img src={conv.participant.avatar} alt={conv.participant.username} />
+                    ) : (
+                      conv.participant?.username?.charAt(0)?.toUpperCase() || '?'
+                    )}
+                    {conv.participant?.isOnline && <div className="online-dot"></div>}
                   </div>
                   <div className="conv-info">
-                    <div className="conv-name">{conv.name}</div>
-                    <div className="conv-last">{conv.lastMessage}</div>
+                    <div className="conv-name">{conv.participant?.username || 'Невідомий користувач'}</div>
+                    <div className="conv-last">
+                      {conv.lastMessage?.content || 'Немає повідомлень'}
+                    </div>
                   </div>
                   <div className="conv-meta">
-                    <div className="conv-time">{conv.time}</div>
-                    {conv.unread > 0 && <div className="unread-count">{conv.unread}</div>}
+                    <div className="conv-time">
+                      {conv.lastActivity ? new Date(conv.lastActivity).toLocaleTimeString('uk-UA', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      }) : ''}
+                    </div>
+                    {conv.unreadCount > 0 && <div className="unread-count">{conv.unreadCount}</div>}
                   </div>
                   <button 
                     className="chat-delete-btn"
-                    onClick={(e) => handleDeleteChat(conv.id, e)}
+                    onClick={(e) => handleDeleteChat(conv._id, e)}
                     title="Видалити чат"
                   >
                     ×
                   </button>
                 </div>
-              ))}
+                    ))
+                  )}
+                </>
+              )}
             </div>
           </div>
 
           {/* Chat Area */}
           <div className="chat-area">
             <div className="chat-header">
-              <div className="chat-user">
-                <div className="chat-avatar">
-                  {activeConversation?.name.charAt(0)}
-                  {activeConversation?.online && <div className="online-dot"></div>}
-                </div>
-                <div className="chat-info">
-                  <div className="chat-name">{activeConversation?.name}</div>
-                  {isTyping && (
-                    <div className="typing-status">
-                      <div className="typing-dots">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                      </div>
-                      <span className="typing-text">друкує...</span>
+              {activeConversation ? (
+                <div className="chat-user">
+                  <div className="chat-avatar">
+                    {activeConversation.participant?.avatar ? (
+                      <img src={activeConversation.participant.avatar} alt={activeConversation.participant.username} />
+                    ) : (
+                      activeConversation.participant?.username?.charAt(0)?.toUpperCase() || '?'
+                    )}
+                    {activeConversation.participant?.isOnline && <div className="online-dot"></div>}
+                  </div>
+                  <div className="chat-info">
+                    <div className="chat-name">{activeConversation.participant?.username || 'Невідомий користувач'}</div>
+                    <div className="chat-status">
+                      {isTyping ? (
+                        <div className="typing-status">
+                          <div className="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
+                          <span className="typing-text">друкує...</span>
+                        </div>
+                      ) : (
+                        activeConversation.participant?.isOnline ? 'В мережі' : 
+                        `Був(ла) ${activeConversation.participant?.lastSeen ? 
+                          new Date(activeConversation.participant.lastSeen).toLocaleString('uk-UA') : 
+                          'нещодавно'}`
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="no-chat-selected">
+                  <h3>Оберіть розмову</h3>
+                  <p>Виберіть розмову зі списку або створіть нову</p>
+                </div>
+              )}
             </div>
 
-            {pinnedMessages.length > 0 && (
-              <div className="pinned-messages">
-                <div className="pinned-header">📌 Закріплені повідомлення</div>
-                {pinnedMessages.map(pin => (
-                  <div key={pin.id} className="pinned-message">
-                    <span className="pinned-text">{pin.text}</span>
-                    <button onClick={() => handleUnpinMessage(pin.id)} className="unpin-btn">×</button>
-                  </div>
-                ))}
-              </div>
-            )}
-
             <div 
-              className={`messages-area ${dragOver ? 'drag-over' : ''}`}
-              onClick={() => { closeContextMenu(); setShowReactionPicker(null); }}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
+              className="messages-area"
+              onClick={() => closeContextMenu()}
             >
-              {messages.map(message => (
+              {messages.map(message => {
+                const isMyMessage = message.sender._id === currentUser?.id;
+                return (
                 <div 
-                  key={message.id} 
-                  className={`message ${message.sender} ${selectedMessages.includes(message.id) ? 'selected' : ''}`}
+                  key={message._id} 
+                  className={`message ${isMyMessage ? 'me' : 'other'}`}
                   onContextMenu={(e) => handleMessageRightClick(e, message)}
-                  onTouchStart={(e) => handleTouchStart(e, message)}
-                  onTouchEnd={(e) => handleTouchEnd(e, message)}
-                  onClick={() => selectionMode && toggleMessageSelection(message.id)}
                 >
-                  <div 
-                    className="message-bubble"
-                    onDoubleClick={() => handleAddReaction(message.id, '❤️')}
-                  >
-
-                    {message.type === 'image' ? (
-                      <div className="message-image">
-                        <img src={message.fileUrl} alt={message.fileName} />
-                        <div className="message-time">
-                          {message.time}
-                          {message.sender === 'me' && (
-                            <span className={`message-status ${message.status}`}>
-                              {message.status === 'sent' && '✓'}
-                              {message.status === 'delivered' && '✓✓'}
-                              {message.status === 'read' && '✓✓'}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    ) : message.type === 'file' ? (
-                      <div className="message-file">
-                        <div className="file-icon">📄</div>
-                        <div className="file-info">
-                          <div className="file-name">{message.fileName}</div>
-                          <div className="file-size">{message.fileSize}</div>
-                        </div>
-                        <div className="message-time">
-                          {message.time}
-                          {message.sender === 'me' && (
-                            <span className={`message-status ${message.status}`}>
-                              {message.status === 'sent' && '✓'}
-                              {message.status === 'delivered' && '✓✓'}
-                              {message.status === 'read' && '✓✓'}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    ) : message.type === 'voice' ? (
-                      <div className="message-voice">
-                        <button className="voice-play-btn">▶️</button>
-                        <div className="voice-duration">{message.duration}</div>
-                        <div className="message-time">
-                          {message.time}
-                          {message.sender === 'me' && (
-                            <span className={`message-status ${message.status}`}>
-                              {message.status === 'sent' && '✓'}
-                              {message.status === 'delivered' && '✓✓'}
-                              {message.status === 'read' && '✓✓'}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    ) : editingMessage === message.id ? (
-                      <div className="edit-message">
-                        <input
-                          type="text"
-                          value={editText}
-                          onChange={(e) => setEditText(e.target.value)}
-                          className="edit-input"
-                          onKeyPress={(e) => {
-                            if (e.key === 'Enter') saveEditMessage();
-                            if (e.key === 'Escape') cancelEdit();
-                          }}
-                          autoFocus
-                        />
-                        <div className="edit-actions">
-                          <button onClick={saveEditMessage} className="save-btn">✓</button>
-                          <button onClick={cancelEdit} className="cancel-btn">×</button>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        {message.replyTo && (
-                          <div className="reply-quote">
-                            <div className="reply-author">{message.replyTo.sender === 'me' ? 'Ви' : message.replyTo.name || 'Користувач'}</div>
-                            <div className="reply-text">{message.replyTo.text}</div>
-                          </div>
-                        )}
-                        <div className="message-text">
-                          {message.encrypted && <span className="encryption-icon">🔒</span>}
-                          {message.text}
-                          {message.edited && <span className="edited-label"> (ред.)</span>}
-                          {message.selfDestruct && <span className="self-destruct-timer">⏱️ {message.selfDestruct}s</span>}
-                        </div>
-                        <div className="message-time">
-                          {message.time}
-                          {message.sender === 'me' && (
-                            <span className={`message-status ${message.status}`}>
-                              {message.status === 'sent' && '✓'}
-                              {message.status === 'delivered' && '✓✓'}
-                              {message.status === 'read' && '✓✓'}
-                            </span>
-                          )}
-                        </div>
-                      </>
-                    )}
-                    {message.sender === 'me' && (
+                  <div className="message-bubble">
+                    <div className="message-text">
+                      {message.content}
+                    </div>
+                    <div className="message-time">
+                      {new Date(message.createdAt).toLocaleTimeString('uk-UA', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
+                      {isMyMessage && (
+                        <span className={`message-status ${message.status}`}>
+                          {message.status === 'sent' && '✓'}
+                          {message.status === 'delivered' && '✓✓'}
+                          {message.status === 'read' && '✓✓'}
+                        </span>
+                      )}
+                    </div>
+                    {isMyMessage && (
                       <button 
                         className="message-delete-btn"
-                        onClick={() => {
-                          setMessages(prev => prev.filter(msg => msg.id !== message.id));
-                        }}
+                        onClick={handleDeleteMessage}
                         title="Видалити повідомлення"
                       >
                         ×
                       </button>
                     )}
-                    
-
                   </div>
-                  
-                  {message.reactions && message.reactions.length > 0 && (
-                    <div className="message-reactions">
-                      {message.reactions.map((reaction, index) => (
-                        <div key={index} className="reaction-item">
-                          <span className="reaction-emoji">{reaction.emoji}</span>
-                          <span className="reaction-count">{reaction.count}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
-              ))}
+              )})}
 
               <div ref={messagesEndRef} />
             </div>
 
-            {replyingTo && (
-              <div className="reply-preview">
-                <div className="reply-preview-content">
-                  <div className="reply-preview-header">
-                    <span className="reply-preview-author">Відповідь {replyingTo.sender === 'me' ? 'собі' : replyingTo.name || 'користувачу'}</span>
-                    <button className="reply-cancel" onClick={() => setReplyingTo(null)}>×</button>
-                  </div>
-                  <div className="reply-preview-text">{replyingTo.text}</div>
+            {activeChat && (
+              <div className="message-input">
+                <div className="message-input-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Напишіть повідомлення..."
+                    value={newMessage}
+                    onChange={handleTyping}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  />
                 </div>
+                
+                <button 
+                  className="send-btn"
+                  onClick={handleSendMessage} 
+                  disabled={!newMessage.trim()}
+                >
+                  ↑
+                </button>
               </div>
             )}
-
-            {selectionMode && (
-              <div className="selection-toolbar">
-                <span className="selection-count">Вибрано: {selectedMessages.length}</span>
-                <div className="selection-actions">
-                  <button onClick={deleteSelectedMessages} className="selection-btn delete">
-                    🗑️ Видалити
-                  </button>
-                  <button onClick={() => {
-                    setSelectedMessages([]);
-                    setSelectionMode(false);
-                  }} className="selection-btn cancel">
-                    × Скасувати
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <div className="message-input">
-              <button 
-                className="attach-btn"
-                onClick={() => setShowAttachMenu(!showAttachMenu)}
-                title="Прикріпити файл"
-              >
-                +
-              </button>
-              {showAttachMenu && (
-                <div className="attach-menu">
-                  <label className="attach-option">
-                    <input type="file" accept="image/*" onChange={handleFileUpload} hidden />
-                    <div className="attach-icon photo">📷</div>
-                    <span>Фото або відео</span>
-                  </label>
-                  <label className="attach-option">
-                    <input type="file" onChange={handleFileUpload} hidden />
-                    <div className="attach-icon file">📁</div>
-                    <span>Файл</span>
-                  </label>
-                </div>
-              )}
-              
-              <div className="message-input-wrapper">
-                <input
-                  type="text"
-                  placeholder="Напишіть повідомлення..."
-                  value={newMessage}
-                  onChange={handleTyping}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                />
-                <div className="input-actions">
-                  <button 
-                    className={`voice-btn ${isRecording ? 'recording' : ''}`}
-                    onClick={handleVoiceRecord}
-                    title="Голосове повідомлення"
-                  >
-                    {isRecording ? '⏹️' : '🎤'}
-                  </button>
-                </div>
-              </div>
-              
-              <button 
-                className="send-btn"
-                onClick={handleSendMessage} 
-                disabled={!newMessage.trim()}
-              >
-                ↑
-              </button>
-            </div>
           </div>
         </div>
 
@@ -665,49 +561,9 @@ const Messages = () => {
             style={{ left: contextMenu.x, top: contextMenu.y }}
             onClick={(e) => e.stopPropagation()}
           >
-            {selectedMessage?.sender === 'me' && selectedMessage?.type !== 'voice' && (
-              <button className="context-menu-item" onClick={() => {
-                handleEditMessage(selectedMessage);
-                closeContextMenu();
-              }}>
-                ✏️ Редагувати
-              </button>
-            )}
-            <button className="context-menu-item" onClick={() => handleReplyToMessage(selectedMessage)}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/>
-              </svg>
-              Відповісти
+            <button className="context-menu-item" onClick={handleDeleteMessage}>
+              🗑️ Видалити
             </button>
-
-            <button className="context-menu-item" onClick={() => {
-              setSelectionMode(true);
-              toggleMessageSelection(selectedMessage.id);
-              closeContextMenu();
-            }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-              Вибрати
-            </button>
-            <button className="context-menu-item" onClick={() => {
-              handlePinMessage(selectedMessage.id);
-              closeContextMenu();
-            }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M16,12V4H17V2H7V4H8V12L6,14V16H11.2V22H12.8V16H18V14L16,12Z"/>
-              </svg>
-              Закріпити
-            </button>
-            {selectedMessage?.sender !== 'me' && (
-              <button className="context-menu-item" onClick={() => handleBlockUser(selectedMessage.sender)}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L19,5.5C19,5.33 19,5.17 19,5A7,7 0 0,0 12,12A7,7 0 0,0 5,5C5,5.17 5,5.33 5,5.5L3,7V9H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V9H21M12,13.5L7,18.5H17L12,13.5Z"/>
-                </svg>
-                Блокувати
-              </button>
-            )}
-
           </div>
         )}
 
@@ -724,7 +580,7 @@ const Messages = () => {
                 </button>
               </div>
               <div className="modal-body">
-                <p>Оберіть користувача зі списку ваших підписників:</p>
+                <p>Знайдіть користувача для початку розмови:</p>
                 <div className="modal-search">
                   <input
                     type="text"
@@ -735,29 +591,36 @@ const Messages = () => {
                   />
                 </div>
                 <div className="followers-list">
-                  {followers.filter(user => 
-                    user.name.toLowerCase().includes(followerSearchQuery.toLowerCase())
-                  ).map(user => (
-                    <div 
-                      key={user.id} 
-                      className="follower-item"
-                      onClick={() => startNewChat(user)}
-                    >
-                      <div className="follower-avatar">
-                        {user.name.charAt(0)}
-                        {user.online && <div className="online-dot"></div>}
-                      </div>
-                      <div className="follower-info">
-                        <div className="follower-name">{user.name}</div>
-                      </div>
-                    </div>
-                  ))}
-                  {followers.filter(user => 
-                    user.name.toLowerCase().includes(followerSearchQuery.toLowerCase())
-                  ).length === 0 && followerSearchQuery && (
-                    <div className="no-results">
-                      <p>Нічого не знайдено</p>
-                    </div>
+                  {searchLoading ? (
+                    <div className="loading">Пошук...</div>
+                  ) : (
+                    <>
+                      {searchResults.map(user => (
+                        <div 
+                          key={user._id} 
+                          className="follower-item"
+                          onClick={() => startNewChat(user)}
+                        >
+                          <div className="follower-avatar">
+                            {user.avatar ? (
+                              <img src={`http://localhost:3001${user.avatar}`} alt={user.username} />
+                            ) : (
+                              user.username?.charAt(0)?.toUpperCase() || '?'
+                            )}
+                            {user.isOnline && <div className="online-dot"></div>}
+                          </div>
+                          <div className="follower-info">
+                            <div className="follower-name">{user.username || user.email}</div>
+                            <div className="follower-email">{user.email}</div>
+                          </div>
+                        </div>
+                      ))}
+                      {searchResults.length === 0 && followerSearchQuery && !searchLoading && (
+                        <div className="no-results">
+                          <p>Нічого не знайдено</p>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
