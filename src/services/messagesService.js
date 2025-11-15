@@ -25,13 +25,25 @@ class MessagesService {
   initSocket() {
     if (!this.socket) {
       this.socket = io(SOCKET_URL, {
-        transports: ['websocket', 'polling']
+        transports: ['websocket', 'polling'],
+        autoConnect: true
       });
 
-      const token = this.getToken();
-      if (token) {
-        this.socket.emit('authenticate', token);
-      }
+      this.socket.on('connect', () => {
+        console.log('Socket connected');
+        const token = this.getToken();
+        if (token) {
+          this.socket.emit('authenticate', token);
+        }
+      });
+
+      this.socket.on('authenticated', (data) => {
+        console.log('Socket authenticated:', data);
+      });
+
+      this.socket.on('authError', (error) => {
+        console.error('Socket auth error:', error);
+      });
     }
     return this.socket;
   }
@@ -60,11 +72,12 @@ class MessagesService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch conversations');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch conversations');
       }
 
       const data = await response.json();
-      return data.data;
+      return data.success ? data.data : [];
     } catch (error) {
       console.error('Error fetching conversations:', error);
       throw error;
@@ -72,7 +85,7 @@ class MessagesService {
   }
 
   // Отримати повідомлення розмови
-  async getMessages(conversationId, page = 1) {
+  async getMessages(conversationId, page = 1, limit = 50) {
     try {
       const token = this.getToken();
       if (!token) {
@@ -80,7 +93,7 @@ class MessagesService {
       }
       
       const response = await fetch(
-        `${API_BASE_URL}/messages/conversations/${conversationId}/messages?page=${page}`,
+        `${API_BASE_URL}/messages/conversations/${conversationId}/messages?page=${page}&limit=${limit}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -90,11 +103,12 @@ class MessagesService {
       );
 
       if (!response.ok) {
-        throw new Error('Failed to fetch messages');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch messages');
       }
 
       const data = await response.json();
-      return data.data;
+      return data.success ? data.data : [];
     } catch (error) {
       console.error('Error fetching messages:', error);
       throw error;
@@ -117,16 +131,17 @@ class MessagesService {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ content })
+          body: JSON.stringify({ content: content.trim() })
         }
       );
 
       if (!response.ok) {
-        throw new Error('Failed to send message');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to send message');
       }
 
       const data = await response.json();
-      return data.data;
+      return data.success ? data.data : null;
     } catch (error) {
       console.error('Error sending message:', error);
       throw error;
@@ -151,11 +166,12 @@ class MessagesService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create conversation');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create conversation');
       }
 
       const data = await response.json();
-      return data.data;
+      return data.success ? data.data : null;
     } catch (error) {
       console.error('Error creating conversation:', error);
       throw error;
@@ -182,10 +198,12 @@ class MessagesService {
       );
 
       if (!response.ok) {
-        throw new Error('Failed to mark messages as read');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to mark messages as read');
       }
 
-      return true;
+      const data = await response.json();
+      return data.success;
     } catch (error) {
       console.error('Error marking messages as read:', error);
       throw error;
@@ -209,10 +227,12 @@ class MessagesService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete message');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete message');
       }
 
-      return true;
+      const data = await response.json();
+      return data.success;
     } catch (error) {
       console.error('Error deleting message:', error);
       throw error;
@@ -239,10 +259,12 @@ class MessagesService {
       );
 
       if (!response.ok) {
-        throw new Error('Failed to delete conversation');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete conversation');
       }
 
-      return true;
+      const data = await response.json();
+      return data.success;
     } catch (error) {
       console.error('Error deleting conversation:', error);
       throw error;
@@ -268,11 +290,12 @@ class MessagesService {
       );
 
       if (!response.ok) {
-        throw new Error('Failed to search users');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to search users');
       }
 
       const data = await response.json();
-      return data.data;
+      return data.success ? data.data : [];
     } catch (error) {
       console.error('Error searching users:', error);
       throw error;

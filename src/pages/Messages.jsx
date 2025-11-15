@@ -41,8 +41,14 @@ const Messages = () => {
         messagesService.initSocket();
         
         // Завантаження розмов
-        const conversationsData = await messagesService.getConversations();
-        setConversations(conversationsData);
+        try {
+          const conversationsData = await messagesService.getConversations();
+          console.log('Loaded conversations:', conversationsData);
+          setConversations(conversationsData || []);
+        } catch (error) {
+          console.error('Failed to load conversations:', error);
+          setConversations([]);
+        }
         
         // Встановлення поточного користувача
         const token = localStorage.getItem('accessToken');
@@ -255,10 +261,22 @@ const Messages = () => {
         const users = await messagesService.searchUsers(query);
         console.log('messagesService search result:', users);
         
-        // Якщо messagesService повертає порожній масив, спробуємо friendsService
+        // Якщо messagesService повертає порожній масив або помилку, спробуємо friendsService
         if (!users || users.length === 0) {
+          console.log('messagesService returned empty results, trying friendsService');
           throw new Error('No users found in messagesService');
         }
+        
+        // Перевіряємо формат даних від messagesService
+        const formattedUsers = users.map(user => ({
+          _id: user._id,
+          username: user.username || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.lastName || 'Unknown'),
+          email: user.email || '',
+          avatar: user.avatar,
+          isOnline: user.isOnline
+        }));
+        
+        setSearchResults(formattedUsers);
         
         setSearchResults(users);
         return;
@@ -271,8 +289,8 @@ const Messages = () => {
         if (friendsResult.success) {
           // Перетворюємо формат даних з friendsService
           const formattedUsers = friendsResult.data.map(user => ({
-            _id: user.id,
-            username: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.lastName || 'Unknown',
+            _id: user.id || user._id,
+            username: user.username || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.lastName || 'Unknown'),
             email: user.email || '',
             avatar: user.avatar,
             isOnline: user.isOnline || user.status === 'online'
@@ -408,7 +426,10 @@ const Messages = () => {
                 >
                   <div className="conv-avatar">
                     {conv.participant?.avatar ? (
-                      <img src={conv.participant.avatar} alt={conv.participant.username} />
+                      <img 
+                        src={conv.participant.avatar.startsWith('http') ? conv.participant.avatar : `http://localhost:3001${conv.participant.avatar}`} 
+                        alt={conv.participant.username} 
+                      />
                     ) : (
                       conv.participant?.username?.charAt(0)?.toUpperCase() || '?'
                     )}
@@ -451,7 +472,10 @@ const Messages = () => {
                 <div className="chat-user">
                   <div className="chat-avatar">
                     {activeConversation.participant?.avatar ? (
-                      <img src={activeConversation.participant.avatar} alt={activeConversation.participant.username} />
+                      <img 
+                        src={activeConversation.participant.avatar.startsWith('http') ? activeConversation.participant.avatar : `http://localhost:3001${activeConversation.participant.avatar}`} 
+                        alt={activeConversation.participant.username} 
+                      />
                     ) : (
                       activeConversation.participant?.username?.charAt(0)?.toUpperCase() || '?'
                     )}
@@ -603,7 +627,10 @@ const Messages = () => {
                         >
                           <div className="follower-avatar">
                             {user.avatar ? (
-                              <img src={`http://localhost:3001${user.avatar}`} alt={user.username} />
+                              <img 
+                                src={user.avatar.startsWith('http') ? user.avatar : `http://localhost:3001${user.avatar}`} 
+                                alt={user.username} 
+                              />
                             ) : (
                               user.username?.charAt(0)?.toUpperCase() || '?'
                             )}
