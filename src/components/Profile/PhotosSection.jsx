@@ -11,7 +11,7 @@ const PhotosSection = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [photoToDelete, setPhotoToDelete] = useState(null);
   
-  console.log('PhotosSection - isOwnProfile:', isOwnProfile, 'photos.length:', photos.length);
+
 
   const handleDeletePhoto = (photoId) => {
     setPhotoToDelete(photoId);

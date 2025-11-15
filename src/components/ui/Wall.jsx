@@ -11,7 +11,7 @@ import './Wall.css';
 
 const Wall = ({ userId, isOwnProfile, user }) => {
   const currentUserId = localStorage.getItem('userId');
-  console.log('Wall component - userId:', userId, 'currentUserId:', currentUserId);
+
   const { posts, loading: wallLoading, refreshWall, addPost } = useUserWall(userId, currentUserId);
   const { isOnline } = useOnlineStatus(userId);
   const [loading, setLoading] = useState(false);
@@ -511,10 +511,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                     key={index} 
                     src={photo} 
                     alt={`Preview ${index + 1}`}
-                    onError={(e) => {
-                      console.error('Preview image error:', photo);
-                      e.target.style.display = 'none';
-                    }}
+onError={(e) => e.target.style.display = 'none'}
                   />
                 ))}
               </div>
@@ -625,7 +622,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
               ) : (
                 <>
                   <p dangerouslySetInnerHTML={{ __html: renderPostContent(post.content) }}></p>
-                  {console.log('Post data:', post)}
+
                   {post.hashtags && post.hashtags.trim() && (
                     <div className="post-hashtags">
                       {post.hashtags.split(' ').filter(tag => tag.trim()).map((tag, index) => (
@@ -650,10 +647,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                       key={index} 
                       src={image.startsWith('http') || image.startsWith('data:') ? image : `http://localhost:3001${image}`} 
                       alt={`Фото ${index + 1}`} 
-                      onError={(e) => {
-                        console.error('Image load error:', image);
-                        e.target.style.display = 'none';
-                      }}
+onError={(e) => e.target.style.display = 'none'}
                     />
                   ))}
                 </div>

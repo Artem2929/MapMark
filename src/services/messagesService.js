@@ -24,24 +24,37 @@ class MessagesService {
   // Ініціалізація WebSocket з'єднання
   initSocket() {
     if (!this.socket) {
+      console.log('Initializing WebSocket connection...');
+      
       this.socket = io(SOCKET_URL, {
         transports: ['websocket', 'polling'],
-        autoConnect: true
+        autoConnect: true,
+        forceNew: true
       });
 
       this.socket.on('connect', () => {
+        console.log('WebSocket connected:', this.socket.id);
         const token = this.getToken();
         if (token) {
+          console.log('Authenticating WebSocket...');
           this.socket.emit('authenticate', token);
         }
       });
 
       this.socket.on('authenticated', (data) => {
-        // Authenticated successfully
+        console.log('WebSocket authenticated:', data);
       });
 
       this.socket.on('authError', (error) => {
-        // Authentication error
+        console.error('WebSocket auth error:', error);
+      });
+      
+      this.socket.on('disconnect', () => {
+        console.log('WebSocket disconnected');
+      });
+      
+      this.socket.on('connect_error', (error) => {
+        console.error('WebSocket connection error:', error);
       });
     }
     return this.socket;
@@ -315,7 +328,11 @@ class MessagesService {
   // Підписка на події
   onNewMessage(callback) {
     if (this.socket) {
-      this.socket.on('newMessage', callback);
+      console.log('Setting up newMessage listener');
+      this.socket.on('newMessage', (data) => {
+        console.log('Received newMessage event:', data);
+        callback(data);
+      });
     }
   }
 

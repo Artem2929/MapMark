@@ -1,9 +1,63 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import messagesService from '../services/messagesService';
 import { friendsService } from '../services/friendsService';
 import './Messages.css';
 
+// Кеш для даних користувачів
+const userCache = new Map();
+
+// Функція для отримання повних даних користувача
+const getUserData = async (userId, token) => {
+  if (userCache.has(userId)) {
+    return userCache.get(userId);
+  }
+  
+  try {
+    const response = await fetch(`http://localhost:3001/api/user/${userId}/profile`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (response.ok) {
+      const userData = await response.json();
+      if (userData.success && userData.data) {
+        const userInfo = {
+          _id: userData.data._id,
+          name: userData.data.name,
+          username: userData.data.name,
+          email: userData.data.email,
+          avatar: userData.data.avatar,
+          isOnline: userData.data.isOnline,
+          lastSeen: userData.data.lastSeen
+        };
+        userCache.set(userId, userInfo);
+        return userInfo;
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
+  
+  return null;
+};
+
+// Функція для покращення даних учасника
+const enhanceParticipant = async (participant, token) => {
+  if (!participant || !participant._id) return participant;
+  
+  const userData = await getUserData(participant._id, token);
+  if (userData) {
+    return { ...participant, ...userData };
+  }
+  
+  return participant;
+};
+
 const Messages = () => {
+  const location = useLocation();
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -18,6 +72,7 @@ const Messages = () => {
   const [loading, setLoading] = useState(true);
   const [searchLoading, setSearchLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [forceUpdate, setForceUpdate] = useState(0);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
@@ -36,11 +91,16 @@ const Messages = () => {
         }
         
         messagesService.setToken(authToken);
-        messagesService.initSocket();
+        const socket = messagesService.initSocket();
+        
+        // Перевіряємо WebSocket стан
+        console.log('Socket state:', socket?.connected);
+        console.log('Socket ID:', socket?.id);
         
         // Завантаження розмов
         try {
           const conversationsData = await messagesService.getConversations();
+          console.log('Conversations data:', conversationsData);
           setConversations(conversationsData || []);
         } catch (error) {
           setConversations([]);
@@ -61,6 +121,24 @@ const Messages = () => {
         messagesService.onUserOnline(handleUserOnline);
         messagesService.onUserOffline(handleUserOffline);
         
+        console.log('WebSocket event listeners set up');
+        
+        // Перевіряємо чи потрібно почати чат з конкретним користувачем
+        if (location.state?.startChatWithUser) {
+          const userId = location.state.startChatWithUser;
+          try {
+            const conversation = await messagesService.createConversation(userId);
+            setConversations(prev => {
+              const exists = prev.find(conv => conv._id === conversation._id);
+              if (exists) return prev;
+              return [conversation, ...prev];
+            });
+            setActiveChat(conversation._id);
+          } catch (error) {
+            console.error('Error starting chat with user:', error);
+          }
+        }
+        
       } catch (error) {
         // Error handled
       } finally {
@@ -71,6 +149,13 @@ const Messages = () => {
     initializeMessages();
     
     return () => {
+      // Відписуємося від подій перед відключенням
+      messagesService.off('newMessage', handleNewMessage);
+      messagesService.off('messageDeleted', handleMessageDeleted);
+      messagesService.off('messagesRead', handleMessagesRead);
+      messagesService.off('userTyping', handleUserTyping);
+      messagesService.off('userOnline', handleUserOnline);
+      messagesService.off('userOffline', handleUserOffline);
       messagesService.disconnect();
     };
   }, []);
@@ -81,6 +166,13 @@ const Messages = () => {
       loadMessages(activeChat);
       messagesService.joinConversation(activeChat);
       messagesService.markAsRead(activeChat);
+      
+      // Обнуляємо unreadCount для активної розмови
+      setConversations(prev => prev.map(conv => 
+        conv._id === activeChat 
+          ? { ...conv, unreadCount: 0 }
+          : conv
+      ));
     }
     
     return () => {
@@ -93,6 +185,8 @@ const Messages = () => {
   // Прокрутка до останнього повідомлення
   useEffect(() => {
     scrollToBottom();
+    // Примусове оновлення при зміні повідомлень
+    setForceUpdate(prev => prev + 1);
   }, [messages]);
   
   const scrollToBottom = () => {
@@ -116,30 +210,63 @@ const Messages = () => {
       setMessages(prev => [...prev, message]);
       setNewMessage('');
       
-      // Оновити останнє повідомлення в розмові
+      // Оновити останнє повідомлення в розмові (без збільшення unreadCount для відправника)
       setConversations(prev => prev.map(conv => 
         conv._id === activeChat 
           ? { ...conv, lastMessage: message, lastActivity: new Date() }
           : conv
       ));
+      
+      // Примусове оновлення
+      setForceUpdate(prev => prev + 1);
     } catch (error) {
       // Error handled
     }
   };
   
   // WebSocket обробники
-  const handleNewMessage = (message) => {
+  const handleNewMessage = useCallback((message) => {
+    console.log('Processing new message:', message);
+    
     if (message.conversation === activeChat) {
-      setMessages(prev => [...prev, message]);
+      setMessages(prev => {
+        // Перевіряємо чи повідомлення вже існує
+        const exists = prev.find(msg => msg._id === message._id);
+        if (exists) return prev;
+        
+        const newMessages = [...prev, message];
+        console.log('Updated messages:', newMessages);
+        return newMessages;
+      });
+      
+      // Примусове оновлення для виправлення проблеми з рендерингом
+      setTimeout(() => {
+        scrollToBottom();
+        setForceUpdate(prev => prev + 1);
+      }, 50);
     }
     
-    // Оновити розмову
-    setConversations(prev => prev.map(conv => 
-      conv._id === message.conversation
-        ? { ...conv, lastMessage: message, lastActivity: new Date(), unreadCount: conv.unreadCount + 1 }
-        : conv
-    ));
-  };
+    // Оновити розмову - збільшувати unreadCount тільки якщо повідомлення не від поточного користувача
+    setConversations(prev => {
+      const updated = prev.map(conv => 
+        conv._id === message.conversation
+          ? { 
+              ...conv, 
+              lastMessage: message, 
+              lastActivity: new Date(), 
+              unreadCount: message.sender._id === currentUser?.id ? conv.unreadCount : (message.conversation === activeChat ? conv.unreadCount : conv.unreadCount + 1),
+              // Зберігаємо існуючі дані учасника, не перезаписуємо їх
+              participant: conv.participant
+            }
+          : conv
+      );
+      console.log('Updated conversations:', updated);
+      return updated;
+    });
+    
+    // Додаткове примусове оновлення
+    setTimeout(() => setForceUpdate(prev => prev + 1), 100);
+  }, [activeChat, currentUser?.id]);
   
   const handleMessageDeleted = ({ messageId }) => {
     setMessages(prev => prev.filter(msg => msg._id !== messageId));
@@ -237,7 +364,10 @@ const Messages = () => {
 
   // Пошук користувачів
   const searchUsers = async (query) => {
-    if (query.trim().length < 2) {
+    // Перевіряємо чи query є рядком
+    const searchQuery = typeof query === 'string' ? query : '';
+    
+    if (searchQuery.trim().length < 3) {
       setSearchResults([]);
       setSearchLoading(false);
       return;
@@ -248,7 +378,7 @@ const Messages = () => {
     try {
       // Спочатку спробуємо messagesService
       try {
-        const users = await messagesService.searchUsers(query);
+        const users = await messagesService.searchUsers(searchQuery);
         
         if (!users || users.length === 0) {
           throw new Error('No users found in messagesService');
@@ -256,7 +386,7 @@ const Messages = () => {
         
         const formattedUsers = users.map(user => ({
           _id: user._id,
-          username: user.username || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.lastName || 'Unknown'),
+          username: user.name || user.username || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.lastName || 'Unknown'),
           email: user.email || '',
           avatar: user.avatar,
           isOnline: user.isOnline
@@ -265,12 +395,12 @@ const Messages = () => {
         setSearchResults(formattedUsers);
         return;
       } catch (messagesError) {
-        const friendsResult = await friendsService.searchUsers(query);
+        const friendsResult = await friendsService.searchUsers(searchQuery);
         
         if (friendsResult.success) {
           const formattedUsers = friendsResult.data.map(user => ({
             _id: user.id || user._id,
-            username: user.username || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.lastName || 'Unknown'),
+            username: user.name || user.username || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.lastName || 'Unknown'),
             email: user.email || '',
             avatar: user.avatar,
             isOnline: user.isOnline || user.status === 'online'
@@ -307,11 +437,29 @@ const Messages = () => {
       messagesService.setToken(token);
       
       const conversation = await messagesService.createConversation(user._id);
+      console.log('Created conversation:', conversation);
       
       setActiveChat(conversation._id);
       
       const updatedConversations = await messagesService.getConversations();
-      setConversations(updatedConversations);
+      console.log('Updated conversations after creating chat:', updatedConversations);
+      
+      // Оновлюємо дані учасника з інформацією з пошуку
+      const enhancedConversations = updatedConversations.map(conv => {
+        if (conv.participant._id === user._id) {
+          return {
+            ...conv,
+            participant: {
+              ...conv.participant,
+              name: user.username,
+              username: user.username
+            }
+          };
+        }
+        return conv;
+      });
+      
+      setConversations(enhancedConversations);
       setShowNewChatModal(false);
       setFollowerSearchQuery('');
       setSearchResults([]);
@@ -387,9 +535,9 @@ const Messages = () => {
                       <p>Немає розмов</p>
                     </div>
                   ) : (
-                    filteredConversations.map(conv => (
+                    filteredConversations.map((conv, index) => (
                 <div
-                  key={conv._id}
+                  key={`${conv._id}-${index}-${forceUpdate}`}
                   className={`conversation ${activeChat === conv._id ? 'active' : ''}`}
                   onClick={() => setActiveChat(conv._id)}
                 >
@@ -406,10 +554,12 @@ const Messages = () => {
                   </div>
                   <div className="conv-info">
                     <div className="conv-name">
-                      {conv.participant?.username || 
+                      {conv.participant?.name || 
+                       conv.participant?.username || 
                        (conv.participant?.firstName && conv.participant?.lastName 
                          ? `${conv.participant.firstName} ${conv.participant.lastName}` 
-                         : conv.participant?.firstName || conv.participant?.lastName || 'Невідомий користувач')}
+                         : conv.participant?.firstName || conv.participant?.lastName || 
+                           (conv.participant?.email ? conv.participant.email.split('@')[0] : 'Невідомий користувач'))}
                     </div>
                     <div className="conv-last">
                       {conv.lastMessage?.content || 'Немає повідомлень'}
@@ -457,10 +607,12 @@ const Messages = () => {
                   </div>
                   <div className="chat-info">
                     <div className="chat-name">
-                      {activeConversation.participant?.username || 
+                      {activeConversation.participant?.name || 
+                       activeConversation.participant?.username || 
                        (activeConversation.participant?.firstName && activeConversation.participant?.lastName 
                          ? `${activeConversation.participant.firstName} ${activeConversation.participant.lastName}` 
-                         : activeConversation.participant?.firstName || activeConversation.participant?.lastName || 'Невідомий користувач')}
+                         : activeConversation.participant?.firstName || activeConversation.participant?.lastName || 
+                           (activeConversation.participant?.email ? activeConversation.participant.email.split('@')[0] : 'Невідомий користувач'))}
                     </div>
                     <div className="chat-status">
                       {isTyping ? (
@@ -492,12 +644,13 @@ const Messages = () => {
             <div 
               className="messages-area"
               onClick={() => closeContextMenu()}
+              key={`messages-${forceUpdate}`}
             >
-              {messages.map(message => {
+              {messages.map((message, index) => {
                 const isMyMessage = message.sender._id === currentUser?.id;
                 return (
                 <div 
-                  key={message._id} 
+                  key={`${message._id}-${index}-${forceUpdate}`} 
                   className={`message ${isMyMessage ? 'me' : 'other'}`}
                   onContextMenu={(e) => handleMessageRightClick(e, message)}
                 >

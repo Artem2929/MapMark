@@ -33,7 +33,7 @@ class SocketService {
             // Повідомити інших про онлайн статус
             socket.broadcast.emit('userOnline', { userId: user._id });
             
-            console.log(`User ${user.username} authenticated`);
+            console.log(`User ${user.name || user.username || user.email} authenticated`);
           }
         } catch (error) {
           socket.emit('authError', { message: 'Authentication failed' });

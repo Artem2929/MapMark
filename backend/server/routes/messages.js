@@ -59,14 +59,16 @@ router.post('/conversations/:conversationId/messages', auth, async (req, res) =>
     
     const message = await MessageService.sendMessage(conversationId, req.user.id, content);
     
-    // Відправити через WebSocket
+    // Відправити через WebSocket всім учасникам розмови
     const io = req.app.get('io');
     if (io) {
+      // Відправляємо повідомлення в розмову
       io.to(conversationId).emit('newMessage', message);
     }
     
     res.json({ success: true, data: message });
   } catch (error) {
+    console.error('Error sending message:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 });
@@ -76,7 +78,7 @@ router.put('/conversations/:conversationId/read', auth, async (req, res) => {
   try {
     const { conversationId } = req.params;
     
-    await MessageService.markMessagesAsRead(conversationId, req.user.id);
+    const result = await MessageService.markMessagesAsRead(conversationId, req.user.id);
     
     // Відправити через WebSocket
     const io = req.app.get('io');
@@ -84,8 +86,9 @@ router.put('/conversations/:conversationId/read', auth, async (req, res) => {
       io.to(conversationId).emit('messagesRead', { userId: req.user.id });
     }
     
-    res.json({ success: true });
+    res.json({ success: true, data: result });
   } catch (error) {
+    console.error('Error marking messages as read:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 });

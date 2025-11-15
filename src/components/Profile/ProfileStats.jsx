@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import messagesService from '../../services/messagesService';
 import './ProfileStats.css';
 
 const ProfileStats = ({ 
@@ -59,11 +60,24 @@ const ProfileStats = ({
   }, [onStatsReady]);
 
   const loadStats = async () => {
-    // All data is now loaded via hooks, no direct API calls needed
-    setStats(prev => ({
-      ...prev,
-      reviews: 0 // Will be implemented later
-    }));
+    try {
+      // Завантажуємо кількість повідомлень
+      const conversations = await messagesService.getConversations();
+      const messageCount = conversations.length;
+      
+      setStats(prev => ({
+        ...prev,
+        messages: messageCount,
+        reviews: 0 // Will be implemented later
+      }));
+    } catch (error) {
+      console.error('Error loading stats:', error);
+      setStats(prev => ({
+        ...prev,
+        messages: 0,
+        reviews: 0
+      }));
+    }
   };
 
   const navigate = useNavigate();
@@ -87,7 +101,12 @@ const ProfileStats = ({
   };
 
   const handleMessagesClick = () => {
-    navigate('/messages');
+    if (isOwnProfile) {
+      navigate('/messages');
+    } else {
+      // Для чужого профілю - створити розмову з цим користувачем
+      navigate('/messages', { state: { startChatWithUser: userId } });
+    }
   };
 
   if (loading) {

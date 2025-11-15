@@ -6,16 +6,22 @@ class MessageService {
   // Отримати всі розмови користувача
   async getUserConversations(userId) {
     try {
+      console.log(`Fetching conversations for user: ${userId}`);
+      
       const conversations = await Conversation.find({
         participants: userId
       })
-      .populate('participants', 'username email firstName lastName avatar isOnline lastSeen')
+      .populate('participants', 'name username email firstName lastName avatar isOnline lastSeen')
       .populate('lastMessage')
       .sort({ lastActivity: -1 });
 
-      return conversations.map(conv => {
+      console.log(`Found ${conversations.length} conversations`);
+
+      const result = conversations.map(conv => {
         const otherParticipant = conv.participants.find(p => p._id.toString() !== userId);
-        const unreadCount = conv.unreadCount.get(userId) || 0;
+        const unreadCount = conv.unreadCount.get(userId.toString()) || 0;
+        
+        console.log(`Conversation ${conv._id}: participant=${otherParticipant?.name || otherParticipant?.email}, unreadCount=${unreadCount}`);
         
         return {
           _id: conv._id,
@@ -25,7 +31,10 @@ class MessageService {
           unreadCount
         };
       });
+      
+      return result;
     } catch (error) {
+      console.error('Error in getUserConversations:', error);
       throw new Error(`Error fetching conversations: ${error.message}`);
     }
   }
@@ -39,7 +48,7 @@ class MessageService {
         conversation: conversationId,
         isDeleted: false
       })
-      .populate('sender', 'username avatar')
+      .populate('sender', 'name username avatar')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -62,7 +71,7 @@ class MessageService {
           participants: [userId, otherUserId]
         });
         await conversation.save();
-        await conversation.populate('participants', 'username email firstName lastName avatar isOnline lastSeen');
+        await conversation.populate('participants', 'name username email firstName lastName avatar isOnline lastSeen');
       }
 
       return conversation;
@@ -81,18 +90,23 @@ class MessageService {
       });
 
       await message.save();
-      await message.populate('sender', 'username avatar');
+      await message.populate('sender', 'name username avatar');
 
       // Оновити розмову
       const conversation = await Conversation.findById(conversationId);
+      if (!conversation) {
+        throw new Error('Conversation not found');
+      }
+      
       conversation.lastMessage = message._id;
       conversation.lastActivity = new Date();
       
-      // Збільшити лічильник непрочитаних для інших учасників
+      // Збільшити лічильник непрочитаних тільки для інших учасників
       conversation.participants.forEach(participantId => {
-        if (participantId.toString() !== senderId) {
-          const currentCount = conversation.unreadCount.get(participantId.toString()) || 0;
-          conversation.unreadCount.set(participantId.toString(), currentCount + 1);
+        const participantIdStr = participantId.toString();
+        if (participantIdStr !== senderId.toString()) {
+          const currentCount = conversation.unreadCount.get(participantIdStr) || 0;
+          conversation.unreadCount.set(participantIdStr, currentCount + 1);
         }
       });
 
@@ -185,13 +199,14 @@ class MessageService {
       const users = await User.find({
         _id: { $ne: currentUserId },
         $or: [
+          { name: { $regex: query, $options: 'i' } },
           { username: { $regex: query, $options: 'i' } },
           { email: { $regex: query, $options: 'i' } },
           { firstName: { $regex: query, $options: 'i' } },
           { lastName: { $regex: query, $options: 'i' } }
         ]
       })
-      .select('username email firstName lastName avatar isOnline lastSeen')
+      .select('name username email firstName lastName avatar isOnline lastSeen')
       .limit(10);
 
       return users;
