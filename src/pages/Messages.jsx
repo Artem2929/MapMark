@@ -386,22 +386,31 @@ const Messages = () => {
                 onClick={() => setShowAttachMenu(!showAttachMenu)}
                 title="Прикріпити файл"
               >
-                📎
+                +
               </button>
               {showAttachMenu && (
                 <div className="attach-menu">
                   <label className="attach-option">
                     <input type="file" accept="image/*" onChange={handleFileUpload} hidden />
-                    🖼️ Фото
+                    <div className="attach-icon photo">📷</div>
+                    <span>Фото або відео</span>
                   </label>
                   <label className="attach-option">
                     <input type="file" onChange={handleFileUpload} hidden />
-                    📄 Файл
+                    <div className="attach-icon file">📁</div>
+                    <span>Файл</span>
                   </label>
                 </div>
               )}
               
               <div className="message-input-wrapper">
+                <input
+                  type="text"
+                  placeholder="Напишіть повідомлення..."
+                  value={newMessage}
+                  onChange={handleTyping}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                />
                 <div className="input-actions">
                   <button 
                     className={`voice-btn ${isRecording ? 'recording' : ''}`}
@@ -411,13 +420,6 @@ const Messages = () => {
                     {isRecording ? '⏹️' : '🎤'}
                   </button>
                 </div>
-                <input
-                  type="text"
-                  placeholder="Напишіть повідомлення..."
-                  value={newMessage}
-                  onChange={handleTyping}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                />
               </div>
               
               <button 
