@@ -18,6 +18,10 @@ const Messages = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [showAttachMenu, setShowAttachMenu] = useState(false);
   const [showReactionPicker, setShowReactionPicker] = useState(null);
+  const [editingMessage, setEditingMessage] = useState(null);
+  const [editText, setEditText] = useState('');
+  const [pinnedMessages, setPinnedMessages] = useState([]);
+  const [dragOver, setDragOver] = useState(false);
   const [conversations, setConversations] = useState([
     { id: 1, name: 'Олексій Петренко', lastMessage: 'Що робиш сьогодні?', time: '14:33', unread: 0, online: true },
     { id: 2, name: 'Марія Іванова', lastMessage: 'Дякую за допомогу!', time: '12:15', unread: 2, online: false },
@@ -179,8 +183,66 @@ const Messages = () => {
 
   const startNewChat = (user) => {
     setShowNewChatModal(false);
-    // Логіка створення нового чату
     console.log('Розпочати чат з:', user.name);
+  };
+
+  const handleEditMessage = (message) => {
+    setEditingMessage(message.id);
+    setEditText(message.text);
+  };
+
+  const saveEditMessage = () => {
+    setMessages(prev => prev.map(msg => 
+      msg.id === editingMessage ? { ...msg, text: editText, edited: true } : msg
+    ));
+    setEditingMessage(null);
+    setEditText('');
+  };
+
+  const cancelEdit = () => {
+    setEditingMessage(null);
+    setEditText('');
+  };
+
+  const handlePinMessage = (messageId) => {
+    const message = messages.find(msg => msg.id === messageId);
+    if (message && !pinnedMessages.find(pin => pin.id === messageId)) {
+      setPinnedMessages(prev => [...prev, message]);
+    }
+  };
+
+  const handleUnpinMessage = (messageId) => {
+    setPinnedMessages(prev => prev.filter(pin => pin.id !== messageId));
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    const files = Array.from(e.dataTransfer.files);
+    files.forEach(file => {
+      const message = {
+        id: messages.length + Date.now(),
+        type: file.type.startsWith('image/') ? 'image' : 'file',
+        fileName: file.name,
+        fileSize: (file.size / 1024 / 1024).toFixed(2) + ' MB',
+        fileUrl: URL.createObjectURL(file),
+        sender: 'me',
+        time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),
+        status: 'sent',
+        reactions: []
+      };
+      setMessages(prev => [...prev, message]);
+    });
   };
 
   return (
@@ -262,11 +324,39 @@ const Messages = () => {
                 </div>
                 <div className="chat-info">
                   <div className="chat-name">{activeConversation?.name}</div>
+                  {isTyping && (
+                    <div className="typing-status">
+                      <div className="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                      <span className="typing-text">друкує...</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
-            <div className="messages-area" onClick={() => { closeContextMenu(); setShowReactionPicker(null); }}>
+            {pinnedMessages.length > 0 && (
+              <div className="pinned-messages">
+                <div className="pinned-header">📌 Закріплені повідомлення</div>
+                {pinnedMessages.map(pin => (
+                  <div key={pin.id} className="pinned-message">
+                    <span className="pinned-text">{pin.text}</span>
+                    <button onClick={() => handleUnpinMessage(pin.id)} className="unpin-btn">×</button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div 
+              className={`messages-area ${dragOver ? 'drag-over' : ''}`}
+              onClick={() => { closeContextMenu(); setShowReactionPicker(null); }}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
               {messages.map(message => (
                 <div 
                   key={message.id} 
@@ -325,9 +415,30 @@ const Messages = () => {
                           )}
                         </div>
                       </div>
+                    ) : editingMessage === message.id ? (
+                      <div className="edit-message">
+                        <input
+                          type="text"
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                          className="edit-input"
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') saveEditMessage();
+                            if (e.key === 'Escape') cancelEdit();
+                          }}
+                          autoFocus
+                        />
+                        <div className="edit-actions">
+                          <button onClick={saveEditMessage} className="save-btn">✓</button>
+                          <button onClick={cancelEdit} className="cancel-btn">×</button>
+                        </div>
+                      </div>
                     ) : (
                       <>
-                        <div className="message-text">{message.text}</div>
+                        <div className="message-text">
+                          {message.text}
+                          {message.edited && <span className="edited-label"> (ред.)</span>}
+                        </div>
                         <div className="message-time">
                           {message.time}
                           {message.sender === 'me' && (
@@ -367,16 +478,7 @@ const Messages = () => {
                   )}
                 </div>
               ))}
-              {isTyping && (
-                <div className="typing-indicator">
-                  <div className="typing-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                  <span className="typing-text">Друкує...</span>
-                </div>
-              )}
+
               <div ref={messagesEndRef} />
             </div>
 
@@ -439,6 +541,20 @@ const Messages = () => {
             style={{ left: contextMenu.x, top: contextMenu.y }}
             onClick={(e) => e.stopPropagation()}
           >
+            {selectedMessage?.sender === 'me' && selectedMessage?.type !== 'voice' && (
+              <button className="context-menu-item" onClick={() => {
+                handleEditMessage(selectedMessage);
+                closeContextMenu();
+              }}>
+                ✏️ Редагувати
+              </button>
+            )}
+            <button className="context-menu-item" onClick={() => {
+              handlePinMessage(selectedMessage.id);
+              closeContextMenu();
+            }}>
+              📌 Закріпити
+            </button>
             <button className="context-menu-item delete" onClick={handleDeleteMessage}>
               🗑️ Видалити повідомлення
             </button>
