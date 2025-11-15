@@ -136,25 +136,28 @@ const Messages = () => {
   };
 
   const handleAddReaction = (messageId, emoji) => {
-    setMessages(prev => prev.map(msg => {
-      if (msg.id === messageId) {
-        const existingReaction = msg.reactions.find(r => r.emoji === emoji);
-        if (existingReaction) {
-          return {
-            ...msg,
-            reactions: msg.reactions.map(r => 
+    console.log('Adding reaction:', emoji, 'to message:', messageId);
+    setMessages(prev => {
+      const updated = prev.map(msg => {
+        if (msg.id === messageId) {
+          const existingReaction = msg.reactions.find(r => r.emoji === emoji);
+          if (existingReaction) {
+            const newReactions = msg.reactions.map(r => 
               r.emoji === emoji ? { ...r, count: r.count + 1 } : r
-            )
-          };
-        } else {
-          return {
-            ...msg,
-            reactions: [...msg.reactions, { emoji, count: 1 }]
-          };
+            );
+            console.log('Updated existing reaction:', newReactions);
+            return { ...msg, reactions: newReactions };
+          } else {
+            const newReactions = [...msg.reactions, { emoji, count: 1 }];
+            console.log('Added new reaction:', newReactions);
+            return { ...msg, reactions: newReactions };
+          }
         }
-      }
-      return msg;
-    }));
+        return msg;
+      });
+      console.log('All messages after reaction:', updated);
+      return updated;
+    });
     setShowReactionPicker(null);
   };
 
@@ -270,14 +273,11 @@ const Messages = () => {
                   className={`message ${message.sender}`}
                   onContextMenu={(e) => handleMessageRightClick(e, message)}
                 >
-                  <div className="message-bubble">
-                    <button 
-                      className="reaction-btn"
-                      onClick={() => toggleReactionPicker(message.id)}
-                      title="Додати реакцію"
-                    >
-                      😊
-                    </button>
+                  <div 
+                    className="message-bubble"
+                    onDoubleClick={() => handleAddReaction(message.id, '❤️')}
+                  >
+
                     {message.type === 'image' ? (
                       <div className="message-image">
                         <img src={message.fileUrl} alt={message.fileName} />
@@ -344,8 +344,7 @@ const Messages = () => {
                       <button 
                         className="message-delete-btn"
                         onClick={() => {
-                          setSelectedMessage(message);
-                          handleDeleteMessage();
+                          setMessages(prev => prev.filter(msg => msg.id !== message.id));
                         }}
                         title="Видалити повідомлення"
                       >
@@ -353,30 +352,19 @@ const Messages = () => {
                       </button>
                     )}
                     
-                    {message.reactions && message.reactions.length > 0 && (
-                      <div className="message-reactions">
-                        {message.reactions.map((reaction, index) => (
-                          <span key={index} className="reaction-item">
-                            {reaction.emoji} {reaction.count}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    
-                    {showReactionPicker === message.id && (
-                      <div className="reaction-picker">
-                        {['👍', '❤️', '😂', '😢', '😡', '😮'].map(emoji => (
-                          <button
-                            key={emoji}
-                            className="reaction-option"
-                            onClick={() => handleAddReaction(message.id, emoji)}
-                          >
-                            {emoji}
-                          </button>
-                        ))}
-                      </div>
-                    )}
+
                   </div>
+                  
+                  {message.reactions && message.reactions.length > 0 && (
+                    <div className="message-reactions">
+                      {message.reactions.map((reaction, index) => (
+                        <div key={index} className="reaction-item">
+                          <span className="reaction-emoji">{reaction.emoji}</span>
+                          <span className="reaction-count">{reaction.count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
               {isTyping && (
