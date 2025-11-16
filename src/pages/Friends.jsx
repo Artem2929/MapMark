@@ -244,7 +244,10 @@ const Friends = () => {
     <div key={friend.id} className="friend-card">
       <div className="friend-avatar">
         {friend.avatar ? (
-          <img src={friend.avatar} alt={friend.name || `${friend.firstName} ${friend.lastName}`} />
+          <img 
+            src={friend.avatar.startsWith('http') ? friend.avatar : `http://localhost:3001${friend.avatar}`} 
+            alt={friend.name || `${friend.firstName || ''} ${friend.lastName || ''}`.trim() || 'User avatar'} 
+          />
         ) : (
           <div className="avatar-placeholder">
             {friend.name ? friend.name.charAt(0) : friend.firstName.charAt(0)}
@@ -371,8 +374,6 @@ const Friends = () => {
           </div>
 
           <div className="friends-main-content">
-
-        <div className="friends-content">
           {activeTab === 'all' && (
             <div className="friends-list">
               {filteredFriends.length > 0 ? (
@@ -409,40 +410,7 @@ const Friends = () => {
                     className="search-input"
                   />
                 </div>
-                <div className="search-filters">
-                  <select 
-                    className="filter-select"
-                    value={filters.country}
-                    onChange={(e) => handleFilterChange('country', e.target.value)}
-                  >
-                    <option value="">Всі країни</option>
-                    <option value="ua">Україна</option>
-                    <option value="pl">Польща</option>
-                    <option value="de">Німеччина</option>
-                  </select>
-                  <select 
-                    className="filter-select"
-                    value={filters.city}
-                    onChange={(e) => handleFilterChange('city', e.target.value)}
-                    disabled={!filters.country}
-                  >
-                    <option value="">Всі міста</option>
-                    {cities.map(city => (
-                      <option key={city} value={city}>{city}</option>
-                    ))}
-                  </select>
-                  <select 
-                    className="filter-select"
-                    value={filters.ageRange}
-                    onChange={(e) => handleFilterChange('ageRange', e.target.value)}
-                  >
-                    <option value="">Будь-який вік</option>
-                    <option value="18-25">18-25 років</option>
-                    <option value="26-35">26-35 років</option>
-                    <option value="36-50">36-50 років</option>
-                    <option value="51-65">51-65 років</option>
-                  </select>
-                </div>
+
               </div>
               <div className="search-results">
                 {error && (

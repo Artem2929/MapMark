@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProfile } from '../../contexts/ProfileContext';
-import PhotoUploadModal from './PhotoUploadModal';
+import { usePhotoUpload } from '../../hooks/usePhotoUpload';
+import Toast from '../ui/Toast';
 import EmptyState from '../ui/EmptyState';
 
 const PhotosSection = () => {
   const navigate = useNavigate();
-  const { photos, isOwnProfile, refreshPhotos, photosLoading } = useProfile();
-  const [showModal, setShowModal] = useState(false);
+  const { photos, isOwnProfile, refreshPhotos, photosLoading, targetUserId, addPhoto } = useProfile();
+  const { uploadPhoto, uploading } = usePhotoUpload();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [photoToDelete, setPhotoToDelete] = useState(null);
+  const [toast, setToast] = useState(null);
+  const fileInputRef = useRef(null);
   
 
 
@@ -47,6 +50,30 @@ const PhotosSection = () => {
     setPhotoToDelete(null);
   };
 
+  const handleFileSelect = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      const photoData = {
+        description: '',
+        tags: [],
+        hashtags: '',
+        location: null
+      };
+      const newPhoto = await uploadPhoto(file, photoData, targetUserId);
+      if (addPhoto) {
+        addPhoto(newPhoto);
+      }
+      if (refreshPhotos) {
+        refreshPhotos();
+      }
+      setToast({ message: 'Фото успішно додано!', type: 'success' });
+    } catch (error) {
+      setToast({ message: error.message, type: 'error' });
+    }
+  };
+
   return (
     <div className="profile-photos-section">
       <div className="profile-photos-header">
@@ -54,12 +81,22 @@ const PhotosSection = () => {
           {isOwnProfile ? 'Мої фото' : 'Фото'} ({photos.length})
         </h3>
         {isOwnProfile && (
-          <button 
-            className="profile-basic-info__edit-btn"
-            onClick={() => setShowModal(true)}
-          >
-            <span>+</span> Додати фото
-          </button>
+          <>
+            <button 
+              className="profile-basic-info__edit-btn"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+            >
+              <span>+</span> {uploading ? 'Завантаження...' : 'Додати фото'}
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+              style={{ display: 'none' }}
+            />
+          </>
         )}
       </div>
       
@@ -70,7 +107,7 @@ const PhotosSection = () => {
             <div key={`skeleton-${index}`} className="photo-skeleton"></div>
           ))
         ) : photos.length > 0 ? (
-          photos.map((photo) => (
+          photos.slice(-3).map((photo) => (
             <div 
               key={photo._id} 
               className="photo-gallery-item"
@@ -116,9 +153,7 @@ const PhotosSection = () => {
         ) : null}
       </div>
 
-      {showModal && (
-        <PhotoUploadModal onClose={() => setShowModal(false)} />
-      )}
+
       
       {showDeleteModal && (
         <div className="delete-confirmation-modal" onClick={cancelDeletePhoto}>
@@ -143,6 +178,14 @@ const PhotosSection = () => {
             </div>
           </div>
         </div>
+      )}
+      
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
       )}
     </div>
   );

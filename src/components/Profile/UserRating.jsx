@@ -7,10 +7,14 @@ const UserRating = ({ userId, isOwnProfile = false }) => {
   const [isVoting, setIsVoting] = useState(false);
 
   useEffect(() => {
-    loadRating();
+    if (userId) {
+      loadRating();
+    }
   }, [userId]);
 
   const loadRating = async () => {
+    if (!userId) return;
+    
     try {
       const response = await fetch(`http://localhost:3001/api/rating/${userId}`, {
         headers: {
@@ -29,7 +33,7 @@ const UserRating = ({ userId, isOwnProfile = false }) => {
   };
 
   const handleVote = async (vote) => {
-    if (isOwnProfile || isVoting) return;
+    if (isOwnProfile || isVoting || !userId) return;
     
     setIsVoting(true);
     

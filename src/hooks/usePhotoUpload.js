@@ -5,7 +5,7 @@ export const usePhotoUpload = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
 
-  const uploadPhoto = useCallback(async (file, description, userId) => {
+  const uploadPhoto = useCallback(async (file, photoData, userId) => {
     if (!file) throw new Error('No file provided');
 
     // Validation
@@ -23,7 +23,12 @@ export const usePhotoUpload = () => {
     try {
       const formData = new FormData();
       formData.append('photo', file);
-      formData.append('description', description);
+      formData.append('description', photoData?.description || '');
+      formData.append('tags', JSON.stringify(photoData?.tags || []));
+      formData.append('hashtags', photoData?.hashtags || '');
+      if (photoData?.location) {
+        formData.append('location', JSON.stringify(photoData.location));
+      }
       formData.append('userId', userId);
       
       const response = await apiPost('/photos/upload', formData);

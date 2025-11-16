@@ -12,7 +12,7 @@ const ProfileAvatar = ({
   onAvatarChange,
   onPhotoCountChange
 }) => {
-  const { isOnline } = useOnlineStatus(user?.id);
+  const { isOnline } = useOnlineStatus(user?._id || user?.id);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -195,7 +195,7 @@ const ProfileAvatar = ({
         )}
 
         {/* Онлайн індикатор */}
-        <OnlineIndicator userId={user?.id} size="md" />
+        <OnlineIndicator userId={user?._id || user?.id} size="md" />
 
         {/* Оверлей для зміни фото */}
         {isOwnProfile && (
@@ -239,7 +239,7 @@ const ProfileAvatar = ({
       )}
 
       {/* Блок рейтингу */}
-      <UserRating userId={user?.id} isOwnProfile={isOwnProfile} />
+      <UserRating userId={user?._id || user?.id} isOwnProfile={isOwnProfile} />
 
       {/* Вертикальне меню під фото */}
       <ProfileAvatarMenu />
