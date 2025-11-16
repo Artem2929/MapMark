@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Rating = require('../models/Rating');
+const PointsService = require('../services/PointsService');
 const auth = require('../middleware/auth');
 
 // Отримати рейтинг користувача
@@ -9,9 +10,8 @@ router.get('/:userId', auth, async (req, res) => {
     const { userId } = req.params;
     const currentUserId = req.user.id;
 
-    // Підрахунок загального рейтингу
-    const ratings = await Rating.find({ userId });
-    const totalRating = ratings.reduce((sum, rating) => sum + rating.vote, 0);
+    // Отримання повного рейтингу
+    const ratingData = await PointsService.getTotalRating(userId);
 
     // Перевірка чи поточний користувач вже голосував
     const userVote = await Rating.findOne({ 
@@ -21,7 +21,9 @@ router.get('/:userId', auth, async (req, res) => {
 
     res.json({
       success: true,
-      rating: totalRating,
+      rating: ratingData.totalPoints,
+      breakdown: ratingData.breakdown,
+      achievements: ratingData.achievements,
       userVote: userVote ? userVote.vote : 0
     });
   } catch (error) {
@@ -63,13 +65,12 @@ router.post('/:userId/vote', auth, async (req, res) => {
       { upsert: true, new: true }
     );
 
-    // Підрахунок нового рейтингу
-    const ratings = await Rating.find({ userId });
-    const totalRating = ratings.reduce((sum, rating) => sum + rating.vote, 0);
+    // Оновлення рейтингу
+    const ratingData = await PointsService.getTotalRating(userId);
 
     res.json({
       success: true,
-      rating: totalRating,
+      rating: ratingData.totalPoints,
       message: 'Голос збережено'
     });
   } catch (error) {

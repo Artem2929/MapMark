@@ -69,18 +69,28 @@ const UserRating = ({ userId, isOwnProfile = false }) => {
   const renderStars = () => {
     const stars = [];
     const maxStars = 5;
-    const starRating = Math.max(0, Math.min(5, (rating + 50) / 20)); // Конвертуємо рейтинг в зірки
     
     for (let i = 0; i < maxStars; i++) {
-      const isFilled = i < Math.floor(starRating);
-      const isHalf = i === Math.floor(starRating) && starRating % 1 >= 0.5;
+      const starThreshold = (i + 1) * 500; // 500 балів = 1 зірка
+      const prevThreshold = i * 500;
+      
+      let starClass = 'empty';
+      if (rating >= starThreshold) {
+        starClass = 'filled';
+      } else if (rating > prevThreshold) {
+        const progress = (rating - prevThreshold) / 500;
+        starClass = progress >= 0.5 ? 'half' : 'partial';
+      }
       
       stars.push(
         <span 
           key={i} 
-          className={`user-rating__star ${
-            isFilled ? 'filled' : isHalf ? 'half' : 'empty'
-          }`}
+          className={`user-rating__star ${starClass}`}
+          style={starClass === 'partial' ? {
+            background: `linear-gradient(90deg, #fbbf24 ${((rating - prevThreshold) / 500) * 100}%, #e5e7eb ${((rating - prevThreshold) / 500) * 100}%)`,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          } : {}}
         >
           ★
         </span>
