@@ -1,34 +1,65 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { debounce } from 'lodash';
+import { useParams, useNavigate } from 'react-router-dom';
 import { friendsService } from '../services/friendsService';
 import './Friends.css';
 
 const Friends = () => {
+  const { userId } = useParams();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [userSearchQuery, setUserSearchQuery] = useState('');
   const [filters, setFilters] = useState({ country: '', city: '', ageRange: '' });
   const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [searchLoading, setSearchLoading] = useState(false);
   const [error, setError] = useState('');
   const [friends, setFriends] = useState([]);
   const [requests, setRequests] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const [cities, setCities] = useState([]);
-  const [friendsLoading, setFriendsLoading] = useState(false);
-  const [requestsLoading, setRequestsLoading] = useState(false);
   const dataLoaded = useRef(false);
 
   useEffect(() => {
-    if (dataLoaded.current) return;
+    const initializeFriends = async () => {
+      try {
+        setLoading(true);
+        
+        const authToken = localStorage.getItem('accessToken');
+        if (!authToken) {
+          navigate('/login');
+          return;
+        }
+        
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          const currentUserId = payload.id;
+          setCurrentUser({ id: currentUserId });
+          
+          if (!userId || userId !== currentUserId) {
+            navigate(`/friends/${currentUserId}`, { replace: true });
+            return;
+          }
+        }
+        
+        await Promise.all([
+          loadFriends(),
+          loadRequests()
+        ]);
+        
+      } catch (error) {
+        console.error('Error initializing friends:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
     
-    const currentUserId = localStorage.getItem('userId');
-    if (!currentUserId) return;
-    
-    dataLoaded.current = true;
-    loadFriends();
-    loadRequests();
-    loadSuggestions();
-  }, []);
+    if (!dataLoaded.current) {
+      dataLoaded.current = true;
+      initializeFriends();
+    }
+  }, [userId, navigate]);
 
   useEffect(() => {
     if (filters.country) {
@@ -39,77 +70,40 @@ const Friends = () => {
   }, [filters.country]);
 
   const loadFriends = async () => {
-    if (friendsLoading) return;
-    
     try {
-      setFriendsLoading(true);
       const currentUserId = localStorage.getItem('userId');
       if (!currentUserId) return;
       
       const result = await friendsService.getFriends(currentUserId);
       if (result.success) {
-        setFriends(result.data);
+        setFriends(result.data || []);
+      } else {
+        setFriends([]);
       }
     } catch (error) {
       console.error('Error loading friends:', error);
       setFriends([]);
-    } finally {
-      setFriendsLoading(false);
     }
   };
 
   const loadRequests = async () => {
-    if (requestsLoading) return;
-    
     try {
-      setRequestsLoading(true);
       const currentUserId = localStorage.getItem('userId');
       if (!currentUserId) return;
       
       const result = await friendsService.getFriendRequests(currentUserId);
       if (result.success) {
-        setRequests(result.data);
+        setRequests(result.data || []);
+      } else {
+        setRequests([]);
       }
     } catch (error) {
       console.error('Error loading requests:', error);
       setRequests([]);
-    } finally {
-      setRequestsLoading(false);
     }
   };
 
-  const loadSuggestions = () => {
-    setSuggestions([
-      {
-        id: 5,
-        name: 'Ірина Мельник',
-        avatar: null,
-        mutualFriends: 7,
-        reason: 'Спільні інтереси'
-      },
-      {
-        id: 6,
-        name: 'Сергій Бондар',
-        avatar: null,
-        mutualFriends: 4,
-        reason: 'Живе поруч'
-      },
-      {
-        id: 7,
-        name: 'Олександр Коваленко',
-        avatar: null,
-        mutualFriends: 2,
-        reason: 'Київ'
-      },
-      {
-        id: 8,
-        name: 'Марина Петренко',
-        avatar: null,
-        mutualFriends: 9,
-        reason: 'Львів'
-      }
-    ]);
-  };
+
 
   const loadCities = async (country) => {
     const cityData = {
@@ -120,40 +114,49 @@ const Friends = () => {
     setCities(cityData[country] || []);
   };
 
-  const searchUsers = async (query, searchFilters) => {
-    if (!query.trim()) {
+  const searchUsers = async (query, searchFilters = {}) => {
+    if (!query.trim() || query.trim().length < 3) {
       setSearchResults([]);
+      setSearchLoading(false);
       return;
     }
 
-    setLoading(true);
+    setSearchLoading(true);
     setError('');
 
     try {
       const result = await friendsService.searchUsers(query, searchFilters);
       if (result.success) {
-        setSearchResults(result.data);
+        setSearchResults(result.data || []);
       } else {
         setError(result.error || 'Помилка пошуку');
+        setSearchResults([]);
       }
     } catch (err) {
       setError('Помилка пошуку. Спробуйте ще раз.');
+      setSearchResults([]);
     } finally {
-      setLoading(false);
+      setSearchLoading(false);
     }
   };
 
   const debouncedSearch = useCallback(
-    debounce((query, searchFilters) => {
-      searchUsers(query, searchFilters);
-    }, 500),
+    (query, searchFilters) => {
+      const timeoutId = setTimeout(() => {
+        searchUsers(query, searchFilters);
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    },
     []
   );
 
-  const handleSearchChange = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    debouncedSearch(query, filters);
+  useEffect(() => {
+    const cleanup = debouncedSearch(userSearchQuery, filters);
+    return cleanup;
+  }, [userSearchQuery, filters, debouncedSearch]);
+
+  const handleUserSearchChange = (e) => {
+    setUserSearchQuery(e.target.value);
   };
 
   const handleFilterChange = (filterType, value) => {
@@ -202,9 +205,11 @@ const Friends = () => {
     }
   };
 
-  const filteredFriends = friends.filter(friend =>
-    friend.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredFriends = friends.filter(friend => {
+    const searchLower = searchQuery.toLowerCase();
+    const name = friend.name || `${friend.firstName || ''} ${friend.lastName || ''}`.trim();
+    return name.toLowerCase().includes(searchLower);
+  });
 
   const handleAcceptRequest = async (id) => {
     try {
@@ -305,42 +310,67 @@ const Friends = () => {
     </div>
   );
 
+  if (loading) {
+    return (
+      <div className="friends-page">
+        <div className="loading">Завантаження...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="page-container friends-page">
+    <div className="friends-page">
       <div className="friends-container">
         <nav className="breadcrumbs">
           <span className="breadcrumb-item">
-            <a className="breadcrumb-link" href="/profile/68fca6b223ea8d70a8da03d8" data-discover="true">Профіль</a>
+            <a className="breadcrumb-link" href={`/profile/${userId}`}>Профіль</a>
           </span>
           <span className="breadcrumb-item">
             <span className="breadcrumb-separator">›</span>
             <span className="breadcrumb-current">Друзі</span>
           </span>
         </nav>
+
         <div className="friends-header">
           <h1>Друзі</h1>
         </div>
 
-        <div className="friends-tabs">
-          <button
-            className={`tab ${activeTab === 'all' ? 'active' : ''}`}
-            onClick={() => setActiveTab('all')}
-          >
-            Всі друзі ({friends.length})
-          </button>
-          <button
-            className={`tab ${activeTab === 'requests' ? 'active' : ''}`}
-            onClick={() => setActiveTab('requests')}
-          >
-            Заявки ({requests.length})
-          </button>
-          <button
-            className={`tab ${activeTab === 'search' ? 'active' : ''}`}
-            onClick={() => setActiveTab('search')}
-          >
-            Пошук друзів
-          </button>
-        </div>
+        <div className="friends-layout">
+          <div className="friends-sidebar">
+            <div className="sidebar-header">
+              <div className="search-box">
+                <input
+                  type="text"
+                  placeholder="Пошук друзів..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="friends-tabs">
+              <button
+                className={`tab ${activeTab === 'all' ? 'active' : ''}`}
+                onClick={() => setActiveTab('all')}
+              >
+                Всі друзі ({friends.length})
+              </button>
+              <button
+                className={`tab ${activeTab === 'requests' ? 'active' : ''}`}
+                onClick={() => setActiveTab('requests')}
+              >
+                Заявки ({requests.length})
+              </button>
+              <button
+                className={`tab ${activeTab === 'search' ? 'active' : ''}`}
+                onClick={() => setActiveTab('search')}
+              >
+                Пошук друзів
+              </button>
+            </div>
+          </div>
+
+          <div className="friends-main-content">
 
         <div className="friends-content">
           {activeTab === 'all' && (
@@ -374,12 +404,10 @@ const Friends = () => {
                   <input
                     type="text"
                     placeholder="Введіть ім'я або прізвище..."
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                    value={userSearchQuery}
+                    onChange={handleUserSearchChange}
                     className="search-input"
                   />
-                  <button className="search-btn" onClick={handleSearch}>Пошук</button>
                 </div>
                 <div className="search-filters">
                   <select 
@@ -422,12 +450,12 @@ const Friends = () => {
                     <p>{error}</p>
                   </div>
                 )}
-                {loading ? (
+                {searchLoading ? (
                   <div className="loading-state">
                     <div className="spinner"></div>
                     <p>Пошук...</p>
                   </div>
-                ) : searchQuery.trim() ? (
+                ) : userSearchQuery.trim() ? (
                   searchResults.length > 0 ? (
                     <div className="friends-list">
                       {searchResults.map(user => renderFriendCard(user, 'search'))}
@@ -445,6 +473,7 @@ const Friends = () => {
               </div>
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>

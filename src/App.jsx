@@ -181,6 +181,7 @@ const AppContent = () => {
             <Route path="/messages/:userId" element={<Messages />} />
             <Route path="/chat/:userId" element={<Chat />} />
             <Route path="/friends" element={<Friends />} />
+            <Route path="/friends/:userId" element={<Friends />} />
             <Route path="/photos" element={<Photos />} />
             <Route path="/user/:userId/followers" element={<Followers />} />
             <Route path="/user/:userId/following" element={<Following />} />
