@@ -119,17 +119,19 @@
 
 @media (max-width: 768px) {
   .footer {
-    padding: 40px 0 0;
+    padding: 30px 0 20px;
+    margin-top: 40px;
   }
   
   .footer-container {
-    padding: 0;
+    padding: 0 16px;
   }
   
   .footer-content {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 24px;
     text-align: center;
+    padding: 0;
   }
   
   .footer-brand {
@@ -140,7 +142,25 @@
     justify-content: center;
   }
   
-
+  .footer-title {
+    font-size: 24px;
+  }
   
-
+  .footer-description {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  
+  .footer-heading {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .footer-links li {
+    margin-bottom: 8px;
+  }
+  
+  .footer-link {
+    font-size: 14px;
+  }
 }
