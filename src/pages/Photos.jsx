@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import './Photos.css';
 
@@ -23,8 +23,14 @@ const Photos = () => {
   const [uploading, setUploading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [heartAnimations, setHeartAnimations] = useState({});
+  const [bookmarkedPhotos, setBookmarkedPhotos] = useState(new Set());
+  const [imageLoadStates, setImageLoadStates] = useState({});
+  
   const navigate = useNavigate();
+  const { userId } = useParams();
   const currentUserId = localStorage.getItem('userId');
+  const targetUserId = userId || currentUserId;
 
   useEffect(() => {
     if (!currentUserId) {
@@ -32,11 +38,88 @@ const Photos = () => {
       return;
     }
     loadPhotos();
-  }, [currentUserId, navigate]);
+  }, [currentUserId, targetUserId, navigate]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (selectedPhoto) {
+        if (e.key === 'Escape') {
+          handleCloseModal();
+        } else if (e.key === 'ArrowLeft') {
+          navigatePhoto(-1);
+        } else if (e.key === 'ArrowRight') {
+          navigatePhoto(1);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedPhoto, photos]);
+
+  const navigatePhoto = (direction) => {
+    if (!selectedPhoto || photos.length === 0) return;
+    
+    const currentIndex = photos.findIndex(p => p._id === selectedPhoto._id);
+    const newIndex = currentIndex + direction;
+    
+    if (newIndex >= 0 && newIndex < photos.length) {
+      handlePhotoClick(photos[newIndex]);
+    }
+  };
+
+  const handleDoubleClick = useCallback((photoId, e) => {
+    e.preventDefault();
+    
+    // Show heart animation
+    setHeartAnimations(prev => ({ ...prev, [photoId]: true }));
+    setTimeout(() => {
+      setHeartAnimations(prev => ({ ...prev, [photoId]: false }));
+    }, 800);
+    
+    // Like the photo
+    handlePhotoLike(photoId, 'like', e);
+  }, []);
+
+  const handleBookmark = useCallback((photoId, e) => {
+    e.stopPropagation();
+    setBookmarkedPhotos(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(photoId)) {
+        newSet.delete(photoId);
+      } else {
+        newSet.add(photoId);
+      }
+      return newSet;
+    });
+  }, []);
+
+  const handleShare = useCallback((photo, e) => {
+    e.stopPropagation();
+    if (navigator.share) {
+      navigator.share({
+        title: 'Подивіться на це фото',
+        text: photo.description || 'Фото',
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert('Посилання скопійовано!');
+    }
+  }, []);
+
+  const handleImageLoad = useCallback((photoId) => {
+    setImageLoadStates(prev => ({ ...prev, [photoId]: true }));
+  }, []);
+
+  const handleImageError = useCallback((photoId) => {
+    setImageLoadStates(prev => ({ ...prev, [photoId]: 'error' }));
+  }, []);
 
   const loadPhotos = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/photos/user/${currentUserId}`);
+      const response = await fetch(`http://localhost:3001/api/photos/user/${targetUserId}`);
       const result = await response.json();
       
       if (result.success) {
@@ -84,7 +167,6 @@ const Photos = () => {
 
   const handlePhotoClick = async (photo) => {
     setSelectedPhoto(photo);
-    // Load comments for selected photo
     try {
       const response = await fetch(`http://localhost:3001/api/photos/${photo._id}/comments`);
       const result = await response.json();
@@ -114,7 +196,6 @@ const Photos = () => {
       const result = await response.json();
       if (result.success) {
         setPhotoLikes(prev => ({ ...prev, [photoId]: newState }));
-        // Update photo stats in photos array
         setPhotos(prev => prev.map(photo => 
           photo._id === photoId 
             ? { ...photo, stats: { ...photo.stats, ...result.data } }
@@ -193,7 +274,6 @@ const Photos = () => {
   const handleUploadSubmit = async () => {
     if (!selectedFile) return;
 
-    // Validate file
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(selectedFile.file.type)) {
       alert('Дозволені тільки файли JPEG, PNG та WebP');
@@ -209,7 +289,6 @@ const Photos = () => {
     setUploadProgress(0);
     
     try {
-      // Convert file to base64
       const base64Data = await new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = (e) => resolve(e.target.result);
@@ -218,7 +297,6 @@ const Photos = () => {
 
       setUploadProgress(30);
 
-      // Create post with photo
       const response = await fetch('http://localhost:3001/api/posts', {
         method: 'POST',
         headers: {
@@ -243,7 +321,6 @@ const Photos = () => {
       const result = await response.json();
       
       if (result.success) {
-        // Also save to photos collection for profile
         const photoFormData = new FormData();
         photoFormData.append('photo', selectedFile.file);
         photoFormData.append('description', uploadDescription);
@@ -281,7 +358,6 @@ const Photos = () => {
 
   const handleTextareaChange = (e) => {
     setUploadDescription(e.target.value);
-    // Auto-resize textarea
     e.target.style.height = 'auto';
     e.target.style.height = e.target.scrollHeight + 'px';
   };
@@ -311,7 +387,6 @@ const Photos = () => {
       const result = await response.json();
       if (result.success) {
         setCommentLikes(prev => ({ ...prev, [commentId]: newState }));
-        // Update comment in state
         setComments(prev => {
           const photoComments = prev[selectedPhoto._id] || [];
           const updatedComments = photoComments.map(comment => 
@@ -343,7 +418,6 @@ const Photos = () => {
             [selectedPhoto._id]: [result.data, ...(prev[selectedPhoto._id] || [])]
           }));
           setComment('');
-          // Update comment count in photos
           setPhotos(prev => prev.map(photo => 
             photo._id === selectedPhoto._id 
               ? { ...photo, stats: { ...photo.stats, comments: photo.stats.comments + 1 } }
@@ -374,63 +448,90 @@ const Photos = () => {
       <Breadcrumbs items={breadcrumbItems} />
       
       <div className="photos-grid">
-        <div className="add-photo-card">
-          <button className="add-photo-grid-btn" onClick={() => setShowUploadModal(true)}>
-            <span>+</span>
-            <span>Додати фото</span>
-          </button>
-        </div>
+        {targetUserId === currentUserId && (
+          <div className="add-photo-card">
+            <button className="add-photo-grid-btn" onClick={() => setShowUploadModal(true)}>
+              <span>+</span>
+              <span>Додати фото</span>
+            </button>
+          </div>
+        )}
         {photos.length > 0 ? (
           photos.map((photo) => {
             const stats = photo.stats || { likes: 0, dislikes: 0, comments: 0 };
+            const isLoaded = imageLoadStates[photo._id];
+            const isError = imageLoadStates[photo._id] === 'error';
+            
             return (
-              <div key={photo._id} className="photo-card">
+              <div 
+                key={photo._id} 
+                className={`photo-card ${!isLoaded && !isError ? 'loading' : ''}`}
+                onDoubleClick={(e) => handleDoubleClick(photo._id, e)}
+                tabIndex={0}
+                role="button"
+                aria-label={`Фото: ${photo.description || 'Без опису'}`}
+              >
                 <div className="photo-image" onClick={() => handlePhotoClick(photo)}>
-                  <img 
-                    src={photo.url} 
-                    alt={photo.description || 'Фото'} 
-                  />
-                  <div className="photo-actions">
-                    <button 
-                      className="delete-btn"
-                      onClick={(e) => handleDeletePhoto(photo._id, e)}
-                    >
-                      Видалити
-                    </button>
-                  </div>
+                  {!isError ? (
+                    <img 
+                      src={photo.url} 
+                      alt={photo.description || 'Фото'}
+                      loading="lazy"
+                      onLoad={() => handleImageLoad(photo._id)}
+                      onError={() => handleImageError(photo._id)}
+                      data-loaded={isLoaded ? 'true' : 'false'}
+                    />
+                  ) : (
+                    <div className="photo-error">
+                      <span>Помилка завантаження</span>
+                    </div>
+                  )}
+                  
+                  {heartAnimations[photo._id] && (
+                    <div className="heart-animation">❤️</div>
+                  )}
+                  
                 </div>
                 <div className="photo-stats">
-                  <div style={{display: 'flex', gap: '8px'}}>
-                    <div 
-                      className={`photo-stat-item ${photoLikes[photo._id] === 'like' ? 'liked' : ''}`}
-                      onClick={(e) => handlePhotoLike(photo._id, 'like', e)}
-                    >
-                      👍 {stats.likes}
-                    </div>
-                    <div 
-                      className={`photo-stat-item ${photoLikes[photo._id] === 'dislike' ? 'disliked' : ''}`}
-                      onClick={(e) => handlePhotoLike(photo._id, 'dislike', e)}
-                    >
-                      👎 {stats.dislikes}
-                    </div>
-                    <div 
-                      className="photo-stat-item"
-                      onClick={() => handlePhotoClick(photo)}
-                    >
-                      💬 {stats.comments}
-                    </div>
-                  </div>
+                  <button 
+                    className={`photo-stat-item ${photoLikes[photo._id] === 'like' ? 'liked' : ''}`}
+                    onClick={(e) => handlePhotoLike(photo._id, 'like', e)}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill={photoLikes[photo._id] === 'like' ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    <span>{stats.likes}</span>
+                  </button>
+                  <button 
+                    className={`photo-stat-item ${photoLikes[photo._id] === 'dislike' ? 'disliked' : ''}`}
+                    onClick={(e) => handlePhotoLike(photo._id, 'dislike', e)}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill={photoLikes[photo._id] === 'dislike' ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+                      <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
+                    </svg>
+                    <span>{stats.dislikes}</span>
+                  </button>
+                  <button 
+                    className="photo-stat-item"
+                    onClick={() => handlePhotoClick(photo)}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span>{stats.comments}</span>
+                  </button>
                 </div>
               </div>
             );
           })
         ) : (
           <div className="no-photos">
-            <p>У вас поки немає фото</p>
+            <p>{targetUserId === currentUserId ? 'У вас поки немає фото' : 'У користувача поки немає фото'}</p>
           </div>
         )}
       </div>
       
+      {/* Rest of the modals remain the same */}
       {selectedPhoto && (
         <div className="photo-modal" onClick={handleCloseModal}>
           <div className="photo-modal-content" onClick={(e) => e.stopPropagation()}>
@@ -448,12 +549,14 @@ const Photos = () => {
             <div className="photo-modal-sidebar">
               <div className="photo-modal-header">
                 <h4>Фото</h4>
-                <button 
-                  className="edit-description-btn"
-                  onClick={handleEditDescription}
-                >
-                  Редагувати
-                </button>
+                {targetUserId === currentUserId && (
+                  <button 
+                    className="edit-description-btn"
+                    onClick={handleEditDescription}
+                  >
+                    Редагувати
+                  </button>
+                )}
               </div>
               
               <div className="photo-modal-description">
