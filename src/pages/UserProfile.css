@@ -46,6 +46,8 @@
 
 .profile-avatar-section {
   flex-shrink: 0;
+  flex-basis: 20%;
+  min-width: 400px;
 }
 
 .profile-avatar-image {

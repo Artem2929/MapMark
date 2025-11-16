@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { updateAvatar } from '../../api/profileEndpoints';
 import useOnlineStatus from '../../hooks/useOnlineStatus';
 import OnlineIndicator from '../ui/OnlineIndicator';
+import UserRating from './UserRating';
 import './ProfileAvatar.css';
 
 const ProfileAvatar = ({ 
@@ -238,7 +239,7 @@ const ProfileAvatar = ({
       )}
 
       {/* Блок рейтингу */}
-      <ProfileRatingBlock />
+      <UserRating userId={user?.id} isOwnProfile={isOwnProfile} />
 
       {/* Вертикальне меню під фото */}
       <ProfileAvatarMenu />
