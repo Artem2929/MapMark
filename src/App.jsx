@@ -102,7 +102,7 @@ const AppContent = () => {
   };
 
   return (
-    <div style={{height: '100vh', backgroundColor: '#f9f9f9', display: 'flex', flexDirection: 'column', overflow: 'hidden'}}>
+    <div style={isHomePage ? {height: '100vh', backgroundColor: '#f9f9f9', display: 'flex', flexDirection: 'column', overflow: 'hidden'} : {minHeight: '100vh', backgroundColor: '#f9f9f9', display: 'flex', flexDirection: 'column'}}>
       <Header 
         onSearch={handleSearch} 
         isCountriesVisible={isCountriesVisible}
@@ -133,7 +133,7 @@ const AppContent = () => {
           }
         }}
       />}
-      <main style={{paddingTop: '64px', flex: 1, overflow: isHomePage ? 'hidden' : 'auto'}}>
+      <main style={isHomePage ? {paddingTop: '64px', flex: 1, overflow: 'hidden'} : {paddingTop: '64px', flex: 1}}>
         <Routes>
           <Route path="/" element={
             <>
@@ -188,8 +188,8 @@ const AppContent = () => {
             <Route path="/register" element={<Register />} />
           </Routes>
         </main>
-        {!isHomePage && <Footer />}
-      </div>
+      {!isHomePage && <Footer />}
+    </div>
   );
 };
 
