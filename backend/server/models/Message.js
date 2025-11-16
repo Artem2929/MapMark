@@ -13,12 +13,14 @@ const messageSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    required: true,
+    required: function() {
+      return this.messageType === 'text';
+    },
     maxlength: 1000
   },
   messageType: {
     type: String,
-    enum: ['text', 'image', 'file'],
+    enum: ['text', 'image', 'file', 'voice'],
     default: 'text'
   },
   status: {
@@ -39,6 +41,25 @@ const messageSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean,
     default: false
+  },
+  // File/Voice message fields
+  fileUrl: {
+    type: String
+  },
+  voiceUrl: {
+    type: String
+  },
+  fileName: {
+    type: String
+  },
+  fileSize: {
+    type: Number
+  },
+  fileType: {
+    type: String
+  },
+  duration: {
+    type: String
   }
 }, {
   timestamps: true

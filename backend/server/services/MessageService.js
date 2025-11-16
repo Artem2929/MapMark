@@ -193,6 +193,92 @@ class MessageService {
     }
   }
 
+  // Надіслати файл
+  async sendFileMessage(conversationId, senderId, file, content = '') {
+    try {
+      const message = new Message({
+        conversation: conversationId,
+        sender: senderId,
+        content: content.trim() || 'File attachment',
+        messageType: 'file',
+        fileUrl: `/uploads/messages/${file.filename}`,
+        fileName: file.originalname,
+        fileSize: file.size,
+        fileType: file.mimetype
+      });
+
+      await message.save();
+      await message.populate('sender', 'name username avatar');
+
+      // Оновити розмову
+      const conversation = await Conversation.findById(conversationId);
+      if (!conversation) {
+        throw new Error('Conversation not found');
+      }
+      
+      conversation.lastMessage = message._id;
+      conversation.lastActivity = new Date();
+      
+      // Збільшити лічильник непрочитаних
+      conversation.participants.forEach(participantId => {
+        const participantIdStr = participantId.toString();
+        if (participantIdStr !== senderId.toString()) {
+          const currentCount = conversation.unreadCount.get(participantIdStr) || 0;
+          conversation.unreadCount.set(participantIdStr, currentCount + 1);
+        }
+      });
+
+      await conversation.save();
+
+      return message;
+    } catch (error) {
+      throw new Error(`Error sending file message: ${error.message}`);
+    }
+  }
+
+  // Надіслати голосове повідомлення
+  async sendVoiceMessage(conversationId, senderId, audioFile) {
+    try {
+      const message = new Message({
+        conversation: conversationId,
+        sender: senderId,
+        content: 'Voice message',
+        messageType: 'voice',
+        voiceUrl: `/uploads/messages/${audioFile.filename}`,
+        fileName: audioFile.originalname,
+        fileSize: audioFile.size,
+        duration: '0:00' // Можна додати визначення тривалості
+      });
+
+      await message.save();
+      await message.populate('sender', 'name username avatar');
+
+      // Оновити розмову
+      const conversation = await Conversation.findById(conversationId);
+      if (!conversation) {
+        throw new Error('Conversation not found');
+      }
+      
+      conversation.lastMessage = message._id;
+      conversation.lastActivity = new Date();
+      
+      // Збільшити лічильник непрочитаних
+      conversation.participants.forEach(participantId => {
+        const participantIdStr = participantId.toString();
+        if (participantIdStr !== senderId.toString()) {
+          const currentCount = conversation.unreadCount.get(participantIdStr) || 0;
+          conversation.unreadCount.set(participantIdStr, currentCount + 1);
+        }
+      });
+
+      await conversation.save();
+
+      return message;
+    } catch (error) {
+      throw new Error(`Error sending voice message: ${error.message}`);
+    }
+  }
+
   // Пошук користувачів для нової розмови
   async searchUsers(query, currentUserId) {
     try {

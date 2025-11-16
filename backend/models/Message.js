@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
-  text: {
+  content: {
     type: String,
-    required: true,
     maxlength: 5000
   },
   sender: {
@@ -16,14 +15,21 @@ const messageSchema = new mongoose.Schema({
     ref: 'Conversation',
     required: true
   },
-  type: {
+  messageType: {
     type: String,
     enum: ['text', 'image', 'file', 'voice'],
     default: 'text'
   },
   fileUrl: String,
   fileName: String,
-  fileSize: String,
+  fileSize: Number,
+  fileType: String,
+  voiceUrl: String,
+  duration: String,
+  isDeleted: {
+    type: Boolean,
+    default: false
+  },
   replyTo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Message'

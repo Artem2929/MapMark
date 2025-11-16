@@ -157,6 +157,77 @@ class MessagesService {
     }
   }
 
+  // Надіслати файл
+  async sendFileMessage(conversationId, file, content = '') {
+    try {
+      const token = this.getToken();
+      if (!token) {
+        throw new Error('No authentication token');
+      }
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      if (content.trim()) {
+        formData.append('content', content.trim());
+      }
+      
+      const response = await fetch(
+        `${API_BASE_URL}/messages/conversations/${conversationId}/files`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to send file');
+      }
+
+      const data = await response.json();
+      return data.success ? data.data : null;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Надіслати голосове повідомлення
+  async sendVoiceMessage(conversationId, audioFile) {
+    try {
+      const token = this.getToken();
+      if (!token) {
+        throw new Error('No authentication token');
+      }
+      
+      const formData = new FormData();
+      formData.append('voice', audioFile);
+      
+      const response = await fetch(
+        `${API_BASE_URL}/messages/conversations/${conversationId}/voice`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to send voice message');
+      }
+
+      const data = await response.json();
+      return data.success ? data.data : null;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Створити нову розмову
   async createConversation(otherUserId) {
     try {

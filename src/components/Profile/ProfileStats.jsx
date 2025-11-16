@@ -101,11 +101,17 @@ const ProfileStats = ({
   };
 
   const handleMessagesClick = () => {
-    if (isOwnProfile) {
-      navigate('/messages');
-    } else {
-      // Для чужого профілю - створити розмову з цим користувачем
-      navigate('/messages', { state: { startChatWithUser: userId } });
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const currentUserId = payload.id;
+      
+      if (isOwnProfile) {
+        navigate(`/messages/${currentUserId}`);
+      } else {
+        // Для чужого профілю - створити розмову з цим користувачем
+        navigate(`/messages/${currentUserId}`, { state: { startChatWithUser: userId } });
+      }
     }
   };
 

@@ -98,7 +98,7 @@ const Chat = () => {
 
   const breadcrumbItems = [
     { label: 'Головна', link: '/' },
-    { label: 'Повідомлення', link: '/messages' },
+    { label: 'Повідомлення', link: `/messages/${localStorage.getItem('accessToken') ? JSON.parse(atob(localStorage.getItem('accessToken').split('.')[1])).id : ''}` },
     { label: loading ? 'Завантаження...' : user.name }
   ];
 

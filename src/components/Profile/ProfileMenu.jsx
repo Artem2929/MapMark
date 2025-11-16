@@ -17,7 +17,7 @@ const ProfileMenu = ({ userId }) => {
       id: 'messages', 
       label: 'Мої повідомлення', 
       icon: '💬', 
-      path: `/messages`,
+      path: `/messages/${userId}`,
       count: 3
     },
     { 

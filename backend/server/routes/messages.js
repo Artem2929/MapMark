@@ -1,7 +1,39 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 const MessageService = require('../services/MessageService');
 const auth = require('../middleware/auth');
+
+// Налаштування multer для завантаження файлів
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/messages/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB
+  },
+  fileFilter: (req, file, cb) => {
+    // Дозволені типи файлів
+    const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx|txt|mp3|mp4|wav|ogg/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Непідтримуваний тип файлу'));
+    }
+  }
+});
 
 // Отримати всі розмови користувача
 router.get('/conversations', auth, async (req, res) => {
@@ -121,6 +153,64 @@ router.delete('/conversations/:conversationId', auth, async (req, res) => {
     
     res.json({ success: true });
   } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Надіслати файл
+router.post('/conversations/:conversationId/files', auth, upload.single('file'), async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const { content } = req.body;
+    
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'Файл не завантажено' });
+    }
+    
+    const message = await MessageService.sendFileMessage(
+      conversationId, 
+      req.user.id, 
+      req.file,
+      content || ''
+    );
+    
+    // Відправити через WebSocket
+    const io = req.app.get('io');
+    if (io) {
+      io.to(conversationId).emit('newMessage', message);
+    }
+    
+    res.json({ success: true, data: message });
+  } catch (error) {
+    console.error('Error sending file:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Надіслати голосове повідомлення
+router.post('/conversations/:conversationId/voice', auth, upload.single('voice'), async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'Голосовий файл не завантажено' });
+    }
+    
+    const message = await MessageService.sendVoiceMessage(
+      conversationId, 
+      req.user.id, 
+      req.file
+    );
+    
+    // Відправити через WebSocket
+    const io = req.app.get('io');
+    if (io) {
+      io.to(conversationId).emit('newMessage', message);
+    }
+    
+    res.json({ success: true, data: message });
+  } catch (error) {
+    console.error('Error sending voice message:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 });

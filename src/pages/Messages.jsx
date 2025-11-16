@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import messagesService from '../services/messagesService';
 import { friendsService } from '../services/friendsService';
+import Footer from '../components/layout/Footer';
 import './Messages.css';
 
 // Кеш для даних користувачів
@@ -58,6 +59,8 @@ const enhanceParticipant = async (participant, token) => {
 
 const Messages = () => {
   const location = useLocation();
+  const { userId } = useParams();
+  const navigate = useNavigate();
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -73,8 +76,12 @@ const Messages = () => {
   const [searchLoading, setSearchLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [forceUpdate, setForceUpdate] = useState(0);
+  const [attachedFile, setAttachedFile] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState(null);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   // Ініціалізація
   useEffect(() => {
@@ -110,7 +117,18 @@ const Messages = () => {
         const token = localStorage.getItem('accessToken');
         if (token) {
           const payload = JSON.parse(atob(token.split('.')[1]));
-          setCurrentUser({ id: payload.id });
+          const currentUserId = payload.id;
+          setCurrentUser({ id: currentUserId });
+          
+          // Перевірка чи userId в URL відповідає поточному користувачу
+          if (!userId || userId !== currentUserId) {
+            navigate(`/messages/${currentUserId}`, { replace: true });
+            return;
+          }
+        } else {
+          // Якщо немає токена, перенаправляємо на логін
+          navigate('/login');
+          return;
         }
         
         // Підписка на WebSocket події
@@ -173,6 +191,9 @@ const Messages = () => {
           ? { ...conv, unreadCount: 0 }
           : conv
       ));
+      
+      // Прокрутка до останнього повідомлення при зміні чату
+      setTimeout(() => scrollToBottom(), 200);
     }
     
     return () => {
@@ -190,7 +211,9 @@ const Messages = () => {
   }, [messages]);
   
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
+    }, 100);
   };
   
   const loadMessages = async (conversationId) => {
@@ -203,25 +226,119 @@ const Messages = () => {
   };
   
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !activeChat) return;
+    if ((!newMessage.trim() && !attachedFile) || !activeChat) return;
 
     try {
-      const message = await messagesService.sendMessage(activeChat, newMessage.trim());
+      let message;
+      
+      if (attachedFile) {
+        // Відправка файлу
+        message = await messagesService.sendFileMessage(activeChat, attachedFile, newMessage.trim());
+        setAttachedFile(null);
+      } else {
+        // Відправка текстового повідомлення
+        message = await messagesService.sendMessage(activeChat, newMessage.trim());
+      }
+      
       setMessages(prev => [...prev, message]);
       setNewMessage('');
       
-      // Оновити останнє повідомлення в розмові (без збільшення unreadCount для відправника)
+      // Оновити останнє повідомлення в розмові
       setConversations(prev => prev.map(conv => 
         conv._id === activeChat 
           ? { ...conv, lastMessage: message, lastActivity: new Date() }
           : conv
       ));
       
-      // Примусове оновлення
       setForceUpdate(prev => prev + 1);
     } catch (error) {
-      // Error handled
+      console.error('Error sending message:', error);
     }
+  };
+  
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Перевірка розміру файлу (макс 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Файл занадто великий. Максимальний розмір: 10MB');
+        return;
+      }
+      setAttachedFile(file);
+    }
+  };
+  
+  const handleRemoveFile = () => {
+    setAttachedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+  
+  const startVoiceRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const audioChunks = [];
+      
+      recorder.ondataavailable = (event) => {
+        audioChunks.push(event.data);
+      };
+      
+      recorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        const audioFile = new File([audioBlob], 'voice-message.wav', { type: 'audio/wav' });
+        
+        try {
+          const message = await messagesService.sendVoiceMessage(activeChat, audioFile);
+          setMessages(prev => [...prev, message]);
+          setConversations(prev => prev.map(conv => 
+            conv._id === activeChat 
+              ? { ...conv, lastMessage: message, lastActivity: new Date() }
+              : conv
+          ));
+          setForceUpdate(prev => prev + 1);
+        } catch (error) {
+          console.error('Error sending voice message:', error);
+        }
+        
+        stream.getTracks().forEach(track => track.stop());
+      };
+      
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+      recorder.start();
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+      alert('Не вдалося отримати доступ до мікрофона');
+    }
+  };
+  
+  const stopVoiceRecording = () => {
+    if (mediaRecorder && isRecording) {
+      mediaRecorder.stop();
+      setIsRecording(false);
+      setMediaRecorder(null);
+    }
+  };
+  
+  const formatFileSize = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+  
+  const getFileIcon = (fileName) => {
+    const extension = fileName.split('.').pop().toLowerCase();
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) return '🖼️';
+    if (['mp4', 'avi', 'mov', 'wmv'].includes(extension)) return '🎥';
+    if (['mp3', 'wav', 'ogg', 'm4a'].includes(extension)) return '🎵';
+    if (['pdf'].includes(extension)) return '📄';
+    if (['doc', 'docx'].includes(extension)) return '📝';
+    if (['zip', 'rar', '7z'].includes(extension)) return '📦';
+    return '📎';
   };
   
   // WebSocket обробники
@@ -492,7 +609,7 @@ const Messages = () => {
       <div className="messages-container">
         <nav className="breadcrumbs">
           <span className="breadcrumb-item">
-            <a className="breadcrumb-link" href="/profile/68fca6b223ea8d70a8da03d8">Профіль</a>
+            <a className="breadcrumb-link" href={`/profile/${userId}`}>Профіль</a>
           </span>
           <span className="breadcrumb-item">
             <span className="breadcrumb-separator">›</span>
@@ -655,9 +772,52 @@ const Messages = () => {
                   onContextMenu={(e) => handleMessageRightClick(e, message)}
                 >
                   <div className="message-bubble">
-                    <div className="message-text">
-                      {message.content}
-                    </div>
+                    {message.content && (
+                      <div className="message-text">
+                        {message.content}
+                      </div>
+                    )}
+                    
+                    {message.fileUrl && (
+                      <div className="message-attachment">
+                        {message.fileType?.startsWith('image/') ? (
+                          <img 
+                            src={`http://localhost:3001${message.fileUrl}`}
+                            alt={message.fileName}
+                            className="message-image"
+                            onClick={() => window.open(`http://localhost:3001${message.fileUrl}`, '_blank')}
+                          />
+                        ) : (
+                          <div 
+                            className="message-file"
+                            onClick={() => window.open(`http://localhost:3001${message.fileUrl}`, '_blank')}
+                          >
+                            <div className="message-file-icon">
+                              {getFileIcon(message.fileName || '')}
+                            </div>
+                            <div className="message-file-info">
+                              <div className="message-file-name">{message.fileName}</div>
+                              <div className="message-file-size">{formatFileSize(message.fileSize || 0)}</div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {message.voiceUrl && (
+                      <div className="message-voice">
+                        <button className="voice-play-btn">
+                          ▶️
+                        </button>
+                        <div className="voice-waveform">
+                          <div className="voice-progress"></div>
+                        </div>
+                        <div className="voice-duration">
+                          {message.duration || '0:00'}
+                        </div>
+                      </div>
+                    )}
+                    
                     <div className="message-time">
                       {new Date(message.createdAt).toLocaleTimeString('uk-UA', { 
                         hour: '2-digit', 
@@ -674,7 +834,14 @@ const Messages = () => {
                     {isMyMessage && (
                       <button 
                         className="message-delete-btn"
-                        onClick={handleDeleteMessage}
+                        onClick={async () => {
+                          try {
+                            await messagesService.deleteMessage(message._id);
+                            setMessages(prev => prev.filter(msg => msg._id !== message._id));
+                          } catch (error) {
+                            console.error('Error deleting message:', error);
+                          }
+                        }}
                         title="Видалити повідомлення"
                       >
                         ×
@@ -690,6 +857,14 @@ const Messages = () => {
             {activeChat && (
               <div className="message-input">
                 <div className="message-input-wrapper">
+                  <button 
+                    className="attachment-btn"
+                    onClick={() => fileInputRef.current?.click()}
+                    title="Прикріпити файл"
+                  >
+                    📎
+                  </button>
+                  
                   <input
                     type="text"
                     placeholder="Напишіть повідомлення..."
@@ -697,15 +872,33 @@ const Messages = () => {
                     onChange={handleTyping}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                   />
+                  
+                  <button 
+                    className={`voice-btn ${isRecording ? 'recording' : ''}`}
+                    onMouseDown={startVoiceRecording}
+                    onMouseUp={stopVoiceRecording}
+                    onMouseLeave={stopVoiceRecording}
+                    title={isRecording ? 'Відпустіть для відправки' : 'Утримуйте для запису'}
+                  >
+                    🎤
+                  </button>
                 </div>
                 
                 <button 
                   className="send-btn"
                   onClick={handleSendMessage} 
-                  disabled={!newMessage.trim()}
+                  disabled={!newMessage.trim() && !attachedFile}
                 >
                   ↑
                 </button>
+                
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  className="file-input"
+                  onChange={handleFileSelect}
+                  accept="*/*"
+                />
               </div>
             )}
           </div>
@@ -787,6 +980,8 @@ const Messages = () => {
           </div>
         )}
       </div>
+      
+      <Footer />
     </div>
   );
 };
