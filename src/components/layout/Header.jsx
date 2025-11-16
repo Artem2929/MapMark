@@ -114,35 +114,17 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
         
         {/* Desktop Navigation */}
         <nav className="header-nav desktop-nav">
-          {/* Profile/Login Button */}
+          {/* Profile and Auth Buttons */}
           {localStorage.getItem('userId') ? (
-            <div className="user-dropdown" ref={userMenuRef}>
-              <button 
-                className="user-btn"
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-              >
-                {localStorage.getItem('userName') || t('header.profile')}
-                <span className={`arrow ${isUserMenuOpen ? 'up' : 'down'}`}>▼</span>
-              </button>
-              <div className={`user-menu ${isUserMenuOpen ? 'open' : ''}`}>
-                <Link
-                  to={`/profile/${localStorage.getItem('userId')}`}
-                  className="user-menu-item"
-                  onClick={() => setIsUserMenuOpen(false)}
-                >
-                  {t('header.profile')}
-                </Link>
-                <button
-                  className="user-menu-item logout-btn"
-                  onClick={handleLogout}
-                >
-                  {t('header.logout')}
-                </button>
-              </div>
-            </div>
+            <Link 
+              to={`/profile/${localStorage.getItem('userId')}`} 
+              className="header-link profile-link"
+            >
+              Мій профіль
+            </Link>
           ) : (
             <Link to="/login" className="header-link login-link">
-              {t('header.login')}
+              Увійти
             </Link>
           )}
           
@@ -188,6 +170,16 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
               ))}
             </div>
           </div>
+          
+          {/* Logout button after other links */}
+          {localStorage.getItem('userId') && (
+            <button
+              className="header-link logout-btn"
+              onClick={handleLogout}
+            >
+              Вийти
+            </button>
+          )}
         </nav>
 
         {/* Mobile Menu Button */}
@@ -209,13 +201,13 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
               className="mobile-link profile-link"
               onClick={() => setIsMenuOpen(false)}
             >
-              {t('header.profile')}
+              Мій профіль
             </Link>
             <button 
               className="mobile-link logout-btn"
               onClick={handleLogout}
             >
-              {t('header.logout')}
+              Вийти
             </button>
           </>
         ) : (
@@ -224,7 +216,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
             className="mobile-link login-link"
             onClick={() => setIsMenuOpen(false)}
           >
-            {t('header.login')}
+            Увійти
           </Link>
         )}
         

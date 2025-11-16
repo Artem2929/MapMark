@@ -581,6 +581,27 @@
   border-color: rgba(59, 130, 246, 0.3);
 }
 
+.header .logout-btn {
+  background: linear-gradient(
+    135deg,
+    rgba(220, 38, 38, 0.1) 0%,
+    rgba(220, 38, 38, 0.05) 100%
+  );
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  color: #dc2626;
+  cursor: pointer;
+}
+
+.header .logout-btn:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(220, 38, 38, 0.15) 0%,
+    rgba(220, 38, 38, 0.08) 100%
+  );
+  border-color: rgba(220, 38, 38, 0.3);
+  color: #b91c1c;
+}
+
 .header .profile-icon,
 .header .login-icon {
   font-size: 16px;

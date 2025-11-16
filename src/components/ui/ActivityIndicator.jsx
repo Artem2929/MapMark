@@ -23,6 +23,7 @@ const ActivityIndicator = ({ status, lastSeen }) => {
         className={`activity-dot activity-dot--${status}`}
         style={{ backgroundColor: color }}
       />
+      <span className="activity-text">{text}</span>
     </div>
   );
 };
