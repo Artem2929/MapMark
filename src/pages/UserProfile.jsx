@@ -6,7 +6,6 @@ import ProfileHeader from '../components/profile/ProfileHeader';
 import ProfileContent from '../components/profile/ProfileContent';
 import ProfileSkeleton from '../components/profile/ProfileSkeleton';
 import Wall from '../components/ui/Wall';
-import Footer from '../components/layout/Footer';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorMessage from '../components/ui/ErrorMessage';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -39,17 +38,14 @@ const UserProfileContent = () => {
   }
 
   return (
-    <>
-      <div className="page-container profile-user-profile">
-        <div className="profile-profile-container">
-          <ProfileBreadcrumbs />
-          <ProfileHeader />
-          <ProfileContent />
-          <Wall userId={targetUserId} isOwnProfile={isOwnProfile} user={user} />
-        </div>
+    <div className="page-container profile-user-profile">
+      <div className="profile-profile-container">
+        <ProfileBreadcrumbs />
+        <ProfileHeader />
+        <ProfileContent />
+        <Wall userId={targetUserId} isOwnProfile={isOwnProfile} user={user} />
       </div>
-      <Footer />
-    </>
+    </div>
   );
 };
 

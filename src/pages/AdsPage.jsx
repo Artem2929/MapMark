@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import StarRating from '../components/ui/StarRating';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
-import Footer from '../components/layout/Footer';
 import CustomSelect from '../components/ui/CustomSelect';
 import CreateAdForm from '../components/forms/CreateAdForm';
 import AdsService from '../services/adsService';
@@ -597,8 +596,6 @@ const AdsPage = () => {
       {showCreateAdForm && (
         <CreateAdForm onClose={() => setShowCreateAdForm(false)} />
       )}
-      
-      <Footer />
     </div>
   );
 };

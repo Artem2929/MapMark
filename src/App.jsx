@@ -188,6 +188,7 @@ const AppContent = () => {
             <Route path="/register" element={<Register />} />
           </Routes>
         </main>
+        {!isHomePage && <Footer />}
       </div>
   );
 };

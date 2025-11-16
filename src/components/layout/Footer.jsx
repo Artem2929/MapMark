@@ -14,7 +14,6 @@ const Footer = () => {
               <h3 className="footer-title">PinPoint</h3>
             </div>
             <p className="footer-description">{t('footer.description')}</p>
-
           </div>
           
           <div className="footer-section">
@@ -44,7 +43,6 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-
       </div>
     </footer>
   );

@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import Breadcrumbs from "../components/ui/Breadcrumbs.jsx";
-import Footer from "../components/layout/Footer.jsx";
 import "./PrivacyPolicy.css";
 
 const PrivacyPolicy = () => {
@@ -121,7 +120,6 @@ const PrivacyPolicy = () => {
           </section>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

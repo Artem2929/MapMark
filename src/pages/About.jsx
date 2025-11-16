@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import Footer from '../components/layout/Footer';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import Toast from '../components/ui/Toast';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
@@ -148,7 +147,6 @@ const About = () => {
   }
 
   return (
-    <>
     <div className="page-container about-page">
       <Breadcrumbs />
       {/* Hero Section */}
@@ -325,9 +323,6 @@ const About = () => {
         />
       )}
     </div>
-    
-    <Footer />
-    </>
   );
 };
 

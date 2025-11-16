@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import StarRating from '../components/ui/StarRating';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
-import Footer from '../components/layout/Footer';
 import './AdDetailPage.css';
 
 const AdDetailPage = () => {
@@ -238,8 +237,6 @@ const AdDetailPage = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

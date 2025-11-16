@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import messagesService from '../services/messagesService';
 import { friendsService } from '../services/friendsService';
-import Footer from '../components/layout/Footer';
 import './Messages.css';
 
 // Кеш для даних користувачів
@@ -980,8 +979,6 @@ const Messages = () => {
           </div>
         )}
       </div>
-      
-      <Footer />
     </div>
   );
 };

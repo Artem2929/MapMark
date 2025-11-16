@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import Breadcrumbs from "../components/ui/Breadcrumbs.jsx";
-import Footer from "../components/layout/Footer.jsx";
 import "./TermsOfService.css";
 
 const TermsOfService = () => {
@@ -96,7 +95,6 @@ const TermsOfService = () => {
           </section>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
