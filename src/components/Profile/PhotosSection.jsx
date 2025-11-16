@@ -111,7 +111,7 @@ const PhotosSection = () => {
             <div 
               key={photo._id} 
               className="photo-gallery-item"
-              onClick={() => navigate('/photos')}
+              onClick={() => navigate(`/photos/${targetUserId}`)}
             >
               <img src={photo.url} alt={photo.description || 'Фото'} />
               <div className="photo-overlay">
@@ -120,7 +120,7 @@ const PhotosSection = () => {
                     className="photo-action-btn view-btn"
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate('/photos');
+                      navigate(`/photos/${targetUserId}`);
                     }}
                     title="Переглянути"
                   >

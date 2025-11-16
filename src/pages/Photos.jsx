@@ -374,64 +374,59 @@ const Photos = () => {
       <Breadcrumbs items={breadcrumbItems} />
       
       <div className="photos-grid">
+        <div className="add-photo-card">
+          <button className="add-photo-grid-btn" onClick={() => setShowUploadModal(true)}>
+            <span>+</span>
+            <span>Додати фото</span>
+          </button>
+        </div>
         {photos.length > 0 ? (
-          <>
-            {photos.map((photo) => {
-              const stats = photo.stats || { likes: 0, dislikes: 0, comments: 0 };
-              return (
-                <div key={photo._id} className="photo-card">
-                  <div className="photo-image" onClick={() => handlePhotoClick(photo)}>
-                    <img 
-                      src={photo.url} 
-                      alt={photo.description || 'Фото'} 
-                    />
-                    <div className="photo-actions">
-                      <button 
-                        className="delete-btn"
-                        onClick={(e) => handleDeletePhoto(photo._id, e)}
-                      >
-                        Видалити
-                      </button>
-                    </div>
+          photos.map((photo) => {
+            const stats = photo.stats || { likes: 0, dislikes: 0, comments: 0 };
+            return (
+              <div key={photo._id} className="photo-card">
+                <div className="photo-image" onClick={() => handlePhotoClick(photo)}>
+                  <img 
+                    src={photo.url} 
+                    alt={photo.description || 'Фото'} 
+                  />
+                  <div className="photo-actions">
+                    <button 
+                      className="delete-btn"
+                      onClick={(e) => handleDeletePhoto(photo._id, e)}
+                    >
+                      Видалити
+                    </button>
                   </div>
-                  <div className="photo-stats">
-                    <div style={{display: 'flex', gap: '8px'}}>
-                      <div 
-                        className={`photo-stat-item ${photoLikes[photo._id] === 'like' ? 'liked' : ''}`}
-                        onClick={(e) => handlePhotoLike(photo._id, 'like', e)}
-                      >
-                        👍 {stats.likes}
-                      </div>
-                      <div 
-                        className={`photo-stat-item ${photoLikes[photo._id] === 'dislike' ? 'disliked' : ''}`}
-                        onClick={(e) => handlePhotoLike(photo._id, 'dislike', e)}
-                      >
-                        👎 {stats.dislikes}
-                      </div>
-                      <div 
-                        className="photo-stat-item"
-                        onClick={() => handlePhotoClick(photo)}
-                      >
-                        💬 {stats.comments}
-                      </div>
+                </div>
+                <div className="photo-stats">
+                  <div style={{display: 'flex', gap: '8px'}}>
+                    <div 
+                      className={`photo-stat-item ${photoLikes[photo._id] === 'like' ? 'liked' : ''}`}
+                      onClick={(e) => handlePhotoLike(photo._id, 'like', e)}
+                    >
+                      👍 {stats.likes}
+                    </div>
+                    <div 
+                      className={`photo-stat-item ${photoLikes[photo._id] === 'dislike' ? 'disliked' : ''}`}
+                      onClick={(e) => handlePhotoLike(photo._id, 'dislike', e)}
+                    >
+                      👎 {stats.dislikes}
+                    </div>
+                    <div 
+                      className="photo-stat-item"
+                      onClick={() => handlePhotoClick(photo)}
+                    >
+                      💬 {stats.comments}
                     </div>
                   </div>
                 </div>
-              );
-            })}
-            <div className="add-photo-card">
-              <button className="add-photo-grid-btn" onClick={() => setShowUploadModal(true)}>
-                <span>+</span>
-                <span>Додати фото</span>
-              </button>
-            </div>
-          </>
+              </div>
+            );
+          })
         ) : (
           <div className="no-photos">
             <p>У вас поки немає фото</p>
-            <button className="add-photo-btn" onClick={() => setShowUploadModal(true)}>
-              <span>+</span> Додати фото
-            </button>
           </div>
         )}
       </div>

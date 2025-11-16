@@ -183,6 +183,7 @@ const AppContent = () => {
             <Route path="/friends" element={<Friends />} />
             <Route path="/friends/:userId" element={<Friends />} />
             <Route path="/photos" element={<Photos />} />
+            <Route path="/photos/:userId" element={<Photos />} />
             <Route path="/user/:userId/followers" element={<Followers />} />
             <Route path="/user/:userId/following" element={<Following />} />
             <Route path="/services" element={<Services />} />

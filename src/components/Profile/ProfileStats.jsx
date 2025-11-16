@@ -97,7 +97,7 @@ const ProfileStats = ({
   };
 
   const handlePhotosClick = () => {
-    navigate('/photos');
+    navigate(`/photos/${userId}`);
   };
 
   const handleMessagesClick = () => {
