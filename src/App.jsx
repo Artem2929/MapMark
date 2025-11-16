@@ -52,6 +52,7 @@ const AppContent = () => {
   const [showQuickReviewForm, setShowQuickReviewForm] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
   const handleAddReviewClick = () => {
     setShowQuickReviewForm(true);
@@ -188,7 +189,7 @@ const AppContent = () => {
             <Route path="/register" element={<Register />} />
           </Routes>
         </main>
-      {!isHomePage && <Footer />}
+      {!isHomePage && !isAuthPage && <Footer />}
     </div>
   );
 };

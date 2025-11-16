@@ -45,11 +45,11 @@ const CustomSelect = ({ value, onChange, options, placeholder, className = '' })
       
       {isOpen && (
         <div className="custom-select-dropdown">
-          {options.map((option) => (
+          {options.filter(option => option.value !== '').map((option) => (
             <div
-              key={option.value || 'empty'}
-              className={`custom-select-option ${value === option.value ? 'selected' : ''} ${option.value === '' ? 'disabled' : ''}`}
-              onClick={() => option.value !== '' && handleOptionClick(option)}
+              key={option.value}
+              className={`custom-select-option ${value === option.value ? 'selected' : ''}`}
+              onClick={() => handleOptionClick(option)}
             >
               {option.label}
             </div>

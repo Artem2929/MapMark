@@ -143,6 +143,7 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
             <button 
               className="countries-btn"
               onClick={() => setIsCountriesVisible && setIsCountriesVisible(!isCountriesVisible)}
+              style={{ display: 'none' }}
             >
               {t('header.countries')}
               <span className={`arrow ${isCountriesVisible ? 'up' : 'down'}`}>▼</span>
