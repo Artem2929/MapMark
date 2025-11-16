@@ -206,13 +206,13 @@ const ProfileBasicInfo = ({
         <div className="profile-basic-info__actions">
           <button 
             onClick={handleSave}
-            className="btn btn--primary btn--sm"
+            className="profile-basic-info__edit-btn"
           >
             зберегти
           </button>
           <button 
             onClick={handleCancel}
-            className="btn btn--secondary btn--sm"
+            className="profile-basic-info__edit-btn"
           >
             скасувати
           </button>

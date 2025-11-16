@@ -224,14 +224,14 @@ const ProfileAvatar = ({
           <button 
             onClick={handleSave}
             disabled={isUploading}
-            className="btn btn--primary btn--sm"
+            className="profile-basic-info__edit-btn"
           >
             {isUploading ? 'Збереження...' : 'Зберегти'}
           </button>
           <button 
             onClick={handleCancel}
             disabled={isUploading}
-            className="btn btn--secondary btn--sm"
+            className="profile-basic-info__edit-btn"
           >
             Скасувати
           </button>

@@ -142,32 +142,13 @@
 
 .cancel-btn,
 .publish-btn {
-  padding: 12px 20px;
-  border-radius: var(--radius-xl);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  font-size: var(--font-size-base);
-  font-family: inherit;
-  height: 44px;
-  min-width: 120px;
-}
-
-.cancel-btn {
-  background: rgba(100, 116, 139, 0.1);
-  color: #64748b;
-}
-
-.cancel-btn:hover {
-  background: rgba(100, 116, 139, 0.15);
-}
-
-.publish-btn {
   background: rgba(59, 130, 246, 0.1);
   border: 1px solid rgba(59, 130, 246, 0.2);
   color: #3b82f6;
   font-size: 12px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 12px;
   font-weight: 500;
   transition: all 0.2s ease;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
@@ -176,11 +157,20 @@
   gap: 6px;
 }
 
+.cancel-btn {
+  background: rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.2);
+  color: #dc2626;
+}
+
+.cancel-btn:hover {
+  background: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
 .publish-btn:hover:not(:disabled) {
   background: rgba(59, 130, 246, 0.15);
   border-color: rgba(59, 130, 246, 0.3);
-  transform: none;
-  box-shadow: none;
 }
 
 .publish-btn:disabled {
@@ -245,46 +235,7 @@
   width: 100%;
 }
 
-.profile-basic-info__actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
 
-.profile-basic-info__actions .btn--primary,
-.profile-basic-info__actions .btn--secondary {
-  padding: 12px 20px;
-  border-radius: var(--radius-xl);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  font-size: var(--font-size-base);
-  font-family: inherit;
-  height: 44px;
-  min-width: 120px;
-}
-
-.profile-basic-info__actions .btn--primary {
-  background: var(--color-primary);
-  color: var(--color-text-inverse);
-  box-shadow: var(--shadow-md);
-}
-
-.profile-basic-info__actions .btn--primary:hover {
-  background: var(--color-primary-dark);
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-1px);
-}
-
-.profile-basic-info__actions .btn--secondary {
-  background: rgba(100, 116, 139, 0.1);
-  color: #64748b;
-}
-
-.profile-basic-info__actions .btn--secondary:hover {
-  background: rgba(100, 116, 139, 0.15);
-}
 
 
 
@@ -317,15 +268,8 @@
     height: 40px;
   }
 
-  .cancel-btn,
-  .publish-btn,
-  .profile-basic-info__actions .btn--primary,
-  .profile-basic-info__actions .btn--secondary {
-    padding: 6px 12px;
-    font-size: 13px;
-    height: 32px;
-    min-width: 60px;
-  }
+
+
 
   .input-container {
     width: 100% !important;
@@ -379,9 +323,6 @@
   .publish-btn {
     padding: 4px 8px;
     font-size: 11px;
-    height: auto;
-    min-width: auto;
-    border-radius: 12px;
   }
 }
 

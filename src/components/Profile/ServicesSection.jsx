@@ -211,7 +211,7 @@ const ServicesSection = ({ userId, isOwnProfile, services = [], onServiceAdded }
         <h3>Мої послуги / товари ({services.length})</h3>
         {isOwnProfile && (
           <button 
-            className="add-service-btn"
+            className="profile-basic-info__edit-btn"
             onClick={() => setShowAddModal(true)}
           >
             <span>+</span> Додати послугу

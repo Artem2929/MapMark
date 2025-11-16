@@ -42,7 +42,7 @@ const ServiceItem = ({ service, onDelete, onEdit, isOwnProfile = false }) => {
         </span>
         <div className="profile-basic-info__actions">
           <button 
-            className="btn btn--primary btn--sm"
+            className="profile-basic-info__edit-btn"
             onClick={() => navigate(`/services?category=${service.category}&serviceItemId=${service._id}`)}
           >
             Перейти
@@ -50,13 +50,13 @@ const ServiceItem = ({ service, onDelete, onEdit, isOwnProfile = false }) => {
           {isOwnProfile && (
             <>
               <button 
-                className="btn btn--primary btn--sm"
+                className="profile-basic-info__edit-btn"
                 onClick={() => onEdit(service)}
               >
                 Редагувати
               </button>
               <button 
-                className="btn btn--secondary btn--sm"
+                className="profile-basic-info__edit-btn"
                 onClick={handleDelete}
               >
                 Видалити

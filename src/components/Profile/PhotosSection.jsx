@@ -55,7 +55,7 @@ const PhotosSection = () => {
         </h3>
         {isOwnProfile && (
           <button 
-            className="add-photo-btn"
+            className="profile-basic-info__edit-btn"
             onClick={() => setShowModal(true)}
           >
             <span>+</span> Додати фото
