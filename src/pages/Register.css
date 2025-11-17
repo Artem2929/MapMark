@@ -251,24 +251,7 @@
   position: relative;
 }
 
-.custom-select-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 12px;
-  background: white;
-  cursor: pointer;
-  font-size: 14px;
-  transition: border-color 0.2s ease;
-  width: 100%;
-  box-sizing: border-box;
-}
 
-.custom-select-trigger:hover {
-  border-color: #10b981;
-}
 
 .custom-select-value {
   color: #374151;

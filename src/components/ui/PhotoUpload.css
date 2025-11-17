@@ -117,7 +117,7 @@
 
 .photo-upload-actions button:disabled {
   background: var(--color-border-medium);
-  cursor: not-allowed;
+
   opacity: 0.6;
 }
 
@@ -218,7 +218,7 @@
     width: 95%;
     max-height: 85vh;
   }
-  
+
   .location-dropdown {
     max-height: 150px;
     width: 250px;

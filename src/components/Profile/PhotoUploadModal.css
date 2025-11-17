@@ -1,5 +1,3 @@
-
-
 .photo-upload-content {
   background: var(--color-bg-primary);
   border-radius: var(--radius-xl);
@@ -103,7 +101,7 @@
 
 .photo-upload-actions button:disabled {
   background: var(--color-border-medium);
-  cursor: not-allowed;
+
   opacity: 0.6;
 }
 

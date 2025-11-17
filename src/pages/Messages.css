@@ -471,11 +471,11 @@
 
 .send-btn:disabled {
   background: #c7c7cc;
-  cursor: not-allowed;
 }
 
 /* Attachment and Voice buttons */
-.attachment-btn, .voice-btn {
+.attachment-btn,
+.voice-btn {
   background: none;
   border: none;
   padding: 8px;
@@ -491,7 +491,8 @@
   color: #8e8e93;
 }
 
-.attachment-btn:hover, .voice-btn:hover {
+.attachment-btn:hover,
+.voice-btn:hover {
   background: #e5e5ea;
   color: #007aff;
 }
@@ -503,18 +504,20 @@
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .file-input {
   display: none;
 }
-
-
-
-
 
 /* Message attachments */
 .message-attachment {
@@ -861,7 +864,9 @@
 }
 
 @keyframes typing {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: scale(0.8);
     opacity: 0.5;
   }
@@ -980,4 +985,3 @@
   margin-right: -50vw;
   width: 100vw;
 }
-

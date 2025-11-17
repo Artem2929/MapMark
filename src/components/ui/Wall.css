@@ -71,6 +71,23 @@
   object-fit: cover;
 }
 
+.input-container {
+  width: 100%;
+  position: relative;
+}
+
+.input-container .char-counter {
+  text-align: right;
+  display: block;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.input-container:focus-within .char-counter {
+  opacity: 1;
+}
+
 .creator-input {
   width: 100%;
   border: none;
@@ -119,7 +136,7 @@
   font-weight: var(--font-weight-medium);
   color: var(--color-primary);
   min-width: 44px;
-  height: 44px;
+  height: 32px;
 }
 
 .tool-btn:hover {
@@ -139,7 +156,47 @@
   align-items: center;
 }
 
+.cancel-btn,
+.publish-btn {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
+.cancel-btn {
+  background: rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.2);
+  color: #dc2626;
+}
+
+.cancel-btn:hover {
+  background: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
+.publish-btn:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.publish-btn:disabled {
+  opacity: 0.5;
+
+  background: rgba(100, 116, 139, 0.1);
+  border-color: rgba(100, 116, 139, 0.2);
+  color: #64748b;
+}
 
 .posts-list {
   display: flex;
@@ -195,10 +252,6 @@
   width: 100%;
 }
 
-
-
-
-
 /* Медіа-запит для планшетів і менших екранів */
 @media (max-width: 1023px) {
   .profile-avatar-menu {
@@ -228,11 +281,8 @@
     height: 40px;
   }
 
-
-
-
   .input-container {
-    width: 100% !important;
+    width: 100%;
   }
 
   .creator-actions {
@@ -278,8 +328,6 @@
     font-size: 11px;
     border-radius: 12px;
   }
-
-
 }
 
 @media (max-width: 480px) {
@@ -287,8 +335,6 @@
     flex-direction: column;
     gap: 6px;
   }
-
-
 
   .creator-tools {
     gap: 4px;

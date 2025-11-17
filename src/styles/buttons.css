@@ -6,7 +6,8 @@
   border-radius: 12px;
   font-weight: 500;
   transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -38,7 +39,7 @@
 
 .btn-disabled {
   opacity: 0.5;
-  cursor: not-allowed;
+
   background: rgba(100, 116, 139, 0.1);
   border-color: rgba(100, 116, 139, 0.2);
   color: #64748b;

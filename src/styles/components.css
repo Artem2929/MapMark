@@ -178,14 +178,7 @@ textarea.input {
   margin-bottom: 5px;
 }
 
-.custom-select-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  width: 100%;
-  box-sizing: border-box;
-}
+
 
 .input:focus {
   border-color: var(--color-primary);
@@ -287,6 +280,15 @@ textarea.input {
   width: 24px;
   height: 24px;
   border-width: 3px;
+}
+
+/* Character Counter */
+.char-counter {
+  font-size: 12px;
+  color: #64748b;
+  text-align: right;
+  margin-top: 4px;
+  font-weight: 500;
 }
 
 /* Utility Classes */
