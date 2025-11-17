@@ -1,20 +1,25 @@
 /* Micro-interactions */
 
 /* Button hover effects */
-.btn, button {
+.btn,
+button {
   transition: all 0.2s ease;
 }
 
-.btn:hover, button:hover {
+.btn:hover,
+button:hover {
   opacity: 0.9;
 }
 
-.btn:active, button:active {
+.btn:active,
+button:active {
   opacity: 0.8;
 }
 
 /* Card hover effects */
-.post, .photo-gallery-item, .comment {
+.post,
+.photo-gallery-item,
+.comment {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -27,21 +32,29 @@
 }
 
 /* Input focus effects */
-input, textarea {
+input,
+textarea {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 /* Icon animations */
-.like-btn, .dislike-btn, .comment-btn, .share-btn {
+.like-btn,
+.dislike-btn,
+.comment-btn,
+.share-btn {
   transition: transform 0.15s ease;
 }
 
-.like-btn:hover, .dislike-btn:hover, .comment-btn:hover, .share-btn:hover {
+.like-btn:hover,
+.dislike-btn:hover,
+.comment-btn:hover,
+.share-btn:hover {
   opacity: 0.8;
 }
 
@@ -54,14 +67,16 @@ input:focus, textarea:focus {
 }
 
 @keyframes bounce {
-  0%, 20%, 60%, 100% {
+  0%,
+  20%,
+  60%,
+  100% {
     transform: translateY(0);
   }
   40% {
     transform: translateY(-3px);
   }
   80% {
-    transform: translateY(-1px);
   }
 }
 
@@ -116,11 +131,14 @@ input:focus, textarea:focus {
 }
 
 /* Apply fade-in to new content */
-.post, .photo-gallery-item, .comment {
+.post,
+.photo-gallery-item,
+.comment {
   animation: fadeIn 0.3s ease-in-out;
 }
 
 /* Smooth transitions for dynamic content */
-.posts-list, .profile-photos-grid {
+.posts-list,
+.profile-photos-grid {
   transition: all 0.3s ease;
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import './Photos.css';
+import './PhotosModalStyles.css';
 
 const Photos = () => {
   const [photos, setPhotos] = useState([]);
@@ -143,7 +144,10 @@ const Photos = () => {
     
     try {
       const response = await fetch(`http://localhost:3001/api/photos/${photoToDelete}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
       });
       
       if (response.ok) {
@@ -216,29 +220,38 @@ const Photos = () => {
 
   const handleEditDescription = () => {
     setEditingDescription(true);
-    setNewDescription(selectedPhoto.description || '');
+    const desc = typeof selectedPhoto.description === 'string' ? selectedPhoto.description : '';
+    setNewDescription(desc);
   };
 
   const handleSaveDescription = async () => {
+    if (newDescription.length > 1000) {
+      alert('Опис занадто довгий (максимум 1000 символів)');
+      return;
+    }
+    
     try {
       const response = await fetch(`http://localhost:3001/api/photos/${selectedPhoto._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description: newDescription })
+        body: JSON.stringify({ description: newDescription.trim() })
       });
       
       const result = await response.json();
       if (result.success) {
-        setSelectedPhoto(prev => ({ ...prev, description: newDescription }));
+        setSelectedPhoto(prev => ({ ...prev, description: newDescription.trim() }));
         setPhotos(prev => prev.map(photo => 
           photo._id === selectedPhoto._id 
-            ? { ...photo, description: newDescription }
+            ? { ...photo, description: newDescription.trim() }
             : photo
         ));
         setEditingDescription(false);
+      } else {
+        alert(result.message || 'Помилка при оновленні опису');
       }
     } catch (error) {
       console.error('Error updating description:', error);
+      alert('Помилка при оновленні опису');
     }
   };
 
@@ -403,12 +416,13 @@ const Photos = () => {
   };
 
   const handleCommentSubmit = async () => {
-    if (comment.trim() && selectedPhoto) {
+    const trimmedComment = comment.trim();
+    if (trimmedComment && selectedPhoto && trimmedComment.length <= 500) {
       try {
         const response = await fetch(`http://localhost:3001/api/photos/${selectedPhoto._id}/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: currentUserId, text: comment.trim() })
+          body: JSON.stringify({ userId: currentUserId, text: trimmedComment })
         });
         
         const result = await response.json();
@@ -423,10 +437,15 @@ const Photos = () => {
               ? { ...photo, stats: { ...photo.stats, comments: photo.stats.comments + 1 } }
               : photo
           ));
+        } else {
+          alert(result.message || 'Помилка при додаванні коментаря');
         }
       } catch (error) {
         console.error('Error adding comment:', error);
+        alert('Помилка при додаванні коментаря');
       }
+    } else if (trimmedComment.length > 500) {
+      alert('Коментар занадто довгий (максимум 500 символів)');
     }
   };
 
@@ -483,6 +502,11 @@ const Photos = () => {
                     />
                   ) : (
                     <div className="photo-error">
+                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#8e8e8e" strokeWidth="1">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21,15 16,10 5,21"/>
+                      </svg>
                       <span>Помилка завантаження</span>
                     </div>
                   )}
@@ -491,6 +515,20 @@ const Photos = () => {
                     <div className="heart-animation">❤️</div>
                   )}
                   
+                  {(photo.userId === currentUserId || targetUserId === currentUserId) && (
+                    <div className="photo-actions">
+                      <button 
+                        className="delete-btn"
+                        onClick={(e) => {
+                          console.log('Delete clicked:', { photoUserId: photo.userId, currentUserId, targetUserId });
+                          handleDeletePhoto(photo._id, e);
+                        }}
+                        title="Видалити"
+                      >
+                        Видалити
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div className="photo-stats">
                   <button 
@@ -498,7 +536,7 @@ const Photos = () => {
                     onClick={(e) => handlePhotoLike(photo._id, 'like', e)}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill={photoLikes[photo._id] === 'like' ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                      <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
                     </svg>
                     <span>{stats.likes}</span>
                   </button>
@@ -567,7 +605,13 @@ const Photos = () => {
                       value={newDescription}
                       onChange={(e) => setNewDescription(e.target.value)}
                       placeholder="Додати опис..."
+                      maxLength={1000}
                     />
+                    <div className="description-counter">
+                      <span className={newDescription.length > 900 ? 'warning' : ''}>
+                        {newDescription.length}/1000
+                      </span>
+                    </div>
                     <div className="delete-confirmation-actions">
                       <button 
                         className="delete-confirmation-btn cancel"
@@ -584,7 +628,7 @@ const Photos = () => {
                     </div>
                   </div>
                 ) : (
-                  <p>{selectedPhoto.description || 'Опис не додано'}</p>
+                  <p>{typeof selectedPhoto.description === 'string' ? selectedPhoto.description : (selectedPhoto.description ? JSON.stringify(selectedPhoto.description) : 'Опис не додано')}</p>
                 )}
               </div>
               
@@ -594,7 +638,7 @@ const Photos = () => {
                     <div key={commentItem._id} className="comment-item">
                       <div className="comment-avatar">
                         {commentItem.userId?.avatar ? (
-                          <img src={commentItem.userId.avatar} alt={commentItem.userId.name} />
+                          <img src={`http://localhost:3001${commentItem.userId.avatar}`} alt={commentItem.userId.name} />
                         ) : (
                           commentItem.userId?.name?.charAt(0).toUpperCase() || 'U'
                         )}
@@ -640,17 +684,24 @@ const Photos = () => {
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   rows={1}
+                  maxLength={500}
                 />
-                {comment.trim() && (
-                  <button 
-                    className="comment-submit"
-                    onClick={handleCommentSubmit}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                    </svg>
-                  </button>
-                )}
+                <div className="comment-input-footer">
+                  <span className={`comment-counter ${comment.length > 450 ? 'warning' : ''}`}>
+                    {comment.length}/500
+                  </span>
+                  {comment.trim() && (
+                    <button 
+                      className="comment-submit"
+                      onClick={handleCommentSubmit}
+                      disabled={comment.length > 500}
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                      </svg>
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>

@@ -197,6 +197,19 @@
   background: #f8f9fa;
 }
 
+.photo-error {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  color: #8e8e8e;
+  font-size: 12px;
+  gap: 8px;
+}
+
 .photo-card:hover img {
   transform: scale(1.02);
 }
@@ -326,23 +339,35 @@
   right: 10px;
   opacity: 0;
   transition: opacity 0.15s ease;
-  z-index: 3;
+  z-index: 5;
+}
+
+.photo-card:hover .photo-actions {
+  opacity: 1;
 }
 
 .delete-btn {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(255, 48, 64, 0.9);
   color: white;
   border: none;
-  padding: 6px 10px;
-  border-radius: 3px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(255, 48, 64, 0.3);
+  padding: 6px 12px;
   font-size: 12px;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .delete-btn:hover {
-  background: rgba(237, 73, 86, 0.9);
+  background: rgba(255, 48, 64, 1);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 48, 64, 0.5);
 }
 
 .no-photos {
@@ -384,63 +409,119 @@
   border-color: rgba(59, 130, 246, 0.3);
 }
 
+.add-photo-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  cursor: pointer;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-photo-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.add-photo-grid-btn {
+  background: none;
+  border: 2px dashed #dbdbdb;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #8e8e8e;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.add-photo-grid-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.add-photo-grid-btn span:first-child {
+  font-size: 32px;
+  font-weight: 300;
+}
+
 .photo-modal {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
 }
 
 .photo-modal-content {
   background: white;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 800px;
-  height: 500px;
+  border-radius: 8px;
+  width: 95%;
+  max-width: 1200px;
+  max-height: 90vh;
   display: flex;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .photo-modal-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  background: rgba(0, 0, 0, 0.5);
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.6);
   color: white;
   border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
   cursor: pointer;
   z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.photo-modal-close:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1);
 }
 
 .photo-modal-image {
-  flex: 1;
-  background: #f8fafc;
+  flex: 2;
+  background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
-.photo-modal-sidebar {
-  width: 300px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid #e2e8f0;
+.photo-modal-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
+
+
 
 .photo-modal-header h4 {
   font-size: 18px;
@@ -449,11 +530,7 @@
   margin: 0 0 24px 0;
 }
 
-.photo-modal-description {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
+
 
 .photo-modal-comments {
   margin-top: 24px;
@@ -558,42 +635,56 @@
 .comment-input-section {
   padding: 16px;
   border-top: 1px solid #efefef;
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
+  position: relative;
 }
 
-/* Comment input styles consolidated in comment-input-optimized.css */
+.comment-input {
+  width: 100%;
+  min-height: 18px;
+  max-height: 80px;
+  padding: 8px 40px 8px 12px;
+  border: 1px solid #dbdbdb;
+  border-radius: 22px;
+  resize: none;
+  font-size: 14px;
+  line-height: 18px;
+  background: white;
+  outline: none;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.comment-input:focus {
+  border-color: #0095f6;
+}
 
 .comment-input::placeholder {
   color: #8e8e8e;
 }
 
 .comment-submit {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
   background: none;
   border: none;
   color: #0095f6;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
+  padding: 8px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
 }
 
 .comment-submit:hover {
   background: rgba(0, 149, 246, 0.1);
 }
 
-.comment-submit:disabled {
-  color: #b3d4fc;
-  cursor: default;
-}
-
 .comment-submit svg {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
 }
 
 .edit-description-btn {
@@ -659,10 +750,12 @@
   display: flex;
   gap: 12px;
   justify-content: center;
+  height: 40px;
+  align-items: center;
+  margin-top: 8px;
 }
 
 .delete-confirmation-btn {
-  flex: 1;
   background: rgba(59, 130, 246, 0.1);
   border: 1px solid rgba(59, 130, 246, 0.2);
   color: #3b82f6;
@@ -678,6 +771,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
+  min-width: 80px;
 }
 
 .delete-confirmation-btn:hover {
@@ -864,20 +958,7 @@
     border-top: 1px solid #e2e8f0;
   }
 }
-.description-textarea {
-  width: 100%;
-  border: none;
-  outline: none;
-  font-size: 14px;
-  resize: none;
-  min-height: 152px;
-  max-height: 361px;
-  font-family: inherit;
-}
 
-.description-textarea::placeholder {
-  color: #8e8e8e;
-}
 .add-photo-card {
   aspect-ratio: 1;
   border-radius: 12px;
@@ -987,4 +1068,25 @@
   color: #3b82f6;
   min-width: 35px;
   text-align: right;
+}
+.photo-modal-comments {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.photo-modal-sidebar {
+  flex: 1;
+  min-width: 335px;
+  max-width: 335px;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #e2e8f0;
+  background: white;
+}
+.photo-modal-description {
+  padding: 16px;
+  max-height: 120px;
+  overflow-y: auto;
+  flex-shrink: 0;
 }

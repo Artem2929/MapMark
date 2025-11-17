@@ -89,7 +89,7 @@
 
 .discover-btn:hover {
   background: #2563eb;
-  transform: translateY(-1px);
+
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
@@ -150,32 +150,32 @@
   .saved-places-page {
     padding: 12px;
   }
-  
+
   .saved-places-header {
     margin: 24px 0 32px 0;
   }
-  
+
   .saved-places-header h1 {
     font-size: 28px;
   }
-  
+
   .saved-posts-grid {
     gap: 16px;
   }
-  
+
   .empty-saved {
     padding: 60px 20px;
   }
-  
+
   .empty-icon {
     font-size: 48px;
     margin-bottom: 20px;
   }
-  
+
   .empty-saved h3 {
     font-size: 20px;
   }
-  
+
   .empty-saved p {
     font-size: 14px;
     margin-bottom: 24px;

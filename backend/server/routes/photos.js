@@ -41,7 +41,7 @@ router.post('/upload', upload.single('photo'), async (req, res) => {
     const photo = new Photo({
       userId,
       url: photoUrl,
-      description: description || '',
+      description: typeof description === 'string' ? description : '',
       filename: req.file.originalname,
       mimetype: req.file.mimetype,
       size: req.file.size
@@ -81,8 +81,10 @@ router.get('/user/:userId', async (req, res) => {
         PhotoComment.countDocuments({ photoId: photo._id })
       ]);
       
+      const photoObj = photo.toObject();
       return {
-        ...photo.toObject(),
+        ...photoObj,
+        description: typeof photoObj.description === 'string' ? photoObj.description : '',
         stats: { likes, dislikes, comments }
       };
     }));
@@ -125,9 +127,17 @@ router.put('/:photoId', async (req, res) => {
     const { photoId } = req.params;
     const { description } = req.body;
     
+    if (typeof description !== 'string') {
+      return res.status(400).json({ success: false, message: 'Description must be a string' });
+    }
+    
+    if (description.length > 1000) {
+      return res.status(400).json({ success: false, message: 'Description too long' });
+    }
+    
     const photo = await Photo.findByIdAndUpdate(
       photoId,
-      { description },
+      { description: description.trim() },
       { new: true }
     );
     
@@ -191,10 +201,18 @@ router.post('/:photoId/comments', async (req, res) => {
     const { photoId } = req.params;
     const { userId, text } = req.body;
     
+    if (!text || typeof text !== 'string' || text.trim().length === 0) {
+      return res.status(400).json({ success: false, message: 'Comment text is required' });
+    }
+    
+    if (text.trim().length > 500) {
+      return res.status(400).json({ success: false, message: 'Comment too long' });
+    }
+    
     const comment = await PhotoComment.create({
       photoId,
       userId,
-      text
+      text: text.trim()
     });
     
     const populatedComment = await PhotoComment.findById(comment._id)

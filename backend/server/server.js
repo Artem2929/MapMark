@@ -185,6 +185,7 @@ app.get('/', (req, res) => {
       userFollowing: 'GET /api/user/:userId/following',
       followUser: 'POST /api/user/:userId/follow',
       unfollowUser: 'DELETE /api/user/:userId/follow',
+      userRating: 'GET /api/rating/:userId',
       health: '/api/health'
     }
   });
@@ -224,6 +225,46 @@ app.get('/api/user/:userId/followers', getUserFollowersHandler);
 app.get('/api/user/:userId/following', getUserFollowingHandler);
 app.post('/api/user/:userId/follow', followUserHandler);
 app.delete('/api/user/:userId/follow', unfollowUserHandler);
+
+// User rating endpoint
+app.get('/api/rating/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    const Rating = require('./models/Rating');
+    const Post = require('./models/Post');
+    
+    // Получаем рейтинг пользователя
+    const ratings = await Rating.find({ userId });
+    const positiveVotes = ratings.filter(r => r.vote === 1).length;
+    const negativeVotes = ratings.filter(r => r.vote === -1).length;
+    const totalRating = positiveVotes - negativeVotes;
+    
+    // Получаем количество постов
+    const posts = await Post.find({ userId });
+    const totalPosts = posts.length;
+    
+    res.json({
+      success: true,
+      data: {
+        userId,
+        totalRating,
+        positiveVotes,
+        negativeVotes,
+        totalPosts,
+        level: Math.floor(Math.max(totalRating, 0) / 10) + 1,
+        progress: Math.min(Math.max(totalRating, 0) * 2, 100)
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching user rating:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching user rating',
+      error: error.message
+    });
+  }
+});
 
 // About page endpoints
 app.get('/api/about/stats', getAboutStatsHandler);
