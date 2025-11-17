@@ -5,36 +5,26 @@
 }
 
 .custom-select-trigger {
-  /* width: 100%; */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 14px;
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(248, 250, 252, 0.95) 100%
-  );
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  padding: 8px 12px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-  backdrop-filter: blur(8px);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  color: var(--color-text-primary);
+  transition: var(--transition-normal);
+  outline: none;
+  margin-bottom: 5px;
 }
 
-.custom-select-trigger:hover {
-  border-color: #3b82f6;
-
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-}
-
+.custom-select-trigger:hover,
+.custom-select-trigger:focus,
 .custom-select-trigger.open {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1),
-    0 4px 12px rgba(59, 130, 246, 0.15);
+  border-color: var(--color-primary);
 }
 
 .custom-select-value {
