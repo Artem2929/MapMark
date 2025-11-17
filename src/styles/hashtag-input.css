@@ -7,8 +7,8 @@
 
 .hashtag-input {
   width: 100%;
-  padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
-  border: 2px solid var(--border-color, #e1e5e9);
+  padding: var(--spacing-sm, 6px) var(--spacing-md, 16px);
+  border: 1px solid var(--border-color, #e1e5e9);
   border-radius: var(--border-radius, 8px);
   font-size: var(--font-size-sm, 14px);
   line-height: 1.4;

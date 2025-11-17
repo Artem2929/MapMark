@@ -252,6 +252,49 @@
   width: 100%;
 }
 
+/* Post Dropdown Styles */
+.post-dropdown {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+}
+
+.post-dropdown button {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.post-dropdown button:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.post-dropdown button:last-child {
+  background: rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.2);
+  color: #dc2626;
+}
+
+.post-dropdown button:last-child:hover {
+  background: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
 /* Медіа-запит для планшетів і менших екранів */
 @media (max-width: 1023px) {
   .profile-avatar-menu {
