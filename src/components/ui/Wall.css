@@ -8,8 +8,32 @@
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-sm);
   padding: var(--space-6);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Profile Info Styles */
+.profile-profile-info {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.profile-profile-info h1,
+.profile-profile-info h2,
+.profile-profile-info h3 {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.003em;
+}
+
+.profile-profile-info p,
+.profile-profile-info span,
+.profile-profile-info div {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 1.47059;
+  letter-spacing: -0.022em;
 }
 
 .wall-header {
@@ -211,10 +235,6 @@
   padding: var(--space-4);
   transition: var(--transition-fast);
   box-shadow: var(--shadow-sm);
-}
-
-.post:hover {
-  box-shadow: var(--shadow-md);
 }
 
 .post-header {

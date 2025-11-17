@@ -376,9 +376,7 @@
 }
 
 .profile-photos-section {
-  background: var(--color-bg-primary);
-  padding: var(--space-6);
-  margin-bottom: var(--space-5);
+  padding: var(--space-4);
 }
 
 .profile-photos-header {

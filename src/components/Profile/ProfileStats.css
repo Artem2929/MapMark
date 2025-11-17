@@ -1,7 +1,7 @@
 .profile-stats {
   display: flex;
   justify-content: space-around;
-  padding: var(--space-4) 0;
+  /* padding: var(--space-4) 0; */
   border-top: 1px solid var(--color-border-light);
   margin-top: var(--space-4);
 }
