@@ -162,8 +162,9 @@
 .profile-name-section {
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   gap: 12px;
+  margin-bottom: var(--space-3);
 }
 
 .profile-location-edit {
@@ -179,15 +180,13 @@
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
-  margin: 0 0 var(--space-2) 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   line-height: 1.2;
   letter-spacing: -0.02em;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .profile-name-input {
@@ -390,27 +389,7 @@
 }
 
 .add-photo-btn {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
   flex-shrink: 0;
-}
-
-.add-photo-btn:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
 }
 
 .profile-photos-header h3 {

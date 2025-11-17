@@ -40,7 +40,7 @@ const ProfileHeader = () => {
         
         <div className="profile-profile-info">
           <div className="profile-name-section">
-            <h1 className="profile-name">
+            <h1 className="profile-profile-name">
               {user.name}
               {user.verified && <ProfileBadge type="verified" size="md" />}
               {user.premium && <ProfileBadge type="premium" size="md" />}

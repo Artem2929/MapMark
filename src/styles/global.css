@@ -1,5 +1,6 @@
 /* Глобальні стилі для всіх сторінок */
 @import './profile-unified.css';
+@import './buttons.css';
 
 /* Visual Hierarchy - Typography Scale */
 h1 {
