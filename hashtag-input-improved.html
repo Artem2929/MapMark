@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hashtag Input</title>
+    <style>
+        .hashtag-input-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 20px 0;
+        }
+
+        .hashtag-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+            transition: border-color 0.2s ease;
+            outline: none;
+            background: #fff;
+        }
+
+        .hashtag-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .hashtag-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            min-height: 32px;
+            padding: 8px 0;
+        }
+
+        .hashtag-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 16px;
+            font-size: 13px;
+            color: #495057;
+            transition: all 0.2s ease;
+        }
+
+        .hashtag-tag:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+
+        .hashtag-tag--active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .hashtag-remove {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 1;
+            transition: background-color 0.2s ease;
+        }
+
+        .hashtag-remove:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .hashtag-tag--active .hashtag-remove {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .hashtag-tag--active .hashtag-remove:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .hashtag-counter {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6c757d;
+            text-align: right;
+        }
+
+        .hashtag-counter--limit {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="hashtag-input-container">
+        <input 
+            placeholder="Додати хештеги... #travel #ukraine" 
+            class="hashtag-input" 
+            type="text" 
+            value=""
+            id="hashtagInput"
+        >
+        <div class="hashtag-preview" id="hashtagPreview">
+            <!-- Приклад тегів -->
+            <span class="hashtag-tag">
+                #travel
+                <button class="hashtag-remove" type="button">×</button>
+            </span>
+            <span class="hashtag-tag hashtag-tag--active">
+                #ukraine
+                <button class="hashtag-remove" type="button">×</button>
+            </span>
+            <span class="hashtag-tag">
+                #photography
+                <button class="hashtag-remove" type="button">×</button>
+            </span>
+        </div>
+        <div class="hashtag-counter">
+            3/10 хештегів
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById('hashtagInput');
+        const preview = document.getElementById('hashtagPreview');
+        let hashtags = ['travel', 'ukraine', 'photography'];
+
+        function updatePreview() {
+            preview.innerHTML = hashtags.map((tag, index) => `
+                <span class="hashtag-tag ${index === 1 ? 'hashtag-tag--active' : ''}">
+                    #${tag}
+                    <button class="hashtag-remove" type="button" onclick="removeHashtag(${index})">×</button>
+                </span>
+            `).join('');
+            
+            updateCounter();
+        }
+
+        function updateCounter() {
+            const counter = document.querySelector('.hashtag-counter');
+            const count = hashtags.length;
+            counter.textContent = `${count}/10 хештегів`;
+            counter.classList.toggle('hashtag-counter--limit', count >= 10);
+        }
+
+        function removeHashtag(index) {
+            hashtags.splice(index, 1);
+            updatePreview();
+        }
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const value = this.value.trim().replace('#', '');
+                if (value && !hashtags.includes(value) && hashtags.length < 10) {
+                    hashtags.push(value);
+                    this.value = '';
+                    updatePreview();
+                }
+            }
+        });
+
+        updatePreview();
+    </script>
+</body>
+</html>
