@@ -178,6 +178,15 @@ textarea.input {
   margin-bottom: 5px;
 }
 
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .input:focus {
   border-color: var(--color-primary);
 }

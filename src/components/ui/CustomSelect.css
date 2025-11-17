@@ -4,22 +4,7 @@
   min-width: 200px;
 }
 
-.custom-select-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px;
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-size: var(--font-size-sm);
-  font-family: inherit;
-  color: var(--color-text-primary);
-  transition: var(--transition-normal);
-  outline: none;
-  margin-bottom: 5px;
-}
+
 
 .custom-select-trigger:hover,
 .custom-select-trigger:focus,
