@@ -15,7 +15,8 @@ router.post('/:postId/like', (req, res) => {
       dislikes: 0,
       likedBy: [],
       dislikedBy: [],
-      comments: []
+      comments: [],
+      shares: 0
     };
   }
   
@@ -57,7 +58,8 @@ router.post('/:postId/dislike', (req, res) => {
       dislikes: 0,
       likedBy: [],
       dislikedBy: [],
-      comments: []
+      comments: [],
+      shares: 0
     };
   }
   
@@ -99,7 +101,8 @@ router.post('/:postId/comments', (req, res) => {
       dislikes: 0,
       likedBy: [],
       dislikedBy: [],
-      comments: []
+      comments: [],
+      shares: 0
     };
   }
   
@@ -116,6 +119,32 @@ router.post('/:postId/comments', (req, res) => {
   res.json({
     success: true,
     data: newComment
+  });
+});
+
+// Increment share count
+router.post('/:postId/share', (req, res) => {
+  const { postId } = req.params;
+  const { userId } = req.body;
+  
+  if (!posts[postId]) {
+    posts[postId] = {
+      likes: 0,
+      dislikes: 0,
+      likedBy: [],
+      dislikedBy: [],
+      comments: [],
+      shares: 0
+    };
+  }
+  
+  posts[postId].shares++;
+  
+  res.json({
+    success: true,
+    data: {
+      shares: posts[postId].shares
+    }
   });
 });
 

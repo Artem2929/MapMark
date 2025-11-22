@@ -312,6 +312,20 @@ const Wall = ({ userId, isOwnProfile, user }) => {
     }
   };
 
+  const handleShare = async (postId) => {
+    try {
+      const postUrl = `${window.location.href}#post-${postId}`;
+      await navigator.clipboard.writeText(postUrl);
+      const currentUserId = localStorage.getItem('userId');
+      const result = await wallService.incrementShare(postId, currentUserId);
+      if (result.success) {
+        refreshWall();
+      }
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+    }
+  };
+
   return (
     <div className="wall-container">
       <div className="wall-header">
@@ -559,7 +573,7 @@ onError={(e) => e.target.style.display = 'none'}
           </div>
         ) : (
           posts.map(post => (
-          <div key={post.id} className="post">
+          <div key={post.id} className="post" id={`post-${post.id}`}>
             <div className="post-header">
               <div className="post-avatar">
                 {user?.avatar ? (
@@ -705,10 +719,11 @@ onError={(e) => e.target.style.display = 'none'}
                 </svg>
                 <span>{post.comments.length}</span>
               </button>
-              <button className="share-btn">
+              <button className="share-btn" onClick={() => handleShare(post.id)}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M7 17l9.2-9.2M17 8v9h-9"></path>
                 </svg>
+                <span>{post.shares || 0}</span>
               </button>
             </div>
             

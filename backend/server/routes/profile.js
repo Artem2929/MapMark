@@ -407,6 +407,37 @@ router.post('/posts/:postId/comments', async (req, res) => {
   }
 });
 
+// Increment share count
+router.post('/posts/:postId/share', async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req.body;
+    
+    const post = await WallPost.findById(postId);
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+    
+    post.shares = (post.shares || 0) + 1;
+    await post.save();
+    
+    res.json({
+      success: true,
+      data: {
+        shares: post.shares
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
+
 // Follow/unfollow user
 router.post('/:userId/follow/:targetUserId', async (req, res) => {
   try {

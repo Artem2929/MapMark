@@ -102,5 +102,20 @@ export const wallService = {
       console.error('Error deleting post:', error);
       return { success: false, error: error.message };
     }
+  },
+
+  // Increment share count
+  incrementShare: async (postId, userId) => {
+    try {
+      const response = await fetch(`${API_BASE}/user/posts/${postId}/share`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      });
+      return await response.json();
+    } catch (error) {
+      console.error('Error incrementing share:', error);
+      return { success: false, error: error.message };
+    }
   }
 };

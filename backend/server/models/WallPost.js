@@ -25,6 +25,7 @@ const wallPostSchema = new mongoose.Schema({
   dislikes: { type: Number, default: 0 },
   likedBy: [String],
   dislikedBy: [String],
+  shares: { type: Number, default: 0 },
   comments: [commentSchema],
   createdAt: { type: Date, default: Date.now }
 });
