@@ -107,7 +107,10 @@ const PhotosSection = () => {
             <div key={`skeleton-${index}`} className="photo-skeleton"></div>
           ))
         ) : photos.length > 0 ? (
-          photos.slice(-3).map((photo) => (
+          photos
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .slice(0, 3)
+            .map((photo) => (
             <div 
               key={photo._id} 
               className="photo-gallery-item"

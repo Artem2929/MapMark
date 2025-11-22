@@ -32,7 +32,7 @@ const HashtagInput = ({
   };
 
   const addHashtag = (tag) => {
-    const cleanTag = tag.replace('#', '').trim();
+    const cleanTag = tag.startsWith('#') ? tag.trim() : `#${tag.trim()}`;
     if (cleanTag && !tags.includes(cleanTag) && tags.length < maxTags) {
       onChange([...tags, cleanTag]);
       setInputValue('');
@@ -124,7 +124,7 @@ const HashtagInput = ({
       <div className="hashtag-preview">
         {tags.map((tag, index) => (
           <span key={`${tag}-${index}`} className="hashtag-tag hashtag-tag--new">
-            #{tag}
+            {tag}
             <button
               type="button"
               className="hashtag-remove"

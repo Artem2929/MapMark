@@ -257,15 +257,7 @@
   color: #374151;
 }
 
-.custom-select-arrow {
-  font-size: 12px;
-  color: #6b7280;
-  transition: transform 0.2s ease;
-}
 
-.custom-select-arrow.up {
-  transform: rotate(180deg);
-}
 
 .error-container {
   min-height: 32px;

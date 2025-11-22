@@ -18,9 +18,7 @@
 }
 
 .custom-select-arrow {
-  font-size: 12px;
-  transition: transform 0.2s ease;
-  color: #6b7280;
+  display: none;
 }
 
 .custom-select-arrow.up {

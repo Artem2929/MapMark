@@ -7,6 +7,7 @@
   overflow: hidden;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  position: relative;
 }
 
 .post-card:hover {
@@ -72,6 +73,17 @@
 .post-card__time {
   font-size: 12px;
   color: #64748b;
+}
+
+.post-meta {
+  display: flex;
+  gap: 8px;
+}
+
+.post-location {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #6c757d;
 }
 
 .post-card__menu {
@@ -147,34 +159,48 @@
 
 .post-card__actions {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
-  border-top: 1px solid #f1f5f9;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .post-card__action-buttons {
   display: flex;
-  gap: 16px;
+  gap: 12px;
 }
 
 .post-card__action-btn {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: none;
-  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
   cursor: pointer;
   padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  color: #64748b;
-  transition: all 0.2s ease;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  font-size: 12px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  min-width: 50px;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .post-card__action-btn:hover {
-  background: #f1f5f9;
-  color: #475569;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .post-card__action-btn.active {
@@ -235,6 +261,12 @@
 
 .post-card__icon {
   font-size: 16px;
+}
+
+.post-card__action-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
 }
 
 .post-card__count {

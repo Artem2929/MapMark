@@ -31,31 +31,11 @@ textarea {
 
 input:focus,
 textarea:focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
 }
 
 /* Icon animations */
-.like-btn,
-.dislike-btn,
-.comment-btn,
-.share-btn {
-  transition: transform 0.15s ease;
-}
-
-.like-btn:hover,
-.dislike-btn:hover,
-.comment-btn:hover,
-.share-btn:hover {
-  opacity: 0.8;
-}
-
-.like-btn.liked {
-  animation: bounce 0.3s ease;
-}
-
-.dislike-btn.disliked {
-  animation: bounce 0.3s ease;
-}
+/* Button styles moved to hashtag-input.css */
 
 @keyframes bounce {
   0%,

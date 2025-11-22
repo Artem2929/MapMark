@@ -52,7 +52,7 @@
 /* Контейнер меню */
 .profile-avatar-menu {
   margin-top: 6px;
-  width: 250px;
+  width: 100%;
   flex-shrink: 0;
   background: linear-gradient(
     145deg,

@@ -23,6 +23,19 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
     return `${Math.floor(diffInMinutes / 1440)} дн тому`;
   };
 
+  const cleanDescription = (description) => {
+    // Видаляємо рядки з локацією та все після них
+    const lines = description.split('\n');
+    const cleanLines = [];
+    
+    for (const line of lines) {
+      if (line.includes('📍')) break;
+      cleanLines.push(line);
+    }
+    
+    return cleanLines.join('\n').trim();
+  };
+
   const handleReaction = async (type) => {
     if (isUpdating) return;
     
@@ -144,8 +157,13 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
             </div>
           </div>
           <div className="post-card__author-info">
-            <span className="post-card__author-name">{post.author.name}</span>
-            <span className="post-card__time">{getTimeAgo(post.createdAt)}</span>
+            <div className="post-meta">
+              <div className="post-author">{post.author.name}</div>
+              <div className="post-date">{getTimeAgo(post.createdAt)}</div>
+            </div>
+            {post.location && (
+              <div className="post-location">📍 {post.location}</div>
+            )}
           </div>
         </Link>
       </div>
@@ -158,13 +176,7 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
 
       <div className="post-card__content" onClick={() => navigate(`/posts/${post.id}`)}>
         <h3 className="post-card__title">{post.title}</h3>
-        <p className="post-card__description">{post.description}</p>
-        {post.location && (
-          <div className="post-card__location">
-            <span className="post-card__location-icon">📍</span>
-            <span className="post-card__location-text">{post.location}</span>
-          </div>
-        )}
+        <p className="post-card__description">{cleanDescription(post.description)}</p>
       </div>
 
       <div className="post-card__actions">
@@ -174,7 +186,9 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
             onClick={() => handleReaction('like')}
             disabled={isUpdating}
           >
-            <span className="post-card__icon">👍</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+            </svg>
             <span className="post-card__count">{localStats.likes}</span>
           </button>
           <button 
@@ -182,21 +196,27 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
             onClick={() => handleReaction('dislike')}
             disabled={isUpdating}
           >
-            <span className="post-card__icon">👎</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
+            </svg>
             <span className="post-card__count">{localStats.dislikes}</span>
           </button>
           <button 
             className="post-card__action-btn comment-btn"
             onClick={() => setShowComments(!showComments)}
           >
-            <span className="post-card__icon">💬</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
             <span className="post-card__count">{localStats.comments}</span>
           </button>
           <button 
             className="post-card__action-btn share-btn"
             onClick={handleShare}
           >
-            <span className="post-card__icon">📤</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M7 17l9.2-9.2M17 8v9h-9"></path>
+            </svg>
           </button>
         </div>
         <button 

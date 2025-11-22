@@ -91,9 +91,31 @@
 
 .profile-basic-info__actions {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   padding: 24px 24px;
   justify-content: center;
+}
+
+.profile-basic-info__actions .profile-basic-info__edit-btn {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.profile-basic-info__actions .profile-basic-info__edit-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.profile-basic-info__actions .profile-basic-info__edit-btn:last-child {
+  background: rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.2);
+  color: #dc2626;
+}
+
+.profile-basic-info__actions .profile-basic-info__edit-btn:last-child:hover {
+  background: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.3);
 }
 
 .profile-basic-info__actions .btn {
