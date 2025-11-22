@@ -785,13 +785,17 @@ onError={(e) => e.target.style.display = 'none'}
                     </div>
                     <div className="comment-content">
                       <div className="comment-input-wrapper">
-                        <input
-                          type="text"
+                        <textarea
                           placeholder="Написати коментар..."
                           value={commentText[post.id] || ''}
-                          onChange={(e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value }))}
-                          onKeyPress={(e) => e.key === 'Enter' && handleCommentSubmit(post.id)}
+                          onChange={(e) => {
+                            setCommentText(prev => ({ ...prev, [post.id]: e.target.value }));
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
+                          }}
+                          onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleCommentSubmit(post.id)}
                           className="comment-input"
+                          rows="1"
                         />
                       </div>
                     </div>

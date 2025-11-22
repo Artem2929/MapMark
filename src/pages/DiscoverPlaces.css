@@ -231,7 +231,6 @@
   border-color: rgba(59, 130, 246, 0.3);
   box-shadow: 0 16px 40px rgba(59, 130, 246, 0.15),
     0 8px 20px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  transform: translateY(-2px);
 }
 
 .category-btn.active {
@@ -615,8 +614,6 @@
 
 .comment-input:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .comment-controls {

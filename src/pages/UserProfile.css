@@ -66,8 +66,6 @@
   letter-spacing: -0.02em;
 }
 
-
-
 .profile-avatar-container:hover .profile-avatar-upload-overlay {
   opacity: 1;
 }
@@ -178,7 +176,8 @@
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, sans-serif;
   line-height: 1.2;
   letter-spacing: -0.02em;
   display: flex;
@@ -432,36 +431,17 @@
 }
 
 .photo-gallery-item:hover {
-  transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .photo-gallery-item:hover img {
-  transform: scale(1.05);
 }
 
 /* Post Actions Styles moved to hashtag-input.css */
 
 /* Button styles moved to hashtag-input.css */
 
-.photo-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  transition: opacity 0.15s ease;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.photo-gallery-item:hover .photo-overlay {
-  opacity: 1;
-}
+/* Photo overlay removed - no hover effects on photos */
 
 .photo-actions {
   display: flex;

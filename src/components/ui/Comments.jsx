@@ -47,8 +47,10 @@ const Comments = ({ postId }) => {
       });
       
       if (data.success) {
-        setComments(prev => [data.comment, ...prev]);
+        // Перезавантажуємо коментарі з сервера
+        fetchComments();
         setNewComment('');
+        setShowAllComments(true);
       }
     } catch (error) {
       console.error('Error posting comment:', error);
@@ -204,12 +206,32 @@ const Comments = ({ postId }) => {
 
       {/* Форма додавання коментаря */}
       <form onSubmit={replyingTo ? (e) => { e.preventDefault(); handleReplySubmit(replyingTo); } : handleSubmit} className="add-comment">
-        <input
-          type="text"
+        <textarea
           value={replyingTo ? replyText : newComment}
-          onChange={(e) => replyingTo ? setReplyText(e.target.value) : setNewComment(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (replyingTo) {
+              setReplyText(value);
+            } else {
+              setNewComment(value);
+            }
+            // Автоматичне розширення
+            e.target.style.height = 'auto';
+            e.target.style.height = e.target.scrollHeight + 'px';
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              if (replyingTo) {
+                handleReplySubmit(replyingTo);
+              } else {
+                handleSubmit(e);
+              }
+            }
+          }}
           placeholder={replyingTo ? `Відповісти ${comments.find(c => c._id === replyingTo)?.author.name}...` : "Додати коментар..."}
           className="comment-input"
+          rows="1"
         />
         {(replyingTo ? replyText.trim() : newComment.trim()) && (
           <button type="submit" className="post-btn">
