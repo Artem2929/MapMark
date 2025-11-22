@@ -386,14 +386,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                   />
                 </label>
 
-                <button 
-                  type="button" 
-                  className="tool-btn" 
-                  title="Емоджі"
-                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                >
-                  😊
-                </button>
+
                 
                 <LocationPicker 
                   onLocationSelect={setSelectedLocation}
