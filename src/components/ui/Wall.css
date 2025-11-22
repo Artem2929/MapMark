@@ -674,3 +674,59 @@
     height: 32px;
   }
 }
+.comment {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.comment-submit {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #007aff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.comment-submit:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.comment-submit:hover:not(:disabled) {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+.comment-input {
+  flex: 1;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+  background: #f8f9fa;
+  transition: border-color 0.2s ease;
+}
+
+.comment-input:focus {
+  border-color: #007aff;
+  background: white;
+}
+
+.comment-input::placeholder {
+  color: #6c757d;
+}
+
+.comment-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}

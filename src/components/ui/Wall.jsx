@@ -75,6 +75,19 @@ const Wall = ({ userId, isOwnProfile, user }) => {
     }
   }, [postText]);
 
+  // Скрол до поста при завантаженні
+  React.useEffect(() => {
+    if (posts.length > 0 && window.location.hash) {
+      const hash = window.location.hash.substring(1);
+      const element = document.getElementById(hash);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+  }, [posts]);
+
   const handleEmojiSelect = (emoji) => {
     const textarea = textareaRef.current;
     const start = textarea.selectionStart;
@@ -729,31 +742,33 @@ onError={(e) => e.target.style.display = 'none'}
             
             {showComments[post.id] && (
               <div className="comments-section">
-                <div className="comments-list">
-                  {post.comments.map(comment => (
-                    <div key={comment.id || comment._id} className="comment">
-                      <div className="comment-avatar">
-                        {comment.avatar ? (
-                          <img 
-                            src={comment.avatar.startsWith('data:') || comment.avatar.startsWith('http') 
-                              ? comment.avatar 
-                              : `http://localhost:3001${comment.avatar}`} 
-                            alt="Аватар" 
-                          />
-                        ) : (
-                          <div className="avatar-placeholder">{comment.author?.charAt(0) || 'U'}</div>
-                        )}
-                      </div>
-                      <div className="comment-content">
-                        <div className="comment-header">
-                          <span className="comment-author">{comment.author}</span>
-                          <span className="comment-date">{comment.date}</span>
+                {post.comments.length > 0 && (
+                  <div className="comments-list">
+                    {post.comments.map(comment => (
+                      <div key={comment.id || comment._id} className="comment">
+                        <div className="comment-avatar">
+                          {comment.avatar ? (
+                            <img 
+                              src={comment.avatar.startsWith('data:') || comment.avatar.startsWith('http') 
+                                ? comment.avatar 
+                                : `http://localhost:3001${comment.avatar}`} 
+                              alt="Аватар" 
+                            />
+                          ) : (
+                            <div className="avatar-placeholder">{comment.author?.charAt(0) || 'U'}</div>
+                          )}
                         </div>
-                        <div className="comment-text">{comment.text}</div>
+                        <div className="comment-content">
+                          <div className="comment-header">
+                            <span className="comment-author">{comment.author}</span>
+                            <span className="comment-date">{comment.date}</span>
+                          </div>
+                          <div className="comment-text">{comment.text}</div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
                 <div className="comment-form">
                   <div className="comment-item">
                     <div className="comment-avatar">
@@ -778,18 +793,15 @@ onError={(e) => e.target.style.display = 'none'}
                           onKeyPress={(e) => e.key === 'Enter' && handleCommentSubmit(post.id)}
                           className="comment-input"
                         />
-                        <button 
-                          onClick={() => handleCommentSubmit(post.id)}
-                          disabled={!commentText[post.id]?.trim()}
-                          className="comment-submit"
-                        >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <line x1="22" y1="2" x2="11" y2="13"/>
-                            <polygon points="22,2 15,22 11,13 2,9 22,2"/>
-                          </svg>
-                        </button>
                       </div>
                     </div>
+                    <button 
+                      onClick={() => handleCommentSubmit(post.id)}
+                      disabled={!commentText[post.id]?.trim()}
+                      className="comment-submit"
+                    >
+                      ↑
+                    </button>
                   </div>
                 </div>
               </div>

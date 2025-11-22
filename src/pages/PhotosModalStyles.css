@@ -102,10 +102,6 @@
   object-fit: cover;
 }
 
-.comment-content {
-  flex: 1;
-}
-
 .comment-main {
   margin-bottom: 4px;
 }
@@ -176,39 +172,9 @@
   margin-top: 8px;
 }
 
-.comment-input {
-  flex: 1;
-  border: none;
-  outline: none;
-  font-size: 14px;
-  resize: none;
-  font-family: inherit;
-  background: transparent;
-}
 
-.comment-input::placeholder {
-  color: #8e8e8e;
-}
 
-.comment-submit {
-  background: none;
-  border: none;
-  color: #0095f6;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0;
-}
 
-.comment-submit:disabled {
-  color: #b3d4fc;
-  cursor: default;
-}
-
-.comment-submit svg {
-  width: 20px;
-  height: 20px;
-}
 
 .comment-counter {
   font-size: 12px;
