@@ -65,13 +65,7 @@ body {
   background: transparent;
 }
 
-/* Enhanced Typography */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: var(--font-weight-bold);
-  line-height: 1.2;
-  color: var(--color-text-primary);
-  margin: 0;
-}
+
 
 p {
   line-height: 1.6;
@@ -79,15 +73,7 @@ p {
   margin: 0;
 }
 
-/* Enhanced Button Reset */
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-  padding: 0;
-  margin: 0;
-}
+
 
 /* Enhanced Input Reset */
 input, textarea, select {

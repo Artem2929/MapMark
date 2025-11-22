@@ -1,10 +1,7 @@
 /* Micro-interactions */
 
 /* Button hover effects */
-.btn,
-button {
-  transition: all 0.2s ease;
-}
+
 
 .btn:hover,
 button:hover {
@@ -24,7 +21,6 @@ button:active {
 }
 
 .photo-gallery-item:hover {
-  transform: scale(1.02);
 }
 
 /* Input focus effects */

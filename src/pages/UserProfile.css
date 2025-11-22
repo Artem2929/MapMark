@@ -66,9 +66,7 @@
   letter-spacing: -0.02em;
 }
 
-.profile-avatar-input {
-  display: none;
-}
+
 
 .profile-avatar-container:hover .profile-avatar-upload-overlay {
   opacity: 1;
@@ -130,12 +128,10 @@
 
 .profile-profile-info {
   flex: 1;
-  width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  position: relative;
-  z-index: 2;
 }
 
 .profile-profile-header-top {

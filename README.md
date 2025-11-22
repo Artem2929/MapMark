@@ -14,11 +14,30 @@ npm install
 # Configure environment (generates secure secrets)
 ./setup-env.sh
 
-# Start development server
+# Start all services (frontend + backend + database)
 npm run dev
+
+# Alternative: use the startup script
+./start-all.sh
 
 # Build for production
 npm run build
+```
+
+### Development Commands
+
+```bash
+# Start only frontend
+npm run dev:frontend
+
+# Start only backend
+npm run dev:backend
+
+# Start only database
+npm run dev:db
+
+# Start backend + database with Docker
+npm run dev:full
 ```
 
 ## 🛠 Development

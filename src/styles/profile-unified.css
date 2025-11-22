@@ -95,9 +95,7 @@
   align-items: center;
 }
 
-.profile-name-section {
-  margin-bottom: var(--space-3);
-}
+
 
 .profile-title {
   font-size: var(--font-size-xl);

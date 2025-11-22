@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './LocationPicker.css';
 
 const LocationPicker = ({ onLocationSelect, selectedLocation }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const dropdownRef = useRef(null);
 
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -34,8 +35,24 @@ const LocationPicker = ({ onLocationSelect, selectedLocation }) => {
     loc.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <div className="location-picker">
+    <div className="location-picker" ref={dropdownRef}>
       <button 
         className="location-picker-btn"
         onClick={() => setIsOpen(!isOpen)}
@@ -57,7 +74,7 @@ const LocationPicker = ({ onLocationSelect, selectedLocation }) => {
             className="location-item current-location"
             onClick={getCurrentLocation}
           >
-            🎯 Використати поточне місце
+            🎯 Моє місце
           </button>
           
           {filteredLocations.map((location, index) => (

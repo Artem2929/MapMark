@@ -27,7 +27,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
   const [showPostMenu, setShowPostMenu] = useState(null);
   const [showComments, setShowComments] = useState({});
   const [commentText, setCommentText] = useState({});
-  const [hashtags, setHashtags] = useState('');
+  const [hashtags, setHashtags] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const textareaRef = useRef(null);
   
@@ -133,10 +133,18 @@ const Wall = ({ userId, isOwnProfile, user }) => {
     return content.replace(/@(\w+)/g, '<span class="user-tag">@$1</span>');
   };
 
-  const handlePhotoSelect = (e) => {
-    const files = Array.from(e.target.files).slice(0, 3);
-    const photoUrls = files.map(file => URL.createObjectURL(file));
-    setSelectedPhotos(photoUrls);
+  const handlePhotoSelect = async (e) => {
+    const files = Array.from(e.target.files).slice(0, 2);
+    const photoPromises = files.map(file => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    });
+    
+    const photoBase64 = await Promise.all(photoPromises);
+    setSelectedPhotos(photoBase64);
   };
   
   const handleFileSelect = (e) => {
@@ -176,7 +184,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
     setPostText('');
     setSelectedPhotos([]);
     setSelectedFiles([]);
-    setHashtags('');
+    setHashtags([]);
     setSelectedLocation(null);
   };
 
@@ -190,7 +198,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
         content: postText,
         images: selectedPhotos,
         files: selectedFiles,
-        hashtags: hashtags,
+        hashtags: hashtags.join(' '),
         location: selectedLocation
       };
       
@@ -392,22 +400,24 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                   selectedLocation={selectedLocation}
                 />
               </div>
-              <div className="creator-buttons">
-                <button 
-                  type="button" 
-                  className="cancel-btn" 
-                  onClick={handleCancel}
-                >
-                  Скасувати
-                </button>
-                <button 
-                  type="submit" 
-                  className="publish-btn" 
-                  disabled={!postText.trim() || postText.length > 1500}
-                >
-                  Опублікувати
-                </button>
-              </div>
+              {postText.trim() && (
+                <div className="creator-buttons">
+                  <button 
+                    type="button" 
+                    className="cancel-btn" 
+                    onClick={handleCancel}
+                  >
+                    Скасувати
+                  </button>
+                  <button 
+                    type="submit" 
+                    className="publish-btn" 
+                    disabled={!postText.trim() || postText.length > 1500}
+                  >
+                    Опублікувати
+                  </button>
+                </div>
+              )}
             </div>
 
             {showEmojiPicker && (
@@ -485,9 +495,9 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                   '🇹🇻', '🇻🇮', '🇺🇬', '🇺🇦', '🇦🇪', '🇬🇧', '🏴󠁧󠁢󠁥󠁮󠁧󠁿', '🏴󠁧󠁢󠁳󠁣󠁴󠁿', '🏴󠁧󠁢󠁷󠁬󠁳󠁿', '🇺🇸',
                   '🇺🇾', '🇺🇿', '🇻🇺', '🇻🇦', '🇻🇪', '🇻🇳', '🇼🇫', '🇪🇭', '🇾🇪', '🇿🇲',
                   '🇿🇼', '🔥', '💯', '🎉', '🎊', '🎈', '🎁', '🎀', '🎂', '🍰'
-                ].map(emoji => (
+                ].map((emoji, index) => (
                   <button
-                    key={emoji}
+                    key={`${emoji}-${index}`}
                     type="button"
                     className="emoji-btn"
                     onClick={() => handleEmojiSelect(emoji)}

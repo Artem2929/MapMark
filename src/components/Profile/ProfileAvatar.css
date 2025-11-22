@@ -173,14 +173,6 @@
   align-self: flex-start;
 }
 
-.profile-profile-info {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
 /* Адаптив */
 @media (max-width: 1024px) {
   .profile-avatar-section {
@@ -197,11 +189,6 @@
 
   .profile-avatar-menu {
     width: 100%;
-  }
-
-  .profile-profile-info {
-    width: 100%;
-    gap: 12px;
   }
 }
 
