@@ -45,12 +45,11 @@
 .profile-basic-info__edit-btn:hover {
   background: rgba(59, 130, 246, 0.15);
   border-color: rgba(59, 130, 246, 0.3);
-  transform: translateY(-1px);
+
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
 
 .profile-basic-info__edit-btn:active {
-  transform: translateY(0);
   background: rgba(59, 130, 246, 0.2);
   border-color: rgba(59, 130, 246, 0.4);
   box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
@@ -116,12 +115,11 @@
 .profile-basic-info__actions .profile-basic-info__edit-btn:hover {
   background: rgba(59, 130, 246, 0.15);
   border-color: rgba(59, 130, 246, 0.3);
-  transform: translateY(-1px);
+
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
 
 .profile-basic-info__actions .profile-basic-info__edit-btn:active {
-  transform: translateY(0);
   background: rgba(59, 130, 246, 0.2);
   border-color: rgba(59, 130, 246, 0.4);
   box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
@@ -136,12 +134,11 @@
 .profile-basic-info__actions .profile-basic-info__edit-btn:last-child:hover {
   background: rgba(220, 38, 38, 0.15);
   border-color: rgba(220, 38, 38, 0.3);
-  transform: translateY(-1px);
+
   box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
 }
 
 .profile-basic-info__actions .profile-basic-info__edit-btn:last-child:active {
-  transform: translateY(0);
   background: rgba(220, 38, 38, 0.2);
   border-color: rgba(220, 38, 38, 0.4);
   box-shadow: 0 1px 4px rgba(220, 38, 38, 0.3);
@@ -231,7 +228,6 @@
 }
 
 .add-service-btn:active {
-  transform: translateY(0);
   box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15);
 }
 

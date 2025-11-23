@@ -13,7 +13,9 @@
   font-size: 14px;
   line-height: 1.5;
   font-family: inherit;
-  background: #ffffff url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23718096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>') no-repeat 16px center;
+  background: #ffffff
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23718096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>')
+    no-repeat 16px center;
   color: #1a202c;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
@@ -38,7 +40,8 @@
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
   max-height: 280px;
   overflow-y: auto;
   z-index: 1000;
@@ -81,11 +84,19 @@
 .location-item.current-location {
   color: #4299e1;
   font-weight: 600;
-  background: linear-gradient(90deg, rgba(66, 153, 225, 0.05) 0%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(66, 153, 225, 0.05) 0%,
+    transparent 100%
+  );
 }
 
 .location-item.current-location:hover {
-  background: linear-gradient(90deg, rgba(66, 153, 225, 0.1) 0%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(66, 153, 225, 0.1) 0%,
+    transparent 100%
+  );
   color: #3182ce;
 }
 
@@ -127,7 +138,6 @@
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -156,12 +166,12 @@
     font-size: 14px;
     border-radius: 10px;
   }
-  
+
   .location-item {
     padding: 12px 14px;
     font-size: 13px;
   }
-  
+
   .location-items {
     border-radius: 10px;
   }
@@ -170,43 +180,53 @@
 /* Dark Theme Support */
 @media (prefers-color-scheme: dark) {
   .location-search {
-    background: #2d3748 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>') no-repeat 16px center;
+    background: #2d3748
+      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>')
+      no-repeat 16px center;
     border-color: #4a5568;
     color: #e2e8f0;
   }
-  
+
   .location-search::placeholder {
     color: #718096;
   }
-  
+
   .location-search:focus {
     border-color: #63b3ed;
     background-color: #2d3748;
   }
-  
+
   .location-items {
     background: #2d3748;
     border-color: #4a5568;
   }
-  
+
   .location-item {
     color: #e2e8f0;
     border-bottom-color: #4a5568;
   }
-  
+
   .location-item:hover {
     background: #4a5568;
   }
-  
+
   .location-item.current-location {
     color: #63b3ed;
-    background: linear-gradient(90deg, rgba(99, 179, 237, 0.1) 0%, transparent 100%);
+    background: linear-gradient(
+      90deg,
+      rgba(99, 179, 237, 0.1) 0%,
+      transparent 100%
+    );
   }
-  
+
   .location-item.current-location:hover {
-    background: linear-gradient(90deg, rgba(99, 179, 237, 0.15) 0%, transparent 100%);
+    background: linear-gradient(
+      90deg,
+      rgba(99, 179, 237, 0.15) 0%,
+      transparent 100%
+    );
   }
-  
+
   .location-item.current-location::before {
     background: #63b3ed;
   }

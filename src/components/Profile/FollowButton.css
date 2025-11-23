@@ -20,12 +20,11 @@
 
 .follow-button.not-following:hover {
   background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-  transform: translateY(-1px);
+
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .follow-button.not-following:active {
-  transform: translateY(0);
   box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
 }
 
@@ -39,12 +38,11 @@
   background: rgba(239, 68, 68, 0.1);
   border-color: rgba(239, 68, 68, 0.2);
   color: #ef4444;
-  transform: translateY(-1px);
+
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 }
 
 .follow-button.following:active {
-  transform: translateY(0);
   background: rgba(239, 68, 68, 0.15);
   box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
 }

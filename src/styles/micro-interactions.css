@@ -2,7 +2,6 @@
 
 /* Button hover effects */
 
-
 .btn:hover,
 button:hover {
   opacity: 0.9;
@@ -37,7 +36,6 @@ textarea {
   20%,
   60%,
   100% {
-    transform: translateY(0);
   }
   40% {
     transform: translateY(-3px);
@@ -75,7 +73,6 @@ textarea {
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 

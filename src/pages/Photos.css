@@ -260,23 +260,17 @@
   color: #8e8e8e;
 }
 
-.edit-description-btn {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
-}
-
 .edit-description-btn:hover {
   background: rgba(59, 130, 246, 0.15);
   border-color: rgba(59, 130, 246, 0.3);
+
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.edit-description-btn:active {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
 }
 
 .save-description-btn {
@@ -528,8 +522,6 @@
   margin: 4px 0;
 }
 
-
-
 .comment-like-btn {
   background: none;
   border: none;
@@ -657,4 +649,45 @@
     height: 90vh;
     max-height: 600px;
   }
+}
+.hashtag-input-container {
+  padding: 16px;
+  border-top: 1px solid #e2e8f0;
+  background: white;
+}
+
+.hashtag-input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.hashtag-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.hashtag-input::placeholder {
+  color: #8e8e8e;
+}
+
+.hashtag-preview {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.hashtag-preview .hashtag {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
 }
