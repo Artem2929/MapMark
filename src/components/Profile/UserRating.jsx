@@ -115,26 +115,7 @@ const UserRating = ({ userId, isOwnProfile = false }) => {
         <span className="user-rating__value">{getRatingText()}</span>
       </div>
       
-      {!isOwnProfile && (
-        <div className="user-rating__controls">
-          <button
-            className={`user-rating__btn user-rating__btn--plus ${userVote === 1 ? 'active' : ''}`}
-            onClick={() => handleVote(1)}
-            disabled={isVoting}
-            title="Підняти рейтинг"
-          >
-            +
-          </button>
-          <button
-            className={`user-rating__btn user-rating__btn--minus ${userVote === -1 ? 'active' : ''}`}
-            onClick={() => handleVote(-1)}
-            disabled={isVoting}
-            title="Знизити рейтинг"
-          >
-            −
-          </button>
-        </div>
-      )}
+
     </div>
   );
 };

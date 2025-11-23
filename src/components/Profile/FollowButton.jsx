@@ -3,13 +3,30 @@ import useUserFollowing from '../../hooks/useUserFollowing';
 import './FollowButton.css';
 
 const FollowButton = ({ userId, targetUserId }) => {
-  const { isFollowing: followingStatus, refreshFollowing } = useUserFollowing(userId);
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setIsFollowing(followingStatus(targetUserId));
-  }, [followingStatus, targetUserId]);
+    const checkFollowingStatus = async () => {
+      try {
+        const response = await fetch(`http://localhost:3001/api/user/${userId}/following/${targetUserId}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        });
+        const result = await response.json();
+        if (result.success) {
+          setIsFollowing(result.isFollowing);
+        }
+      } catch (error) {
+        console.error('Error checking following status:', error);
+      }
+    };
+    
+    if (userId && targetUserId) {
+      checkFollowingStatus();
+    }
+  }, [userId, targetUserId]);
 
   const handleFollowToggle = async () => {
     if (loading) return;
@@ -17,13 +34,17 @@ const FollowButton = ({ userId, targetUserId }) => {
     try {
       setLoading(true);
       const response = await fetch(`http://localhost:3001/api/user/${userId}/follow/${targetUserId}`, {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json'
+        }
       });
       const result = await response.json();
       
       if (result.success) {
-        setIsFollowing(result.data.isFollowing);
-        refreshFollowing(); // Refresh following cache
+        const newFollowingState = !isFollowing;
+        setIsFollowing(newFollowingState);
       }
     } catch (error) {
       console.error('Error toggling follow:', error);

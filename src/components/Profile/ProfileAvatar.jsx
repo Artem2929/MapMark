@@ -4,6 +4,7 @@ import { updateAvatar } from '../../api/profileEndpoints';
 import useOnlineStatus from '../../hooks/useOnlineStatus';
 import OnlineIndicator from '../ui/OnlineIndicator';
 import UserRating from './UserRating';
+import FollowButton from './FollowButton';
 import './ProfileAvatar.css';
 
 const ProfileAvatar = ({ 
@@ -242,7 +243,16 @@ const ProfileAvatar = ({
       <UserRating userId={user?._id || user?.id} isOwnProfile={isOwnProfile} />
 
       {/* Вертикальне меню під фото */}
-      <ProfileAvatarMenu />
+      {isOwnProfile ? (
+        <ProfileAvatarMenu />
+      ) : (
+        <div className="profile-follow-section">
+          <FollowButton 
+            userId={localStorage.getItem('userId')} 
+            targetUserId={user?._id || user?.id} 
+          />
+        </div>
+      )}
     </div>
   );
 };

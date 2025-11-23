@@ -137,10 +137,12 @@ const ProfileStats = ({
         <span className="profile-stats__number">{stats.following}</span>
         <span className="profile-stats__label">підписок</span>
       </div>
-      <div className="profile-stats__item" onClick={handleMessagesClick}>
-        <span className="profile-stats__number">{stats.messages}</span>
-        <span className="profile-stats__label">повідомлення</span>
-      </div>
+      {isOwnProfile && (
+        <div className="profile-stats__item" onClick={handleMessagesClick}>
+          <span className="profile-stats__number">{stats.messages}</span>
+          <span className="profile-stats__label">повідомлення</span>
+        </div>
+      )}
     </div>
   );
 };

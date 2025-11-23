@@ -443,6 +443,13 @@ router.post('/:userId/follow/:targetUserId', async (req, res) => {
   try {
     const { userId, targetUserId } = req.params;
     
+    if (userId === targetUserId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot follow yourself'
+      });
+    }
+    
     const user = await User.findById(userId);
     const targetUser = await User.findById(targetUserId);
     
@@ -453,14 +460,18 @@ router.post('/:userId/follow/:targetUserId', async (req, res) => {
       });
     }
     
-    const isFollowing = user.following?.includes(targetUserId);
+    // Initialize arrays if they don't exist
+    if (!user.following) user.following = [];
+    if (!targetUser.followers) targetUser.followers = [];
+    
+    const isFollowing = user.following.includes(targetUserId);
     
     if (isFollowing) {
-      user.following = user.following.filter(id => id !== targetUserId);
-      targetUser.followers = targetUser.followers.filter(id => id !== userId);
+      // Unfollow
+      user.following = user.following.filter(id => id.toString() !== targetUserId);
+      targetUser.followers = targetUser.followers.filter(id => id.toString() !== userId);
     } else {
-      if (!user.following) user.following = [];
-      if (!targetUser.followers) targetUser.followers = [];
+      // Follow
       user.following.push(targetUserId);
       targetUser.followers.push(userId);
     }
@@ -473,6 +484,7 @@ router.post('/:userId/follow/:targetUserId', async (req, res) => {
       data: { isFollowing: !isFollowing }
     });
   } catch (error) {
+    console.error('Follow/unfollow error:', error);
     res.status(500).json({
       success: false,
       message: error.message
@@ -521,6 +533,33 @@ router.get('/:userId/following', async (req, res) => {
     res.json({
       success: true,
       data: user.following || []
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
+
+// Check if user is following another user
+router.get('/:userId/following/:targetUserId', async (req, res) => {
+  try {
+    const { userId, targetUserId } = req.params;
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+    
+    const isFollowing = user.following?.includes(targetUserId) || false;
+    
+    res.json({
+      success: true,
+      isFollowing
     });
   } catch (error) {
     res.status(500).json({

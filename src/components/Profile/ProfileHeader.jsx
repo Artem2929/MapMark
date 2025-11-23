@@ -58,14 +58,7 @@ const ProfileHeader = () => {
             followers={followers}
             posts={posts}
           />
-          {!isOwnProfile && currentUserId && (
-            <div style={{ marginTop: '16px', textAlign: 'center' }}>
-              <FollowButton 
-                userId={currentUserId} 
-                targetUserId={targetUserId}
-              />
-            </div>
-          )}
+
         </div>
       </div>
     </div>

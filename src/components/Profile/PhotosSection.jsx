@@ -74,6 +74,11 @@ const PhotosSection = () => {
     }
   };
 
+  // Приховуємо секцію фото для чужих профілів без фото
+  if (!isOwnProfile && photos.length === 0) {
+    return null;
+  }
+
   return (
     <div className="profile-photos-section">
       <div className="profile-photos-header">

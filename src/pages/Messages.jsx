@@ -177,6 +177,43 @@ const Messages = () => {
     };
   }, []);
   
+  // Автоматичне відкриття чату з користувачем з URL
+  useEffect(() => {
+    const openChatFromUrl = async () => {
+      const urlParts = window.location.pathname.split('/');
+      const targetUserId = urlParts[urlParts.length - 1];
+      
+      // Перевіряємо чи це не поточний користувач
+      if (targetUserId && targetUserId !== userId && conversations.length > 0) {
+        // Шукаємо існуючу розмову з цим користувачем
+        const existingConv = conversations.find(conv => 
+          conv.participant._id === targetUserId
+        );
+        
+        if (existingConv) {
+          setActiveChat(existingConv._id);
+        } else {
+          // Створюємо нову розмову
+          try {
+            const conversation = await messagesService.createConversation(targetUserId);
+            setConversations(prev => {
+              const exists = prev.find(conv => conv._id === conversation._id);
+              if (exists) return prev;
+              return [conversation, ...prev];
+            });
+            setActiveChat(conversation._id);
+          } catch (error) {
+            console.error('Error creating conversation:', error);
+          }
+        }
+      }
+    };
+    
+    if (conversations.length > 0 && !loading) {
+      openChatFromUrl();
+    }
+  }, [conversations, userId, loading]);
+  
   // Завантаження повідомлень при зміні активного чату
   useEffect(() => {
     if (activeChat) {

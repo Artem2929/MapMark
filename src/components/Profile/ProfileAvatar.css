@@ -232,3 +232,12 @@
     font-size: 14px;
   }
 }
+.profile-follow-section {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.profile-follow-section .follow-button {
+  width: 100%;
+}

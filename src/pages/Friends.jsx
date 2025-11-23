@@ -18,6 +18,7 @@ const Friends = () => {
   const [requests, setRequests] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [cities, setCities] = useState([]);
+  const [dropdownOpen, setDropdownOpen] = useState(null);
   const dataLoaded = useRef(false);
 
   useEffect(() => {
@@ -182,7 +183,13 @@ const Friends = () => {
           user.id === userId ? { ...user, requestSent: true } : user
         ));
       } else {
-        setError(result.error || 'Помилка відправки заявки');
+        if (result.error === 'Friendship request already exists') {
+          setSearchResults(prev => prev.map(user => 
+            user.id === userId ? { ...user, requestSent: true } : user
+          ));
+        } else {
+          setError(result.error || 'Помилка відправки заявки');
+        }
       }
     } catch (err) {
       setError('Помилка відправки заявки');
@@ -238,11 +245,23 @@ const Friends = () => {
     }
   };
 
+  const handleSendMessage = (friendId) => {
+    navigate(`/messages/${friendId}`);
+  };
+
 
 
   const renderFriendCard = (friend, type = 'friend') => (
-    <div key={friend.id} className="friend-card">
-      <div className="friend-avatar">
+    <div 
+      key={friend.id} 
+      className="friend-card"
+      onClick={() => setDropdownOpen(null)}
+    >
+      <div 
+        className="friend-avatar"
+        onClick={() => navigate(`/profile/${friend.id}`)}
+        style={{ cursor: 'pointer' }}
+      >
         {friend.avatar ? (
           <img 
             src={friend.avatar.startsWith('http') ? friend.avatar : `http://localhost:3001${friend.avatar}`} 
@@ -258,7 +277,11 @@ const Friends = () => {
         )}
       </div>
       <div className="friend-info">
-        <h3 className="friend-name">
+        <h3 
+          className="friend-name"
+          onClick={() => navigate(`/profile/${friend.id}`)}
+          style={{ cursor: 'pointer' }}
+        >
           {friend.name || `${friend.firstName} ${friend.lastName}`}
           {friend.age && `, ${friend.age}`}
         </h3>
@@ -273,8 +296,41 @@ const Friends = () => {
       <div className="friend-actions">
         {type === 'friend' && (
           <>
-            <button className="btn-message">Написати</button>
-            <button className="btn-menu">⋯</button>
+            <button className="btn-message" onClick={() => handleSendMessage(friend.id)}>Написати</button>
+            <div className="menu-wrapper">
+              <button 
+                className="btn-menu" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDropdownOpen(dropdownOpen === friend.id ? null : friend.id);
+                }}
+              >
+                ⋯
+              </button>
+              {dropdownOpen === friend.id && (
+                <div className="friend-menu-buttons">
+                  <button 
+                    className="btn-delete"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveFriend(friend.id);
+                      setDropdownOpen(null);
+                    }}
+                  >
+                    Видалити
+                  </button>
+                  <button 
+                    className="btn-block"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDropdownOpen(null);
+                    }}
+                  >
+                    Заблокувати
+                  </button>
+                </div>
+              )}
+            </div>
           </>
         )}
         {type === 'request' && (
@@ -340,17 +396,6 @@ const Friends = () => {
 
         <div className="friends-layout">
           <div className="friends-sidebar">
-            <div className="sidebar-header">
-              <div className="search-box">
-                <input
-                  type="text"
-                  placeholder="Пошук друзів..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
-
             <div className="friends-tabs">
               <button
                 className={`tab ${activeTab === 'all' ? 'active' : ''}`}

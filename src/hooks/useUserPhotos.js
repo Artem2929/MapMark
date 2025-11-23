@@ -1,5 +1,6 @@
 import { apiGet } from '../utils/apiUtils';
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const photosCache = new Map();
 const loadingStates = new Map();
@@ -14,6 +15,7 @@ const useUserPhotos = (userId) => {
   const [loading, setLoading] = useState(true);
   const [forceRefresh, setForceRefresh] = useState(0);
   const isMountedRef = useRef(true);
+  const location = useLocation();
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -94,6 +96,42 @@ const useUserPhotos = (userId) => {
       isMountedRef.current = false;
     };
   }, [userId, forceRefresh]);
+
+  // Refresh photos when navigating to profile page
+  useEffect(() => {
+    if (userId && location.pathname.includes('/profile') && isMountedRef.current) {
+      // Clear cache and refresh photos when navigating to profile
+      photosCache.delete(userId);
+      setForceRefresh(prev => prev + 1);
+    }
+  }, [location.pathname, userId]);
+
+  // Add listeners to refresh photos when returning to page
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && userId && isMountedRef.current) {
+        // Clear cache and refresh photos when page becomes visible
+        photosCache.delete(userId);
+        setForceRefresh(prev => prev + 1);
+      }
+    };
+
+    const handleFocus = () => {
+      if (userId && isMountedRef.current) {
+        // Clear cache and refresh photos when window gains focus
+        photosCache.delete(userId);
+        setForceRefresh(prev => prev + 1);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [userId]);
 
   const refreshPhotos = () => {
     photosCache.delete(userId);
