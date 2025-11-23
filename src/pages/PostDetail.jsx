@@ -173,7 +173,7 @@ const PostDetail = () => {
             <Link to={`/profile/${post.author.id}`} className="post-detail-author">
               <div className="post-detail-avatar">
                 {post.author.avatar ? (
-                  <img src={post.author.avatar} alt={post.author.name} />
+                  <img src={`http://localhost:3001${post.author.avatar}`} alt={post.author.name} />
                 ) : (
                   <div className="post-detail-avatar-placeholder">
                     {post.author.name.charAt(0).toUpperCase()}
