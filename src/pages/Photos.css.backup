@@ -259,7 +259,7 @@
 
 .quick-action-btn:hover {
   background: white;
-  transform: scale(1.1);
+  transform: scale(0.95);
 }
 
 .quick-action-btn svg {
@@ -520,7 +520,7 @@
 
 .photo-modal-close:hover {
   background: rgba(0, 0, 0, 0.8);
-  transform: scale(1.1);
+  transform: scale(0.95);
 }
 
 .photo-modal-image {

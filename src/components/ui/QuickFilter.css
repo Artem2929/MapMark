@@ -161,7 +161,7 @@
 }
 
 .arrow.up {
-  transform: rotate(180deg) scale(1.1);
+  transform: rotate(180deg) scale(0.95);
   color: #3b82f6;
 }
 

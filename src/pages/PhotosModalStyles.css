@@ -30,12 +30,7 @@
   background: rgba(59, 130, 246, 0.15);
 }
 
-.photo-modal-description {
-  padding: 16px;
-  max-height: 120px;
-  overflow-y: auto;
-  flex-shrink: 0;
-}
+
 
 .photo-modal-description p {
   margin: 0;
@@ -44,20 +39,7 @@
   color: #262626;
 }
 
-.photo-modal-description textarea {
-  width: 100%;
-  min-height: 80px;
-  border: 1px solid #dbdbdb;
-  border-radius: 8px;
-  padding: 8px;
-  font-size: 14px;
-  resize: vertical;
-  outline: none;
-}
 
-.photo-modal-description textarea:focus {
-  border-color: #3b82f6;
-}
 
 .description-actions {
   display: flex;

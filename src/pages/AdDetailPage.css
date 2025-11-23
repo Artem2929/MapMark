@@ -482,7 +482,7 @@
 .ads-item-action-btn:hover {
   background: #3b82f6;
   color: white;
-  transform: scale(1.1);
+  transform: scale(0.95);
   box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
 }
 
@@ -517,7 +517,7 @@
 .ads-item-post-bookmark-btn:hover {
   background: #10b981;
   color: white;
-  transform: scale(1.1);
+  transform: scale(0.95);
   box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
 }
 

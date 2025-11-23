@@ -337,7 +337,7 @@ body:has(.reviews-list.visible) .notification-item {
 }
 
 .reviews-list .reviews-list-user-avatar:hover {
-  transform: scale(1.1);
+  transform: scale(0.95);
   box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5),
     0 3px 10px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
@@ -402,7 +402,7 @@ body:has(.reviews-list.visible) .notification-item {
     filter: brightness(1);
   }
   50% {
-    transform: scale(1.1);
+    transform: scale(0.95);
     filter: brightness(1.2);
   }
 }
@@ -700,7 +700,7 @@ body:has(.reviews-list.visible) .notification-item {
     opacity: 0.3;
   }
   50% {
-    transform: translate(-50%, -50%) scale(1.1);
+    transform: translate(-50%, -50%) scale(0.95);
     opacity: 0.1;
   }
 }

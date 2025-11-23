@@ -151,7 +151,7 @@ const ProfileAvatar = ({
     const menuItems = [
       { path: '/friends', label: 'Мої друзі', count: user?.followers?.length || 0 },
       { path: `/messages/${user?.id}`, label: 'Повідомлення', count: 0 },
-      { path: '/photos', label: 'Фото', count: user?.photos?.length || 0 }
+      { path: `/photos/${user?._id || user?.id}`, label: 'Фото', count: user?.photos?.length || 0 }
     ];
 
     return (

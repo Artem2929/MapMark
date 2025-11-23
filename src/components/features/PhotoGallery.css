@@ -175,7 +175,7 @@
 
 .close-fullscreen:hover {
   background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
+  transform: scale(0.95);
 }
 
 .fullscreen-nav {
@@ -198,7 +198,7 @@
 
 .fullscreen-nav:hover {
   background: rgba(255, 255, 255, 0.3);
-  (-50%) scale(1.1);
+  (-50%) scale(0.95);
 }
 
 .fullscreen-nav.prev {

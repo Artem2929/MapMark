@@ -216,8 +216,6 @@
   line-height: 1.5;
 }
 
-
-
 .photo-upload-area {
   position: relative;
 }
@@ -302,7 +300,7 @@
 
 .photo-remove-btn:hover {
   background: rgba(220, 38, 38, 0.9);
-  transform: scale(1.1);
+  transform: scale(0.95);
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
 }
 

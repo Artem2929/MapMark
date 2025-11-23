@@ -449,6 +449,10 @@ const Photos = () => {
     }
   };
 
+  const handleAvatarClick = (userId) => {
+    navigate(`/profile/${userId}`);
+  };
+
   if (loading) {
     return (
       <div className="photos-page">
@@ -599,33 +603,23 @@ const Photos = () => {
               
               <div className="photo-modal-description">
                 {editingDescription ? (
-                  <div>
-                    <textarea
-                      className="description-textarea"
-                      value={newDescription}
-                      onChange={(e) => setNewDescription(e.target.value)}
-                      placeholder="Додати опис..."
-                      maxLength={1000}
-                    />
-                    <div className="description-counter">
-                      <span className={newDescription.length > 900 ? 'warning' : ''}>
-                        {newDescription.length}/1000
-                      </span>
+                  <div className="message-input">
+                    <div className="message-input-wrapper">
+                      <textarea 
+                        placeholder="Напишіть повідомлення..."
+                        value={newDescription}
+                        onChange={(e) => setNewDescription(e.target.value)}
+                        maxLength={500}
+                        rows={1}
+                      />
                     </div>
-                    <div className="delete-confirmation-actions">
-                      <button 
-                        className="delete-confirmation-btn cancel"
-                        onClick={handleCancelEdit}
-                      >
-                        Скасувати
-                      </button>
-                      <button 
-                        className="delete-confirmation-btn delete"
-                        onClick={handleSaveDescription}
-                      >
-                        Зберегти
-                      </button>
-                    </div>
+                    <button 
+                      className="send-btn"
+                      onClick={handleSaveDescription}
+                      disabled={!newDescription.trim()}
+                    >
+                      ↑
+                    </button>
                   </div>
                 ) : (
                   <p>{typeof selectedPhoto.description === 'string' ? selectedPhoto.description : (selectedPhoto.description ? JSON.stringify(selectedPhoto.description) : 'Опис не додано')}</p>
@@ -639,7 +633,11 @@ const Photos = () => {
                       <div className="comment-content">
                         <div className="comment-main">
                           <div className="comment-author">
-                            <div className="comment-avatar">
+                            <div 
+                              className="comment-avatar"
+                              onClick={() => handleAvatarClick(commentItem.userId?._id)}
+                              style={{ cursor: 'pointer' }}
+                            >
                               {commentItem.userId?.avatar ? (
                                 <img src={`http://localhost:3001${commentItem.userId.avatar}`} alt={commentItem.userId.name} />
                               ) : (
@@ -764,47 +762,42 @@ const Photos = () => {
                 <h4>Додати нове фото</h4>
               </div>
               
-              <div className="photo-modal-description">
-                <textarea
-                  className="upload-textarea"
-                  value={uploadDescription}
-                  onChange={handleTextareaChange}
-                  placeholder="Напишіть опис..."
-                  rows={1}
-                />
-                
-
-                
-                {uploading && uploadProgress > 0 && (
-                  <div className="upload-progress">
-                    <div className="progress-bar">
-                      <div 
-                        className="progress-fill" 
-                        style={{ width: `${uploadProgress}%` }}
-                      ></div>
-                    </div>
-                    <span className="progress-text">{uploadProgress}%</span>
-                  </div>
-                )}
-              </div>
-              
-              <div className="photo-modal-comments">
-                <div className="upload-modal-actions">
-                  <button 
-                    className="upload-modal-btn cancel"
-                    onClick={handleCloseUploadModal}
-                  >
-                    Скасувати
-                  </button>
-                  <button 
-                    className={`upload-modal-btn submit ${(!selectedFile || uploading) ? 'disabled' : ''}`}
-                    onClick={handleUploadSubmit}
-                    disabled={!selectedFile || uploading}
-                  >
-                    {uploading ? 'Завантаження...' : 'Опублікувати'}
-                  </button>
+              <div className="message-input">
+                <div className="message-input-wrapper">
+                  <textarea 
+                    placeholder="Напишіть опис..."
+                    value={uploadDescription}
+                    onChange={(e) => {
+                      setUploadDescription(e.target.value);
+                      e.target.style.height = 'auto';
+                      e.target.style.height = e.target.scrollHeight + 'px';
+                    }}
+                    maxLength={500}
+                    rows={1}
+                  />
                 </div>
+                <button 
+                  className="send-btn"
+                  onClick={handleUploadSubmit}
+                  disabled={!selectedFile || uploading || !uploadDescription.trim()}
+                >
+                  ↑
+                </button>
               </div>
+                
+              {uploading && uploadProgress > 0 && (
+                <div className="upload-progress">
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill" 
+                      style={{ width: `${uploadProgress}%` }}
+                    ></div>
+                  </div>
+                  <span className="progress-text">{uploadProgress}%</span>
+                </div>
+              )}
+              
+
             </div>
           </div>
         </div>

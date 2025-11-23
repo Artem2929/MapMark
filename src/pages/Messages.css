@@ -239,7 +239,7 @@
 
 .chat-delete-btn:hover {
   background: #dc2626;
-  transform: scale(1.1);
+  transform: scale(0.95);
 }
 
 /* Chat Area */
@@ -400,16 +400,7 @@
 
 .message-delete-btn:hover {
   background: #dc2626;
-  transform: scale(1.1);
-}
-
-.message-input {
-  padding: 12px;
-  border-top: 1px solid #e4e4e6;
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  position: relative;
+  transform: scale(0.95);
 }
 
 .message-input-wrapper {
@@ -508,7 +499,7 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.1);
+    transform: scale(0.95);
   }
   100% {
     transform: scale(1);

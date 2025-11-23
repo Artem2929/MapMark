@@ -544,8 +544,6 @@
   display: none;
 }
 
-
-
 .photo-upload-area {
   padding: 10px 0;
   text-align: center;
@@ -584,8 +582,6 @@
   gap: 12px;
   margin-top: 16px;
 }
-
-
 
 .remove-photo-btn {
   position: absolute;
@@ -773,7 +769,7 @@
   }
   50% {
     opacity: 1;
-    transform: scale(1.1);
+    transform: scale(0.95);
   }
   100% {
     opacity: 1;
@@ -834,8 +830,6 @@
     rgba(248, 250, 252, 1) 100%
   );
 }
-
-
 
 .photo-upload-area {
   margin-top: 8px;

@@ -467,7 +467,7 @@
 
 .photo-action-btn:hover {
   background: rgba(255, 255, 255, 1);
-  transform: scale(1.1);
+  transform: scale(0.95);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 

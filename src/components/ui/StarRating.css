@@ -43,7 +43,7 @@
 }
 
 .star.interactive:hover {
-  transform: scale(1.1);
+  transform: scale(0.95);
 }
 
 /* Review form specific styles */
@@ -87,7 +87,6 @@
 }
 
 .review-star:active {
-  transform: scale(1.1);
+  transform: scale(0.95);
   transition: transform 0.1s ease;
 }
-
