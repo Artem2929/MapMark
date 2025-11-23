@@ -62,147 +62,12 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.photo-card.loading {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
 .photo-image {
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
   cursor: pointer;
   background: #f8f9fa;
-}
-
-.photo-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.6) 100%
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  z-index: 2;
-  padding-bottom: 8px;
-}
-
-.photo-card:hover .photo-overlay {
-  opacity: 1;
-}
-
-.photo-stats-overlay {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  color: white;
-  font-weight: 600;
-  font-size: 14px;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-  flex-wrap: wrap;
-  padding: 12px;
-}
-
-.photo-stats-overlay .overlay-stat-btn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  cursor: pointer;
-  padding: 6px 10px;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-  font-size: 12px;
-  font-weight: 600;
-  backdrop-filter: blur(8px);
-  min-width: 50px;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.photo-stats-overlay .overlay-stat-btn:hover {
-  background: rgba(0, 0, 0, 0.8);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.photo-stats-overlay .overlay-stat-btn.liked {
-  background: rgba(255, 48, 64, 0.8);
-  border-color: rgba(255, 48, 64, 0.6);
-  color: white;
-}
-
-.photo-stats-overlay .overlay-stat-btn.liked:hover {
-  background: rgba(255, 48, 64, 0.9);
-  border-color: rgba(255, 48, 64, 0.8);
-}
-
-.photo-stats-overlay .overlay-stat-btn.commented {
-  background: rgba(0, 149, 246, 0.8);
-  border-color: rgba(0, 149, 246, 0.6);
-  color: white;
-}
-
-.photo-stats-overlay .overlay-stat-btn.commented:hover {
-  background: rgba(0, 149, 246, 0.9);
-  border-color: rgba(0, 149, 246, 0.8);
-}
-
-.photo-stats-overlay .overlay-stat-btn svg {
-  flex-shrink: 0;
-}
-
-.photo-stats-overlay .overlay-stat-btn span {
-  white-space: nowrap;
-}
-
-.heart-animation {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 60px;
-  color: #ff3040;
-  pointer-events: none;
-  z-index: 10;
-  animation: heartPop 0.8s ease-out;
-}
-
-@keyframes heartPop {
-  0% {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
-  }
 }
 
 .photo-card img {
@@ -213,62 +78,205 @@
   background: #f8f9fa;
 }
 
-.photo-error {
-  width: 100%;
-  height: 100%;
+.photo-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #f8f9fa;
-  color: #8e8e8e;
-  font-size: 12px;
-  gap: 8px;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
 }
 
-.quick-actions {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
+.photo-modal-content {
+  background: white;
+  border-radius: 8px;
+  width: 65%;
+  max-width: 840px;
+  height: 68vh;
+  max-height: 640px;
   display: flex;
-  gap: 8px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 4;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
-.photo-card:hover .quick-actions {
-  opacity: 1;
-}
-
-.quick-action-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+.photo-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
   border: none;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(8px);
-  color: #262626;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
   cursor: pointer;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(8px);
 }
 
-.quick-action-btn:hover {
-  background: white;
+.photo-modal-close:hover {
+  background: rgba(0, 0, 0, 0.8);
   transform: scale(1.1);
 }
 
-.quick-action-btn svg {
-  width: 16px;
-  height: 16px;
+.photo-modal-image {
+  flex: 2;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.photo-modal-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.photo-modal-sidebar {
+  flex: 1;
+  min-width: 335px;
+  max-width: 335px;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #e2e8f0;
+  background: white;
+}
+
+.no-photos {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.no-photos p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.add-photo-btn {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.add-photo-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.comment-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #262626;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+.comment-input::placeholder {
+  color: #8e8e8e;
+}
+
+.comment-submit {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+.comment-submit:disabled {
+  color: #c7d2fe;
+  cursor: not-allowed;
+}
+
+.edit-description-btn {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+
+.edit-description-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.save-description-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cancel-description-btn {
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 .photo-description {
-  display: none;
+  width: 100%;
+  min-height: 80px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.photo-description:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .photo-stats {
@@ -277,11 +285,7 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.6) 100%
-  );
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
   position: absolute;
   bottom: 0;
   left: 0;
@@ -349,208 +353,9 @@
   white-space: nowrap;
 }
 
-.photo-actions {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-  z-index: 5;
-}
-
-.photo-card:hover .photo-actions {
-  opacity: 1;
-}
-
-.delete-btn {
-  background: rgba(255, 48, 64, 0.9);
-  color: white;
-  border: none;
-  border-radius: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 2px 8px rgba(255, 48, 64, 0.3);
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 600;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-}
-
-.delete-btn:hover {
-  background: rgba(255, 48, 64, 1);
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(255, 48, 64, 0.5);
-}
-
-.no-photos {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px 20px;
-  color: #64748b;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.no-photos p {
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-
-.no-photos button,
-.add-photo-btn {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.no-photos button:hover,
-.add-photo-btn:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.add-photo-card {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  position: relative;
-  cursor: pointer;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.add-photo-card:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.add-photo-grid-btn {
-  background: none;
-  border: 2px dashed #dbdbdb;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #8e8e8e;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.add-photo-grid-btn:hover {
-  border-color: #3b82f6;
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.05);
-}
-
-.add-photo-grid-btn span:first-child {
-  font-size: 32px;
-  font-weight: 300;
-}
-
-.photo-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(4px);
-}
-
-.photo-modal-content {
-  background: white;
-  border-radius: 8px;
-  width: 95%;
-  max-width: 1200px;
-  max-height: 90vh;
-  display: flex;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.photo-modal-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  font-size: 20px;
-  cursor: pointer;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(8px);
-}
-
-.photo-modal-close:hover {
-  background: rgba(0, 0, 0, 0.8);
-  transform: scale(1.1);
-}
-
-.photo-modal-image {
-  flex: 2;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.photo-modal-image img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.photo-modal-header h4 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #1e293b;
-  margin: 0 0 24px 0;
-}
-
-.photo-modal-comments {
-  margin-top: 24px;
-}
-
 .comment-avatar {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
   display: flex;
@@ -558,11 +363,9 @@
   justify-content: center;
   color: white;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
   flex-shrink: 0;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
 
 .comment-avatar img {
@@ -571,22 +374,36 @@
   object-fit: cover;
 }
 
+.comment-content {
+  flex: 1;
+}
+
 .comment-main {
-  line-height: 1.5;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
+  padding-right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .comment-author {
   font-weight: 600;
-  color: #1e293b;
-  margin-right: 8px;
+  color: #262626;
   font-size: 14px;
 }
 
 .comment-text {
-  color: #475569;
   font-size: 14px;
-  line-height: 1.5;
+  color: #262626;
+  line-height: 1.4;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.comment-time {
+  font-size: 12px;
+  color: #8e8e8e;
+  margin-top: 4px;
 }
 
 .comment-actions {
@@ -633,423 +450,19 @@
   height: 14px;
 }
 
-.no-comments {
-  color: #8e8e8e;
-  font-size: 14px;
-  text-align: center;
-  padding: 20px 0;
-}
-
-.comment-input-section {
-  padding: 16px;
-  border-top: 1px solid #efefef;
-  position: relative;
-}
-
-
-
-
-
-.edit-description-btn {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-.edit-description-btn:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.delete-confirmation-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1002;
-}
-
-.delete-confirmation-content {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 400px;
-  width: 90%;
-  text-align: center;
-}
-
-.delete-confirmation-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #262626;
-  margin-bottom: 12px;
-}
-
-.delete-confirmation-message {
-  font-size: 14px;
-  color: #8e8e8e;
-  margin-bottom: 24px;
-  line-height: 1.4;
-}
-
-.delete-confirmation-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  height: 40px;
-  align-items: center;
-  margin-top: 8px;
-}
-
-.delete-confirmation-btn {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-width: 80px;
-}
-
-.delete-confirmation-btn:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.delete-confirmation-btn.cancel {
-  background: rgba(220, 38, 38, 0.1);
-  border: 1px solid rgba(220, 38, 38, 0.2);
-  color: #dc2626;
-}
-
-.delete-confirmation-btn.cancel:hover {
-  background: rgba(220, 38, 38, 0.15);
-  border-color: rgba(220, 38, 38, 0.3);
-}
-
-.delete-confirmation-btn.delete {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-}
-
-.delete-confirmation-btn.delete:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.delete-confirmation-btn.single {
-  flex: none;
-  min-width: 80px;
-  max-width: 120px;
-}
-
-.upload-modal-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.upload-modal-btn {
-  flex: 1;
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-.upload-modal-btn:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.upload-modal-btn.cancel {
-  background: rgba(220, 38, 38, 0.1);
-  border: 1px solid rgba(220, 38, 38, 0.2);
-  color: #dc2626;
-}
-
-.upload-modal-btn.cancel:hover {
-  background: rgba(220, 38, 38, 0.15);
-  border-color: rgba(220, 38, 38, 0.3);
-}
-
-.upload-modal-btn.submit {
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-}
-
-.upload-modal-btn.submit:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.upload-modal-btn.submit:disabled {
-  background: rgba(156, 163, 175, 0.1);
-  border: 1px solid rgba(156, 163, 175, 0.2);
-  color: #9ca3af;
-}
-
-.upload-modal-btn.submit:disabled:hover {
-  background: rgba(156, 163, 175, 0.1);
-  border-color: rgba(156, 163, 175, 0.2);
-}
-
-.upload-textarea {
-  width: 100%;
-  min-height: 40px;
-  max-height: 200px;
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  border-radius: 8px;
-  padding: 8px;
-  font-size: 14px;
-  resize: none;
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
-  outline: none;
-  transition: all 0.2s ease;
-  background: rgba(255, 255, 255, 0.9);
-  overflow-y: hidden;
-  line-height: 1.4;
-}
-
-.upload-textarea:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  background: white;
-}
-
-.upload-textarea::placeholder {
-  color: #9ca3af;
-}
-
-.simple-drop-zone {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  border: 2px dashed #d1d5db;
-  border-radius: 8px;
-  cursor: pointer;
-  background: #f9fafb;
-  transition: all 0.2s ease;
-  padding: 60px 20px;
-}
-
-.simple-drop-zone:hover {
-  border-color: #3b82f6;
-  background: #f8fafc;
-}
-
-.simple-drop-zone p {
-  margin: 0;
-  font-size: 16px;
-  color: #6b7280;
-  text-align: center;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
-}
-
-@media (max-width: 735px) {
-  .photos-page {
-    padding: 0;
+@media (max-width: 768px) {
+  .photo-modal-sidebar {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    border-left: none;
+    border-top: 1px solid #e2e8f0;
+    max-height: 50%;
   }
-
-  .photos-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    margin-top: 0;
-  }
-
-  .photos-header {
-    padding: 0 16px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-  }
-
+  
   .photo-modal-content {
     flex-direction: column;
     height: 90vh;
     max-height: 600px;
   }
-
-  .photo-modal-sidebar {
-    width: 100%;
-    border-left: none;
-    border-top: 1px solid #e2e8f0;
-  }
-}
-
-.add-photo-card {
-  aspect-ratio: 1;
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.add-photo-grid-btn {
-  width: 100%;
-  height: 100%;
-  background: rgba(59, 130, 246, 0.05);
-  border: 2px dashed rgba(59, 130, 246, 0.2);
-  border-radius: 12px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: #3b82f6;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
-}
-
-.add-photo-grid-btn:hover {
-  background: rgba(59, 130, 246, 0.1);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.add-photo-grid-btn span:first-child {
-  font-size: 32px;
-  font-weight: 300;
-}
-
-.upload-form-fields {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-field label {
-  font-size: 12px;
-  font-weight: 500;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.category-select,
-.visibility-select {
-  padding: 8px 12px;
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  border-radius: 8px;
-  font-size: 14px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #1e293b;
-  outline: none;
-  transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    sans-serif;
-}
-
-.category-select:focus,
-.visibility-select:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  background: white;
-}
-
-.upload-progress {
-  margin-top: 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.progress-bar {
-  flex: 1;
-  height: 6px;
-  background: rgba(59, 130, 246, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-.progress-text {
-  font-size: 12px;
-  font-weight: 500;
-  color: #3b82f6;
-  min-width: 35px;
-  text-align: right;
-}
-.photo-modal-comments {
-  max-height: 300px;
-  overflow-y: auto;
-}
-.photo-modal-sidebar {
-  flex: 1;
-  min-width: 335px;
-  max-width: 335px;
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid #e2e8f0;
-  background: white;
-}
-.photo-modal-description {
-  padding: 16px;
-  max-height: 120px;
-  overflow-y: auto;
-  flex-shrink: 0;
 }

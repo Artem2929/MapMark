@@ -1,0 +1,26 @@
+/* Optimized photo-modal-sidebar styles - consolidated from duplicates */
+
+.photo-modal-sidebar {
+  flex: 1;
+  min-width: 335px;
+  max-width: 400px;
+  height: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #e2e8f0;
+  background: white;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .photo-modal-sidebar {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    border-left: none;
+    border-top: 1px solid #e2e8f0;
+    max-height: 50%;
+  }
+}

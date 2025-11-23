@@ -775,36 +775,7 @@ const Photos = () => {
                   rows={1}
                 />
                 
-                <div className="upload-form-fields">
-                  <div className="form-field">
-                    <label>Категорія (необов'язково):</label>
-                    <select 
-                      value={category} 
-                      onChange={(e) => setCategory(e.target.value)}
-                      className="category-select"
-                    >
-                      <option value="">Оберіть категорію</option>
-                      <option value="nature">Природа</option>
-                      <option value="city">Місто</option>
-                      <option value="food">Їжа</option>
-                      <option value="travel">Подорожі</option>
-                      <option value="people">Люди</option>
-                      <option value="other">Інше</option>
-                    </select>
-                  </div>
-                  
-                  <div className="form-field">
-                    <label>Видимість:</label>
-                    <select 
-                      value={visibility} 
-                      onChange={(e) => setVisibility(e.target.value)}
-                      className="visibility-select"
-                    >
-                      <option value="public">Публічно</option>
-                      <option value="private">Приватно</option>
-                    </select>
-                  </div>
-                </div>
+
                 
                 {uploading && uploadProgress > 0 && (
                   <div className="upload-progress">
