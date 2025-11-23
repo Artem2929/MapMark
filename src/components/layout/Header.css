@@ -143,7 +143,13 @@
 }
 
 .header .header-logo:hover {
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.header .header-logo:hover {
   color: #333;
+  text-decoration: none;
 }
 
 .header .header-nav {
@@ -610,7 +616,20 @@
 /* Mobile responsive */
 @media (max-width: 768px) {
   .header {
-    padding: 0 16px;
+    padding: 0 12px;
+    height: 70px;
+  }
+
+  .header .header-container {
+    gap: 8px;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .header .header-logo {
+    font-size: 20px;
+    flex-shrink: 0;
+    min-width: 0;
   }
 
   .header .desktop-nav {
@@ -623,5 +642,45 @@
 
   .header .search-container {
     display: none;
+  }
+
+  .header .mobile-nav {
+    padding: 12px 16px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .header .mobile-link {
+    padding: 10px 14px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0 8px;
+  }
+
+  .header .header-container {
+    gap: 6px;
+  }
+
+  .header .header-logo {
+    font-size: 18px;
+  }
+
+  .header .mobile-menu-btn {
+    padding: 6px;
+  }
+
+  .header .mobile-nav {
+    padding: 10px 12px;
+  }
+
+  .header .mobile-link {
+    padding: 8px 12px;
+    font-size: 14px;
   }
 }

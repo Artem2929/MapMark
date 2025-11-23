@@ -361,6 +361,54 @@
 }
 
 @media (max-width: 768px) {
+  .comments-section {
+    padding: 12px;
+  }
+
+  .comments-list {
+    padding: 12px 0;
+  }
+
+  .comment-item {
+    gap: 10px;
+    padding: 6px;
+  }
+
+  .comment-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .comment-content {
+    padding: 6px 10px;
+  }
+
+  .comment-time {
+    font-size: 11px;
+    top: 6px;
+    right: 10px;
+  }
+
+  .add-comment {
+    padding: 12px;
+    gap: 6px;
+  }
+
+  .comment-input-wrapper {
+    padding: 6px 12px;
+    min-height: 32px;
+  }
+
+  .comment-input {
+    font-size: 13px;
+  }
+
+  .send-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
   .comment-replies-section {
     margin-left: 28px;
   }
