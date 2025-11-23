@@ -253,7 +253,13 @@ const PostDetail = () => {
           </div>
 
           {/* Коментарі */}
-          <Comments postId={post.id} initialCount={localStats?.comments || 0} />
+          <Comments 
+            postId={post.id} 
+            initialCount={localStats?.comments || 0}
+            onCommentCountChange={(count) => {
+              setLocalStats(prev => ({ ...prev, comments: count }));
+            }}
+          />
         </div>
       </div>
     </div>

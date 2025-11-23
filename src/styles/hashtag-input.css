@@ -326,14 +326,7 @@
 }
 
 
-.like-btn svg,
-.dislike-btn svg,
-.comment-btn svg,
-.share-btn svg {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
+
 
 .like-btn span,
 .dislike-btn span,

@@ -15,6 +15,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 20px;
   margin-bottom: 24px;
   padding: 0 4px;
 }
@@ -74,6 +75,7 @@
 
 .post-detail-author:hover {
   opacity: 0.8;
+  text-decoration: none;
 }
 
 .post-detail-avatar {
@@ -343,22 +345,34 @@
     font-size: 16px;
   }
 }
-/* Post Card Actions */
-.post-card__actions {
+/* Post Card Actions - Override PostCard.css styles */
+.post-detail-page .post-detail-container .post-detail-content .post-card__actions {
   display: flex;
   align-items: center;
   padding: 16px 24px;
   border-top: 1px solid #f1f5f9;
   border-bottom: 1px solid #f1f5f9;
+  position: static;
+  background: transparent;
+  justify-content: flex-start;
 }
 
-.post-card__action-buttons {
+.post-detail-page .post-detail-container .post-detail-content .post-card__action-buttons {
   display: flex;
   align-items: center;
   gap: 16px;
+  position: static;
+  background: transparent;
+  opacity: 1;
+  visibility: visible;
+  padding: 0;
+  bottom: auto;
+  left: auto;
+  right: auto;
+  justify-content: flex-start;
 }
 
-.post-card__action-btn {
+.post-detail-page .post-detail-container .post-detail-content .post-card__action-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -371,36 +385,37 @@
   transition: all 0.2s ease;
   font-size: 14px;
   font-weight: 500;
+  backdrop-filter: none;
+  box-shadow: none;
+  text-shadow: none;
+  min-width: auto;
 }
 
-.post-card__action-btn:hover {
+.post-detail-page .post-detail-container .post-detail-content .post-card__action-btn:hover {
   background: rgba(0, 0, 0, 0.05);
   color: #374151;
+  box-shadow: none;
 }
 
-.post-card__action-btn.active,
-.post-card__action-btn.like-btn.active {
+.post-detail-page .post-detail-container .post-detail-content .post-card__action-btn.active,
+.post-detail-page .post-detail-container .post-detail-content .post-card__action-btn.like-btn.active {
   color: #22c55e;
   background: rgba(34, 197, 94, 0.1);
 }
 
-.post-card__action-btn.dislike-btn.active {
+.post-detail-page .post-detail-container .post-detail-content .post-card__action-btn.dislike-btn.active {
   color: #ef4444;
   background: rgba(239, 68, 68, 0.1);
 }
 
-.post-card__action-btn:disabled {
+.post-detail-page .post-detail-container .post-detail-content .post-card__action-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.post-card__count {
+.post-detail-page .post-detail-container .post-detail-content .post-card__count {
   font-size: 14px;
   font-weight: 600;
+  color: inherit;
 }
 
-.post-card__action-btn svg {
-  width: 16px;
-  height: 16px;
-  stroke-width: 2;
-}

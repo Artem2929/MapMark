@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import apiClient from '../../utils/apiClient.js';
 import './Comments.css';
 
-const Comments = ({ postId }) => {
+const Comments = ({ postId, onCommentCountChange }) => {
   const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -33,6 +33,9 @@ const Comments = ({ postId }) => {
       const data = await apiClient.get(`/posts/${postId}/comments`);
       if (data.success) {
         setComments(data.comments || []);
+        if (onCommentCountChange) {
+          onCommentCountChange(data.comments?.length || 0);
+        }
       }
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -52,7 +55,6 @@ const Comments = ({ postId }) => {
         // Перезавантажуємо коментарі з сервера
         fetchComments();
         setNewComment('');
-
       }
     } catch (error) {
       console.error('Error posting comment:', error);
