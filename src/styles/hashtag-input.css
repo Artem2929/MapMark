@@ -226,10 +226,6 @@
 .hashtag-tag--new {
   animation: tagSlideIn 0.3s ease-out;
 }
-.post-meta {
-  display: flex;
-  gap: 8px;
-}
 .post-location {
   margin-top: 4px;
   font-size: 14px;

@@ -10,7 +10,7 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
   const [isUpdating, setIsUpdating] = useState(false);
   const [isSaved, setIsSaved] = useState(initialSaved);
   const [isSaving, setIsSaving] = useState(false);
-  const [showComments, setShowComments] = useState(false);
+
 
   const getTimeAgo = (timestamp) => {
     const now = new Date();
@@ -203,7 +203,7 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
           </button>
           <button 
             className="post-card__action-btn comment-btn"
-            onClick={() => setShowComments(!showComments)}
+            onClick={() => navigate(`/posts/${post.id}`)}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -219,6 +219,7 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
             </svg>
           </button>
         </div>
+        {/* TODO: Додати функціонал збереження постів
         <button 
           className={`post-card__save-btn ${isSaved ? 'saved' : ''}`}
           onClick={handleSave}
@@ -227,11 +228,10 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
         >
           <span className="post-card__save-icon">{isSaved ? '★' : '☆'}</span>
         </button>
+        */}
       </div>
 
-      {showComments && (
-        <Comments postId={post.id} initialCount={localStats.comments} />
-      )}
+
     </div>
   );
 };

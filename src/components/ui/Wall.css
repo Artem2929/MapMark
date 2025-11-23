@@ -677,33 +677,12 @@
   gap: 12px;
 }
 
-.comment-input {
-  flex: 1;
-  border: 1px solid #e1e5e9;
-  border-radius: 20px;
-  padding: 8px 12px;
-  font-size: 14px;
-  outline: none;
-  background: #f8f9fa;
-  transition: border-color 0.2s ease;
-  resize: none;
-  min-height: 20px;
-  max-height: 120px;
-  overflow-y: auto;
-}
 
-.comment-input:focus {
-  border-color: #007aff;
-  background: white;
-}
+
+
 
 .comment-input::placeholder {
   color: #6c757d;
 }
 
-.comment-input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-}
+

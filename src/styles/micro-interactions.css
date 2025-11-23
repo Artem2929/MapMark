@@ -23,10 +23,7 @@ button:active {
 }
 
 /* Input focus effects */
-input,
-textarea {
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
+
 
 /* Icon animations */
 /* Button styles moved to hashtag-input.css */

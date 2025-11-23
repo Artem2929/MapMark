@@ -223,7 +223,7 @@ router.post('/:postId/reactions', optionalAuth, reactionRateLimit, async (req, r
   try {
     const { postId } = req.params;
     const { type } = req.body;
-    const userId = req.user?._id || new require('mongoose').Types.ObjectId('507f1f77bcf86cd799439011');
+    const userId = req.user?._id || new (require('mongoose').Types.ObjectId)('507f1f77bcf86cd799439011');
 
     const post = await Post.findById(postId);
     if (!post) {
@@ -331,7 +331,7 @@ router.post('/:postId/comments/:commentId/reactions', optionalAuth, reactionRate
   try {
     const { postId, commentId } = req.params;
     const { type } = req.body;
-    const userId = req.user?._id || new require('mongoose').Types.ObjectId('507f1f77bcf86cd799439011');
+    const userId = req.user?._id || new (require('mongoose').Types.ObjectId)('507f1f77bcf86cd799439011');
 
     const post = await Post.findById(postId);
     if (!post) {

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import apiClient from '../../utils/apiClient.js';
 import './Comments.css';
 
 const Comments = ({ postId }) => {
+  const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-  const [showAllComments, setShowAllComments] = useState(false);
+
   const [commentReactions, setCommentReactions] = useState({});
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState('');
@@ -50,7 +52,7 @@ const Comments = ({ postId }) => {
         // Перезавантажуємо коментарі з сервера
         fetchComments();
         setNewComment('');
-        setShowAllComments(true);
+
       }
     } catch (error) {
       console.error('Error posting comment:', error);
@@ -91,9 +93,17 @@ const Comments = ({ postId }) => {
     }));
 
     try {
-      await apiClient.post(`/posts/${postId}/comments/${commentId}/reactions`, {
-        type: newReaction
+      const response = await fetch(`http://localhost:3001/api/posts/${postId}/comments/${commentId}/reactions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ type: newReaction })
       });
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error);
+      }
     } catch (error) {
       console.error('Error updating comment reaction:', error);
       // Відкат при помилці
@@ -127,8 +137,7 @@ const Comments = ({ postId }) => {
     }
   };
 
-  const displayedComments = showAllComments ? comments : comments.slice(0, 2);
-  const hasMoreComments = comments.length > 2;
+  const displayedComments = comments.slice(0, 3);
 
   // Закриваємо форму відповіді при кліку поза нею
   const handleClickOutside = (e) => {
@@ -145,21 +154,12 @@ const Comments = ({ postId }) => {
 
   return (
     <div className="comments-section">
-      {/* Показати всі коментарі */}
-      {hasMoreComments && !showAllComments && (
-        <button 
-          className="view-all-comments"
-          onClick={() => setShowAllComments(true)}
-        >
-          Переглянути всі коментарі ({comments.length})
-        </button>
-      )}
-
       {/* Список коментарів */}
-      <div className="comments-list">
-        {displayedComments.map((comment) => (
+      {displayedComments.length > 0 && (
+        <div className="comments-list">
+          {displayedComments.map((comment) => (
           <div key={comment._id} className="comment-item">
-            <div className="comment-avatar">
+            <div className="comment-avatar" onClick={() => navigate(`/profile/${comment.author._id}`)}>
               {comment.author.avatar ? (
                 <img src={`http://localhost:3001${comment.author.avatar}`} alt={comment.author.name} />
               ) : (
@@ -170,74 +170,81 @@ const Comments = ({ postId }) => {
             </div>
             <div className="comment-content">
               <div className="comment-main">
-                <span className="comment-author">{comment.author.name}</span>
-                <span className="comment-text">{comment.content}</span>
+                <div className="comment-author">{comment.author.name}</div>
+                <div className="comment-text">{comment.content}</div>
               </div>
               <div className="comment-actions">
                 <span className="comment-time">{getTimeAgo(comment.createdAt)}</span>
-                <div className="comment-reaction-buttons">
-                  <button 
-                    className={`comment-action-btn like-btn ${commentReactions[comment._id] === 'like' ? 'active' : ''}`}
-                    onClick={() => handleCommentReaction(comment._id, 'like')}
-                  >
-                    <span className="comment-icon">👍</span>
-                    <span className="comment-count">{comment.likes || 0}</span>
-                  </button>
-                  <button 
-                    className={`comment-action-btn dislike-btn ${commentReactions[comment._id] === 'dislike' ? 'active' : ''}`}
-                    onClick={() => handleCommentReaction(comment._id, 'dislike')}
-                  >
-                    <span className="comment-icon">👎</span>
-                    <span className="comment-count">{comment.dislikes || 0}</span>
-                  </button>
-                </div>
                 <button 
-                  className="comment-reply-btn"
-                  onClick={() => setReplyingTo(replyingTo === comment._id ? null : comment._id)}
+                  className={`comment-like-btn ${commentReactions[comment._id] === 'like' ? 'liked' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCommentReaction(comment._id, 'like');
+                  }}
                 >
-                  Відповісти
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                  </svg>
+                  <span>{comment.likes || 0}</span>
+                </button>
+                <button 
+                  className={`comment-like-btn ${commentReactions[comment._id] === 'dislike' ? 'disliked' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCommentReaction(comment._id, 'dislike');
+                  }}
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
+                  </svg>
+                  <span>{comment.dislikes || 0}</span>
                 </button>
               </div>
             </div>
 
           </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Форма додавання коментаря */}
       <form onSubmit={replyingTo ? (e) => { e.preventDefault(); handleReplySubmit(replyingTo); } : handleSubmit} className="add-comment">
-        <textarea
-          value={replyingTo ? replyText : newComment}
-          onChange={(e) => {
-            const value = e.target.value;
-            if (replyingTo) {
-              setReplyText(value);
-            } else {
-              setNewComment(value);
-            }
-            // Автоматичне розширення
-            e.target.style.height = 'auto';
-            e.target.style.height = e.target.scrollHeight + 'px';
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
+        <div className="comment-input-wrapper">
+          <textarea
+            value={replyingTo ? replyText : newComment}
+            onChange={(e) => {
+              const value = e.target.value;
               if (replyingTo) {
-                handleReplySubmit(replyingTo);
+                setReplyText(value);
               } else {
-                handleSubmit(e);
+                setNewComment(value);
               }
-            }
-          }}
-          placeholder={replyingTo ? `Відповісти ${comments.find(c => c._id === replyingTo)?.author.name}...` : "Додати коментар..."}
-          className="comment-input"
-          rows="1"
-        />
-        {(replyingTo ? replyText.trim() : newComment.trim()) && (
-          <button type="submit" className="post-btn">
-            {replyingTo ? "Відповісти" : "Опублікувати"}
-          </button>
-        )}
+              // Автоматичне розширення
+              e.target.style.height = 'auto';
+              e.target.style.height = e.target.scrollHeight + 'px';
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (replyingTo) {
+                  handleReplySubmit(replyingTo);
+                } else {
+                  handleSubmit(e);
+                }
+              }
+            }}
+            placeholder={replyingTo ? `Відповісти ${comments.find(c => c._id === replyingTo)?.author.name}...` : "Додати коментар..."}
+            className="comment-input"
+            rows="1"
+          />
+        </div>
+        <button 
+          type="submit" 
+          className="send-btn"
+          disabled={!(replyingTo ? replyText.trim() : newComment.trim())}
+        >
+          ↑
+        </button>
         {replyingTo && (
           <button 
             type="button" 

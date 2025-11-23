@@ -12,21 +12,7 @@
 }
 
 /* Основний клас для коментарів */
-.comment-input {
-  flex: 1;
-  font-size: 14px;
-  color: #262626;
-  resize: none;
-  min-height: 36px;
-  max-height: 160px;
-  line-height: 1.4;
-  overflow-y: auto;
-  border: 1px solid #dbdbdb;
-  border-radius: 22px;
-  padding: 8px 12px;
-  background: #fafafa;
-  transition: all 0.2s ease;
-}
+
 
 .comment-input::placeholder {
   color: #8e8e8e;

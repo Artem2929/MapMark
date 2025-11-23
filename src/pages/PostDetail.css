@@ -157,6 +157,11 @@
   color: #374151;
   margin: 0;
   white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
 }
 
 /* Actions */

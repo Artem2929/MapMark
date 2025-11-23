@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Comments from '../components/ui/Comments';
 import './PostDetail.css';
+import '../components/ui/PostCard.css';
 
 const PostDetail = () => {
   const { postId } = useParams();
@@ -209,36 +210,44 @@ const PostDetail = () => {
           </div>
 
           {/* Дії */}
-          <div className="post-detail-actions">
-            <div className="post-detail-action-buttons">
+          <div className="post-card__actions">
+            <div className="post-card__action-buttons">
               <button 
-                className={`post-detail-action-btn like-btn ${userReaction === 'like' ? 'active' : ''}`}
+                className={`post-card__action-btn like-btn ${userReaction === 'like' ? 'active' : ''}`}
                 onClick={() => handleReaction('like')}
                 disabled={isUpdating}
               >
-                <span className="action-icon">👍</span>
-                <span className="action-count">{localStats?.likes || 0}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                </svg>
+                <span className="post-card__count">{localStats?.likes || 0}</span>
               </button>
               <button 
-                className={`post-detail-action-btn dislike-btn ${userReaction === 'dislike' ? 'active' : ''}`}
+                className={`post-card__action-btn dislike-btn ${userReaction === 'dislike' ? 'active' : ''}`}
                 onClick={() => handleReaction('dislike')}
                 disabled={isUpdating}
               >
-                <span className="action-icon">👎</span>
-                <span className="action-count">{localStats?.dislikes || 0}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
+                </svg>
+                <span className="post-card__count">{localStats?.dislikes || 0}</span>
               </button>
               <button 
-                className="post-detail-action-btn comment-btn"
+                className="post-card__action-btn comment-btn"
                 onClick={() => document.querySelector('.comments-section')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                <span className="action-icon">💬</span>
-                <span className="action-count">{localStats?.comments || 0}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span className="post-card__count">{localStats?.comments || 0}</span>
               </button>
               <button 
-                className="post-detail-action-btn share-btn"
+                className="post-card__action-btn share-btn"
                 onClick={handleShare}
               >
-                <span className="action-icon">↗️</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M7 17l9.2-9.2M17 8v9h-9"></path>
+                </svg>
               </button>
             </div>
           </div>
