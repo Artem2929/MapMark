@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
+import HashtagInput from '../components/ui/HashtagInput';
 import './Photos.css';
 import './PhotosModalStyles.css';
 
@@ -27,6 +28,7 @@ const Photos = () => {
   const [heartAnimations, setHeartAnimations] = useState({});
   const [bookmarkedPhotos, setBookmarkedPhotos] = useState(new Set());
   const [imageLoadStates, setImageLoadStates] = useState({});
+  const [hashtags, setHashtags] = useState([]);
   
   const navigate = useNavigate();
   const { userId } = useParams();
@@ -337,6 +339,7 @@ const Photos = () => {
         const photoFormData = new FormData();
         photoFormData.append('photo', selectedFile.file);
         photoFormData.append('description', uploadDescription);
+        photoFormData.append('hashtags', JSON.stringify(hashtags));
         photoFormData.append('userId', currentUserId);
         
         await fetch('http://localhost:3001/api/photos/upload', {
@@ -367,6 +370,7 @@ const Photos = () => {
     setCategory('');
     setVisibility('public');
     setUploadProgress(0);
+    setHashtags([]);
   };
 
   const handleTextareaChange = (e) => {
@@ -622,7 +626,18 @@ const Photos = () => {
                     </button>
                   </div>
                 ) : (
-                  <p>{typeof selectedPhoto.description === 'string' ? selectedPhoto.description : (selectedPhoto.description ? JSON.stringify(selectedPhoto.description) : 'Опис не додано')}</p>
+                  <>
+                    <p>{typeof selectedPhoto.description === 'string' ? selectedPhoto.description : (selectedPhoto.description ? JSON.stringify(selectedPhoto.description) : 'Опис не додано')}</p>
+                    {selectedPhoto.hashtags && selectedPhoto.hashtags.length > 0 && (
+                      <div className="photo-hashtags">
+                        {selectedPhoto.hashtags.map((hashtag, index) => (
+                          <span key={index} className="photo-hashtag">
+                            {hashtag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
               
@@ -784,6 +799,14 @@ const Photos = () => {
                   ↑
                 </button>
               </div>
+              
+              <HashtagInput
+                value={hashtags}
+                onChange={setHashtags}
+                placeholder="Додати хештеги... #travel #ukraine"
+                maxTags={10}
+                className="photo-modal-hashtag-input"
+              />
                 
               {uploading && uploadProgress > 0 && (
                 <div className="upload-progress">

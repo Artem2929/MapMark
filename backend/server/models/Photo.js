@@ -14,6 +14,10 @@ const photoSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  hashtags: {
+    type: [String],
+    default: []
+  },
   filename: {
     type: String,
     required: true

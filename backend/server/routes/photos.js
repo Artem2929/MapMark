@@ -23,7 +23,7 @@ const upload = multer({
 // Upload photo
 router.post('/upload', upload.single('photo'), async (req, res) => {
   try {
-    const { description, userId } = req.body;
+    const { description, userId, hashtags } = req.body;
     
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No file uploaded' });
@@ -37,11 +37,25 @@ router.post('/upload', upload.single('photo'), async (req, res) => {
     const base64Data = req.file.buffer.toString('base64');
     const photoUrl = `data:${req.file.mimetype};base64,${base64Data}`;
     
+    // Parse hashtags
+    let parsedHashtags = [];
+    if (hashtags) {
+      try {
+        parsedHashtags = typeof hashtags === 'string' ? JSON.parse(hashtags) : hashtags;
+        if (!Array.isArray(parsedHashtags)) {
+          parsedHashtags = [];
+        }
+      } catch (e) {
+        parsedHashtags = [];
+      }
+    }
+
     // Save to database
     const photo = new Photo({
       userId,
       url: photoUrl,
       description: typeof description === 'string' ? description : '',
+      hashtags: parsedHashtags,
       filename: req.file.originalname,
       mimetype: req.file.mimetype,
       size: req.file.size
@@ -55,6 +69,7 @@ router.post('/upload', upload.single('photo'), async (req, res) => {
         id: photo._id,
         url: photoUrl,
         description: photo.description,
+        hashtags: photo.hashtags,
         createdAt: photo.createdAt
       }
     });
@@ -71,7 +86,7 @@ router.get('/user/:userId', async (req, res) => {
     
     const photos = await Photo.find({ userId })
       .sort({ createdAt: -1 })
-      .select('_id url description createdAt');
+      .select('_id url description hashtags createdAt');
     
     // Get stats for each photo
     const photosWithStats = await Promise.all(photos.map(async (photo) => {
@@ -85,6 +100,7 @@ router.get('/user/:userId', async (req, res) => {
       return {
         ...photoObj,
         description: typeof photoObj.description === 'string' ? photoObj.description : '',
+        hashtags: Array.isArray(photoObj.hashtags) ? photoObj.hashtags : [],
         stats: { likes, dislikes, comments }
       };
     }));
