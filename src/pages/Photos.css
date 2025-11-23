@@ -561,35 +561,7 @@
   color: #8e8e8e;
 }
 
-.send-btn {
-  background: #007aff;
-  color: white;
-  border: none;
-  padding: 0;
-  border-radius: 50%;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 2px;
-  flex-shrink: 0;
-}
 
-.send-btn:hover:not(:disabled) {
-  background: #0056cc;
-  transform: scale(1.05);
-}
-
-.send-btn:disabled {
-  background: #d1d5db;
-  cursor: not-allowed;
-  transform: none;
-}
 
 @media (max-width: 1024px) {
   .photos-page {
@@ -920,11 +892,7 @@
     min-height: 32px;
   }
 
-  .send-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-  }
+
 }
 
 /* Toast Notifications */
