@@ -636,19 +636,21 @@ const Photos = () => {
                 {comments[selectedPhoto._id] && comments[selectedPhoto._id].length > 0 ? (
                   comments[selectedPhoto._id].map((commentItem) => (
                     <div key={commentItem._id} className="comment-item">
-                      <div className="comment-avatar">
-                        {commentItem.userId?.avatar ? (
-                          <img src={`http://localhost:3001${commentItem.userId.avatar}`} alt={commentItem.userId.name} />
-                        ) : (
-                          commentItem.userId?.name?.charAt(0).toUpperCase() || 'U'
-                        )}
-                      </div>
                       <div className="comment-content">
                         <div className="comment-main">
-                          <span className="comment-author">{commentItem.userId?.name || 'Користувач'}</span>
-                          <span className="comment-text">{commentItem.text}</span>
+                          <div className="comment-author">
+                            <div className="comment-avatar">
+                              {commentItem.userId?.avatar ? (
+                                <img src={`http://localhost:3001${commentItem.userId.avatar}`} alt={commentItem.userId.name} />
+                              ) : (
+                                commentItem.userId?.name?.charAt(0).toUpperCase() || 'U'
+                              )}
+                            </div>
+                            <span>{commentItem.userId?.name || 'Користувач'}</span>
+                          </div>
+                          <span className="comment-time">{formatTime(commentItem.createdAt)}</span>
                         </div>
-                        <div className="comment-time">{formatTime(commentItem.createdAt)}</div>
+                        <div className="comment-text">{commentItem.text}</div>
                         <div className="comment-actions">
                           <button 
                             className={`comment-like-btn ${commentLikes[commentItem._id] === 'like' ? 'liked' : ''}`}
@@ -677,31 +679,27 @@ const Photos = () => {
                 )}
               </div>
               
-              <div className="comment-input-section">
-                <textarea
-                  className="comment-input"
-                  placeholder="Додати коментар..."
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  rows={1}
-                  maxLength={500}
-                />
-                <div className="comment-input-footer">
-                  <span className={`comment-counter ${comment.length > 450 ? 'warning' : ''}`}>
-                    {comment.length}/500
-                  </span>
-                  {comment.trim() && (
-                    <button 
-                      className="comment-submit"
-                      onClick={handleCommentSubmit}
-                      disabled={comment.length > 500}
-                    >
-                      <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                      </svg>
-                    </button>
-                  )}
+              <div className="message-input">
+                <div className="message-input-wrapper">
+                  <textarea 
+                    placeholder="Напишіть повідомлення..."
+                    value={comment}
+                    onChange={(e) => {
+                      setComment(e.target.value);
+                      e.target.style.height = 'auto';
+                      e.target.style.height = e.target.scrollHeight + 'px';
+                    }}
+                    maxLength={500}
+                    rows={1}
+                  />
                 </div>
+                <button 
+                  className="send-btn"
+                  onClick={handleCommentSubmit}
+                  disabled={!comment.trim() || comment.length > 500}
+                >
+                  ↑
+                </button>
               </div>
             </div>
           </div>

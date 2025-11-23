@@ -29,11 +29,6 @@ textarea {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-input:focus,
-textarea:focus {
-  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
-}
-
 /* Icon animations */
 /* Button styles moved to hashtag-input.css */
 

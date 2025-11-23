@@ -39,11 +39,21 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  outline: none;
 }
 
 .profile-basic-info__edit-btn:hover {
   background: rgba(59, 130, 246, 0.15);
   border-color: rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.profile-basic-info__edit-btn:active {
+  transform: translateY(0);
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
 }
 
 .profile-basic-info__content {
@@ -100,11 +110,21 @@
   background: rgba(59, 130, 246, 0.1);
   border: 1px solid rgba(59, 130, 246, 0.2);
   color: #3b82f6;
+  outline: none;
 }
 
 .profile-basic-info__actions .profile-basic-info__edit-btn:hover {
   background: rgba(59, 130, 246, 0.15);
   border-color: rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.profile-basic-info__actions .profile-basic-info__edit-btn:active {
+  transform: translateY(0);
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
 }
 
 .profile-basic-info__actions .profile-basic-info__edit-btn:last-child {
@@ -116,6 +136,15 @@
 .profile-basic-info__actions .profile-basic-info__edit-btn:last-child:hover {
   background: rgba(220, 38, 38, 0.15);
   border-color: rgba(220, 38, 38, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+
+.profile-basic-info__actions .profile-basic-info__edit-btn:last-child:active {
+  transform: translateY(0);
+  background: rgba(220, 38, 38, 0.2);
+  border-color: rgba(220, 38, 38, 0.4);
+  box-shadow: 0 1px 4px rgba(220, 38, 38, 0.3);
 }
 
 .profile-basic-info__actions .btn {

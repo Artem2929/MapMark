@@ -147,8 +147,8 @@
 
 .photo-modal-sidebar {
   flex: 1;
-  min-width: 335px;
-  max-width: 335px;
+  min-width: 385px;
+  max-width: 385px;
   height: 100%;
   overflow: hidden;
   display: flex;
@@ -193,6 +193,51 @@
   border-color: rgba(59, 130, 246, 0.3);
 }
 
+.add-photo-card {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: white;
+}
+
+.add-photo-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.add-photo-grid-btn {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed rgba(59, 130, 246, 0.4);
+  background: rgba(59, 130, 246, 0.05);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.add-photo-grid-btn:hover {
+  border-color: rgba(59, 130, 246, 0.6);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.add-photo-grid-btn span:first-child {
+  font-size: 32px;
+  color: #3b82f6;
+  font-weight: 300;
+}
+
+.add-photo-grid-btn span:last-child {
+  font-size: 14px;
+  color: #1d4ed8;
+  font-weight: 500;
+}
+
 .comment-input {
   flex: 1;
   border: none;
@@ -206,21 +251,6 @@
 
 .comment-input::placeholder {
   color: #8e8e8e;
-}
-
-.comment-submit {
-  background: none;
-  border: none;
-  color: #3b82f6;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 8px 12px;
-}
-
-.comment-submit:disabled {
-  color: #c7d2fe;
-  cursor: not-allowed;
 }
 
 .edit-description-btn {
@@ -376,20 +406,40 @@
 
 .comment-content {
   flex: 1;
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 12px;
+  padding: 8px 12px;
+  position: relative;
+}
+
+.comment-item {
+  padding: 18px 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
 }
 
 .comment-main {
-  margin-bottom: 4px;
-  padding-right: 8px;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
 .comment-author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-weight: 600;
   color: #262626;
   font-size: 14px;
+}
+
+.comment-time {
+  font-size: 12px;
+  color: #8e8e8e;
 }
 
 .comment-text {
@@ -398,12 +448,7 @@
   line-height: 1.4;
   word-break: break-word;
   overflow-wrap: break-word;
-}
-
-.comment-time {
-  font-size: 12px;
-  color: #8e8e8e;
-  margin-top: 4px;
+  margin: 4px 0;
 }
 
 .comment-actions {
@@ -449,6 +494,89 @@
   width: 14px;
   height: 14px;
 }
+
+.message-input {
+  padding: 16px;
+  border-top: 1px solid #efefef;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+}
+
+.message-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  background: #f1f1f4;
+  border-radius: 18px;
+  padding: 0;
+  min-height: 36px;
+  max-height: 100px;
+  overflow: hidden;
+}
+
+.message-input-wrapper:focus-within {
+  border-color: #3b82f6;
+  background: white;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.message-input-wrapper textarea {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: #262626;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  padding: 8px 16px;
+  min-height: 20px;
+  max-height: 100px;
+  resize: none;
+  overflow-y: auto;
+  line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.message-input-wrapper textarea::placeholder {
+  color: #8e8e8e;
+}
+
+.send-btn {
+  background: #007aff;
+  color: white;
+  border: none;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px;
+  flex-shrink: 0;
+}
+
+.send-btn:hover:not(:disabled) {
+  background: #0056cc;
+  transform: scale(1.05);
+}
+
+.send-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  transform: none;
+}
+
+
+
 
 @media (max-width: 768px) {
   .photo-modal-sidebar {
