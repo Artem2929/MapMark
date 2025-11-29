@@ -1301,6 +1301,10 @@
     border-radius: 12px;
   }
 
+  .profile-profile-header::before {
+    display: none;
+  }
+
   .profile-profile-header-top {
     flex-direction: column;
     align-items: center;
@@ -1309,8 +1313,8 @@
   }
 
   .profile-avatar-section {
-    min-width: 120px;
-    width: 120px;
+    min-width: auto;
+    width: auto;
     height: 120px;
   }
 

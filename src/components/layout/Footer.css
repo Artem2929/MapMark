@@ -14,10 +14,12 @@
 .footer-content {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 48px;
+  gap: 24px;
   margin: 0 auto;
   padding: 0 24px;
   max-width: 1200px;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .footer-section {
@@ -27,12 +29,19 @@
 
 .footer-brand {
   max-width: 320px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-align: center;
+  align-items: center;
 }
 
 .brand-logo {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
+  justify-content: center;
+  margin-bottom: 8px;
 }
 
 
@@ -50,8 +59,17 @@
   color: #6b7280;
   font-size: 15px;
   line-height: 1.6;
-  margin: 0 0 24px 0;
+  margin: 0 0 12px 0;
   font-weight: 400;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  flex-shrink: 1;
 }
 
 
@@ -60,7 +78,7 @@
   font-size: 17px;
   font-weight: 700;
   color: #1d1d1f;
-  margin: 0 0 20px 0;
+  margin: 0 0 12px 0;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
   letter-spacing: -0.01em;
 }
@@ -73,7 +91,7 @@
 }
 
 .footer-links li {
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .footer-link {
@@ -113,29 +131,31 @@
 @media (max-width: 1024px) {
   .footer-content {
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 20px;
   }
 }
 
 @media (max-width: 768px) {
   .footer {
     padding: 30px 0 20px;
-    margin-top: 40px;
+    margin-top: -3px;
   }
   
-  .footer-container {
-    padding: 0 16px;
-  }
+
   
   .footer-content {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 16px;
     text-align: center;
     padding: 0;
+    overflow-x: hidden;
+    width: 100%;
   }
   
   .footer-brand {
     max-width: none;
+    min-width: 0;
+    width: 100%;
   }
   
   .brand-logo {
@@ -148,16 +168,20 @@
   
   .footer-description {
     font-size: 14px;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
+    word-break: break-word;
   }
   
   .footer-heading {
     font-size: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
   
   .footer-links li {
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
   
   .footer-link {

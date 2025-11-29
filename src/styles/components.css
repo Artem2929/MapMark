@@ -430,4 +430,13 @@ textarea.input {
   margin-bottom: 8px;
 }
 
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .profile-avatar-upload-overlay {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+}
+
 

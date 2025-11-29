@@ -161,9 +161,6 @@ const PostDetail = () => {
           <button onClick={() => navigate(-1)} className="back-button">
             ← Назад
           </button>
-          <Link to="/discover-places" className="home-link">
-            Стрічка постів
-          </Link>
         </div>
 
         {/* Основний контент */}

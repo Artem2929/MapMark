@@ -20,16 +20,18 @@
   margin-bottom: 16px;
   padding: 16px 0px;
   border-top: 1px solid #e9ecef;
-  max-height: 200px;
-  overflow-y: auto;
 }
 
 .comment-item {
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 12px;
   padding: 8px;
   border-radius: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .comment-avatar {
@@ -64,12 +66,19 @@
   border-radius: 12px;
   padding: 8px 12px;
   position: relative;
+  min-width: 0;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 .comment-main {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 
@@ -86,6 +95,9 @@
 .comment-text {
   font-weight: 400;
   pointer-events: none !important;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .comment-actions {
