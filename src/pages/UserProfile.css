@@ -162,6 +162,31 @@
   gap: 12px;
 }
 
+.profile-name-details {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-name-rating {
+  display: none;
+}
+
+/* Show rating in name section on mobile/tablet */
+@media (max-width: 1023px) {
+  .profile-name-rating {
+    display: block;
+  }
+  
+  .profile-name-rating .user-rating {
+    display: flex;
+  }
+  
+  .profile-profile-info {
+    width: 100%;
+  }
+}
+
 .profile-location-edit {
   display: flex;
   align-items: center;
@@ -441,7 +466,25 @@
 
 /* Button styles moved to hashtag-input.css */
 
-/* Photo overlay removed - no hover effects on photos */
+/* Photo overlay with hover effects */
+.photo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: 12px;
+}
+
+.photo-gallery-item:hover .photo-overlay {
+  opacity: 1;
+}
 
 .photo-actions {
   display: flex;
@@ -1071,6 +1114,21 @@
 
   .photo-gallery-item:active .photo-overlay {
     opacity: 1;
+  }
+
+  /* Показувати кнопки на мобільних пристроях */
+  .photo-overlay {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .photo-gallery-item:not(:hover) .photo-overlay {
+    opacity: 0;
+  }
+
+  .photo-gallery-item:active .photo-overlay {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.5);
   }
 
   .no-photos {

@@ -1,95 +1,92 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import './LocationPicker.css';
 
 const LocationPicker = ({ onLocationSelect, selectedLocation }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const dropdownRef = useRef(null);
+  const [locationInput, setLocationInput] = useState('');
+  const [isEditing, setIsEditing] = useState(!selectedLocation);
 
-  const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const location = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-            name: 'Моє місцезнаходження'
-          };
-          onLocationSelect(location);
-          setIsOpen(false);
-        },
-        (error) => {
-          console.error('Geolocation error:', error);
-        }
-      );
+  const handleAddLocation = () => {
+    if (locationInput.trim()) {
+      const location = {
+        lat: 0,
+        lng: 0,
+        name: locationInput.trim()
+      };
+      onLocationSelect(location);
+      setLocationInput('');
+      setIsEditing(false);
     }
   };
 
-  const mockLocations = [
-    { name: 'Київ, Україна', lat: 50.4501, lng: 30.5234 },
-    { name: 'Львів, Україна', lat: 49.8397, lng: 24.0297 },
-    { name: 'Одеса, Україна', lat: 46.4825, lng: 30.7233 }
-  ];
-
-  const filteredLocations = mockLocations.filter(loc =>
-    loc.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleAddLocation();
     }
+  };
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
+  const handleEdit = () => {
+    setLocationInput(selectedLocation?.name || '');
+    setIsEditing(true);
+  };
+
+  const handleCancel = () => {
+    setLocationInput('');
+    setIsEditing(false);
+  };
 
   return (
-    <div className="location-picker" ref={dropdownRef}>
-      <button 
-        className="location-picker-btn"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        📍 {selectedLocation?.name || 'Додати місце'}
-      </button>
-      
-      {isOpen && (
-        <div className="location-dropdown">
+    <div className="location-picker">
+      {isEditing ? (
+        <div className="location-input-container">
           <input
             type="text"
-            placeholder="Пошук місця..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="location-search"
+            placeholder="Введіть назву місця, міста або країни..."
+            value={locationInput}
+            onChange={(e) => setLocationInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            className="location-input"
+            autoFocus
           />
-          
           <button 
-            className="location-item current-location"
-            onClick={getCurrentLocation}
+            className="location-add-btn"
+            onClick={handleAddLocation}
+            disabled={!locationInput.trim()}
           >
-            🎯 Моє місце
+            {selectedLocation ? 'Зберегти' : 'Додати'}
           </button>
-          
-          {filteredLocations.map((location, index) => (
-            <button
-              key={index}
-              className="location-item"
-              onClick={() => {
-                onLocationSelect(location);
-                setIsOpen(false);
-              }}
+          {selectedLocation && (
+            <button 
+              className="location-cancel-btn"
+              onClick={handleCancel}
             >
-              📍 {location.name}
+              Скасувати
             </button>
-          ))}
+          )}
         </div>
+      ) : (
+        selectedLocation ? (
+          <div className="selected-location" onClick={handleEdit}>
+            📍 {selectedLocation.name}
+          </div>
+        ) : (
+          <div className="location-input-container">
+            <input
+              type="text"
+              placeholder="Введіть назву місця, міста або країни..."
+              value={locationInput}
+              onChange={(e) => setLocationInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="location-input"
+            />
+            <button 
+              className="location-add-btn"
+              onClick={handleAddLocation}
+              disabled={!locationInput.trim()}
+            >
+              Додати
+            </button>
+          </div>
+        )
       )}
     </div>
   );

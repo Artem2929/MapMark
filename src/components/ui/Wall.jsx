@@ -537,12 +537,23 @@ const Wall = ({ userId, isOwnProfile, user }) => {
             {selectedPhotos.length > 0 && (
               <div className="photo-preview">
                 {selectedPhotos.map((photo, index) => (
-                  <img 
-                    key={index} 
-                    src={photo} 
-                    alt={`Preview ${index + 1}`}
-onError={(e) => e.target.style.display = 'none'}
-                  />
+                  <div key={index} className="photo-preview-item">
+                    <img 
+                      src={photo} 
+                      alt={`Preview ${index + 1}`}
+                      onError={(e) => e.target.style.display = 'none'}
+                    />
+                    <button 
+                      type="button" 
+                      className="photo-remove-btn"
+                      onClick={() => {
+                        setSelectedPhotos(selectedPhotos.filter((_, i) => i !== index));
+                      }}
+                      title="Видалити фото"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 ))}
               </div>
             )}
@@ -635,7 +646,11 @@ onError={(e) => e.target.style.display = 'none'}
                 <div className="edit-form">
                   <textarea 
                     value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
+                    onChange={(e) => {
+                      setEditText(e.target.value);
+                      e.target.style.height = 'auto';
+                      e.target.style.height = e.target.scrollHeight + 'px';
+                    }}
                     className="edit-textarea"
                   />
                   <div className="edit-buttons">
@@ -653,16 +668,16 @@ onError={(e) => e.target.style.display = 'none'}
                 <>
                   <p dangerouslySetInnerHTML={{ __html: renderPostContent(post.content) }}></p>
 
+                  {post.location && post.location.name && (
+                    <div className="post-location">
+                      📍 {post.location.name}
+                    </div>
+                  )}
                   {post.hashtags && post.hashtags.trim() && (
                     <div className="post-hashtags">
                       {post.hashtags.split(' ').filter(tag => tag.trim()).map((tag, index) => (
                         <span key={index} className="hashtag">{tag}</span>
                       ))}
-                    </div>
-                  )}
-                  {post.location && post.location.name && (
-                    <div className="post-location">
-                      📍 {post.location.name}
                     </div>
                   )}
                 </>

@@ -103,6 +103,14 @@ router.post('/login', loginLimiter, loginValidation, async (req, res) => {
     // Згенерувати токен
     const token = generateToken(user._id);
 
+    // Set httpOnly cookie for security
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    });
+
     res.json({
       success: true,
       message: 'Login successful',
@@ -178,6 +186,14 @@ router.post('/register', registerValidation, async (req, res) => {
     // Згенерувати токен
     const token = generateToken(user._id);
 
+    // Set httpOnly cookie for security
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    });
+
     res.status(201).json({
       success: true,
       message: 'Registration successful',
@@ -242,6 +258,29 @@ router.post('/forgot-password', async (req, res) => {
 
   } catch (error) {
     console.error('Forgot password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+});
+
+// POST /api/auth/logout
+router.post('/logout', (req, res) => {
+  try {
+    // Clear httpOnly cookie
+    res.clearCookie('authToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict'
+    });
+
+    res.json({
+      success: true,
+      message: 'Logout successful'
+    });
+  } catch (error) {
+    console.error('Logout error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'

@@ -5,6 +5,7 @@ const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const SocketService = require('./services/SocketService');
 const { securityMiddleware, generalLimiter } = require('./middleware/security');
@@ -75,6 +76,7 @@ app.use(securityMiddleware);
 // Body parsing middleware
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cookieParser());
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });

@@ -5,6 +5,7 @@ import ProfileBasicInfo from './ProfileBasicInfo';
 import FollowButton from './FollowButton';
 import ProfileBadge from '../ui/ProfileBadge';
 import ActivityIndicator from '../ui/ActivityIndicator';
+// import UserRating from './UserRating';
 import useOnlineStatus from '../../hooks/useOnlineStatus';
 import { useProfileActions } from '../../hooks/useProfileActions';
 
@@ -45,10 +46,15 @@ const ProfileHeader = () => {
               {user.verified && <ProfileBadge type="verified" size="md" />}
               {user.premium && <ProfileBadge type="premium" size="md" />}
             </h1>
-            <ActivityIndicator 
-              status={isOnline ? 'online' : 'offline'} 
-              lastSeen={lastSeen || user.lastSeen}
-            />
+            <div className="profile-name-details">
+              <ActivityIndicator 
+                status={isOnline ? 'online' : 'offline'} 
+                lastSeen={lastSeen || user.lastSeen}
+              />
+              {/* <div className="profile-name-rating">
+                <UserRating userId={targetUserId} isOwnProfile={isOwnProfile} />
+              </div> */}
+            </div>
           </div>
           <ProfileBasicInfo 
             user={user}
