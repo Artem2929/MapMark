@@ -196,6 +196,15 @@
   .hashtag-preview {
     gap: var(--spacing-xs, 6px);
   }
+
+  .hashtag-counter {
+    font-size: 10px;
+    margin-top: 4px;
+  }
+
+  .hashtag-counter__count {
+    font-size: 10px;
+  }
 }
 
 /* Dark Theme Support */

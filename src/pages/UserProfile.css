@@ -907,7 +907,7 @@
 /* Tablet Large - 768px to 1023px */
 @media (max-width: 1023px) and (min-width: 768px) {
   .page-container.profile-user-profile {
-    padding: 10px 0px;
+    padding: 16px 0 0 0;
   }
 
   .profile-profile-container {
@@ -1015,18 +1015,21 @@
 /* Mobile Large - 480px to 767px */
 @media (max-width: 767px) and (min-width: 480px) {
   .page-container.profile-user-profile {
-    padding: 8px 12px 0;
+    padding: 16px 0 0 0;
   }
 
   .profile-profile-container {
-    padding: 0 12px;
+    padding: 0;
   }
 
   .profile-profile-header {
     padding: 16px;
     flex-direction: column;
     gap: 16px;
-    border-radius: 12px;
+    border-radius: 0;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
   }
 
   .profile-profile-header-top {
@@ -1145,6 +1148,8 @@
   .profile-profile-header {
     padding: 16px;
     gap: 16px;
+    flex-direction: column;
+    border-radius: 12px;
   }
 
   .profile-avatar-section {
@@ -1348,7 +1353,7 @@
 /* Modern Mobile-First Responsive Design */
 @media (max-width: 480px) {
   .profile-profile-container {
-    padding: 0 12px;
+    padding: 0;
     max-width: 100%;
   }
 
@@ -1356,7 +1361,10 @@
     padding: 16px;
     flex-direction: column;
     gap: 16px;
-    border-radius: 12px;
+    border-radius: 0;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
   }
 
   .profile-profile-header::before {
@@ -1385,6 +1393,13 @@
   .profile-profile-name {
     font-size: 18px;
     justify-content: center;
+    margin: 0;
+  }
+
+  .profile-name-section {
+    gap: 8px;
+    margin: 0;
+    padding: 0;
   }
 
   .profile-main-edit-btn {

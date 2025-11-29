@@ -647,6 +647,56 @@
     margin: var(--space-2) 0;
   }
 
+  .wall-container .location-input-container {
+    flex-direction: row !important;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .wall-container .location-input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .wall-container .location-add-btn {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-light);
+    color: var(--color-primary);
+    min-width: 32px;
+    height: 32px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    text-indent: -9999px;
+    position: relative;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  
+  .wall-container .location-add-btn::before {
+    content: '+';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-indent: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .wall-container .location-add-btn:hover:not(:disabled) {
+    background: var(--color-bg-muted);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .wall-container .location-add-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   .creator-input {
     font-size: 14px;
     padding: var(--space-2);
@@ -680,13 +730,21 @@
 }
 
 @media (max-width: 480px) {
-  .creator-buttons {
+  .creator-actions {
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
   }
 
   .creator-tools {
     gap: 4px;
+  }
+
+  .creator-buttons {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin-top: 12px;
   }
 
   .tool-btn {

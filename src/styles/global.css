@@ -131,3 +131,10 @@ h5, h6 {
 a {
   text-decoration: none;
 }
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 16px 0px 0px 0px;
+  }
+}
