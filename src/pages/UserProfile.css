@@ -1065,8 +1065,24 @@
   }
 
   .profile-photos-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 12px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .profile-photos-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .photo-gallery-item {
+    flex-shrink: 0;
+    width: 200px;
+    height: 150px;
   }
 
   .profile-photos-header {
@@ -1165,11 +1181,24 @@
   }
 
   .profile-photos-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 12px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .profile-photos-grid::-webkit-scrollbar {
+    display: none;
   }
 
   .photo-gallery-item {
+    flex-shrink: 0;
+    width: 180px;
+    height: 135px;
     border-radius: 8px;
   }
 
@@ -1203,8 +1232,24 @@
   }
 
   .profile-photos-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 10px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .profile-photos-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .photo-gallery-item {
+    flex-shrink: 0;
+    width: 160px;
+    height: 120px;
   }
 
   .photo-upload-content {
@@ -1412,8 +1457,25 @@
   }
 
   .profile-photos-grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
     gap: 12px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .profile-photos-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .photo-gallery-item {
+    flex-shrink: 0;
+    width: 200px;
+    height: 150px;
+    border-radius: 12px;
   }
 
   .profile-photos-header {
@@ -1422,11 +1484,6 @@
 
   .profile-photos-header h3 {
     font-size: 16px;
-  }
-
-  .photo-gallery-item {
-    aspect-ratio: 16/9;
-    border-radius: 12px;
   }
 
   .photo-upload-content {
