@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { useTranslation } from 'react-i18next';
 import StarRating from '../ui/StarRating';
 import ReviewService from '../../services/reviewService';
 import './ReviewForm.css';
 
-const ReviewForm = ({ marker, onClose, onSubmit }) => {
+const ReviewForm = memo(({  marker, onClose, onSubmit  }) => {
   const { t } = useTranslation();
   const [reviewText, setReviewText] = useState('');
   const [rating, setRating] = useState(0);
@@ -227,7 +229,7 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
                     <button
                       type="button"
                       className="review-photo-remove-btn"
-                      onClick={() => removePhoto(index)}
+                      onClick={useCallback(() => removePhoto(index), [])}
                     >
                       ×
                     </button>
@@ -260,6 +262,8 @@ const ReviewForm = ({ marker, onClose, onSubmit }) => {
       </div>
     </div>
   );
-};
+});
+
+ReviewForm.displayName = 'ReviewForm';
 
 export default ReviewForm;

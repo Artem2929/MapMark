@@ -1,9 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./Breadcrumbs.css";
 
-const Breadcrumbs = ({ items = null }) => {
+const Breadcrumbs = memo(({  items = null  }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter((x) => x);
@@ -72,6 +72,8 @@ const Breadcrumbs = ({ items = null }) => {
       })}
     </nav>
   );
-};
+});
+
+Breadcrumbs.displayName = 'Breadcrumbs';
 
 export default Breadcrumbs;

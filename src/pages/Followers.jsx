@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { classNames } from '../utils/classNames';
 import { useParams, Link } from 'react-router-dom';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import './Followers.css';
@@ -136,7 +137,7 @@ const Followers = () => {
               </Link>
               
               <button 
-                onClick={() => handleFollowToggle(follower.id)}
+                onClick={useCallback(() => handleFollowToggle(follower.id), [])}
                 className={`follow-btn ${follower.isFollowing ? 'following' : ''}`}
               >
                 {follower.isFollowing ? 'Підписано' : 'Підписатися'}

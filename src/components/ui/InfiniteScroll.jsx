@@ -1,12 +1,12 @@
-import { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, memo } from 'react';
 
-const InfiniteScroll = ({ 
+const InfiniteScroll = memo(({  
   hasMore, 
   loading, 
   onLoadMore, 
   threshold = 100,
   children 
-}) => {
+ }) => {
   const sentinelRef = useRef(null);
   const observerRef = useRef(null);
   const loadingRef = useRef(false);
@@ -51,6 +51,8 @@ const InfiniteScroll = ({
       <div ref={sentinelRef} style={{ height: '1px' }} />
     </>
   );
-};
+});
+
+InfiniteScroll.displayName = 'InfiniteScroll';
 
 export default InfiniteScroll;

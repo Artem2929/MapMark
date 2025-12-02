@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './Toast.css';
 
-const Toast = ({ message, type = 'success', onClose, duration = 3000 }) => {
+const Toast = memo(({  message, type = 'success', onClose, duration = 3000  }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
@@ -29,6 +30,8 @@ const Toast = ({ message, type = 'success', onClose, duration = 3000 }) => {
       <button className="toast__close" onClick={onClose}>×</button>
     </div>
   );
-};
+});
+
+Toast.displayName = 'Toast';
 
 export default Toast;

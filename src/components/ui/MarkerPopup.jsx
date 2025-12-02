@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import authService from '../../services/authService';
 import './MarkerPopup.css';
 
-const MarkerPopup = ({ 
+const MarkerPopup = memo(({  
   marker, 
   reviews, 
   onAddReview, 
   onViewReviews, 
   onBuildRoute, 
   onDelete 
-}) => {
+ }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const isAuthenticated = authService.isAuthenticated();
@@ -61,6 +62,8 @@ const MarkerPopup = ({
       </div>
     </div>
   );
-};
+});
+
+MarkerPopup.displayName = 'MarkerPopup';
 
 export default MarkerPopup;

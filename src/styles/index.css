@@ -1,0 +1,102 @@
+/* MapMark Main Stylesheet - Головний файл стилів */
+
+/* === DESIGN TOKENS === */
+@import './design-tokens.css';
+
+/* === BASE STYLES === */
+@import './base.css';
+
+/* === LAYOUT SYSTEM === */
+@import './layout.css';
+
+/* === COMPONENT SYSTEM === */
+@import './components-system.css';
+
+/* === ANIMATIONS === */
+@import './animations.css';
+
+/* === UTILITIES === */
+@import './utilities.css';
+
+/* === LEGACY SUPPORT === */
+/* Підтримка старих класів для поступової міграції */
+.mapmark-glass {
+  background: var(--gradient-glass);
+  backdrop-filter: var(--blur-glass);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: var(--shadow-glass);
+}
+
+.mapmark-gradient-primary {
+  background: var(--gradient-primary);
+}
+
+.mapmark-gradient-secondary {
+  background: var(--gradient-secondary);
+}
+
+.mapmark-shadow {
+  box-shadow: var(--shadow-glass);
+}
+
+.mapmark-transition {
+  transition: var(--transition-normal);
+}
+
+/* Старі класи кнопок */
+.btn-base {
+  /* Use .btn class directly */
+}
+
+.btn-primary {
+  /* Use .btn.btn--primary classes directly */
+}
+
+.btn-danger {
+  /* Use .btn.btn--danger classes directly */
+}
+
+.btn-disabled {
+  /* Use .btn class directly with disabled state */
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* === PRINT STYLES === */
+@media print {
+  .no-print {
+    display: none;
+  }
+  
+  .page {
+    padding-top: 0;
+  }
+  
+  .header,
+  .footer {
+    display: none;
+  }
+  
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+  
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+  
+  .btn,
+  .card {
+    border: 1px solid #000;
+  }
+}

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './AuthLoader.css';
 
-const AuthLoader = ({ message = 'Завантаження...' }) => {
+const AuthLoader = memo(({  message = 'Завантаження...'  }) => {
   return (
     <div className="auth-loader">
       <div className="auth-loader-spinner">
@@ -12,6 +13,8 @@ const AuthLoader = ({ message = 'Завантаження...' }) => {
       <p className="auth-loader-message">{message}</p>
     </div>
   );
-};
+});
+
+AuthLoader.displayName = 'AuthLoader';
 
 export default AuthLoader;

@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { memo,  useState, useEffect , useCallback, useMemo } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import './UserRating.css';
 
-const UserRating = ({ userId, isOwnProfile = false }) => {
+const UserRating = memo(({  userId, isOwnProfile = false  }) => {
   const [rating, setRating] = useState(0);
+
+UserRating;
+
+.displayName = 'UserRating';
   const [userVote, setUserVote] = useState(0);
   const [isVoting, setIsVoting] = useState(false);
 

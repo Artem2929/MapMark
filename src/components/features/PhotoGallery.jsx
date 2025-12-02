@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
+import { classNames } from '../../utils/classNames';
 import './PhotoGallery.css';
 
-const PhotoGallery = ({ photos }) => {
+const PhotoGallery = memo(({  photos  }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+PhotoGallery;
+
+.displayName = 'PhotoGallery';
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const nextPhoto = () => {
@@ -45,7 +50,7 @@ const PhotoGallery = ({ photos }) => {
         <div 
           className="main-photo"
           onTouchStart={handleSwipe}
-          onClick={() => setIsFullscreen(true)}
+          onClick={useCallback(() => setIsFullscreen(true), [])}
         >
           <img 
             src={photos[currentIndex]} 
@@ -75,7 +80,7 @@ const PhotoGallery = ({ photos }) => {
               <div
                 key={index}
                 className={`thumbnail ${index === currentIndex ? 'active' : ''}`}
-                onClick={() => goToPhoto(index)}
+                onClick={useCallback(() => goToPhoto(index), [])}
               >
                 <img src={photo} alt={`Превʼю ${index + 1}`} />
               </div>
@@ -85,11 +90,11 @@ const PhotoGallery = ({ photos }) => {
       </div>
 
       {isFullscreen && (
-        <div className="fullscreen-overlay" onClick={() => setIsFullscreen(false)}>
-          <div className="fullscreen-content" onClick={(e) => e.stopPropagation()}>
+        <div className="fullscreen-overlay" onClick={useCallback(() => setIsFullscreen(false), [])}>
+          <div className="fullscreen-content" onClick={useCallback((e) => e.stopPropagation(), [])}>
             <button 
               className="close-fullscreen"
-              onClick={() => setIsFullscreen(false)}
+              onClick={useCallback(() => setIsFullscreen(false), [])}
             >
               ✕
             </button>

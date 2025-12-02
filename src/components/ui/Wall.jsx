@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, memo } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { wallService } from '../../services/wallService';
 import useUserWall from '../../hooks/useUserWall';
 import useOnlineStatus from '../../hooks/useOnlineStatus';
@@ -9,7 +11,7 @@ import HashtagInput from './HashtagInput';
 import LocationPicker from './LocationPicker';
 import './Wall.css';
 
-const Wall = ({ userId, isOwnProfile, user }) => {
+const Wall = memo(({  userId, isOwnProfile, user  }) => {
   const currentUserId = localStorage.getItem('userId');
 
   const { posts, loading: wallLoading, refreshWall, addPost } = useUserWall(userId, currentUserId);
@@ -30,6 +32,26 @@ const Wall = ({ userId, isOwnProfile, user }) => {
   const [hashtags, setHashtags] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const textareaRef = useRef(null);
+  
+  // Stable callback references
+  const handleUserSelectCallback = (user) => handleUserSelect(user);
+  const handleEmojiSelectCallback = (emoji) => handleEmojiSelect(emoji);
+  const handlePhotoRemoveCallback = (index) => {
+    setSelectedPhotos(selectedPhotos.filter((_, i) => i !== index));
+  };
+  const handleFileRemoveCallback = (index) => removeFile(index);
+  const handlePostMenuCallback = (postId) => {
+    setShowPostMenu(showPostMenu === postId ? null : postId);
+  };
+  const handleEditPostCallback = (post) => handleEditPost(post);
+  const handleDeletePostCallback = (postId) => handleDeletePost(postId);
+  const handleReportPostCallback = (postId) => handleReportPost(postId);
+  const handleSaveEditCallback = (postId) => handleSaveEdit(postId);
+  const handleLikeCallback = (postId) => handleLike(postId);
+  const handleDislikeCallback = (postId) => handleDislike(postId);
+  const handleToggleCommentsCallback = (postId) => toggleComments(postId);
+  const handleShareCallback = (postId) => handleShare(postId);
+  const handleCommentSubmitCallback = (postId) => handleCommentSubmit(postId);
   
   const mockUsers = [
     { id: 1, name: 'Артем Поліщук', username: 'artem' },
@@ -381,7 +403,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                     <div
                       key={user.id}
                       className={`suggestion-item ${index === selectedSuggestionIndex ? 'selected' : ''}`}
-                      onClick={() => handleUserSelect(user)}
+                      onClick={() => handleUserSelectCallback(user)}
                     >
                       <div className="suggestion-avatar">{user.name[0]}</div>
                       <div className="suggestion-info">
@@ -520,7 +542,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                     key={`${emoji}-${index}`}
                     type="button"
                     className="emoji-btn"
-                    onClick={() => handleEmojiSelect(emoji)}
+                    onClick={() => handleEmojiSelectCallback(emoji)}
                   >
                     {emoji}
                   </button>
@@ -546,9 +568,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                     <button 
                       type="button" 
                       className="photo-remove-btn"
-                      onClick={() => {
-                        setSelectedPhotos(selectedPhotos.filter((_, i) => i !== index));
-                      }}
+                      onClick={() => handlePhotoRemoveCallback(index)}
                       title="Видалити фото"
                     >
                       ✕
@@ -578,7 +598,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                     <button 
                       type="button" 
                       className="file-remove"
-                      onClick={() => removeFile(index)}
+                      onClick={() => handleFileRemoveCallback(index)}
                     >
                       ✕
                     </button>
@@ -621,7 +641,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
               <div className="post-menu">
                 <button 
                   className="menu-btn"
-                  onClick={() => setShowPostMenu(showPostMenu === post.id ? null : post.id)}
+                  onClick={() => handlePostMenuCallback(post.id)}
                 >
                   ⋯
                 </button>
@@ -629,12 +649,12 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                   <div className="post-dropdown">
                     {isOwnProfile ? (
                       <>
-                        <button onClick={() => handleEditPost(post)}>Редагувати</button>
-                        <button onClick={() => handleDeletePost(post.id)}>Видалити</button>
+                        <button onClick={() => handleEditPostCallback(post)}>Редагувати</button>
+                        <button onClick={() => handleDeletePostCallback(post.id)}>Видалити</button>
                       </>
                     ) : (
                       <>
-                        <button onClick={() => handleReportPost(post.id)}>Поскаржитись</button>
+                        <button onClick={() => handleReportPostCallback(post.id)}>Поскаржитись</button>
                       </>
                     )}
                   </div>
@@ -655,7 +675,7 @@ const Wall = ({ userId, isOwnProfile, user }) => {
                   />
                   <div className="edit-buttons">
                     <button 
-                      onClick={() => handleSaveEdit(post.id)} 
+                      onClick={() => handleSaveEditCallback(post.id)} 
                       className="save-btn"
                       disabled={!editText.trim()}
                     >
@@ -722,7 +742,7 @@ onError={(e) => e.target.style.display = 'none'}
             <div className="post-actions">
               <button 
                 className={`like-btn ${post.liked ? 'liked' : ''}`}
-                onClick={() => handleLike(post.id)}
+                onClick={() => handleLikeCallback(post.id)}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
@@ -731,7 +751,7 @@ onError={(e) => e.target.style.display = 'none'}
               </button>
               <button 
                 className={`dislike-btn ${post.disliked ? 'disliked' : ''}`}
-                onClick={() => handleDislike(post.id)}
+                onClick={() => handleDislikeCallback(post.id)}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
@@ -740,14 +760,14 @@ onError={(e) => e.target.style.display = 'none'}
               </button>
               <button 
                 className="comment-btn"
-                onClick={() => toggleComments(post.id)}
+                onClick={() => handleToggleCommentsCallback(post.id)}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
                 <span>{post.comments.length}</span>
               </button>
-              <button className="share-btn" onClick={() => handleShare(post.id)}>
+              <button className="share-btn" onClick={() => handleShareCallback(post.id)}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M7 17l9.2-9.2M17 8v9h-9"></path>
                 </svg>
@@ -815,7 +835,7 @@ onError={(e) => e.target.style.display = 'none'}
                       </div>
                     </div>
                     <button 
-                      onClick={() => handleCommentSubmit(post.id)}
+                      onClick={() => handleCommentSubmitCallback(post.id)}
                       disabled={!commentText[post.id]?.trim()}
                       className="comment-submit"
                     >
@@ -831,6 +851,8 @@ onError={(e) => e.target.style.display = 'none'}
       </div>
     </div>
   );
-};
+});
+
+Wall.displayName = 'Wall';
 
 export default Wall;

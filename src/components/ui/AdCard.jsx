@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import { Link } from 'react-router-dom';
-import Card from './Card';
+import Card from './Card.optimized';
 import StarRating from './StarRating';
 import './AdCard.css';
 
-const AdCard = ({ 
+const AdCard = memo(({  
   ad,
   className = '',
   ...props 
-}) => {
+ }) => {
   const {
     id,
     title,
@@ -83,6 +84,8 @@ const AdCard = ({
       </Card>
     </Link>
   );
-};
+});
+
+AdCard.displayName = 'AdCard';
 
 export default AdCard;

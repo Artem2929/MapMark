@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import useUserFollowing from '../../hooks/useUserFollowing';
 import './FollowButton.css';
 
-const FollowButton = ({ userId, targetUserId }) => {
+const FollowButton = memo(({  userId, targetUserId  }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -62,6 +64,8 @@ const FollowButton = ({ userId, targetUserId }) => {
       {loading ? '...' : isFollowing ? 'Відписатися' : 'Підписатися'}
     </button>
   );
-};
+});
+
+FollowButton.displayName = 'FollowButton';
 
 export default FollowButton;

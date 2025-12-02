@@ -1,6 +1,7 @@
+import React, { memo } from 'react';
 import DOMPurify from 'dompurify';
 
-const SafeHtml = ({ html, className = '', tag = 'div' }) => {
+const SafeHtml = memo(({  html, className = '', tag = 'div'  }) => {
   const sanitizedHtml = DOMPurify.sanitize(html, {
     ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'a'],
     ALLOWED_ATTR: ['href', 'target'],
@@ -14,6 +15,8 @@ const SafeHtml = ({ html, className = '', tag = 'div' }) => {
       dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
     />
   );
-};
+});
+
+SafeHtml.displayName = 'SafeHtml';
 
 export default SafeHtml;

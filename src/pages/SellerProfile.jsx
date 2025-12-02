@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { classNames } from '../utils/classNames';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
@@ -165,25 +166,25 @@ const SellerProfile = () => {
           <div className="seller-tabs">
             <button 
               className={`tab-btn ${activeTab === 'products' ? 'active' : ''}`}
-              onClick={() => setActiveTab('products')}
+              onClick={useCallback(() => setActiveTab('products'), [])}
             >
               🛍️ Товари ({seller.products.length})
             </button>
             <button 
               className={`tab-btn ${activeTab === 'services' ? 'active' : ''}`}
-              onClick={() => setActiveTab('services')}
+              onClick={useCallback(() => setActiveTab('services'), [])}
             >
               🔧 Послуги ({seller.services.length})
             </button>
             <button 
               className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
-              onClick={() => setActiveTab('reviews')}
+              onClick={useCallback(() => setActiveTab('reviews'), [])}
             >
               ⭐ Відгуки ({seller.reviewsCount})
             </button>
             <button 
               className={`tab-btn ${activeTab === 'about' ? 'active' : ''}`}
-              onClick={() => setActiveTab('about')}
+              onClick={useCallback(() => setActiveTab('about'), [])}
             >
               ℹ️ Про продавця
             </button>

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
+import { classNames } from '../../utils/classNames';
 
-const Comment = ({ comment, postId, onReply, canReply }) => {
+const Comment = memo(({  comment, postId, onReply, canReply  }) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [showReplies, setShowReplies] = useState(false);
@@ -131,6 +132,8 @@ const Comment = ({ comment, postId, onReply, canReply }) => {
       )}
     </div>
   );
-};
+});
+
+Comment.displayName = 'Comment';
 
 export default Comment;

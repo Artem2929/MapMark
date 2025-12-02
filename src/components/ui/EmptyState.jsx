@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './EmptyState.css';
 
-const EmptyState = ({ icon, title, description, action }) => {
+const EmptyState = memo(({  icon, title, description, action  }) => {
   return (
     <div className="empty-state">
       <div className="empty-state__icon">{icon}</div>
@@ -10,6 +11,8 @@ const EmptyState = ({ icon, title, description, action }) => {
       {action && <div className="empty-state__action">{action}</div>}
     </div>
   );
-};
+});
+
+EmptyState.displayName = 'EmptyState';
 
 export default EmptyState;

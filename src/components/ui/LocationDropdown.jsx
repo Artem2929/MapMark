@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { classNames } from '../../utils/classNames';
 import '../../styles/location-dropdown.css';
 
 const LocationDropdown = ({
@@ -114,7 +115,7 @@ const LocationDropdown = ({
               className={`location-item ${location.isCurrent ? 'current-location' : ''} ${
                 index === activeIndex ? 'location-item--active' : ''
               }`}
-              onClick={() => handleLocationSelect(location)}
+              onClick={useCallback(() => handleLocationSelect(location), [])}
               disabled={disabled}
             >
               <span className="location-item__icon">{location.icon}</span>

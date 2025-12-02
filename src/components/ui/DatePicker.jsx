@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, {  useState , useCallback, useMemo, memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import CustomSelect from './CustomSelect';
 import './DatePicker.css';
 
-const DatePicker = ({ value, onChange, placeholder = "Оберіть дату" }) => {
+const DatePicker = memo(({  value, onChange, placeholder = "Оберіть дату"  }) => {
   const parseDate = (dateString) => {
     if (!dateString) return { day: '', month: '', year: '' };
     const date = new Date(dateString);
@@ -78,6 +79,8 @@ const DatePicker = ({ value, onChange, placeholder = "Оберіть дату" }
       </div>
     </div>
   );
-};
+});
+
+DatePicker.displayName = 'DatePicker';
 
 export default DatePicker;

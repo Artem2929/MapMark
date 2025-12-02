@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../utils/classNames';
 import { useParams, Navigate } from 'react-router-dom';
 import { ProfileProvider } from '../contexts/ProfileContext';
 import ProfileBreadcrumbs from '../components/profile/ProfileBreadcrumbs';

@@ -349,6 +349,29 @@
   }
 }
 
+/* Mobile */
+@media (max-width: 480px) {
+  .login-page {
+    padding: 16px;
+    padding-top: 90px;
+    justify-content: center;
+  }
+
+  .login-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .login-form-wrapper {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+}
+
 /* Tablet */
 @media (min-width: 481px) {
   .login-page {

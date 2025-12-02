@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import { Link } from 'react-router-dom';
 import './ErrorMessage.css';
 
-const ErrorMessage = ({ 
+const ErrorMessage = memo(({  
   title = "Щось пішло не так", 
   message = "Спробуйте пізніше або поверніться на головну сторінку",
   showHomeLink = true 
-}) => {
+ }) => {
   return (
     <div className="error-message-container">
       <div className="error-icon">😔</div>
@@ -19,6 +20,8 @@ const ErrorMessage = ({
       )}
     </div>
   );
-};
+});
+
+ErrorMessage.displayName = 'ErrorMessage';
 
 export default ErrorMessage;

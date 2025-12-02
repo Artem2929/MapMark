@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { Link, useNavigate } from 'react-router-dom';
 import Comments from './Comments';
 import './PostCard.css';
 
-const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved = false }) => {
+const PostCard = memo(({  post, onReaction, onComment, onShare, onSave, initialSaved = false  }) => {
   const navigate = useNavigate();
   const [localStats, setLocalStats] = useState(post.stats);
   const [userReaction, setUserReaction] = useState(null); // 'like', 'dislike', або null
@@ -169,12 +171,12 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
       </div>
 
       {post.image && (
-        <div className="post-card__media" onClick={() => navigate(`/posts/${post.id}`)}>
+        <div className="post-card__media" onClick={useCallback(() => navigate(`/posts/${post.id}`), [])}>
           <img src={post.image} alt={post.title} className="post-card__image" />
         </div>
       )}
 
-      <div className="post-card__content" onClick={() => navigate(`/posts/${post.id}`)}>
+      <div className="post-card__content" onClick={useCallback(() => navigate(`/posts/${post.id}`), [])}>
         <h3 className="post-card__title">{post.title}</h3>
         <p className="post-card__description">{cleanDescription(post.description)}</p>
       </div>
@@ -183,7 +185,7 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
         <div className="post-card__action-buttons">
           <button 
             className={`post-card__action-btn like-btn ${userReaction === 'like' ? 'active' : ''}`}
-            onClick={() => handleReaction('like')}
+            onClick={useCallback(() => handleReaction('like'), [])}
             disabled={isUpdating}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -193,7 +195,7 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
           </button>
           <button 
             className={`post-card__action-btn dislike-btn ${userReaction === 'dislike' ? 'active' : ''}`}
-            onClick={() => handleReaction('dislike')}
+            onClick={useCallback(() => handleReaction('dislike'), [])}
             disabled={isUpdating}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -203,7 +205,7 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
           </button>
           <button 
             className="post-card__action-btn comment-btn"
-            onClick={() => navigate(`/posts/${post.id}`)}
+            onClick={useCallback(() => navigate(`/posts/${post.id}`), [])}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -234,6 +236,8 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
 
     </div>
   );
-};
+});
+
+PostCard.displayName = 'PostCard';
 
 export default PostCard;

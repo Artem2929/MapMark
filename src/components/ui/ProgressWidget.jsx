@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import ReviewService from '../../services/reviewService';
 import useReviews from '../../hooks/useReviews';
 import './ProgressWidget.css';
 
-const ProgressWidget = ({ onReviewAdded }) => {
+const ProgressWidget = memo(({  onReviewAdded  }) => {
   const { reviews, loading: reviewsLoading } = useReviews();
   const [stats, setStats] = useState({ reviewCount: 0, level: 1, progress: 0 });
   
@@ -54,6 +55,8 @@ const ProgressWidget = ({ onReviewAdded }) => {
       </div>
     </div>
   );
-};
+});
+
+ProgressWidget.displayName = 'ProgressWidget';
 
 export default ProgressWidget;

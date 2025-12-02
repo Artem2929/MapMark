@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './SearchBar.css';
 
-const SearchBar = ({ 
+const SearchBar = memo(({  
   value, 
   onChange, 
   onSearch,
@@ -9,10 +10,12 @@ const SearchBar = ({
   buttonText = 'Пошук',
   className = '',
   ...props 
-}) => {
+ }) => {
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && onSearch) {
       onSearch(value);
+
+SearchBar.displayName = 'SearchBar';
     }
   };
 

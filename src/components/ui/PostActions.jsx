@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
 import { useTranslation } from 'react-i18next';
 import './PostActions.css';
 
-const PostActions = ({ initialLikes = 0, initialDislikes = 0, initialComments = [] }) => {
+const PostActions = memo(({  initialLikes = 0, initialDislikes = 0, initialComments = []  }) => {
   const { t } = useTranslation();
   const [likes, setLikes] = useState(initialLikes);
   const [dislikes, setDislikes] = useState(initialDislikes);
@@ -164,7 +165,7 @@ const PostActions = ({ initialLikes = 0, initialDislikes = 0, initialComments = 
                 <div className="post-comment-text">{comment.text}</div>
                 <button 
                   className="post-delete-comment-btn"
-                  onClick={() => handleDeleteComment(comment.id)}
+                  onClick={useCallback(() => handleDeleteComment(comment.id), [])}
                   aria-label="Видалити коментар"
                 >
                   ×
@@ -183,6 +184,8 @@ const PostActions = ({ initialLikes = 0, initialDislikes = 0, initialComments = 
       )}
     </div>
   );
-};
+});
+
+PostActions.displayName = 'PostActions';
 
 export default PostActions;

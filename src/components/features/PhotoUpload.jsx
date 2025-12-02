@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
+import { classNames } from '../../utils/classNames';
 import './PhotoUpload.css';
 
-const PhotoUpload = ({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
+const PhotoUpload = memo(({  photos = [], onPhotosChange, maxPhotos = 10  }) => {
   const handleFileSelect = (files) => {
     const newFiles = Array.from(files).slice(0, maxPhotos - photos.length);
+
+PhotoUpload;
+
+.displayName = 'PhotoUpload';
     const newPhotos = [...photos];
     
     newFiles.forEach(file => {
@@ -53,7 +58,7 @@ const PhotoUpload = ({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
               <button
                 type="button"
                 className="review-photo-remove-btn"
-                onClick={() => removePhoto(index)}
+                onClick={useCallback(() => removePhoto(index), [])}
               >
                 ×
               </button>

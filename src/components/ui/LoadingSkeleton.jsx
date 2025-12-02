@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './LoadingSkeleton.css';
 
-const LoadingSkeleton = ({ count = 3 }) => {
+const LoadingSkeleton = memo(({  count = 3  }) => {
   return (
     <>
       {Array.from({ length: count }).map((_, index) => (
@@ -28,6 +29,8 @@ const LoadingSkeleton = ({ count = 3 }) => {
       ))}
     </>
   );
-};
+});
+
+LoadingSkeleton.displayName = 'LoadingSkeleton';
 
 export default LoadingSkeleton;

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { classNames } from '../utils/classNames';
+import { useOptimizedState } from '../hooks/useOptimizedState';
 import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import HashtagInput from '../components/ui/HashtagInput';
@@ -190,7 +192,7 @@ const Photos = () => {
   const handlePhotoLike = async (photoId, action, e) => {
     e.stopPropagation();
     const currentState = photoLikes[photoId] || null;
-    let newState = currentState === action ? null : action;
+    const newState = currentState === action ? null : action;
     
     try {
       const response = await fetch(`http://localhost:3001/api/photos/${photoId}/like`, {
@@ -392,7 +394,7 @@ const Photos = () => {
 
   const handleCommentLike = async (commentId, action) => {
     const currentState = commentLikes[commentId] || null;
-    let newState = currentState === action ? null : action;
+    const newState = currentState === action ? null : action;
     
     try {
       const response = await fetch(`http://localhost:3001/api/photos/comments/${commentId}/like`, {

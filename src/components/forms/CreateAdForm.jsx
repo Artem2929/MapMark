@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { useTranslation } from 'react-i18next';
 import CustomSelect from '../ui/CustomSelect';
 import CountrySelect from '../ui/CountrySelect';
@@ -6,7 +8,7 @@ import { validateCreateAdForm } from '../../utils/createAdValidation';
 import adService from '../../services/adService';
 import './CreateAdForm.css';
 
-const CreateAdForm = ({ onClose }) => {
+const CreateAdForm = memo(({  onClose  }) => {
   const { t, i18n } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -640,6 +642,8 @@ const CreateAdForm = ({ onClose }) => {
       </div>
     </div>
   );
-};
+});
+
+CreateAdForm.displayName = 'CreateAdForm';
 
 export default CreateAdForm;

@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import ReviewService from '../../services/reviewService';
 import './ReviewsList.css';
 
-const ReviewsList = ({ marker, onClose }) => {
+const ReviewsList = memo(({  marker, onClose  }) => {
   const reviewsListRef = useRef(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -181,7 +183,7 @@ const ReviewsList = ({ marker, onClose }) => {
               <div className="reviews-list-actions">
                 <button 
                   className={`action-btn like-btn ${review.userLiked ? 'active' : ''}`}
-                  onClick={() => handleLike(review._id)}
+                  onClick={useCallback(() => handleLike(review._id), [])}
                   title="Подобається"
                 >
                   👍
@@ -189,7 +191,7 @@ const ReviewsList = ({ marker, onClose }) => {
                 </button>
                 <button 
                   className={`action-btn dislike-btn ${review.userDisliked ? 'active' : ''}`}
-                  onClick={() => handleDislike(review._id)}
+                  onClick={useCallback(() => handleDislike(review._id), [])}
                   title="Не подобається"
                 >
                   👎
@@ -197,7 +199,7 @@ const ReviewsList = ({ marker, onClose }) => {
                 </button>
                 <button 
                   className="action-btn comment-btn"
-                  onClick={() => toggleComments(review._id)}
+                  onClick={useCallback(() => toggleComments(review._id), [])}
                   title="Коментарі"
                 >
                   💬
@@ -236,7 +238,7 @@ const ReviewsList = ({ marker, onClose }) => {
                       }}
                     />
                     <button 
-                      onClick={() => handleCommentSubmit(review._id)}
+                      onClick={useCallback(() => handleCommentSubmit(review._id), [])}
                       disabled={submittingComment[review._id] || !newComments[review._id]?.trim()}
                     >
                       {submittingComment[review._id] ? '...' : '➤'}
@@ -256,6 +258,8 @@ const ReviewsList = ({ marker, onClose }) => {
       </div>
     </div>
   );
-};
+});
+
+ReviewsList.displayName = 'ReviewsList';
 
 export default ReviewsList;

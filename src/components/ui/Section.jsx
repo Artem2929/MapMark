@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import Container from './Container';
 import './Section.css';
 
-const Section = ({ 
+const Section = memo(({  
   children, 
   title,
   subtitle,
@@ -12,13 +13,15 @@ const Section = ({
   className = '',
   containerSize = 'default',
   ...props 
-}) => {
+ }) => {
   const sectionClasses = [
     'section',
     `section--spacing-${spacing}`,
     `section--bg-${background}`,
     className
   ].filter(Boolean).join(' ');
+
+Section.displayName = 'Section';
 
   return (
     <section className={sectionClasses} {...props}>

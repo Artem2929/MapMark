@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
+import { classNames } from '../../utils/classNames';
 import './LocationMap.css';
 
-const LocationMap = ({ location, showRouteButton = false }) => {
+const LocationMap = memo(({  location, showRouteButton = false  }) => {
   const [mapLoaded, setMapLoaded] = useState(false);
+
+LocationMap;
+
+.displayName = 'LocationMap';
 
   const openInMaps = () => {
     const { lat, lng } = location;
@@ -25,7 +30,7 @@ const LocationMap = ({ location, showRouteButton = false }) => {
             <p>Карта завантажується...</p>
             <button 
               className="load-map-btn"
-              onClick={() => setMapLoaded(true)}
+              onClick={useCallback(() => setMapLoaded(true), [])}
             >
               Завантажити карту
             </button>

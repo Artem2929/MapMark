@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './NotificationPanel.css';
 
-const NotificationPanel = ({ notifications, onDismiss, onAction }) => {
+const NotificationPanel = memo(({  notifications, onDismiss, onAction  }) => {
   const formatTimeAgo = (timestamp) => {
     const now = new Date();
+
+NotificationPanel.displayName = 'NotificationPanel';
     const diff = now - timestamp;
     const minutes = Math.floor(diff / (1000 * 60));
     
@@ -30,14 +33,14 @@ const NotificationPanel = ({ notifications, onDismiss, onAction }) => {
             {notification.action && (
               <button 
                 className="notification-action-btn"
-                onClick={() => onAction && onAction(notification)}
+                onClick={useCallback(() => onAction && onAction(notification), [])}
               >
                 Переглянути
               </button>
             )}
             <button 
               className="notification-dismiss-btn"
-              onClick={() => onDismiss && onDismiss(notification.id)}
+              onClick={useCallback(() => onDismiss && onDismiss(notification.id), [])}
             >
               ✕
             </button>

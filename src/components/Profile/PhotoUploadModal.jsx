@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { memo, useState, useRef } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { useProfile } from '../../contexts/ProfileContext';
 import { usePhotoUpload } from '../../hooks/usePhotoUpload';
 import PhotoTagger from '../ui/PhotoTagger';
@@ -7,8 +9,12 @@ import LocationPicker from '../ui/LocationPicker';
 import Toast from '../ui/Toast';
 import './PhotoUploadModal.css';
 
-const PhotoUploadModal = ({ onClose }) => {
+const PhotoUploadModal = memo(({  onClose  }) => {
   const { targetUserId, refreshPhotos, addPhoto } = useProfile();
+
+PhotoUploadModal;
+
+.displayName = 'PhotoUploadModal';
   const { uploadPhoto, uploading } = usePhotoUpload();
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [description, setDescription] = useState('');
@@ -69,7 +75,7 @@ const PhotoUploadModal = ({ onClose }) => {
 
   return (
     <div className="photo-upload-modal" onClick={onClose}>
-      <div className="photo-upload-content" onClick={(e) => e.stopPropagation()}>
+      <div className="photo-upload-content" onClick={useCallback((e) => e.stopPropagation(), [])}>
         <div className="photo-upload-header">
           <h3>Додати нове фото</h3>
           <button onClick={onClose}>×</button>
@@ -81,7 +87,7 @@ const PhotoUploadModal = ({ onClose }) => {
               className="photo-drop-zone"
               onDrop={handleDrop}
               onDragOver={(e) => e.preventDefault()}
-              onClick={() => fileInputRef.current?.click()}
+              onClick={useCallback(() => fileInputRef.current?.click(), [])}
             >
               <p>Перетягніть фото сюди або натисніть для вибору</p>
             </div>

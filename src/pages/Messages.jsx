@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { classNames } from '../utils/classNames';
+import { useOptimizedState } from '../hooks/useOptimizedState';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import messagesService from '../services/messagesService';
 import { friendsService } from '../services/friendsService';

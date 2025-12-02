@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
 import VoiceReview from './VoiceReview';
 import './FeatureHub.css';
 
-const FeatureHub = ({ isReviewFormOpen = false }) => {
+const FeatureHub = memo(({  isReviewFormOpen = false  }) => {
   const [activeFeature, setActiveFeature] = useState(null);
 
   return (
@@ -25,6 +26,8 @@ const FeatureHub = ({ isReviewFormOpen = false }) => {
       )}
     </div>
   );
-};
+});
+
+FeatureHub.displayName = 'FeatureHub';
 
 export default FeatureHub;

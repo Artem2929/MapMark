@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import Container from './Container';
 import './Hero.css';
 
-const Hero = ({ 
+const Hero = memo(({  
   icon,
   title, 
   subtitle, 
@@ -10,12 +11,14 @@ const Hero = ({
   variant = 'default',
   className = '',
   ...props 
-}) => {
+ }) => {
   const heroClasses = [
     'hero',
     `hero--${variant}`,
     className
   ].filter(Boolean).join(' ');
+
+Hero.displayName = 'Hero';
 
   return (
     <section className={heroClasses} {...props}>

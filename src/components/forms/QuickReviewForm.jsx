@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 
-const QuickReviewForm = ({ onClose, onSubmit }) => {
+const QuickReviewForm = memo(({  onClose, onSubmit  }) => {
   const [location, setLocation] = useState('');
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
@@ -176,6 +176,8 @@ const QuickReviewForm = ({ onClose, onSubmit }) => {
       </div>
     </div>
   );
-};
+});
+
+QuickReviewForm.displayName = 'QuickReviewForm';
 
 export default QuickReviewForm;

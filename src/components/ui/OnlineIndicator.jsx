@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import useOnlineStatus from '../../hooks/useOnlineStatus';
 import './OnlineIndicator.css';
 
-const OnlineIndicator = ({ userId, size = 'sm' }) => {
+const OnlineIndicator = memo(({  userId, size = 'sm'  }) => {
   const { isOnline } = useOnlineStatus(userId);
 
   if (!isOnline) return null;
@@ -12,6 +13,8 @@ const OnlineIndicator = ({ userId, size = 'sm' }) => {
       <div className="online-dot" />
     </div>
   );
-};
+});
+
+OnlineIndicator.displayName = 'OnlineIndicator';
 
 export default OnlineIndicator;

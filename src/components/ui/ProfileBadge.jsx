@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './ProfileBadge.css';
 
-const ProfileBadge = ({ type, size = 'sm' }) => {
+const ProfileBadge = memo(({  type, size = 'sm'  }) => {
   const badges = {
     verified: { icon: '✓', label: 'Верифікований', color: '#1DA1F2' },
     premium: { icon: '★', label: 'Преміум', color: '#FFD700' },
     moderator: { icon: '⚡', label: 'Модератор', color: '#9146FF' },
     new: { icon: '🆕', label: 'Новачок', color: '#00C851' }
   };
+
+ProfileBadge.displayName = 'ProfileBadge';
 
   const badge = badges[type];
   if (!badge) return null;
@@ -21,6 +24,8 @@ const ProfileBadge = ({ type, size = 'sm' }) => {
       {badge.icon}
     </span>
   );
-};
+});
+
+ProfileBadge.displayName = 'ProfileBadge';
 
 export default ProfileBadge;

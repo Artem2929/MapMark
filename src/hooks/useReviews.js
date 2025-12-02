@@ -3,7 +3,7 @@ import ReviewService from '../services/reviewService';
 
 let reviewsCache = null;
 let isLoading = false;
-let subscribers = new Set();
+const subscribers = new Set();
 
 const useReviews = () => {
   const [reviews, setReviews] = useState(reviewsCache || []);

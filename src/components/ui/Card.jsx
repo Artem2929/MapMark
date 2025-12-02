@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './Card.css';
 
-const Card = ({ 
+const Card = memo(({  
   children, 
   variant = 'default', 
   hover = false, 
@@ -9,7 +10,7 @@ const Card = ({
   className = '',
   onClick,
   ...props 
-}) => {
+ }) => {
   const cardClasses = [
     'card',
     `card--${variant}`,
@@ -27,6 +28,8 @@ const Card = ({
       {children}
     </div>
   );
-};
+});
+
+Card.displayName = 'Card';
 
 export default Card;

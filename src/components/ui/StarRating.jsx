@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
 import './StarRating.css';
 
-const StarRating = ({ value = 0, onChange, size = 'medium', readonly = true, isReviewForm = false }) => {
+const StarRating = memo(({  value = 0, onChange, size = 'medium', readonly = true, isReviewForm = false  }) => {
   const [hoverValue, setHoverValue] = useState(0);
 
   const handleClick = (starRating) => {
@@ -46,7 +47,7 @@ const StarRating = ({ value = 0, onChange, size = 'medium', readonly = true, isR
             key={star}
             className={`review-star ${getStarClass(star)}`}
 
-            onClick={() => handleClick(star)}
+            onClick={useCallback(() => handleClick(star), [])}
             onMouseEnter={() => handleMouseEnter(star)}
             onMouseLeave={handleMouseLeave}
           >
@@ -63,7 +64,7 @@ const StarRating = ({ value = 0, onChange, size = 'medium', readonly = true, isR
         <span
           key={star}
           className={`star ${getStarClass(star)} ${!readonly ? 'interactive' : ''}`}
-          onClick={() => handleClick(star)}
+          onClick={useCallback(() => handleClick(star), [])}
           onMouseEnter={() => handleMouseEnter(star)}
           onMouseLeave={handleMouseLeave}
         >
@@ -72,6 +73,8 @@ const StarRating = ({ value = 0, onChange, size = 'medium', readonly = true, isR
       ))}
     </div>
   );
-};
+});
+
+StarRating.displayName = 'StarRating';
 
 export default StarRating;

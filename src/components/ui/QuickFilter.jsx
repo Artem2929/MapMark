@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
 import { useTranslation } from 'react-i18next';
 import { useCountries } from '../../hooks/useCountries';
 import CustomSelect from './CustomSelect';
 import './QuickFilter.css';
 
-const QuickFilter = ({ onFilterChange, onLocationClick }) => {
+const QuickFilter = memo(({  onFilterChange, onLocationClick  }) => {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const [filters, setFilters] = useState({
@@ -94,6 +95,8 @@ const QuickFilter = ({ onFilterChange, onLocationClick }) => {
       )}
     </div>
   );
-};
+});
+
+QuickFilter.displayName = 'QuickFilter';
 
 export default QuickFilter;

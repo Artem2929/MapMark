@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import { useProfile } from '../../contexts/ProfileContext';
 import ProfileAvatar from './ProfileAvatar';
 import ProfileBasicInfo from './ProfileBasicInfo';

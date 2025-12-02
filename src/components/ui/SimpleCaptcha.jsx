@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, {  useState, useEffect , useCallback, useMemo, memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import { useTranslation } from 'react-i18next';
 import './SimpleCaptcha.css';
 
-const SimpleCaptcha = ({ onVerify, onAnswerChange }) => {
+const SimpleCaptcha = memo(({  onVerify, onAnswerChange  }) => {
   const { t } = useTranslation();
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
@@ -93,6 +94,8 @@ const SimpleCaptcha = ({ onVerify, onAnswerChange }) => {
       </div>
     </div>
   );
-};
+});
+
+SimpleCaptcha.displayName = 'SimpleCaptcha';
 
 export default SimpleCaptcha;

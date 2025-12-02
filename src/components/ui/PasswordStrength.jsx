@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import { useTranslation } from 'react-i18next';
 import './PasswordStrength.css';
 
-const PasswordStrength = ({ password }) => {
+const PasswordStrength = memo(({  password  }) => {
   const { t } = useTranslation();
+
+PasswordStrength.displayName = 'PasswordStrength';
   const getStrength = (pwd) => {
     if (!pwd) return { score: 0, text: '', color: '' };
     
@@ -46,6 +49,8 @@ const PasswordStrength = ({ password }) => {
       </span>
     </div>
   );
-};
+});
+
+PasswordStrength.displayName = 'PasswordStrength';
 
 export default PasswordStrength;

@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, memo, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AuthService from "../../services/authService";
 
 import "./Header.css";
 
-const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewFormOpen = false }) => {
+const Header = memo(({  onSearch, isCountriesVisible, setIsCountriesVisible, isReviewFormOpen = false  }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -258,6 +258,8 @@ const Header = ({ onSearch, isCountriesVisible, setIsCountriesVisible, isReviewF
       </nav>
     </header>
   );
-};
+});
+
+Header.displayName = 'Header';
 
 export default Header;

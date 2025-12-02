@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, {  useState , useCallback, useMemo, memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './LocationPicker.css';
 
-const LocationPicker = ({ onLocationSelect, selectedLocation }) => {
+const LocationPicker = memo(({  onLocationSelect, selectedLocation  }) => {
   const [locationInput, setLocationInput] = useState('');
   const [isEditing, setIsEditing] = useState(!selectedLocation);
 
@@ -90,6 +91,8 @@ const LocationPicker = ({ onLocationSelect, selectedLocation }) => {
       )}
     </div>
   );
-};
+});
+
+LocationPicker.displayName = 'LocationPicker';
 
 export default LocationPicker;

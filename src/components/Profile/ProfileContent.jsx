@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useProfile } from '../../contexts/ProfileContext';
 import ServicesSection from './ServicesSection';
 

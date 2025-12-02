@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Mock posts data
-let posts = {};
+const posts = {};
 
 // Like/unlike post
 router.post('/:postId/like', (req, res) => {

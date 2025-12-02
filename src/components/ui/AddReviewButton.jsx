@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 
-const AddReviewButton = ({ onClick }) => {
+const AddReviewButton = memo(({  onClick  }) => {
   return (
     <button 
       className="add-review-btn"
@@ -37,6 +38,8 @@ const AddReviewButton = ({ onClick }) => {
       <span>Додати відгук</span>
     </button>
   );
-};
+});
+
+AddReviewButton.displayName = 'AddReviewButton';
 
 export default AddReviewButton;

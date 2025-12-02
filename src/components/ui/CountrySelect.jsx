@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import { useCountries } from '../../hooks/useCountries';
 import CustomSelect from './CustomSelect';
 
-const CountrySelect = ({ value, onChange, placeholder = "Select country", className = '' }) => {
+const CountrySelect = memo(({  value, onChange, placeholder = "Select country", className = ''  }) => {
   const { countries, loading, error } = useCountries();
+
+CountrySelect.displayName = 'CountrySelect';
 
   if (loading) {
     return (
@@ -46,6 +49,8 @@ const CountrySelect = ({ value, onChange, placeholder = "Select country", classN
       className={className}
     />
   );
-};
+});
+
+CountrySelect.displayName = 'CountrySelect';
 
 export default CountrySelect;

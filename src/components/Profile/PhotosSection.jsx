@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { useNavigate } from 'react-router-dom';
 import { useProfile } from '../../contexts/ProfileContext';
 import { usePhotoUpload } from '../../hooks/usePhotoUpload';

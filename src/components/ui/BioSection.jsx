@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './BioSection.css';
 
-const BioSection = ({ bio, isEditing, editedBio, setEditedBio, onKeyPress }) => {
+const BioSection = memo(({  bio, isEditing, editedBio, setEditedBio, onKeyPress  }) => {
   return (
     <div className="bio-section">
       <div className="bio-header">
@@ -28,6 +29,8 @@ const BioSection = ({ bio, isEditing, editedBio, setEditedBio, onKeyPress }) => 
       )}
     </div>
   );
+
+BioSection.displayName = 'BioSection';
 };
 
 export default BioSection;

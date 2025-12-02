@@ -1,9 +1,5 @@
-/* MapMark Enhanced Global Styles - Clean version without !important */
-@import './styles/variables.css';
-@import './styles/bem-components.css';
-@import './styles/components.css';
-@import './styles/animations.css';
-@import './styles/responsive.css';
+/* MapMark Enhanced Global Styles - Оптимізована версія */
+@import './styles/index.css';
 
 /* Global font family */
 * {

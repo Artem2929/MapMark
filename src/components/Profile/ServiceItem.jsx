@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
 import { useNavigate } from 'react-router-dom';
 import './ServiceItem.css';
 
-const ServiceItem = ({ service, onDelete, onEdit, isOwnProfile = false }) => {
+const ServiceItem = memo(({  service, onDelete, onEdit, isOwnProfile = false  }) => {
   const navigate = useNavigate();
   
 
@@ -43,7 +44,7 @@ const ServiceItem = ({ service, onDelete, onEdit, isOwnProfile = false }) => {
         <div className="profile-basic-info__actions">
           <button 
             className="profile-basic-info__edit-btn"
-            onClick={() => navigate(`/services?category=${service.category}&serviceItemId=${service._id}`)}
+            onClick={useCallback(() => navigate(`/services?category=${service.category}&serviceItemId=${service._id}`), [])}
           >
             Перейти
           </button>
@@ -51,7 +52,7 @@ const ServiceItem = ({ service, onDelete, onEdit, isOwnProfile = false }) => {
             <>
               <button 
                 className="profile-basic-info__edit-btn"
-                onClick={() => onEdit(service)}
+                onClick={useCallback(() => onEdit(service), [])}
               >
                 Редагувати
               </button>
@@ -67,6 +68,8 @@ const ServiceItem = ({ service, onDelete, onEdit, isOwnProfile = false }) => {
       </div>
     </div>
   );
-};
+});
+
+ServiceItem.displayName = 'ServiceItem';
 
 export default ServiceItem;

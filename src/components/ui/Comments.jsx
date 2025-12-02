@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../utils/apiClient.js';
 import './Comments.css';
 
-const Comments = ({ postId, onCommentCountChange }) => {
+const Comments = memo(({  postId, onCommentCountChange  }) => {
   const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -161,7 +163,7 @@ const Comments = ({ postId, onCommentCountChange }) => {
         <div className="comments-list">
           {displayedComments.map((comment) => (
           <div key={comment._id} className="comment-item">
-            <div className="comment-avatar" onClick={() => navigate(`/profile/${comment.author._id}`)}>
+            <div className="comment-avatar" onClick={useCallback(() => navigate(`/profile/${comment.author._id}`), [])}>
               {comment.author.avatar ? (
                 <img src={`http://localhost:3001${comment.author.avatar}`} alt={comment.author.name} />
               ) : (
@@ -179,10 +181,10 @@ const Comments = ({ postId, onCommentCountChange }) => {
                 <span className="comment-time">{getTimeAgo(comment.createdAt)}</span>
                 <button 
                   className={`comment-like-btn ${commentReactions[comment._id] === 'like' ? 'liked' : ''}`}
-                  onClick={(e) => {
+                  onClick={useCallback((e) => {
                     e.stopPropagation();
                     handleCommentReaction(comment._id, 'like');
-                  }}
+                  }, [])}
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
@@ -191,10 +193,10 @@ const Comments = ({ postId, onCommentCountChange }) => {
                 </button>
                 <button 
                   className={`comment-like-btn ${commentReactions[comment._id] === 'dislike' ? 'disliked' : ''}`}
-                  onClick={(e) => {
+                  onClick={useCallback((e) => {
                     e.stopPropagation();
                     handleCommentReaction(comment._id, 'dislike');
-                  }}
+                  }, [])}
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path>
@@ -250,7 +252,7 @@ const Comments = ({ postId, onCommentCountChange }) => {
         {replyingTo && (
           <button 
             type="button" 
-            onClick={() => { setReplyingTo(null); setReplyText(''); }}
+            onClick={useCallback(() => { setReplyingTo(null); setReplyText(''); }, [])}
             className="cancel-reply-btn"
           >
             Скасувати
@@ -259,6 +261,8 @@ const Comments = ({ postId, onCommentCountChange }) => {
       </form>
     </div>
   );
-};
+});
+
+Comments.displayName = 'Comments';
 
 export default Comments;

@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './ActivityIndicator.css';
 
-const ActivityIndicator = ({ status, lastSeen }) => {
+const ActivityIndicator = memo(({  status, lastSeen  }) => {
   const getStatusInfo = () => {
     switch (status) {
       case 'online':
         return { color: '#00C851', text: 'В мережі' };
+
+ActivityIndicator.displayName = 'ActivityIndicator';
       case 'away':
         return { color: '#FFB900', text: 'Відійшов' };
       case 'offline':
@@ -26,6 +29,8 @@ const ActivityIndicator = ({ status, lastSeen }) => {
       <span className="activity-text">{text}</span>
     </div>
   );
-};
+});
+
+ActivityIndicator.displayName = 'ActivityIndicator';
 
 export default ActivityIndicator;

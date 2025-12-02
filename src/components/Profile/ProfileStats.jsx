@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { memo, useState, useEffect, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { useNavigate } from 'react-router-dom';
 import messagesService from '../../services/messagesService';
 import './ProfileStats.css';
 
-const ProfileStats = ({ 
+const ProfileStats = memo(({  
   userId, 
   isOwnProfile, 
   onRefresh, 
@@ -12,7 +14,7 @@ const ProfileStats = ({
   following = [], 
   followers = [], 
   posts = [] 
-}) => {
+ }) => {
   const [stats, setStats] = useState({
     posts: 0,
     photos: 0,
@@ -145,6 +147,8 @@ const ProfileStats = ({
       )}
     </div>
   );
-};
+});
+
+ProfileStats.displayName = 'ProfileStats';
 
 export default ProfileStats;

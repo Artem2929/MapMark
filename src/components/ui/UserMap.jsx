@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, {  useState, useEffect , useCallback, useMemo, memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 
 import './UserMap.css';
 
-const UserMap = ({ userId }) => {
+const UserMap = memo(({  userId  }) => {
   const reviews = [];
   const reviewsLoading = false;
   const [loading, setLoading] = useState(true);
@@ -126,6 +127,8 @@ const UserMap = ({ userId }) => {
       </div>
     </div>
   );
-};
+});
+
+UserMap.displayName = 'UserMap';
 
 export default UserMap;

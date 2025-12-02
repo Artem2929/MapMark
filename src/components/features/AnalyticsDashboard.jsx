@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './AnalyticsDashboard.css';
 
-const AnalyticsDashboard = ({ isOpen, onClose }) => {
+const AnalyticsDashboard = memo(({  isOpen, onClose  }) => {
 
 
 
   if (!isOpen) return null;
+
+AnalyticsDashboard.displayName = 'AnalyticsDashboard';
 
   return (
     <div className="analytics-overlay">

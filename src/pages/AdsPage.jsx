@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { classNames } from '../utils/classNames';
+import { useOptimizedState } from '../hooks/useOptimizedState';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import StarRating from '../components/ui/StarRating';

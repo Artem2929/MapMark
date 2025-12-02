@@ -1,5 +1,6 @@
-import React from 'react';
-import Header from './Header';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
+import Header from './Header.optimized';
 import Footer from './Footer';
 import { Container, Breadcrumbs } from '../ui';
 import './PageLayout.css';

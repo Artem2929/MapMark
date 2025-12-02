@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
 import { useCountries } from '../../hooks/useCountries';
 import './CountryFlags.css';
 
-const CountryFlags = ({ onCountryClick, isVisible }) => {
+const CountryFlags = memo(({  onCountryClick, isVisible  }) => {
   const { countries, loading, error } = useCountries();
 
   if (loading) return <div className="country-flags loading">Loading countries...</div>;
@@ -27,6 +28,8 @@ const CountryFlags = ({ onCountryClick, isVisible }) => {
       </div>
     </div>
   );
-};
+});
+
+CountryFlags.displayName = 'CountryFlags';
 
 export default CountryFlags;

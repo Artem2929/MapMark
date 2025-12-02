@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { classNames } from '../utils/classNames';
+import { useOptimizedState } from '../hooks/useOptimizedState';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 import './Services.css';
@@ -205,7 +207,7 @@ const Services = () => {
         
         <div className="services-header">
           <h1>{getCategoryTitle()}</h1>
-          <button className="add-service-btn" onClick={() => setShowModal(true)}>
+          <button className="add-service-btn" onClick={useCallback(() => setShowModal(true), [])}>
             <span>+</span> Додати {category === 'service' ? 'послугу' : 'товар'}
           </button>
         </div>
@@ -359,11 +361,11 @@ const Services = () => {
       )}
       
       {showPreview && selectedService && (
-        <div className="profile-service-modal" onClick={() => setShowPreview(false)}>
-          <div className="profile-service-modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="profile-service-modal" onClick={useCallback(() => setShowPreview(false), [])}>
+          <div className="profile-service-modal-content" onClick={useCallback((e) => e.stopPropagation(), [])}>
             <div className="profile-service-modal-header">
               <h3>{selectedService.title}</h3>
-              <button onClick={() => setShowPreview(false)}>×</button>
+              <button onClick={useCallback(() => setShowPreview(false), [])}>×</button>
             </div>
             <div className="service-preview-body">
               {selectedService.photo && (
@@ -384,13 +386,13 @@ const Services = () => {
                 </div>
                 
                 <div className="preview-actions">
-                  <button className="preview-like-btn" onClick={() => handleLike(selectedService._id)}>
+                  <button className="preview-like-btn" onClick={useCallback(() => handleLike(selectedService._id), [])}>
                     👍 {selectedService.likesCount || 0}
                   </button>
-                  <button className="preview-dislike-btn" onClick={() => handleDislike(selectedService._id)}>
+                  <button className="preview-dislike-btn" onClick={useCallback(() => handleDislike(selectedService._id), [])}>
                     👎 {selectedService.dislikesCount || 0}
                   </button>
-                  <button className="preview-comment-btn" onClick={() => handleComment(selectedService._id)}>
+                  <button className="preview-comment-btn" onClick={useCallback(() => handleComment(selectedService._id), [])}>
                     💬 Додати коментар
                   </button>
                 </div>
@@ -424,11 +426,11 @@ const Services = () => {
       )}
       
       {showCommentModal && (
-        <div className="profile-service-modal" onClick={() => setShowCommentModal(false)}>
-          <div className="comment-modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="profile-service-modal" onClick={useCallback(() => setShowCommentModal(false), [])}>
+          <div className="comment-modal-content" onClick={useCallback((e) => e.stopPropagation(), [])}>
             <div className="comment-modal-header">
               <h3>💬 Додати коментар</h3>
-              <button onClick={() => setShowCommentModal(false)}>×</button>
+              <button onClick={useCallback(() => setShowCommentModal(false), [])}>×</button>
             </div>
             <div className="comment-modal-body">
               <textarea
@@ -444,7 +446,7 @@ const Services = () => {
             <div className="comment-modal-actions">
               <button 
                 className="comment-btn-cancel" 
-                onClick={() => setShowCommentModal(false)}
+                onClick={useCallback(() => setShowCommentModal(false), [])}
               >
                 Скасувати
               </button>

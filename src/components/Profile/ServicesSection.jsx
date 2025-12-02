@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { memo, useState, useRef, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { useNavigate } from 'react-router-dom';
 import { apiPost } from '../../utils/apiUtils';
 
@@ -6,7 +8,7 @@ import CustomSelect from '../ui/CustomSelect';
 import ServiceItem from './ServiceItem';
 import './ServicesSection.css';
 
-const ServicesSection = ({ userId, isOwnProfile, services = [], onServiceAdded }) => {
+const ServicesSection = memo(({  userId, isOwnProfile, services = [], onServiceAdded  }) => {
   const navigate = useNavigate();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -212,7 +214,7 @@ const ServicesSection = ({ userId, isOwnProfile, services = [], onServiceAdded }
         {isOwnProfile && (
           <button 
             className="profile-basic-info__edit-btn"
-            onClick={() => setShowAddModal(true)}
+            onClick={useCallback(() => setShowAddModal(true), [])}
           >
             <span>+</span> Додати послугу
           </button>
@@ -238,11 +240,11 @@ const ServicesSection = ({ userId, isOwnProfile, services = [], onServiceAdded }
       </div>
 
       {showAddModal && (
-        <div className="profile-service-modal" onClick={() => setShowAddModal(false)}>
-          <div className="profile-service-modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="profile-service-modal" onClick={useCallback(() => setShowAddModal(false), [])}>
+          <div className="profile-service-modal-content" onClick={useCallback((e) => e.stopPropagation(), [])}>
             <div className="profile-service-modal-header">
               <h3>Додати нову послугу</h3>
-              <button onClick={() => setShowAddModal(false)}>×</button>
+              <button onClick={useCallback(() => setShowAddModal(false), [])}>×</button>
             </div>
             <div className="profile-service-modal-body">
               <div className="form-field">
@@ -287,7 +289,7 @@ const ServicesSection = ({ userId, isOwnProfile, services = [], onServiceAdded }
                   {!photoPreview ? (
                     <div 
                       className="photo-upload-zone"
-                      onClick={() => fileInputRef.current?.click()}
+                      onClick={useCallback(() => fileInputRef.current?.click(), [])}
                     >
                       <div className="photo-upload-icon"></div>
                       <p>Натисніть для вибору фото</p>
@@ -315,7 +317,7 @@ const ServicesSection = ({ userId, isOwnProfile, services = [], onServiceAdded }
                 </div>
               </div>
               <div className="profile-service-modal-actions">
-                <button type="button" onClick={() => setShowAddModal(false)}>Скасувати</button>
+                <button type="button" onClick={useCallback(() => setShowAddModal(false), [])}>Скасувати</button>
                 <button 
                   type="button" 
                   onClick={handleAddService}
@@ -330,11 +332,11 @@ const ServicesSection = ({ userId, isOwnProfile, services = [], onServiceAdded }
       )}
 
       {showEditModal && (
-        <div className="profile-service-modal" onClick={() => setShowEditModal(false)}>
-          <div className="profile-service-modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="profile-service-modal" onClick={useCallback(() => setShowEditModal(false), [])}>
+          <div className="profile-service-modal-content" onClick={useCallback((e) => e.stopPropagation(), [])}>
             <div className="profile-service-modal-header">
               <h3>Редагувати послугу</h3>
-              <button onClick={() => setShowEditModal(false)}>×</button>
+              <button onClick={useCallback(() => setShowEditModal(false), [])}>×</button>
             </div>
             <div className="profile-service-modal-body">
               <div className="form-field">
@@ -379,7 +381,7 @@ const ServicesSection = ({ userId, isOwnProfile, services = [], onServiceAdded }
                   {!photoPreview ? (
                     <div 
                       className="photo-upload-zone"
-                      onClick={() => fileInputRef.current?.click()}
+                      onClick={useCallback(() => fileInputRef.current?.click(), [])}
                     >
                       <div className="photo-upload-icon"></div>
                       <p>Натисніть для вибору фото</p>
@@ -407,7 +409,7 @@ const ServicesSection = ({ userId, isOwnProfile, services = [], onServiceAdded }
                 </div>
               </div>
               <div className="profile-service-modal-actions">
-                <button type="button" onClick={() => setShowEditModal(false)}>Скасувати</button>
+                <button type="button" onClick={useCallback(() => setShowEditModal(false), [])}>Скасувати</button>
                 <button 
                   type="button" 
                   onClick={handleUpdateService}
@@ -422,6 +424,8 @@ const ServicesSection = ({ userId, isOwnProfile, services = [], onServiceAdded }
       )}
     </div>
   );
-};
+});
+
+ServicesSection.displayName = 'ServicesSection';
 
 export default ServicesSection;

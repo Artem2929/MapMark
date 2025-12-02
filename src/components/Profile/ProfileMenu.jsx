@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import { Link, useLocation } from 'react-router-dom';
 import './ProfileMenu.css';
 
-const ProfileMenu = ({ userId }) => {
+const ProfileMenu = memo(({  userId  }) => {
   const location = useLocation();
+
+ProfileMenu.displayName = 'ProfileMenu';
 
   const menuItems = [
     { 

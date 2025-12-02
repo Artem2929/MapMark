@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
 import Comment from './Comment';
 
-const Post = ({ post, onReaction, onShare, onComment, onReply, canComment }) => {
+const Post = memo(({  post, onReaction, onShare, onComment, onReply, canComment  }) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [showReactions, setShowReactions] = useState(false);
@@ -93,7 +94,7 @@ const Post = ({ post, onReaction, onShare, onComment, onReply, canComment }) => 
         <div className="post-action-buttons">
           <div className="reaction-container">
             <button
-              onClick={() => handleReaction('like')}
+              onClick={useCallback(() => handleReaction('like'), [])}
               onMouseEnter={() => setShowReactions(true)}
               onMouseLeave={() => setShowReactions(false)}
               className={`action-btn like-btn ${post.likedByUser ? 'liked' : ''}`}
@@ -115,7 +116,7 @@ const Post = ({ post, onReaction, onShare, onComment, onReply, canComment }) => 
                 {reactions.map(reaction => (
                   <button
                     key={reaction.type}
-                    onClick={() => handleReaction(reaction.type)}
+                    onClick={useCallback(() => handleReaction(reaction.type), [])}
                     className={`reaction-btn ${post.userReaction === reaction.type ? 'active' : ''}`}
                     title={reaction.label}
                   >
@@ -180,6 +181,8 @@ const Post = ({ post, onReaction, onShare, onComment, onReply, canComment }) => 
       )}
     </div>
   );
-};
+});
+
+Post.displayName = 'Post';
 
 export default Post;

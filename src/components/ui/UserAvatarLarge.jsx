@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './UserAvatarLarge.css';
 
-const UserAvatarLarge = ({
+const UserAvatarLarge = memo(({ 
   avatarUrl,
   fullName,
   username,
@@ -10,7 +11,7 @@ const UserAvatarLarge = ({
   isFollowing = false,
   onFollowToggle,
   onMessage
-}) => {
+ }) => {
   const getInitials = (name) => {
     return name
       .split(' ')
@@ -18,6 +19,8 @@ const UserAvatarLarge = ({
       .join('')
       .toUpperCase()
       .slice(0, 2);
+
+UserAvatarLarge.displayName = 'UserAvatarLarge';
   };
 
   const formatJoinedDate = (dateString) => {

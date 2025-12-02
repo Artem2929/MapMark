@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './LoadingSpinner.css';
 
-const LoadingSpinner = ({ message = "Завантаження..." }) => {
+const LoadingSpinner = memo(({  message = "Завантаження..."  }) => {
   return (
     <div className="loading-spinner-container">
       <div className="loading-spinner">
@@ -12,6 +13,8 @@ const LoadingSpinner = ({ message = "Завантаження..." }) => {
       <p className="loading-message">{message}</p>
     </div>
   );
-};
+});
+
+LoadingSpinner.displayName = 'LoadingSpinner';
 
 export default LoadingSpinner;

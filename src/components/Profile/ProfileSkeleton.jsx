@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import Skeleton from '../ui/Skeleton';
 import './ProfileSkeleton.css';
 

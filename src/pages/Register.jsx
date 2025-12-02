@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import { classNames } from '../utils/classNames';
+import { useOptimizedState } from '../hooks/useOptimizedState';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CountrySelect from '../components/ui/CountrySelect';
@@ -305,7 +307,7 @@ const Register = () => {
               <button
                 type="button"
                 className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={useCallback(() => setShowPassword(!showPassword), [])}
               >
                 {showPassword ? '👀' : '🙈'}
               </button>
@@ -325,7 +327,7 @@ const Register = () => {
               <button
                 type="button"
                 className="password-toggle"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onClick={useCallback(() => setShowConfirmPassword(!showConfirmPassword), [])}
               >
                 {showConfirmPassword ? '👀' : '🙈'}
               </button>

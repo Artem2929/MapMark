@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './UserStats.css';
 
-const UserStats = ({ stats, onStatClick }) => {
+const UserStats = memo(({  stats, onStatClick  }) => {
   const handleStatClick = (statType) => {
     if (onStatClick) {
       onStatClick(statType);
+
+UserStats.displayName = 'UserStats';
     }
   };
 
@@ -21,7 +24,7 @@ const UserStats = ({ stats, onStatClick }) => {
         <div
           key={item.key}
           className="stat-item"
-          onClick={() => handleStatClick(item.key)}
+          onClick={useCallback(() => handleStatClick(item.key), [])}
         >
           <div className="stat-number">{item.value}</div>
           <div className="stat-label">{item.label}</div>

@@ -1,7 +1,8 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo, memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import { FILE_UPLOAD } from '../../constants';
 
-const SecureFileUpload = ({ 
+const SecureFileUpload = memo(({  
   onFileSelect, 
   multiple = false, 
   accept = 'image/*',
@@ -10,7 +11,7 @@ const SecureFileUpload = ({
   allowedTypes = FILE_UPLOAD.ALLOWED_TYPES,
   className = '',
   children 
-}) => {
+ }) => {
   const [dragActive, setDragActive] = useState(false);
   const [errors, setErrors] = useState([]);
 
@@ -139,6 +140,8 @@ const SecureFileUpload = ({
       )}
     </div>
   );
-};
+});
+
+SecureFileUpload.displayName = 'SecureFileUpload';
 
 export default SecureFileUpload;

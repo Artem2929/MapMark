@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
 import './CustomSelect.css';
 
-const CustomSelect = ({ value, onChange, options, placeholder, className = '' }) => {
+const CustomSelect = memo(({  value, onChange, options, placeholder, className = ''  }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const selectRef = useRef(null);
@@ -35,7 +36,7 @@ const CustomSelect = ({ value, onChange, options, placeholder, className = '' })
     <div className={`custom-select ${className}`} ref={selectRef}>
       <div 
         className={`custom-select-trigger ${isOpen ? 'open' : ''}`}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={useCallback(() => setIsOpen(!isOpen), [])}
       >
         <span className="custom-select-value">
           {selectedOption && selectedOption.value !== '' ? selectedOption.label : placeholder}
@@ -49,7 +50,7 @@ const CustomSelect = ({ value, onChange, options, placeholder, className = '' })
             <div
               key={option.value}
               className={`custom-select-option ${value === option.value ? 'selected' : ''}`}
-              onClick={() => handleOptionClick(option)}
+              onClick={useCallback(() => handleOptionClick(option), [])}
             >
               {option.label}
             </div>
@@ -58,6 +59,8 @@ const CustomSelect = ({ value, onChange, options, placeholder, className = '' })
       )}
     </div>
   );
-};
+});
+
+CustomSelect.displayName = 'CustomSelect';
 
 export default CustomSelect;

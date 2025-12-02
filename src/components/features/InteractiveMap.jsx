@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { memo,  useState, useEffect , useCallback, useMemo } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import './InteractiveMap.css';
 
-const InteractiveMap = ({ address, onLocationSelect, selectedLocation }) => {
+const InteractiveMap = memo(({  address, onLocationSelect, selectedLocation  }) => {
   const [mapLocation, setMapLocation] = useState(selectedLocation || { lat: 50.4501, lng: 30.5234 });
+
+InteractiveMap;
+
+.displayName = 'InteractiveMap';
   const [isMapReady, setIsMapReady] = useState(false);
 
   useEffect(() => {

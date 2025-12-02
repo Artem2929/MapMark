@@ -1,16 +1,19 @@
-import React from 'react';
-import Button from './Button';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
+import Button from './Button.optimized';
 import './Pagination.css';
 
-const Pagination = ({ 
+const Pagination = memo(({  
   currentPage,
   totalPages,
   onPageChange,
   maxVisiblePages = 5,
   className = '',
   ...props 
-}) => {
+ }) => {
   if (totalPages <= 1) return null;
+
+Pagination.displayName = 'Pagination';
 
   const getVisiblePages = () => {
     const pages = [];
@@ -37,7 +40,7 @@ const Pagination = ({
         variant="secondary"
         size="medium"
         disabled={currentPage === 1}
-        onClick={() => onPageChange(currentPage - 1)}
+        onClick={useCallback(() => onPageChange(currentPage - 1), [])}
         className="pagination__nav"
       >
         ← Попередня
@@ -49,7 +52,7 @@ const Pagination = ({
             key={page}
             variant={currentPage === page ? 'primary' : 'secondary'}
             size="medium"
-            onClick={() => onPageChange(page)}
+            onClick={useCallback(() => onPageChange(page), [])}
             className="pagination__number"
           >
             {page}
@@ -61,7 +64,7 @@ const Pagination = ({
         variant="secondary"
         size="medium"
         disabled={currentPage === totalPages}
-        onClick={() => onPageChange(currentPage + 1)}
+        onClick={useCallback(() => onPageChange(currentPage + 1), [])}
         className="pagination__nav"
       >
         Наступна →

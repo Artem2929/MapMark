@@ -304,7 +304,7 @@ app.get('/api/ads', async (req, res) => {
       radius = 10000
     } = req.query;
     
-    let query = {};
+    const query = {};
     
     if (category) query.category = category;
     if (subcategory) query.subcategory = subcategory;

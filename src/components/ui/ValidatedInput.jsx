@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import { useRealTimeValidation } from '../../hooks/useRealTimeValidation';
 import './ValidatedInput.css';
 
-const ValidatedInput = ({ 
+const ValidatedInput = memo(({  
   name, 
   value, 
   onChange, 
@@ -11,7 +12,7 @@ const ValidatedInput = ({
   className = '',
   rows,
   ...props 
-}) => {
+ }) => {
   const { errors, isValid, hasErrors } = useRealTimeValidation(name, value);
 
   const handleChange = (e) => {
@@ -48,6 +49,8 @@ const ValidatedInput = ({
       )}
     </div>
   );
-};
+});
+
+ValidatedInput.displayName = 'ValidatedInput';
 
 export default ValidatedInput;

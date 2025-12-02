@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
 import '../../styles/hashtag-input.css';
 
-const HashtagInput = ({
+const HashtagInput = memo(({ 
   value = [],
   onChange,
   placeholder = "Додати хештеги... #travel #ukraine",
@@ -9,7 +10,7 @@ const HashtagInput = ({
   suggestions = [],
   disabled = false,
   className = ""
-}) => {
+ }) => {
   const [inputValue, setInputValue] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestion, setActiveSuggestion] = useState(-1);
@@ -147,6 +148,8 @@ const HashtagInput = ({
       )}
     </div>
   );
-};
+});
+
+HashtagInput.displayName = 'HashtagInput';
 
 export default HashtagInput;

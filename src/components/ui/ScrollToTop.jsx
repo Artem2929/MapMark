@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, {  useState, useEffect , useCallback, useMemo, memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './ScrollToTop.css';
 
-const ScrollToTop = ({ threshold = 300 }) => {
+const ScrollToTop = memo(({  threshold = 300  }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -33,6 +34,8 @@ const ScrollToTop = ({ threshold = 300 }) => {
       ↑
     </button>
   );
-};
+});
+
+ScrollToTop.displayName = 'ScrollToTop';
 
 export default ScrollToTop;

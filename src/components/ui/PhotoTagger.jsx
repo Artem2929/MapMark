@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
 import './PhotoTagger.css';
 
-const PhotoTagger = ({ imageUrl, tags = [], onTagsChange }) => {
+const PhotoTagger = memo(({  imageUrl, tags = [], onTagsChange  }) => {
   const [isTagging, setIsTagging] = useState(false);
   const [newTag, setNewTag] = useState({ x: 0, y: 0, name: '' });
   const [showInput, setShowInput] = useState(false);
@@ -35,7 +36,7 @@ const PhotoTagger = ({ imageUrl, tags = [], onTagsChange }) => {
       <div className="photo-tagger-controls">
         <button 
           className={`tag-btn ${isTagging ? 'active' : ''}`}
-          onClick={() => setIsTagging(!isTagging)}
+          onClick={useCallback(() => setIsTagging(!isTagging), [])}
         >
           🏷️ {isTagging ? 'Готово' : 'Додати теги'}
         </button>
@@ -60,7 +61,7 @@ const PhotoTagger = ({ imageUrl, tags = [], onTagsChange }) => {
               {tag.name}
               <button 
                 className="tag-remove"
-                onClick={() => removeTag(tag.id)}
+                onClick={useCallback(() => removeTag(tag.id), [])}
               >
                 ×
               </button>
@@ -88,6 +89,8 @@ const PhotoTagger = ({ imageUrl, tags = [], onTagsChange }) => {
       </div>
     </div>
   );
-};
+});
+
+PhotoTagger.displayName = 'PhotoTagger';
 
 export default PhotoTagger;

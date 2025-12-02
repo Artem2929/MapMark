@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { memo, useState, useCallback } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import CustomSelect from '../ui/CustomSelect';
 import DatePicker from '../ui/DatePicker';
 import { updateProfile } from '../../api/profileEndpoints';
@@ -7,7 +9,7 @@ import ProfileStats from './ProfileStats';
 import PhotosSection from './PhotosSection';
 import './ProfileBasicInfo.css';
 
-const ProfileBasicInfo = ({ 
+const ProfileBasicInfo = memo(({  
   user, 
   isOwnProfile = false, 
   onUpdate, 
@@ -16,7 +18,7 @@ const ProfileBasicInfo = ({
   following = [], 
   followers = [], 
   posts = [] 
-}) => {
+ }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: user?.name?.split(' ')[0] || 'Артем',
@@ -88,7 +90,7 @@ const ProfileBasicInfo = ({
         {isOwnProfile && !isEditing && (
           <button 
             className="profile-basic-info__edit-btn"
-            onClick={() => setIsEditing(true)}
+            onClick={useCallback(() => setIsEditing(true), [])}
           >
             редагувати
           </button>
@@ -220,6 +222,8 @@ const ProfileBasicInfo = ({
       )}
     </div>
   );
-};
+});
+
+ProfileBasicInfo.displayName = 'ProfileBasicInfo';
 
 export default ProfileBasicInfo;

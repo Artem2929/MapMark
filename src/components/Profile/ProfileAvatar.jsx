@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { memo,  useState, useRef , useCallback, useMemo } from 'react';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { Link, useLocation } from 'react-router-dom';
 import { updateAvatar } from '../../api/profileEndpoints';
 import useOnlineStatus from '../../hooks/useOnlineStatus';
@@ -7,12 +9,12 @@ import OnlineIndicator from '../ui/OnlineIndicator';
 import FollowButton from './FollowButton';
 import './ProfileAvatar.css';
 
-const ProfileAvatar = ({ 
+const ProfileAvatar = memo(({  
   user, 
   isOwnProfile = false, 
   onAvatarChange,
   onPhotoCountChange
-}) => {
+ }) => {
   const { isOnline } = useOnlineStatus(user?._id || user?.id);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -255,6 +257,8 @@ const ProfileAvatar = ({
       )}
     </div>
   );
-};
+});
+
+ProfileAvatar.displayName = 'ProfileAvatar';
 
 export default ProfileAvatar;

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { classNames } from '../../utils/classNames';
 import './VoiceReview.css';
 
-const VoiceReview = ({ onCancel }) => {
+const VoiceReview = memo(({  onCancel  }) => {
   return (
     <div className="voice-review">
       <div className="voice-header">
@@ -13,6 +14,8 @@ const VoiceReview = ({ onCancel }) => {
       </div>
     </div>
   );
-};
+});
+
+VoiceReview.displayName = 'VoiceReview';
 
 export default VoiceReview;
