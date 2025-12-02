@@ -158,8 +158,8 @@ const PostCard = ({ post, onReaction, onComment, onShare, onSave, initialSaved =
           </div>
           <div className="post-card__author-info">
             <div className="post-meta">
-              <div className="post-author">{post.author.name}</div>
               <div className="post-date">{getTimeAgo(post.createdAt)}</div>
+              <div className="post-author">{post.author.name}</div>
             </div>
             {post.location && (
               <div className="post-location">📍 {post.location}</div>

@@ -77,7 +77,7 @@
 
 .post-meta {
   display: flex;
-  gap: 8px;
+  gap: 1px;
 }
 
 .post-location {
@@ -266,5 +266,9 @@
 
   .post-card__action-btn {
     padding: 6px 8px;
+  }
+
+  .post-meta {
+    flex-direction: column;
   }
 }

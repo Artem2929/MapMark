@@ -652,13 +652,9 @@
 
 
 
-  .message-input {
-    padding: 10px;
-  }
 
-  .photo-modal-hashtag-input {
-    padding: 10px;
-  }
+
+
 
   .photo-modal-description {
     margin: 10px;
@@ -837,6 +833,14 @@
     gap: 12px;
   }
 
+  .add-photo-grid-btn {
+    height: 120px;
+  }
+
+  .add-photo-card {
+    aspect-ratio: unset;
+  }
+
   .photos-header {
     flex-direction: row;
     align-items: center;
@@ -886,10 +890,40 @@
 
   .message-input {
     padding: 8px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    gap: 4px;
   }
 
   .message-input-wrapper {
     min-height: 32px;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+
+  .send-btn {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+  }
+
+  .photo-modal-hashtag-input,
+  .photo-modal-sidebar .hashtag-input-container {
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+
+  .hashtag-input-container,
+  .hashtag-input {
+    width: calc(100% - 16px);
+    box-sizing: border-box;
+    max-width: calc(100% - 16px);
+    margin: 0 8px;
   }
 
 

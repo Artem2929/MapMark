@@ -93,7 +93,7 @@
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    padding: 0 4px;
+    padding: 10px 4px 0 4px;
     gap: 2px;
   }
 
