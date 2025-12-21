@@ -1,7 +1,7 @@
-import React, {  useState, useEffect , useCallback, useMemo } from 'react';
-import { classNames } from '../utils/classNames';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { classNames } from '../../utils/classNames';
 import { useParams, Link } from 'react-router-dom';
-import Breadcrumbs from '../components/ui/Breadcrumbs';
+import Breadcrumbs from '../../components/ui/Breadcrumbs';
 import './Chat.css';
 
 const Chat = () => {
@@ -12,7 +12,6 @@ const Chat = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Hide body scroll on chat page
     document.body.style.overflow = 'hidden';
     document.documentElement.style.height = '100vh';
     document.body.style.height = '100vh';
@@ -26,7 +25,6 @@ const Chat = () => {
     }
     
     return () => {
-      // Restore body scroll when leaving chat page
       document.body.style.overflow = 'auto';
       document.documentElement.style.height = 'auto';
       document.body.style.height = 'auto';
@@ -40,7 +38,6 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    // Mock API call
     setTimeout(() => {
       const mockUser = {
         id: userId,
@@ -153,18 +150,18 @@ const Chat = () => {
             </div>
 
             <div className="chat-messages">
-          {messages.map(message => (
-            <div 
-              key={message.id} 
-              className={`message ${message.sender === 'me' ? 'message-sent' : 'message-received'}`}
-            >
-              <div className="message-content">
-                <p className="message-text">{message.text}</p>
-                <span className="message-time">{message.timestamp}</span>
-              </div>
+              {messages.map(message => (
+                <div 
+                  key={message.id} 
+                  className={`message ${message.sender === 'me' ? 'message-sent' : 'message-received'}`}
+                >
+                  <div className="message-content">
+                    <p className="message-text">{message.text}</p>
+                    <span className="message-time">{message.timestamp}</span>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
             <form className="chat-input-form" onSubmit={handleSendMessage}>
               <input

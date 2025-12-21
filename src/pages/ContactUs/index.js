@@ -1,0 +1,1 @@
+export { default } from './ContactUs.page.jsx';

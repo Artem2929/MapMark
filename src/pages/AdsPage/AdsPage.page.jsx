@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { classNames } from '../utils/classNames';
-import { useOptimizedState } from '../hooks/useOptimizedState';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import StarRating from '../components/ui/StarRating';
-import Breadcrumbs from '../components/ui/Breadcrumbs';
-import CustomSelect from '../components/ui/CustomSelect';
-import CreateAdForm from '../components/forms/CreateAdForm';
-import AdsService from '../services/adsService';
-import { categoriesService } from '../services/categoriesService.js';
-import { filtersService } from '../services/filtersService.js';
+import StarRating from '../../components/ui/StarRating';
+import Breadcrumbs from '../../components/ui/Breadcrumbs';
+import CustomSelect from '../../components/ui/CustomSelect';
+import CreateAdForm from '../../components/forms/CreateAdForm';
+import AdsService from '../../services/adsService';
+import { categoriesService } from '../../services/categoriesService.js';
+import { filtersService } from '../../services/filtersService.js';
 import './AdsPage.css';
-import './DiscoverPlaces.css';
 
 const AdsPage = () => {
   const { t } = useTranslation();
@@ -23,7 +22,7 @@ const AdsPage = () => {
 
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [showCreateAdForm, setShowCreateAdForm] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'map'
+  const [viewMode, setViewMode] = useState('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
@@ -36,9 +35,7 @@ const AdsPage = () => {
     distance: '',
     sortBy: 'rating',
     tags: [],
-    // Нерухомість
-    operationType: '', // продаж/оренда
-    // Авто
+    operationType: '',
     brand: '',
     model: '',
     year: '',
@@ -99,12 +96,9 @@ const AdsPage = () => {
     }
   }, [searchQuery, filters, currentPage]);
 
-
-
   const loadAds = async () => {
     if (!selectedCategory) return;
     
-    // Показуємо loading тільки при першому завантаженні
     if (ads.length === 0 && !categoriesLoading) {
       setLoading(true);
     }
@@ -137,7 +131,6 @@ const AdsPage = () => {
   const applyFilters = () => {
     let filtered = [...ads];
 
-    // Пошук
     if (searchQuery) {
       filtered = filtered.filter(ad => 
         ad.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -145,32 +138,26 @@ const AdsPage = () => {
       );
     }
 
-    // Фільтр по категорії
     if (filters.category) {
       filtered = filtered.filter(ad => ad.category === filters.category);
     }
 
-    // Фільтр по рейтингу
     if (filters.rating > 0) {
       filtered = filtered.filter(ad => ad.rating >= filters.rating);
     }
 
-    // Фільтр по відстані
     if (filters.distance) {
       const maxDistance = parseInt(filters.distance);
       filtered = filtered.filter(ad => ad.distance <= maxDistance);
     }
 
-    // Фільтр по тегах
     if (filters.tags.length > 0) {
       filtered = filtered.filter(ad => 
         filters.tags.some(tag => ad.tags.includes(tag))
       );
     }
 
-    // Сортування
     switch (filters.sortBy) {
-
       case 'rating':
         filtered.sort((a, b) => b.rating - a.rating);
         break;
@@ -218,7 +205,6 @@ const AdsPage = () => {
     setSearchQuery('');
   };
 
-  // Дані для фільтрів авто
   const carBrands = [
     { value: '', label: 'Всі марки' },
     { value: 'toyota', label: 'Toyota' },
@@ -293,70 +279,67 @@ const AdsPage = () => {
     <div className="page-container ads-page">
       <Breadcrumbs />
       
-        <div className="categories-section">
-          {categoriesLoading ? (
-            <div className="loading-spinner">
-              <div className="spinner"></div>
-              <p>Завантаження категорій...</p>
-            </div>
-          ) : (
-            <div className="categories-scroll">
-              {categories.map(category => (
+      <div className="categories-section">
+        {categoriesLoading ? (
+          <div className="loading-spinner">
+            <div className="spinner"></div>
+            <p>Завантаження категорій...</p>
+          </div>
+        ) : (
+          <div className="categories-scroll">
+            {categories.map(category => (
+              <button
+                key={category.id}
+                className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
+                onClick={() => {
+                  if (selectedCategory === category.id) {
+                    setShowSubcategories(!showSubcategories);
+                  } else {
+                    setSelectedCategory(category.id);
+                    setSelectedSubcategory('');
+                    setShowSubcategories(true);
+                    setCurrentPage(1);
+                  }
+                }}
+              >
+                <span className="category-emoji">{category.emoji}</span>
+                <span className="category-name">{t(`categories.${category.id}`, category.name)}</span>
+              </button>
+            ))}
+          </div>
+        )}
+        
+        {showSubcategories && categories.find(cat => cat.id === selectedCategory)?.subcategories?.length > 0 && (
+          <div className="subcategories-section">
+            <h4>Підкатегорії:</h4>
+            <div className="subcategories-scroll">
+              <button
+                className={`subcategory-btn ${!selectedSubcategory ? 'active' : ''}`}
+                onClick={() => setSelectedSubcategory('')}
+              >
+                Всі
+              </button>
+              {categories.find(cat => cat.id === selectedCategory)?.subcategories.map(subcategory => (
                 <button
-                  key={category.id}
-                  className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
-                  onClick={() => {
-                    if (selectedCategory === category.id) {
-                      setShowSubcategories(!showSubcategories);
-                    } else {
-                      setSelectedCategory(category.id);
-                      setSelectedSubcategory('');
-                      setShowSubcategories(true);
-                      setCurrentPage(1);
-                    }
-                  }}
+                  key={subcategory.id}
+                  className={`subcategory-btn ${selectedSubcategory === subcategory.id ? 'active' : ''}`}
+                  onClick={() => setSelectedSubcategory(subcategory.id)}
                 >
-                  <span className="category-emoji">{category.emoji}</span>
-                  <span className="category-name">{t(`categories.${category.id}`, category.name)}</span>
+                  {t(`subcategories.${subcategory.id}`, subcategory.name)}
                 </button>
               ))}
             </div>
-          )}
-          
-          {showSubcategories && categories.find(cat => cat.id === selectedCategory)?.subcategories?.length > 0 && (
-            <div className="subcategories-section">
-              <h4>Підкатегорії:</h4>
-              <div className="subcategories-scroll">
-                <button
-                  className={`subcategory-btn ${!selectedSubcategory ? 'active' : ''}`}
-                  onClick={() => setSelectedSubcategory('')}
-                >
-                  Всі
-                </button>
-                {categories.find(cat => cat.id === selectedCategory)?.subcategories.map(subcategory => (
-                  <button
-                    key={subcategory.id}
-                    className={`subcategory-btn ${selectedSubcategory === subcategory.id ? 'active' : ''}`}
-                    onClick={() => setSelectedSubcategory(subcategory.id)}
-                  >
-                    {t(`subcategories.${subcategory.id}`, subcategory.name)}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
+      </div>
 
-      {/* Результати */}
       <div className="results-info">
         <span className="results-count">
           Знайдено {filteredAds.length} оголошень
         </span>
       </div>
 
-      {/* Контейнер з фільтрами та сіткою */}
       <div className="ads-content-container">
-        {/* Бічна панель фільтрів */}
         <div className="sidebar-filters">
           <button 
             className="create-ad-btn"
@@ -387,76 +370,6 @@ const AdsPage = () => {
             />
           </div>
 
-          <div className="filter-group">
-            <label>Тип угоди</label>
-            <CustomSelect
-              value={filters.dealType}
-              onChange={(value) => handleFilterChange('dealType', value)}
-              placeholder="Всі типи"
-              options={[
-                { value: '', label: 'Всі типи' },
-                { value: 'sale', label: 'Продаж' },
-                { value: 'rent', label: 'Оренда' }
-              ]}
-            />
-          </div>
-
-          <div className="filter-group">
-            <label>Тип нерухомості</label>
-            <CustomSelect
-              value={filters.propertyType}
-              onChange={(value) => handleFilterChange('propertyType', value)}
-              placeholder="Всі типи"
-              options={[
-                { value: '', label: 'Всі типи' },
-                { value: 'apartment', label: 'Квартира' },
-                { value: 'house', label: 'Будинок' },
-                { value: 'office', label: 'Офіс / Комерційна нерухомість' },
-                { value: 'land', label: 'Ділянка / Земля' },
-                { value: 'garage', label: 'Гараж / Паркомісце' },
-                { value: 'other', label: 'Інше' }
-              ]}
-            />
-          </div>
-
-          <div className="filter-group">
-            <label>Загальна (м²)</label>
-            <input
-              type="number"
-              placeholder="Площа м²"
-              value={filters.totalArea || ''}
-              onChange={(e) => handleFilterChange('totalArea', e.target.value)}
-              className="filter-input"
-            />
-          </div>
-
-          <div className="filter-group">
-            <label>Житлова (м²)</label>
-            <input
-              type="number"
-              placeholder="Площа м²"
-              value={filters.livingArea || ''}
-              onChange={(e) => handleFilterChange('livingArea', e.target.value)}
-              className="filter-input"
-            />
-          </div>
-
-          <div className="filter-group">
-            <label>Кухня (м²)</label>
-            <input
-              type="number"
-              placeholder="Площа м²"
-              value={filters.kitchenArea || ''}
-              onChange={(e) => handleFilterChange('kitchenArea', e.target.value)}
-              className="filter-input"
-            />
-          </div>
-
-
-
-
-
-          {/* Додаткові фільтри для нерухомості */}
           {filters.category === 'real-estate' && (
             <div className="filter-group">
               <label>Тип операції</label>
@@ -473,7 +386,6 @@ const AdsPage = () => {
             </div>
           )}
 
-          {/* Додаткові фільтри для авто */}
           {filters.category === 'auto' && (
             <>
               <div className="filter-group">
@@ -482,7 +394,7 @@ const AdsPage = () => {
                   value={filters.brand}
                   onChange={(value) => {
                     handleFilterChange('brand', value);
-                    handleFilterChange('model', ''); // Скидаємо модель при зміні марки
+                    handleFilterChange('model', '');
                   }}
                   placeholder="Оберіть марку"
                   options={carBrands}
@@ -510,23 +422,6 @@ const AdsPage = () => {
                   options={carYears}
                 />
               </div>
-
-              <div className="filter-group">
-                <label>Ціна</label>
-                <CustomSelect
-                  value={filters.price}
-                  onChange={(value) => handleFilterChange('price', value)}
-                  placeholder="Оберіть ціну"
-                  options={[
-                    { value: '', label: 'Будь-яка ціна' },
-                    { value: '0-5000', label: 'До $5,000' },
-                    { value: '5000-10000', label: '$5,000 - $10,000' },
-                    { value: '10000-20000', label: '$10,000 - $20,000' },
-                    { value: '20000-50000', label: '$20,000 - $50,000' },
-                    { value: '50000+', label: 'Від $50,000' }
-                  ]}
-                />
-              </div>
             </>
           )}
 
@@ -537,7 +432,6 @@ const AdsPage = () => {
           )}
         </div>
 
-        {/* Список оголошень або порожній стан */}
         <div className="ads-main-content">
           {loading && ads.length === 0 ? (
             <div className="loading-state">
@@ -557,7 +451,6 @@ const AdsPage = () => {
         </div>
       </div>
 
-      {/* Пагінація */}
       {totalPages > 1 && (
         <div className="pagination">
           <button 
@@ -592,8 +485,6 @@ const AdsPage = () => {
           </button>
         </div>
       )}
-
-
       
       {showCreateAdForm && (
         <CreateAdForm onClose={() => setShowCreateAdForm(false)} />

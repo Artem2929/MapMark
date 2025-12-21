@@ -1,16 +1,12 @@
-import React, {  useState, useEffect, useRef , useCallback, useMemo } from 'react';
-import { classNames } from '../utils/classNames';
-import { useOptimizedState } from '../hooks/useOptimizedState';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useTranslation } from "react-i18next";
-
 import { Link } from "react-router-dom";
-import Breadcrumbs from "../components/ui/Breadcrumbs.jsx";
-import PostCard from "../components/ui/PostCard.jsx";
-import InfiniteScroll from "../components/ui/InfiniteScroll.jsx";
-import LoadingSkeleton from "../components/ui/LoadingSkeleton.jsx";
-import usePosts from "../hooks/usePosts.js";
-
-import apiClient from "../utils/apiClient.js";
+import Breadcrumbs from "../../components/ui/Breadcrumbs.jsx";
+import PostCard from "../../components/ui/PostCard.jsx";
+import InfiniteScroll from "../../components/ui/InfiniteScroll.jsx";
+import LoadingSkeleton from "../../components/ui/LoadingSkeleton.jsx";
+import usePosts from "../../hooks/usePosts.js";
+import apiClient from "../../utils/apiClient.js";
 import "./DiscoverPlaces.css";
 
 const DiscoverPlaces = () => {
@@ -20,12 +16,6 @@ const DiscoverPlaces = () => {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const scrollRef = useRef(null);
-
-
-
-
-
-
 
   const handleReaction = async (postId, reactionType) => {
     try {
@@ -57,10 +47,6 @@ const DiscoverPlaces = () => {
     }
   };
 
-
-
-
-
   const scrollCategories = (direction) => {
     const container = scrollRef.current;
     if (!container) return;
@@ -86,8 +72,6 @@ const DiscoverPlaces = () => {
     setCanScrollRight(true);
   }, []);
 
-
-
   const breadcrumbItems = [
     { label: t('header.home'), link: '/' },
     { label: t('header.discover') }
@@ -98,9 +82,6 @@ const DiscoverPlaces = () => {
       <div className="discover-container">
         <Breadcrumbs items={breadcrumbItems} />
         
-
-        
-
         <div className="discover-content-container">
           <div className="places-feed">
             {error && (
@@ -150,7 +131,6 @@ const DiscoverPlaces = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };

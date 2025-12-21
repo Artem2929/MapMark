@@ -1,0 +1,222 @@
+/* AdDetailPage styles */
+.ads-item-ad-detail-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.ads-item-ad-header {
+  margin-bottom: 20px;
+}
+
+.ads-item-ad-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.ads-item-verified-badge {
+  background: #4CAF50;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.ads-item-detail-image {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.ads-item-detail-image img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.ads-item-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 50%);
+  border-radius: 12px;
+}
+
+.ads-item-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.ads-item-back-btn a {
+  background: rgba(255,255,255,0.9);
+  padding: 8px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.ads-item-ad-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+}
+
+.ads-item-ad-info h1 {
+  margin: 10px 0;
+}
+
+.ads-item-ad-category {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.ads-item-ad-rating-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.ads-item-description-section,
+.ads-item-tags-section,
+.ads-item-reviews-section {
+  margin-bottom: 30px;
+}
+
+.ads-item-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ads-item-detail-tag {
+  background: #f0f0f0;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+}
+
+.ads-item-review-item {
+  border: 1px solid #eee;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.ads-item-review-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.ads-item-review-author {
+  font-weight: 500;
+}
+
+.ads-item-verified-icon {
+  color: #4CAF50;
+}
+
+.ads-item-review-date {
+  color: #666;
+  font-size: 14px;
+  margin-left: auto;
+}
+
+.ads-item-sidebar {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 12px;
+  height: fit-content;
+}
+
+.ads-item-sidebar h3 {
+  margin-bottom: 15px;
+}
+
+.ads-item-location-section,
+.ads-item-working-hours,
+.ads-item-stats-section {
+  margin-bottom: 25px;
+}
+
+.ads-item-contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ads-item-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ads-item-contact-item a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.ads-item-stats-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ads-item-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ads-item-action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.ads-item-action-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.ads-item-favorite-btn {
+  background: #f0f0f0;
+}
+
+.ads-item-favorite-btn.active {
+  background: #ffebee;
+}
+
+.ads-item-share-btn,
+.ads-item-post-bookmark-btn {
+  background: #f0f0f0;
+}
+
+.loading {
+  text-align: center;
+  padding: 50px;
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .ads-item-ad-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .ads-item-ad-detail-page {
+    padding: 10px;
+  }
+}
