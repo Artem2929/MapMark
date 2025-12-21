@@ -1,0 +1,1 @@
+// HelpCenter validation schema

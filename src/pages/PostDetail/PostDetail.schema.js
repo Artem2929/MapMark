@@ -1,0 +1,1 @@
+// PostDetail validation schema

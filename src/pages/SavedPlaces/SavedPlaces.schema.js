@@ -1,0 +1,1 @@
+// SavedPlaces validation schema

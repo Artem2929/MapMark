@@ -1,17 +1,17 @@
 import React, { memo } from 'react';
-import { classNames } from '../utils/classNames';
+import { classNames } from '../../utils/classNames';
 import { useParams, Navigate } from 'react-router-dom';
-import { ProfileProvider } from '../contexts/ProfileContext';
-import ProfileBreadcrumbs from '../components/profile/ProfileBreadcrumbs';
-import ProfileHeader from '../components/profile/ProfileHeader';
-import ProfileContent from '../components/profile/ProfileContent';
-import ProfileSkeleton from '../components/profile/ProfileSkeleton';
-import Wall from '../components/ui/Wall';
-import LoadingSpinner from '../components/ui/LoadingSpinner';
-import ErrorMessage from '../components/ui/ErrorMessage';
-import ErrorBoundary from '../components/ErrorBoundary';
-import authService from '../services/authService';
-import { useProfile } from '../contexts/ProfileContext';
+import { ProfileProvider } from '../../contexts/ProfileContext';
+import ProfileBreadcrumbs from '../../components/profile/ProfileBreadcrumbs';
+import ProfileHeader from '../../components/profile/ProfileHeader';
+import ProfileContent from '../../components/profile/ProfileContent';
+import ProfileSkeleton from '../../components/profile/ProfileSkeleton';
+import Wall from '../../components/ui/Wall';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import ErrorMessage from '../../components/ui/ErrorMessage';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import authService from '../../services/authService';
+import { useProfile } from '../../contexts/ProfileContext';
 import './UserProfile.css';
 
 const UserProfileContent = () => {

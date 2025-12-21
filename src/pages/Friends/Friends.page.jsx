@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { classNames } from '../utils/classNames';
-import { useOptimizedState } from '../hooks/useOptimizedState';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { useParams, useNavigate } from 'react-router-dom';
-import { friendsService } from '../services/friendsService';
+import { friendsService } from '../../services/friendsService';
 import './Friends.css';
 
 const Friends = () => {

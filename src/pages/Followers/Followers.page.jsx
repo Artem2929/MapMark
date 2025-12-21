@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { classNames } from '../utils/classNames';
+import { classNames } from '../../utils/classNames';
 import { useParams, Link } from 'react-router-dom';
-import Breadcrumbs from '../components/ui/Breadcrumbs';
+import Breadcrumbs from '../../components/ui/Breadcrumbs';
 import './Followers.css';
 
 const Followers = () => {

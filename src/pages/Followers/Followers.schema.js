@@ -1,0 +1,1 @@
+// Followers validation schema
