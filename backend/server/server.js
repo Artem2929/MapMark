@@ -134,8 +134,12 @@ mongoose.connect(DB_URL)
   process.exit(1);
 });
 
+// New auth architecture
+const newAuthRoutes = require('../src/modules/auth/auth.routes');
+const errorMiddleware = require('../src/middlewares/error.middleware');
+
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', newAuthRoutes);
 app.use('/api/posts', postsRoutes);
 app.use('/api/ads', adsRoutes);
 app.use('/api/categories', categoriesRoutes);
@@ -589,7 +593,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Error handling middleware
-app.use(errorHandler);
+app.use(errorMiddleware);
 
 // 404 handler
 app.use('*', (req, res) => {
