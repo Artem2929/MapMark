@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { classNames } from '../utils/classNames';
+import { classNames } from '../../utils/classNames';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import Breadcrumbs from '../components/ui/Breadcrumbs';
+import Breadcrumbs from '../../components/ui/Breadcrumbs';
 import './SellerProfile.css';
 
 const SellerProfile = () => {

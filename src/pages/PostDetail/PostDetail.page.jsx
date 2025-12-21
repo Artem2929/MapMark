@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { classNames } from '../utils/classNames';
-import { useOptimizedState } from '../hooks/useOptimizedState';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import Comments from '../components/ui/Comments';
+import Comments from '../../components/ui/Comments';
 import './PostDetail.css';
-import '../components/ui/PostCard.css';
+import '../../components/ui/PostCard.css';
 
 const PostDetail = () => {
   const { postId } = useParams();

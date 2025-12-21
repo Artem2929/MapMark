@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { classNames } from '../utils/classNames';
-import { useOptimizedState } from '../hooks/useOptimizedState';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { Link } from 'react-router-dom';
-import PostCard from '../components/ui/PostCard';
-import InfiniteScroll from '../components/ui/InfiniteScroll';
-import LoadingSkeleton from '../components/ui/LoadingSkeleton';
-import Breadcrumbs from '../components/ui/Breadcrumbs';
+import PostCard from '../../components/ui/PostCard';
+import InfiniteScroll from '../../components/ui/InfiniteScroll';
+import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
+import Breadcrumbs from '../../components/ui/Breadcrumbs';
 import './SavedPlaces.css';
 
 const SavedPlaces = () => {

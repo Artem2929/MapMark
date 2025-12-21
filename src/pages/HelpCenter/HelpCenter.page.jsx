@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import Breadcrumbs from "../components/ui/Breadcrumbs.jsx";
+import Breadcrumbs from "../../components/ui/Breadcrumbs.jsx";
 import "./HelpCenter.css";
 
 const HelpCenter = () => {

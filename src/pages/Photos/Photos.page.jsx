@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { classNames } from '../utils/classNames';
-import { useOptimizedState } from '../hooks/useOptimizedState';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { useNavigate, useParams } from 'react-router-dom';
-import Breadcrumbs from '../components/ui/Breadcrumbs';
-import HashtagInput from '../components/ui/HashtagInput';
+import Breadcrumbs from '../../components/ui/Breadcrumbs';
+import HashtagInput from '../../components/ui/HashtagInput';
 import './Photos.css';
 import './PhotosModalStyles.css';
 

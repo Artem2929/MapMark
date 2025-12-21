@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { classNames } from '../utils/classNames';
-import { useOptimizedState } from '../hooks/useOptimizedState';
+import { classNames } from '../../utils/classNames';
+import { useOptimizedState } from '../../hooks/useOptimizedState';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import Breadcrumbs from '../components/ui/Breadcrumbs';
+import Breadcrumbs from '../../components/ui/Breadcrumbs';
 import './Services.css';
 
 const Services = () => {
