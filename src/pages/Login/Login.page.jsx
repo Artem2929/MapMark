@@ -43,9 +43,9 @@ const Login = () => {
                      data.email && data.password;
 
   return (
-    <div className={styles.page}>
-      <div className={styles.container}>
-        <form className={styles.form} onSubmit={handleSubmit}>
+    <div className={styles.page} style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: '#f9f9f9', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px'}}>
+      <div className={styles.container} style={{width: '100%', maxWidth: '400px'}}>
+        <form className={styles.form} style={{background: 'rgba(255, 255, 255, 0.98)', backdropFilter: 'blur(20px)', border: '1px solid rgba(59, 130, 246, 0.1)', borderRadius: '12px', padding: '32px', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)'}} onSubmit={handleSubmit}>
           <h1 className={styles.title}>Вхід</h1>
           <p className={styles.subtitle}>Увійдіть до свого акаунту</p>
 
