@@ -10,14 +10,14 @@ export const useFormValidation = (initialData, schema) => {
     setData(prev => ({ ...prev, [name]: value }));
     
     if (touched[name]) {
-      const error = validateField(name, value, schema);
+      const error = validateField(name, value, schema, { ...data, [name]: value });
       setErrors(prev => ({ ...prev, [name]: error }));
     }
-  }, [schema, touched]);
+  }, [schema, touched, data]);
 
   const handleBlur = useCallback((name) => {
     setTouched(prev => ({ ...prev, [name]: true }));
-    const error = validateField(name, data[name], schema);
+    const error = validateField(name, data[name], schema, data);
     setErrors(prev => ({ ...prev, [name]: error }));
   }, [data, schema]);
 
