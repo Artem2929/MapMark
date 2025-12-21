@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
 import { registerSchema } from './Register.schema';
 import { authService } from '../../services/auth.service';
-import styles from './Register.styles.module.css';
+import './Register.css';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validate()) return;
 
     setIsLoading(true);
@@ -48,7 +48,7 @@ const Register = () => {
         country: data.country,
         role: data.role
       });
-      
+
       localStorage.setItem('accessToken', response.accessToken);
       navigate('/dashboard');
     } catch (error) {
@@ -67,7 +67,7 @@ const Register = () => {
 
   const passwordStrength = getPasswordStrength(data.password);
 
-  const isFormValid = !Object.values(errors).some(Boolean) && 
+  const isFormValid = !Object.values(errors).some(Boolean) &&
                      Object.keys(registerSchema).every(key => {
                        if (registerSchema[key].required) {
                          return data[key] !== '' && data[key] !== false;
@@ -76,22 +76,23 @@ const Register = () => {
                      });
 
   return (
-    <div className={styles.page} style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: '#f9f9f9', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', overflowY: 'auto'}}>
-      <div className={styles.container} style={{width: '100%', maxWidth: '480px'}}>
-        <form className={styles.form} style={{background: 'rgba(255, 255, 255, 0.98)', backdropFilter: 'blur(20px)', border: '1px solid rgba(59, 130, 246, 0.1)', borderRadius: '12px', padding: '32px', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)'}} onSubmit={handleSubmit}>
-          <h1 className={styles.title}>Реєстрація</h1>
-          <p className={styles.subtitle}>Створіть новий акаунт</p>
+    <div className="register-page">
+      <div className="register-container">
+        <div className="register-form-wrapper">
+          <h1 className="register-title">Реєстрація</h1>
+          <p className="register-subtitle">Створіть новий акаунт</p>
 
-          {apiError && (
-            <div className={styles.error}>{apiError}</div>
-          )}
+          <div className="error-container">
+            {apiError && (
+              <div className="error-message">{apiError}</div>
+            )}
+          </div>
 
-          <div className={styles.fields}>
-            <div className={styles.field}>
-              <label className={styles.label}>Ім'я</label>
+          <form className="register-form" onSubmit={handleSubmit}>
+            <div className="form-group">
               <input
                 type="text"
-                className={`${styles.input} ${errors.name && touched.name ? styles.error : ''}`}
+                className={`${errors.name && touched.name ? 'input-error' : ''}`}
                 value={data.name}
                 onChange={(e) => handleChange('name', e.target.value)}
                 onBlur={() => handleBlur('name')}
@@ -99,15 +100,14 @@ const Register = () => {
                 disabled={isLoading}
               />
               {errors.name && touched.name && (
-                <span className={styles.fieldError}>{errors.name}</span>
+                <span className="field-error">{errors.name}</span>
               )}
             </div>
 
-            <div className={styles.field}>
-              <label className={styles.label}>Email</label>
+            <div className="form-group">
               <input
                 type="email"
-                className={`${styles.input} ${errors.email && touched.email ? styles.error : ''}`}
+                className={`${errors.email && touched.email ? 'input-error' : ''}`}
                 value={data.email}
                 onChange={(e) => handleChange('email', e.target.value)}
                 onBlur={() => handleBlur('email')}
@@ -115,36 +115,33 @@ const Register = () => {
                 disabled={isLoading}
               />
               {errors.email && touched.email && (
-                <span className={styles.fieldError}>{errors.email}</span>
+                <span className="field-error">{errors.email}</span>
               )}
             </div>
 
-            <div className={styles.field}>
-              <label className={styles.label}>Пароль</label>
-              <div className={styles.passwordField}>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  className={`${styles.input} ${errors.password && touched.password ? styles.error : ''}`}
-                  value={data.password}
-                  onChange={(e) => handleChange('password', e.target.value)}
-                  onBlur={() => handleBlur('password')}
-                  placeholder="Введіть пароль"
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  className={styles.passwordToggle}
-                  onClick={() => setShowPassword(!showPassword)}
-                  disabled={isLoading}
-                >
-                  {showPassword ? '🙈' : '👁️'}
-                </button>
-              </div>
+            <div className="form-group password-group">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className={`${errors.password && touched.password ? 'input-error' : ''}`}
+                value={data.password}
+                onChange={(e) => handleChange('password', e.target.value)}
+                onBlur={() => handleBlur('password')}
+                placeholder="Введіть пароль"
+                disabled={isLoading}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+                disabled={isLoading}
+              >
+                {showPassword ? '🙈' : '👀'}
+              </button>
               {errors.password && touched.password && (
-                <span className={styles.fieldError}>{errors.password}</span>
+                <span className="field-error">{errors.password}</span>
               )}
               {passwordStrength && (
-                <div className={`${styles.passwordStrength} ${styles[passwordStrength]}`}>
+                <div className={`password-strength ${passwordStrength}`}>
                   {passwordStrength === 'weak' && 'Слабкий пароль'}
                   {passwordStrength === 'medium' && 'Середній пароль'}
                   {passwordStrength === 'strong' && 'Сильний пароль'}
@@ -152,36 +149,32 @@ const Register = () => {
               )}
             </div>
 
-            <div className={styles.field}>
-              <label className={styles.label}>Підтвердіть пароль</label>
-              <div className={styles.passwordField}>
-                <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  className={`${styles.input} ${errors.confirmPassword && touched.confirmPassword ? styles.error : ''}`}
-                  value={data.confirmPassword}
-                  onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                  onBlur={() => handleBlur('confirmPassword')}
-                  placeholder="Повторіть пароль"
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  className={styles.passwordToggle}
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  disabled={isLoading}
-                >
-                  {showConfirmPassword ? '🙈' : '👁️'}
-                </button>
-              </div>
+            <div className="form-group password-group">
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                className={`${errors.confirmPassword && touched.confirmPassword ? 'input-error' : ''}`}
+                value={data.confirmPassword}
+                onChange={(e) => handleChange('confirmPassword', e.target.value)}
+                onBlur={() => handleBlur('confirmPassword')}
+                placeholder="Повторіть пароль"
+                disabled={isLoading}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                disabled={isLoading}
+              >
+                {showConfirmPassword ? '🙈' : '👀'}
+              </button>
               {errors.confirmPassword && touched.confirmPassword && (
-                <span className={styles.fieldError}>{errors.confirmPassword}</span>
+                <span className="field-error">{errors.confirmPassword}</span>
               )}
             </div>
 
-            <div className={styles.field}>
-              <label className={styles.label}>Країна</label>
+            <div className="form-group">
               <select
-                className={`${styles.select} ${errors.country && touched.country ? styles.error : ''}`}
+                className={`${errors.country && touched.country ? 'input-error' : ''}`}
                 value={data.country}
                 onChange={(e) => handleChange('country', e.target.value)}
                 onBlur={() => handleBlur('country')}
@@ -194,14 +187,13 @@ const Register = () => {
                 <option value="usa">🇺🇸 США</option>
               </select>
               {errors.country && touched.country && (
-                <span className={styles.fieldError}>{errors.country}</span>
+                <span className="field-error">{errors.country}</span>
               )}
             </div>
 
-            <div className={styles.field}>
-              <label className={styles.label}>Роль</label>
+            <div className="form-group">
               <select
-                className={`${styles.select} ${errors.role && touched.role ? styles.error : ''}`}
+                className={`${errors.role && touched.role ? 'input-error' : ''}`}
                 value={data.role}
                 onChange={(e) => handleChange('role', e.target.value)}
                 onBlur={() => handleBlur('role')}
@@ -211,71 +203,69 @@ const Register = () => {
                 <option value="seller">Продавець</option>
               </select>
               {errors.role && touched.role && (
-                <span className={styles.fieldError}>{errors.role}</span>
+                <span className="field-error">{errors.role}</span>
               )}
             </div>
 
-            <div className={styles.field}>
-              <div className={styles.checkboxField}>
+            <div className="form-group checkbox-group">
+              <div className="checkbox-row">
                 <input
                   type="checkbox"
-                  className={styles.checkbox}
                   checked={data.acceptTerms}
                   onChange={(e) => handleChange('acceptTerms', e.target.checked)}
                   onBlur={() => handleBlur('acceptTerms')}
                   disabled={isLoading}
                 />
-                <label className={styles.checkboxLabel}>
-                  Я приймаю <Link to="/terms" target="_blank">умови використання</Link>
-                </label>
+                <span>
+                   <Link to="/terms" target="_blank">умови використання</Link>
+                </span>
               </div>
               {errors.acceptTerms && touched.acceptTerms && (
-                <span className={styles.fieldError}>{errors.acceptTerms}</span>
+                <span className="field-error">{errors.acceptTerms}</span>
               )}
             </div>
 
-            <div className={styles.field}>
-              <div className={styles.checkboxField}>
+            <div className="form-group checkbox-group">
+              <div className="checkbox-row">
                 <input
                   type="checkbox"
-                  className={styles.checkbox}
                   checked={data.acceptPrivacy}
                   onChange={(e) => handleChange('acceptPrivacy', e.target.checked)}
                   onBlur={() => handleBlur('acceptPrivacy')}
                   disabled={isLoading}
                 />
-                <label className={styles.checkboxLabel}>
-                  Я приймаю <Link to="/privacy" target="_blank">політику конфіденційності</Link>
-                </label>
+                <span>
+                   <Link to="/privacy" target="_blank">політику конфіденційності</Link>
+                </span>
               </div>
               {errors.acceptPrivacy && touched.acceptPrivacy && (
-                <span className={styles.fieldError}>{errors.acceptPrivacy}</span>
+                <span className="field-error">{errors.acceptPrivacy}</span>
               )}
             </div>
-          </div>
 
-          <button
-            type="submit"
-            className={styles.submitButton}
-            disabled={!isFormValid || isLoading}
-          >
-            {isLoading ? (
-              <>
-                <div className={styles.spinner} />
-                Реєстрація...
-              </>
-            ) : (
-              'Зареєструватися'
-            )}
-          </button>
+            <button
+              type="submit"
+              className="register-btn"
+              disabled={!isFormValid || isLoading}
+            >
+              {isLoading ? (
+                <div className="btn-loading">
+                  <div className="btn-spinner" />
+                  Реєстрація...
+                </div>
+              ) : (
+                'Зареєструватися'
+              )}
+            </button>
+          </form>
 
-          <div className={styles.footer}>
+          <div className="register-footer">
             <p>
               Вже є акаунт?{' '}
               <Link to="/login">Увійти</Link>
             </p>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

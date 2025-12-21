@@ -1,22 +1,24 @@
-import React, {  useState, useEffect , useCallback, useMemo } from 'react';
-import { classNames } from '../utils/classNames';
-import { useOptimizedState } from '../hooks/useOptimizedState';
-import { useTranslation } from 'react-i18next';
-import LoadingSpinner from '../components/ui/LoadingSpinner';
-import Toast from '../components/ui/Toast';
-import Breadcrumbs from '../components/ui/Breadcrumbs';
+import { useState, useEffect } from 'react';
+import { useFormValidation } from '../../hooks/useFormValidation';
+import { aboutSchema } from './About.schema';
 import './About.css';
 
 const About = () => {
-  const { t } = useTranslation();
   const [stats, setStats] = useState(null);
   const [team, setTeam] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
-  const [toast, setToast] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [touched, setTouched] = useState({});
+  const [toast, setToast] = useState(null);
+
+  const {
+    data,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    validate,
+    reset
+  } = useFormValidation({ name: '', email: '', message: '' }, aboutSchema);
 
   useEffect(() => {
     let isMounted = true;
@@ -53,57 +55,11 @@ const About = () => {
     };
   }, []);
 
-
-
-  const validateField = (name, value) => {
-    switch (name) {
-      case 'name':
-        if (!value.trim()) return t('aboutPage.contact.validation.nameRequired');
-        if (value.trim().length < 2) return t('aboutPage.contact.validation.nameMinLength');
-        if (value.trim().length > 50) return t('aboutPage.contact.validation.nameMaxLength');
-        return '';
-      case 'email':
-        if (!value.trim()) return t('aboutPage.contact.validation.emailRequired');
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value.trim())) return t('aboutPage.contact.validation.emailInvalid');
-        return '';
-      case 'message':
-        if (!value.trim()) return t('aboutPage.contact.validation.messageRequired');
-        if (value.trim().length < 10) return t('aboutPage.contact.validation.messageMinLength');
-        if (value.trim().length > 1000) return t('aboutPage.contact.validation.messageMaxLength');
-        return '';
-      default:
-        return '';
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    Object.keys(contactForm).forEach(key => {
-      const error = validateField(key, contactForm[key]);
-      if (error) newErrors[key] = error;
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleInputChange = (name, value) => {
-    setContactForm(prev => ({ ...prev, [name]: value }));
-    if (touched[name]) {
-      setErrors(prev => ({ ...prev, [name]: validateField(name, value) }));
-    }
-  };
-
-  const handleInputBlur = (name) => {
-    setTouched(prev => ({ ...prev, [name]: true }));
-    setErrors(prev => ({ ...prev, [name]: validateField(name, contactForm[name]) }));
-  };
-
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     
-    if (!validateForm()) {
-      setToast({ message: t('aboutPage.contact.messages.validationError'), type: 'error' });
+    if (!validate()) {
+      setToast({ message: 'Помилка валідації', type: 'error' });
       return;
     }
     
@@ -114,50 +70,46 @@ const About = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: contactForm.name.trim(),
-          email: contactForm.email.trim().toLowerCase(),
-          message: contactForm.message.trim()
+          name: data.name.trim(),
+          email: data.email.trim().toLowerCase(),
+          message: data.message.trim()
         })
       });
       
-      const data = await response.json();
+      const result = await response.json();
       
-      if (data.success) {
-        setContactForm({ name: '', email: '', message: '' });
-        setErrors({});
-        setTouched({});
-        setToast({ message: t('aboutPage.contact.messages.success'), type: 'success' });
+      if (result.success) {
+        reset();
+        setToast({ message: 'Повідомлення надіслано успішно!', type: 'success' });
       } else {
-        if (data.errors) {
-          const serverErrors = {};
-          data.errors.forEach(err => {
-            serverErrors[err.field] = err.message;
-          });
-          setErrors(serverErrors);
-        }
-        setToast({ message: data.message || t('aboutPage.contact.messages.error'), type: 'error' });
+        setToast({ message: result.message || 'Помилка відправки', type: 'error' });
       }
     } catch (error) {
-      setToast({ message: t('aboutPage.contact.messages.networkError'), type: 'error' });
+      setToast({ message: 'Помилка мережі', type: 'error' });
     } finally {
       setSubmitting(false);
     }
   };
 
   if (loading) {
-    return <LoadingSpinner message="Завантаження..." />;
+    return (
+      <div className="about-page">
+        <div className="about-container">
+          <p>Завантаження...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="page-container about-page">
-      <Breadcrumbs />
       {/* Hero Section */}
       <div className="about-hero section">
         <div className="about-container">
           <div className="about-hero-content">
-            <h1 className="about-hero-title">{t('aboutPage.hero.title')}</h1>
+            <h1 className="about-hero-title">Про MapMark</h1>
             <p className="about-hero-description">
-              {t('aboutPage.hero.description')}
+              Ваш надійний провідник у світі подорожей та відкриттів
             </p>
           </div>
         </div>
@@ -167,23 +119,23 @@ const About = () => {
       {stats && (
         <div className="section">
           <div className="about-container">
-            <h2 className="section-title">{t('aboutPage.stats.title')}</h2>
+            <h2 className="section-title">Наші досягнення</h2>
             <div className="about-stats-grid">
               <div className="about-stat-card">
                 <div className="about-stat-number">{stats.totalUsers}</div>
-                <div className="about-stat-label">{t('aboutPage.stats.users')}</div>
+                <div className="about-stat-label">Користувачів</div>
               </div>
               <div className="about-stat-card">
                 <div className="about-stat-number">{stats.totalReviews}</div>
-                <div className="about-stat-label">{t('aboutPage.stats.reviews')}</div>
+                <div className="about-stat-label">Відгуків</div>
               </div>
               <div className="about-stat-card">
                 <div className="about-stat-number">{stats.totalCountries}</div>
-                <div className="about-stat-label">{t('aboutPage.stats.countries')}</div>
+                <div className="about-stat-label">Країн</div>
               </div>
               <div className="about-stat-card">
                 <div className="about-stat-number">{stats.totalPhotos}</div>
-                <div className="about-stat-label">{t('aboutPage.stats.photos')}</div>
+                <div className="about-stat-label">Фото</div>
               </div>
             </div>
           </div>
@@ -194,26 +146,28 @@ const About = () => {
       <div className="section">
         <div className="about-container">
           <div className="content-card">
-            <h2 className="section-title">{t('aboutPage.mission.title')}</h2>
+            <h2 className="section-title">Наша місія</h2>
             <p>
-              {t('aboutPage.mission.description')}
+              MapMark створений для того, щоб допомогти мандрівникам знаходити найкращі місця, 
+              ділитися досвідом та створювати незабутні спогади. Ми віримо, що кожна подорож 
+              має бути особливою та наповненою відкриттями.
             </p>
             <div className="about-features-list">
               <div className="about-feature-item">
                 <span className="about-feature-icon">🗺️</span>
-                <span>{t('aboutPage.mission.features.maps')}</span>
+                <span>Інтерактивні карти</span>
               </div>
               <div className="about-feature-item">
                 <span className="about-feature-icon">📸</span>
-                <span>{t('aboutPage.mission.features.photos')}</span>
+                <span>Фото та відгуки</span>
               </div>
               <div className="about-feature-item">
                 <span className="about-feature-icon">⭐</span>
-                <span>{t('aboutPage.mission.features.ratings')}</span>
+                <span>Рейтинги місць</span>
               </div>
               <div className="about-feature-item">
                 <span className="about-feature-icon">🌍</span>
-                <span>{t('aboutPage.mission.features.community')}</span>
+                <span>Глобальна спільнота</span>
               </div>
             </div>
           </div>
@@ -224,7 +178,7 @@ const About = () => {
       {team.length > 0 && (
         <div className="about-team-section">
           <div className="about-container">
-            <h2>{t('aboutPage.team.title')}</h2>
+            <h2 className="section-title">Наша команда</h2>
             <div className="about-team-grid">
               {team.map((member) => (
                 <div key={member._id} className="about-team-card">
@@ -250,11 +204,13 @@ const About = () => {
       {/* Contact Section */}
       <div className="about-contact-section">
         <div className="about-container">
-          <h2>{t('aboutPage.contact.title')}</h2>
+          <h2 className="section-title">Зв'яжіться з нами</h2>
           <div className="about-contact-content">
             <div className="about-contact-info">
-              <h3>{t('aboutPage.contact.subtitle')}</h3>
-              <p>{t('aboutPage.contact.description')}</p>
+              <h3>Маєте питання?</h3>
+              <p>
+                Ми завжди раді допомогти! Напишіть нам, і ми відповімо якомога швидше.
+              </p>
               <div className="about-contact-details">
                 <div className="about-contact-item">
                   <span className="about-contact-icon">📧</span>
@@ -266,64 +222,65 @@ const About = () => {
                 </div>
               </div>
             </div>
+
             <form className="about-contact-form" onSubmit={handleContactSubmit}>
+              {toast && (
+                <div className={`toast ${toast.type}`}>
+                  {toast.message}
+                </div>
+              )}
+              
               <div className="about-form-group">
                 <input
                   type="text"
-                  placeholder={t('aboutPage.contact.form.name')}
-                  value={contactForm.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  onBlur={() => handleInputBlur('name')}
                   className={errors.name && touched.name ? 'error' : ''}
-                  required
+                  value={data.name}
+                  onChange={(e) => handleChange('name', e.target.value)}
+                  onBlur={() => handleBlur('name')}
+                  placeholder="Ваше ім'я"
+                  disabled={submitting}
                 />
                 {errors.name && touched.name && (
                   <span className="about-field-error">{errors.name}</span>
                 )}
               </div>
+
               <div className="about-form-group">
                 <input
                   type="email"
-                  placeholder={t('aboutPage.contact.form.email')}
-                  value={contactForm.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  onBlur={() => handleInputBlur('email')}
                   className={errors.email && touched.email ? 'error' : ''}
-                  required
+                  value={data.email}
+                  onChange={(e) => handleChange('email', e.target.value)}
+                  onBlur={() => handleBlur('email')}
+                  placeholder="Ваш email"
+                  disabled={submitting}
                 />
                 {errors.email && touched.email && (
                   <span className="about-field-error">{errors.email}</span>
                 )}
               </div>
+
               <div className="about-form-group">
                 <textarea
-                  placeholder={t('aboutPage.contact.form.message')}
-                  rows="5"
-                  value={contactForm.message}
-                  onChange={(e) => handleInputChange('message', e.target.value)}
-                  onBlur={() => handleInputBlur('message')}
                   className={errors.message && touched.message ? 'error' : ''}
-                  required
-                ></textarea>
+                  value={data.message}
+                  onChange={(e) => handleChange('message', e.target.value)}
+                  onBlur={() => handleBlur('message')}
+                  placeholder="Ваше повідомлення"
+                  disabled={submitting}
+                />
                 {errors.message && touched.message && (
                   <span className="about-field-error">{errors.message}</span>
                 )}
               </div>
-              <button type="submit" disabled={submitting || Object.keys(errors).some(key => errors[key]) || !contactForm.name.trim() || !contactForm.email.trim() || !contactForm.message.trim()}>
-                {submitting ? t('aboutPage.contact.form.submitting') : t('aboutPage.contact.form.submit')}
+
+              <button type="submit" disabled={submitting}>
+                {submitting ? 'Надсилання...' : 'Надіслати'}
               </button>
             </form>
           </div>
         </div>
       </div>
-
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
     </div>
   );
 };

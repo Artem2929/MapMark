@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFormValidation } from '../../hooks/useFormValidation';
 import { loginSchema } from './Login.schema';
 import { authService } from '../../services/auth.service';
-import styles from './Login.styles.module.css';
+import './Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -43,82 +43,80 @@ const Login = () => {
                      data.email && data.password;
 
   return (
-    <div className={styles.page} style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: '#f9f9f9', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px'}}>
-      <div className={styles.container} style={{width: '100%', maxWidth: '400px'}}>
-        <form className={styles.form} style={{background: 'rgba(255, 255, 255, 0.98)', backdropFilter: 'blur(20px)', border: '1px solid rgba(59, 130, 246, 0.1)', borderRadius: '12px', padding: '32px', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)'}} onSubmit={handleSubmit}>
-          <h1 className={styles.title}>Вхід</h1>
-          <p className={styles.subtitle}>Увійдіть до свого акаунту</p>
+    <div className="login-page">
+      <div className="login-container">
+        <div className="login-form-wrapper">
+          <h1 className="login-title">Вхід</h1>
+          <p className="login-subtitle">Увійдіть до свого акаунту</p>
 
-          {apiError && (
-            <div className={styles.error}>{apiError}</div>
-          )}
+          <div className="error-container">
+            {apiError && (
+              <div className="error-message">{apiError}</div>
+            )}
+          </div>
 
-          <div className={styles.fields}>
-            <div className={styles.field}>
-              <label className={styles.label}>Email</label>
+          <form className="login-form" onSubmit={handleSubmit}>
+            <div className="form-group">
               <input
                 type="email"
-                className={`${styles.input} ${errors.email && touched.email ? styles.error : ''}`}
+                className={`${errors.email && touched.email ? 'input-error' : ''}`}
                 value={data.email}
                 onChange={(e) => handleChange('email', e.target.value)}
                 onBlur={() => handleBlur('email')}
-                placeholder="your@email.com"
+                placeholder="Email"
                 disabled={isLoading}
               />
               {errors.email && touched.email && (
-                <span className={styles.fieldError}>{errors.email}</span>
+                <span className="field-error">{errors.email}</span>
               )}
             </div>
 
-            <div className={styles.field}>
-              <label className={styles.label}>Пароль</label>
-              <div className={styles.passwordField}>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  className={`${styles.input} ${errors.password && touched.password ? styles.error : ''}`}
-                  value={data.password}
-                  onChange={(e) => handleChange('password', e.target.value)}
-                  onBlur={() => handleBlur('password')}
-                  placeholder="Введіть пароль"
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  className={styles.passwordToggle}
-                  onClick={() => setShowPassword(!showPassword)}
-                  disabled={isLoading}
-                >
-                  {showPassword ? '🙈' : '👁️'}
-                </button>
-              </div>
+            <div className="form-group password-group">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className={`${errors.password && touched.password ? 'input-error' : ''}`}
+                value={data.password}
+                onChange={(e) => handleChange('password', e.target.value)}
+                onBlur={() => handleBlur('password')}
+                placeholder="Пароль"
+                disabled={isLoading}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+                disabled={isLoading}
+              >
+                {showPassword ? '👀' : '🙈'}
+              </button>
               {errors.password && touched.password && (
-                <span className={styles.fieldError}>{errors.password}</span>
+                <span className="field-error">{errors.password}</span>
               )}
             </div>
-          </div>
 
-          <button
-            type="submit"
-            className={styles.submitButton}
-            disabled={!isFormValid || isLoading}
-          >
-            {isLoading ? (
-              <>
-                <div className={styles.spinner} />
-                Вхід...
-              </>
-            ) : (
-              'Увійти'
-            )}
-          </button>
+            <button
+              type="submit"
+              className="login-btn"
+              disabled={!isFormValid || isLoading}
+            >
+              {isLoading ? (
+                <div className="btn-loading">
+                  <div className="btn-spinner" />
+                  Вхід...
+                </div>
+              ) : (
+                'Увійти'
+              )}
+            </button>
+          </form>
 
-          <div className={styles.footer}>
+          <div className="login-footer">
             <p>
               Немає акаунту?{' '}
               <Link to="/register">Зареєструватися</Link>
             </p>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
