@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { AuthProvider } from '../authStore'
-import { HomePage } from '../pages/HomePage.jsx'
-import { LoginPage } from '../pages/LoginPage.jsx'
-import { RegisterPage } from '../pages/RegisterPage.jsx'
+import { AuthProvider } from './store'
+import { HomePage } from '../pages/HomePage'
+import { LoginPage } from '../pages/LoginPage'
+import { RegisterPage } from '../pages/RegisterPage'
 
 export function App() {
   return (

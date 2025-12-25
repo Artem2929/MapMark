@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
-import { useAuth } from '../authStore'
+import { useAuthStore } from '../app/store'
 
 export function HomePage() {
-  const { isAuthenticated, user, clearAuth } = useAuth()
+  const { isAuthenticated, user, clearAuth } = useAuthStore()
 
   const handleLogout = () => {
     clearAuth()
@@ -11,7 +11,7 @@ export function HomePage() {
   return (
     <div style={{ padding: '20px' }}>
       <h1>MapMark</h1>
-      <p>Чистий старт з правильною архітектурою</p>
+      <p>Професійна архітектура готова!</p>
       
       {isAuthenticated ? (
         <div>
@@ -24,10 +24,10 @@ export function HomePage() {
           <Link to="/login" style={{ 
             display: 'inline-block',
             padding: '10px 20px',
-            background: '#3b82f6',
+            background: 'var(--color-primary)',
             color: 'white',
             textDecoration: 'none',
-            borderRadius: '8px'
+            borderRadius: 'var(--radius-md)'
           }}>
             Увійти
           </Link>

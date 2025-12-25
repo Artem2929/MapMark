@@ -11,6 +11,10 @@ export function Input({
   className = '',
   ...props 
 }) {
+  const baseClass = 'input'
+  const errorClass = error ? 'input--error' : ''
+  const classes = [baseClass, errorClass, className].filter(Boolean).join(' ')
+
   return (
     <div className="input-wrapper">
       <input
@@ -20,7 +24,7 @@ export function Input({
         onChange={onChange}
         onBlur={onBlur}
         disabled={disabled}
-        className={`input ${error ? 'input--error' : ''} ${className}`}
+        className={classes}
         {...props}
       />
       {error && <span className="input__error">{error}</span>}

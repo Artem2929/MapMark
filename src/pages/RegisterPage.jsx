@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../authStore'
-import { RegisterForm } from '../RegisterForm'
+import { useAuthStore } from '../app/store'
+import { RegisterForm } from '../features/auth/components/RegisterForm'
 
 export function RegisterPage() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated } = useAuthStore()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -17,5 +17,9 @@ export function RegisterPage() {
     return null
   }
 
-  return <RegisterForm />
+  return (
+    <div className="page-container">
+      <RegisterForm />
+    </div>
+  )
 }

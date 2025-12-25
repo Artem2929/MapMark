@@ -7,15 +7,25 @@ export function Button({
   disabled, 
   loading,
   variant = 'primary',
+  size = 'md',
   className = '',
   ...props 
 }) {
+  const baseClass = 'btn'
+  const variantClass = `btn--${variant}`
+  const sizeClass = `btn--${size}`
+  const loadingClass = loading ? 'btn--loading' : ''
+  
+  const classes = [baseClass, variantClass, sizeClass, loadingClass, className]
+    .filter(Boolean)
+    .join(' ')
+
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      className={`btn btn--${variant} ${loading ? 'btn--loading' : ''} ${className}`}
+      className={classes}
       {...props}
     >
       {loading ? (
