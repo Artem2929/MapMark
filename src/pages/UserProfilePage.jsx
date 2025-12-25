@@ -1,10 +1,56 @@
 import { useParams, Navigate } from 'react-router-dom'
 import { useAuthStore } from '../app/store'
 import { Header } from '../components/ui/Header'
+import { ErrorBoundary } from '../components/ErrorBoundary'
+import { ProfileProvider, useProfile } from '../contexts/ProfileContext'
+import ProfileContent from '../features/profile/components/ProfileContent'
+import ProfileSkeleton from '../features/profile/components/ProfileSkeleton'
+import ProfileBreadcrumbs from '../features/profile/components/ProfileBreadcrumbs'
+import ProfileHeader from '../features/profile/components/ProfileHeader'
+import Wall from '../features/profile/components/Wall'
+import ErrorMessage from '../components/ui/ErrorMessage'
+import '../features/profile/components/Profile.css'
 
-export function UserProfilePage() {
+const UserProfileContent = () => {
+  const { user, loading, targetUserId, isOwnProfile } = useProfile()
+
+  if (loading) {
+    return (
+      <div className="profile-user-profile">
+        <ProfileSkeleton />
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="profile-user-profile">
+        <div className="profile-profile-container">
+          <ErrorMessage 
+            title="Профіль не знайдено"
+            message="Не вдалося завантажити дані профілю. Спробуйте пізніше."
+          />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="page-container profile-user-profile">
+      <div className="profile-profile-container">
+        <ProfileBreadcrumbs />
+        <ProfileHeader />
+        <ProfileContent />
+        <Wall userId={targetUserId} isOwnProfile={isOwnProfile} user={user} />
+      </div>
+    </div>
+  )
+}
+
+const UserProfile = () => {
   const { userId } = useParams()
-  const { isAuthenticated, user, isLoading } = useAuthStore()
+  const { user: currentUser, isAuthenticated, isLoading } = useAuthStore()
+  const targetUserId = userId || currentUser?.id
 
   if (isLoading) {
     return <div>Завантаження...</div>
@@ -15,12 +61,13 @@ export function UserProfilePage() {
   }
 
   return (
-    <div className="page-container">
+    <ErrorBoundary>
       <Header />
-      <div className="content-container">
-        <h1>Профіль користувача: {userId}</h1>
-        <p>Поточний користувач: {user?.name}</p>
-      </div>
-    </div>
+      <ProfileProvider userId={targetUserId}>
+        <UserProfileContent />
+      </ProfileProvider>
+    </ErrorBoundary>
   )
 }
+
+export default UserProfile
