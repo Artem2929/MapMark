@@ -131,3 +131,11 @@
     transition: none;
   }
 }
+
+.skeleton-mb-16 {
+  margin-bottom: 16px;
+}
+
+.skeleton-mb-8 {
+  margin-bottom: 8px;
+}

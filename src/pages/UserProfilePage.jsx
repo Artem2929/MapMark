@@ -1,6 +1,6 @@
 import { useParams, Navigate } from 'react-router-dom'
 import { useAuthStore } from '../app/store'
-import { Header } from '../components/ui/Header'
+import { Header, ErrorMessage } from '../components/ui'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { ProfileProvider, useProfile } from '../contexts/ProfileContext'
 import ProfileContent from '../features/profile/components/ProfileContent'
@@ -8,7 +8,6 @@ import ProfileSkeleton from '../features/profile/components/ProfileSkeleton'
 import ProfileBreadcrumbs from '../features/profile/components/ProfileBreadcrumbs'
 import ProfileHeader from '../features/profile/components/ProfileHeader'
 import Wall from '../features/profile/components/Wall'
-import ErrorMessage from '../components/ui/ErrorMessage'
 import '../features/profile/components/Profile.css'
 
 const UserProfileContent = () => {

@@ -1,3 +1,6 @@
 export { Button } from './Button'
 export { Input } from './Input'
 export { Header } from './Header'
+export { default as Breadcrumbs } from './Breadcrumbs'
+export { default as Skeleton } from './Skeleton'
+export { default as ErrorMessage } from './ErrorMessage'
