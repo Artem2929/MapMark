@@ -1,47 +1,72 @@
-const mongoose = require('mongoose')
 const config = require('./config')
+const logger = require('./utils/logger')
+const database = require('./utils/database')
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
-  console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...')
-  console.log(err.name, err.message)
+  logger.error('UNCAUGHT EXCEPTION! 💥 Shutting down...', {
+    error: err.name,
+    message: err.message,
+    stack: err.stack
+  })
   process.exit(1)
 })
 
 const app = require('./app')
 
-// Connect to MongoDB
-mongoose
-  .connect(config.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
+// Connect to database
+database.connect()
   .then(() => {
-    console.log('✅ Connected to MongoDB')
+    // Start server only after successful database connection
+    const server = app.listen(config.PORT, () => {
+      logger.info(`🚀 Server running on port ${config.PORT} in ${config.NODE_ENV} mode`, {
+        port: config.PORT,
+        environment: config.NODE_ENV,
+        nodeVersion: process.version,
+        pid: process.pid
+      })
+    })
+
+    // Graceful shutdown handlers
+    const gracefulShutdown = (signal) => {
+      logger.info(`👋 ${signal} RECEIVED. Shutting down gracefully`, { signal })
+      
+      server.close(async () => {
+        logger.info('🔄 HTTP server closed')
+        
+        try {
+          await database.disconnect()
+          logger.info('💥 Process terminated gracefully!')
+          process.exit(0)
+        } catch (error) {
+          logger.error('Error during graceful shutdown:', error)
+          process.exit(1)
+        }
+      })
+      
+      // Force close server after 30 seconds
+      setTimeout(() => {
+        logger.error('⚠️ Could not close connections in time, forcefully shutting down')
+        process.exit(1)
+      }, 30000)
+    }
+
+    // Handle unhandled promise rejections
+    process.on('unhandledRejection', (err) => {
+      logger.error('UNHANDLED REJECTION! 💥 Shutting down...', {
+        error: err.name,
+        message: err.message,
+        stack: err.stack
+      })
+      gracefulShutdown('UNHANDLED_REJECTION')
+    })
+
+    // Handle SIGTERM
+    process.on('SIGTERM', () => gracefulShutdown('SIGTERM'))
+    process.on('SIGINT', () => gracefulShutdown('SIGINT'))
+    
   })
-  .catch((err) => {
-    console.error('❌ MongoDB connection error:', err)
+  .catch((error) => {
+    logger.error('❌ Failed to start server:', error)
     process.exit(1)
   })
-
-// Start server
-const server = app.listen(config.PORT, () => {
-  console.log(`🚀 Server running on port ${config.PORT} in ${config.NODE_ENV} mode`)
-})
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.log('UNHANDLED REJECTION! 💥 Shutting down...')
-  console.log(err.name, err.message)
-  server.close(() => {
-    process.exit(1)
-  })
-})
-
-// Handle SIGTERM
-process.on('SIGTERM', () => {
-  console.log('👋 SIGTERM RECEIVED. Shutting down gracefully')
-  server.close(() => {
-    console.log('💥 Process terminated!')
-  })
-})

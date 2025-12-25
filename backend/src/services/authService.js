@@ -1,13 +1,20 @@
 const User = require('../models/User')
 const { AppError } = require('../utils/errorHandler')
 const { createSendToken, verifyToken } = require('../utils/jwt')
+const logger = require('../utils/logger')
 
 class AuthService {
   async register(userData) {
     // Check if user already exists
     const existingUser = await User.findOne({ email: userData.email })
     if (existingUser) {
-      throw new AppError('User with this email already exists', 400, 'USER_EXISTS')
+      throw new AppError('User already exists', 409, 'USER_EXISTS')
+    }
+
+    // Additional security checks
+    const suspiciousPatterns = /^(admin|root|test|user|null|undefined)$/i
+    if (suspiciousPatterns.test(userData.name.trim())) {
+      throw new AppError('Invalid name format', 400, 'INVALID_NAME')
     }
 
     // Create new user
@@ -15,7 +22,7 @@ class AuthService {
       name: userData.name,
       email: userData.email,
       password: userData.password,
-      passwordConfirm: userData.passwordConfirm,
+      passwordConfirm: userData.passwordConfirm || userData.password,
       country: userData.country,
       role: userData.role || 'user'
     })
@@ -30,10 +37,10 @@ class AuthService {
     }
 
     // Check if user exists && password is correct
-    const user = await User.findOne({ email }).select('+password')
+    const user = await User.findOne({ email, isActive: true }).select('+password')
 
     if (!user || !(await user.correctPassword(password, user.password))) {
-      throw new AppError('Incorrect email or password', 401, 'INVALID_CREDENTIALS')
+      throw new AppError('Invalid credentials', 401, 'INVALID_CREDENTIALS')
     }
 
     // Update last login
@@ -67,6 +74,21 @@ class AuthService {
     }
 
     return currentUser
+  }
+
+  async forgotPassword(email) {
+    if (!email) {
+      throw new AppError('Email is required', 400, 'EMAIL_REQUIRED')
+    }
+
+    // Check if user exists
+    const user = await User.findOne({ email, isActive: true })
+    
+    // For security reasons, always return success even if user doesn't exist
+    logger.info('Password reset requested', { email, userExists: !!user })
+    
+    // In real app, generate reset token and send email here
+    return { message: 'If this email exists, password reset instructions have been sent' }
   }
 
   async changePassword(userId, currentPassword, newPassword) {

@@ -22,8 +22,24 @@ const registerValidation = [
     .trim()
     .isLength({ min: 2, max: 50 })
     .withMessage('Name must be between 2 and 50 characters')
-    .matches(/^[a-zA-Zа-яА-ЯіІїЇєЄ\s]+$/)
-    .withMessage('Name can only contain letters and spaces'),
+    .matches(/^[a-zA-Zа-яА-ЯіІїЇєЄ'\-\s]+$/)
+    .withMessage('Name can only contain letters, spaces, hyphens and apostrophes')
+    .custom((value) => {
+      // Check for consecutive spaces
+      if (/\s{2,}/.test(value)) {
+        throw new Error('Name cannot contain consecutive spaces')
+      }
+      // Check for leading/trailing spaces
+      if (value !== value.trim()) {
+        throw new Error('Name cannot start or end with spaces')
+      }
+      // Check for suspicious patterns
+      const suspiciousPatterns = /^(admin|root|test|user|null|undefined)$/i
+      if (suspiciousPatterns.test(value.trim())) {
+        throw new Error('Invalid name format')
+      }
+      return true
+    }),
     
   body('email')
     .isEmail()
@@ -65,8 +81,8 @@ const loginValidation = [
     .normalizeEmail(),
     
   body('password')
-    .notEmpty()
-    .withMessage('Password is required'),
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters'),
     
   handleValidationErrors
 ]
@@ -99,11 +115,20 @@ const updateProfileValidation = [
     .trim()
     .isLength({ min: 2, max: 50 })
     .withMessage('Name must be between 2 and 50 characters')
-    .matches(/^[a-zA-Zа-яА-ЯіІїЇєЄ\s]+$/)
-    .withMessage('Name can only contain letters and spaces'),
+    .matches(/^[a-zA-Zа-яА-ЯіІїЇєЄ'\-\s]+$/)
+    .withMessage('Name can only contain letters, spaces, hyphens and apostrophes'),
     
   body('email')
     .optional()
+    .isEmail()
+    .withMessage('Please provide a valid email')
+    .normalizeEmail(),
+    
+  handleValidationErrors
+]
+
+const forgotPasswordValidation = [
+  body('email')
     .isEmail()
     .withMessage('Please provide a valid email')
     .normalizeEmail(),
@@ -116,5 +141,6 @@ module.exports = {
   loginValidation,
   changePasswordValidation,
   updateProfileValidation,
+  forgotPasswordValidation,
   handleValidationErrors
 }
