@@ -10,6 +10,15 @@
   position: relative;
 }
 
+@media (min-width: 769px) {
+  .page-container {
+    height: 100vh;
+    overflow: hidden;
+    align-items: flex-start;
+    padding-top: 15vh;
+  }
+}
+
 .page-container--full {
   padding: 0;
 }
