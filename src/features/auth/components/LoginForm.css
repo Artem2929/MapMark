@@ -123,16 +123,14 @@
 .checkbox-label input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: var(--color-success);
 }
 
 .checkbox-label a {
-  color: var(--color-success);
   font-weight: 600;
 }
 
 .checkbox-label a:hover {
-  color: var(--color-success-dark);
+  color: var(--color-primary-dark);
 }
 
 /* Responsive */

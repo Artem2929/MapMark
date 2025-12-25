@@ -13,7 +13,7 @@ export function RegisterForm() {
     password: '',
     confirmPassword: '',
     country: '',
-    role: 'user',
+    role: '',
     acceptTerms: false,
     acceptPrivacy: false
   })
@@ -175,7 +175,7 @@ export function RegisterForm() {
         
         <Input
           type="email"
-          placeholder="Email"
+          placeholder="Пошта"
           value={formData.email}
           onChange={handleFieldChange('email')}
           onBlur={handleFieldBlur('email')}
@@ -208,8 +208,9 @@ export function RegisterForm() {
             onBlur={handleFieldBlur('country')}
             className={`input ${fieldErrors.country && touched.country ? 'input--error' : ''}`}
             disabled={loading}
+            required
           >
-            <option value="">Оберіть країну</option>
+            <option value="" disabled>Оберіть країну</option>
             {countries.map(country => (
               <option key={country.value} value={country.value}>
                 {country.label}
@@ -227,7 +228,9 @@ export function RegisterForm() {
             onChange={handleFieldChange('role')}
             className="input"
             disabled={loading}
+            required
           >
+            <option value="" disabled>Оберіть роль</option>
             {roles.map(role => (
               <option key={role.value} value={role.value}>
                 {role.label}

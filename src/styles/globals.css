@@ -24,8 +24,8 @@ body {
 
 /* Focus styles */
 *:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  /* outline: 2px solid var(--color-primary); */
+  /* outline-offset: 2px; */
 }
 
 /* Link styles */
@@ -37,7 +37,6 @@ a {
 
 a:hover {
   color: var(--color-primary-dark);
-  text-decoration: underline;
 }
 
 /* Button reset */

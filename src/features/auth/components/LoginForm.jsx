@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Input } from '../../../components/ui'
+import { PasswordInput } from '../../../components/ui/PasswordInput/PasswordInput'
 import { validators, validateField } from '../../../utils/validators'
 import { useAuth } from '../hooks/useAuth'
 import './LoginForm.css'
@@ -75,7 +76,7 @@ export function LoginForm() {
       <form onSubmit={handleSubmit} className="auth-form__form">
         <Input
           type="email"
-          placeholder="Email"
+          placeholder="Пошта"
           value={formData.email}
           onChange={handleFieldChange('email')}
           onBlur={handleFieldBlur('email')}
@@ -83,8 +84,7 @@ export function LoginForm() {
           disabled={loading}
         />
         
-        <Input
-          type="password"
+        <PasswordInput
           placeholder="Пароль"
           value={formData.password}
           onChange={handleFieldChange('password')}

@@ -28,10 +28,23 @@
   font-weight: 400;
 }
 
+/* Select placeholder styling */
+select.input option[value=""] {
+  color: var(--color-gray-400);
+}
+
+/* When select has empty value, make text look like placeholder */
+select.input:invalid {
+  color: var(--color-gray-400);
+}
+
+select.input:focus:invalid {
+  color: var(--color-gray-400);
+}
+
 .input:disabled {
   background: var(--color-gray-100);
   color: var(--color-gray-500);
-  cursor: not-allowed;
 }
 
 /* Error state */

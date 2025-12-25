@@ -34,7 +34,6 @@
 .btn--primary {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: white;
-  border: 1px solid rgba(59, 130, 246, 0.3);
   box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
@@ -59,7 +58,6 @@
 .btn:disabled {
   background: var(--color-gray-400) !important;
   color: white;
-  cursor: not-allowed;
   box-shadow: none;
 }
 
