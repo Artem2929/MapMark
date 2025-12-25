@@ -1,1 +1,0 @@
-// Following validation schema

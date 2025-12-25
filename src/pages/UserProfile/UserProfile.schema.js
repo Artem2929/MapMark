@@ -1,1 +1,0 @@
-// UserProfile validation schema

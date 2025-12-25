@@ -1,1 +1,0 @@
-// Friends validation schema

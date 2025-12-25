@@ -1,1 +1,0 @@
-// Photos validation schema
