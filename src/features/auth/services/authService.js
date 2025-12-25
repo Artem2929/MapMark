@@ -1,4 +1,17 @@
-const API_BASE_URL = 'http://localhost:3001/api/v1'
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001/api/v1'
+
+let csrfToken = null
+
+const getCSRFToken = async () => {
+  if (!csrfToken) {
+    const response = await fetch(`${API_BASE_URL}/auth/csrf-token`, {
+      credentials: 'include'
+    })
+    const data = await response.json()
+    csrfToken = data.csrfToken
+  }
+  return csrfToken
+}
 
 const validateCredentials = (credentials) => {
   if (!credentials || typeof credentials !== 'object') {
@@ -30,9 +43,14 @@ export const authService = {
     try {
       validateCredentials(credentials)
       
+      const token = await getCSRFToken()
+      
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': token
+        },
         credentials: 'include',
         body: JSON.stringify(credentials)
       })
@@ -54,9 +72,14 @@ export const authService = {
     try {
       validateUserData(userData)
       
+      const token = await getCSRFToken()
+      
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': token
+        },
         credentials: 'include',
         body: JSON.stringify({
           email: userData.email,

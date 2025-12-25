@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Input } from '../../../components/ui'
 import { PasswordInput } from '../../../components/ui/PasswordInput/PasswordInput'
@@ -66,7 +66,7 @@ export function RegisterForm() {
     return !value ? 'Прийміть політику конфіденційності' : null
   }
 
-  const handleFieldChange = (field) => (e) => {
+  const handleFieldChange = useCallback((field) => (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
     setFormData(prev => ({ ...prev, [field]: value }))
     
@@ -88,9 +88,9 @@ export function RegisterForm() {
       }
       setFieldErrors(prev => ({ ...prev, [field]: fieldError }))
     }
-  }
+  }, [touched, error, clearError])
 
-  const handleFieldBlur = (field) => () => {
+  const handleFieldBlur = useCallback((field) => () => {
     setTouched(prev => ({ ...prev, [field]: true }))
     let fieldError = null
     const value = formData[field]
@@ -102,20 +102,24 @@ export function RegisterForm() {
       case 'country': fieldError = validateCountry(value); break
     }
     setFieldErrors(prev => ({ ...prev, [field]: fieldError }))
-  }
+  }, [formData])
 
-  const isFormValid = () => {
-    const nameError = validateName(formData.name)
-    const emailError = validateEmail(formData.email)
-    const passwordError = validatePassword(formData.password)
-    const confirmPasswordError = validateConfirmPassword(formData.confirmPassword)
-    const countryError = validateCountry(formData.country)
-    const termsError = validateTerms(formData.acceptTerms)
-    const privacyError = validatePrivacy(formData.acceptPrivacy)
-    
-    return !nameError && !emailError && !passwordError && !confirmPasswordError && 
-           !countryError && !termsError && !privacyError
-  }
+  const validateAllFields = useCallback((data) => {
+    return {
+      name: validateName(data.name),
+      email: validateEmail(data.email),
+      password: validatePassword(data.password),
+      confirmPassword: validateConfirmPassword(data.confirmPassword),
+      country: validateCountry(data.country),
+      acceptTerms: validateTerms(data.acceptTerms),
+      acceptPrivacy: validatePrivacy(data.acceptPrivacy)
+    }
+  }, [])
+
+  const isFormValid = useMemo(() => {
+    const errors = validateAllFields(formData)
+    return !Object.values(errors).some(error => error)
+  }, [formData, validateAllFields])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -266,7 +270,7 @@ export function RegisterForm() {
           type="submit"
           variant="success"
           loading={loading}
-          disabled={!isFormValid() || loading}
+          disabled={!isFormValid || loading}
         >
           Зареєструватися
         </Button>

@@ -12,6 +12,10 @@ class AuthService {
     }
 
     // Additional security checks
+    if (!userData.name || typeof userData.name !== 'string') {
+      throw new AppError('Invalid name format', 400, 'INVALID_NAME')
+    }
+    
     const suspiciousPatterns = /^(admin|root|test|user|null|undefined)$/i
     if (suspiciousPatterns.test(userData.name.trim())) {
       throw new AppError('Invalid name format', 400, 'INVALID_NAME')
@@ -47,6 +51,9 @@ class AuthService {
     user.lastLogin = new Date()
     await user.save({ validateBeforeSave: false })
 
+    // Remove password from response
+    user.password = undefined
+
     return user
   }
 
@@ -55,25 +62,35 @@ class AuthService {
       throw new AppError('Refresh token is required', 400, 'MISSING_REFRESH_TOKEN')
     }
 
-    // Verify refresh token
-    const decoded = await verifyToken(refreshToken)
-    
-    if (decoded.type !== 'refresh') {
-      throw new AppError('Invalid refresh token', 401, 'INVALID_REFRESH_TOKEN')
-    }
+    try {
+      // Verify refresh token
+      const decoded = await verifyToken(refreshToken)
+      
+      if (decoded.type !== 'refresh') {
+        throw new AppError('Invalid refresh token', 401, 'INVALID_REFRESH_TOKEN')
+      }
 
-    // Check if user still exists
-    const currentUser = await User.findById(decoded.id)
-    if (!currentUser) {
-      throw new AppError('The user belonging to this token does no longer exist.', 401, 'USER_NOT_FOUND')
-    }
+      // Check if user still exists
+      const currentUser = await User.findById(decoded.id)
+      if (!currentUser) {
+        throw new AppError('The user belonging to this token does no longer exist.', 401, 'USER_NOT_FOUND')
+      }
 
-    // Check if user changed password after the token was issued
-    if (currentUser.changedPasswordAfter(decoded.iat)) {
-      throw new AppError('User recently changed password! Please log in again.', 401, 'PASSWORD_CHANGED')
-    }
+      // Check if user changed password after the token was issued
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
+        throw new AppError('User recently changed password! Please log in again.', 401, 'PASSWORD_CHANGED')
+      }
 
-    return currentUser
+      return currentUser
+    } catch (error) {
+      if (error.name === 'JsonWebTokenError') {
+        throw new AppError('Invalid refresh token', 401, 'INVALID_REFRESH_TOKEN')
+      }
+      if (error.name === 'TokenExpiredError') {
+        throw new AppError('Refresh token expired', 401, 'TOKEN_EXPIRED')
+      }
+      throw error
+    }
   }
 
   async forgotPassword(email) {
@@ -94,6 +111,10 @@ class AuthService {
   async changePassword(userId, currentPassword, newPassword) {
     // Get user from collection
     const user = await User.findById(userId).select('+password')
+    
+    if (!user) {
+      throw new AppError('User not found', 404, 'USER_NOT_FOUND')
+    }
 
     // Check if current password is correct
     if (!(await user.correctPassword(currentPassword, user.password))) {

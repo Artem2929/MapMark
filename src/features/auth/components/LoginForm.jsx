@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Input } from '../../../components/ui'
 import { PasswordInput } from '../../../components/ui/PasswordInput/PasswordInput'
@@ -12,21 +12,21 @@ export function LoginForm() {
   const [touched, setTouched] = useState({})
   const { login, loading, error, clearError } = useAuth()
 
-  const validateEmail = (value) => {
+  const validateEmail = useCallback((value) => {
     return validateField(value, [
       validators.required, 
       validators.onlyLatin('Email може містити тільки латинські символи'),
       validators.email
     ])
-  }
+  }, [])
 
-  const validatePassword = (value) => {
+  const validatePassword = useCallback((value) => {
     return validateField(value, [
       validators.required,
       validators.onlyLatin('Пароль може містити тільки латинські символи'),
       validators.minLength(6, 'Пароль має бути мінімум 6 символів')
     ])
-  }
+  }, [])
 
   const handleFieldChange = (field) => (e) => {
     const value = e.target.value
@@ -44,25 +44,19 @@ export function LoginForm() {
     setFieldErrors(prev => ({ ...prev, [field]: fieldError }))
   }
 
-  const isFormValid = () => {
+  const isFormValid = useMemo(() => {
     const emailError = validateEmail(formData.email)
     const passwordError = validatePassword(formData.password)
     return !emailError && !passwordError
-  }
+  }, [formData.email, formData.password, validateEmail, validatePassword])
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
     
-    const emailError = validateEmail(formData.email)
-    const passwordError = validatePassword(formData.password)
-    
-    setFieldErrors({ email: emailError, password: passwordError })
-    setTouched({ email: true, password: true })
-    
-    if (emailError || passwordError) return
+    if (!isFormValid) return
     
     await login(formData)
-  }
+  }, [formData, isFormValid, login])
 
   return (
     <div className="auth-form">
@@ -103,7 +97,7 @@ export function LoginForm() {
           type="submit"
           variant="primary"
           loading={loading}
-          disabled={!isFormValid() || loading}
+          disabled={!isFormValid || loading}
         >
           Увійти
         </Button>
