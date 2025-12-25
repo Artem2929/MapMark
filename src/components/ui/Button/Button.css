@@ -12,6 +12,9 @@
   position: relative;
   overflow: hidden;
   letter-spacing: -0.01em;
+  min-height: 44px;
+  width: 100%;
+  touch-action: manipulation;
 }
 
 /* Sizes */
@@ -96,4 +99,30 @@
 
 .btn:hover::before {
   left: 100%;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .btn {
+    min-height: 40px;
+    font-weight: 600;
+  }
+  
+  .btn--sm {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    min-height: 36px;
+  }
+  
+  .btn--md {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-base);
+    min-height: 40px;
+  }
+  
+  .btn--lg {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    font-size: var(--font-size-lg);
+    min-height: 44px;
+  }
 }

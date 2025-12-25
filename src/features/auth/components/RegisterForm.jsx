@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Input } from '../../../components/ui'
 import { PasswordInput } from '../../../components/ui/PasswordInput/PasswordInput'
+import { CustomSelect } from '../../../components/ui/CustomSelect'
 import { validators, validateField } from '../../../utils/validators'
 import { useAuth } from '../hooks/useAuth'
 import './LoginForm.css'
@@ -201,43 +202,23 @@ export function RegisterForm() {
           disabled={loading}
         />
         
-        <div className="input-wrapper">
-          <select
-            value={formData.country}
-            onChange={handleFieldChange('country')}
-            onBlur={handleFieldBlur('country')}
-            className={`input ${fieldErrors.country && touched.country ? 'input--error' : ''}`}
-            disabled={loading}
-            required
-          >
-            <option value="" disabled>Оберіть країну</option>
-            {countries.map(country => (
-              <option key={country.value} value={country.value}>
-                {country.label}
-              </option>
-            ))}
-          </select>
-          {fieldErrors.country && touched.country && (
-            <span className="input__error">{fieldErrors.country}</span>
-          )}
-        </div>
+        <CustomSelect
+          value={formData.country}
+          onChange={handleFieldChange('country')}
+          onBlur={handleFieldBlur('country')}
+          options={countries}
+          placeholder="Оберіть країну"
+          error={touched.country ? fieldErrors.country : null}
+          disabled={loading}
+        />
         
-        <div className="input-wrapper">
-          <select
-            value={formData.role}
-            onChange={handleFieldChange('role')}
-            className="input"
-            disabled={loading}
-            required
-          >
-            <option value="" disabled>Оберіть роль</option>
-            {roles.map(role => (
-              <option key={role.value} value={role.value}>
-                {role.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        <CustomSelect
+          value={formData.role}
+          onChange={handleFieldChange('role')}
+          options={roles}
+          placeholder="Оберіть роль"
+          disabled={loading}
+        />
         
         <div className="checkbox-group">
           <label className="checkbox-label">

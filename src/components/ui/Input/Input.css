@@ -14,6 +14,16 @@
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   transition: all var(--transition-normal);
+  min-height: 44px;
+  width: 100%;
+}
+
+/* Remove select arrow */
+select.input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: none;
 }
 
 .input:focus {
@@ -64,4 +74,27 @@ select.input:focus:invalid {
   font-weight: 500;
   margin-left: var(--spacing-xs);
   animation: slideIn 0.3s ease-out;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .input {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    min-height: 48px;
+  }
+  
+  .input__error {
+    font-size: 11px;
+    margin-left: var(--spacing-xs);
+  }
+}
+
+@media (max-width: 374px) {
+  .input {
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+  }
 }
