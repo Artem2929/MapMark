@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import './Button.css'
 
 export function Button({ 
@@ -11,14 +12,16 @@ export function Button({
   className = '',
   ...props 
 }) {
-  const baseClass = 'btn'
-  const variantClass = `btn--${variant}`
-  const sizeClass = `btn--${size}`
-  const loadingClass = loading ? 'btn--loading' : ''
-  
-  const classes = [baseClass, variantClass, sizeClass, loadingClass, className]
-    .filter(Boolean)
-    .join(' ')
+  const classes = useMemo(() => {
+    const baseClass = 'btn'
+    const variantClass = `btn--${variant}`
+    const sizeClass = `btn--${size}`
+    const loadingClass = loading ? 'btn--loading' : ''
+    
+    return [baseClass, variantClass, sizeClass, loadingClass, className]
+      .filter(Boolean)
+      .join(' ')
+  }, [variant, size, loading, className])
 
   return (
     <button
@@ -26,10 +29,12 @@ export function Button({
       onClick={onClick}
       disabled={disabled || loading}
       className={classes}
+      aria-busy={loading}
+      aria-label={loading ? 'Завантаження...' : undefined}
       {...props}
     >
       {loading ? (
-        <span className="btn__spinner">Loading</span>
+        <span className="btn__spinner">Завантаження...</span>
       ) : (
         children
       )}

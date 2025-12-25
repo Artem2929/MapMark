@@ -138,11 +138,7 @@ export function RegisterForm() {
   }
 
   const countries = [
-    { value: 'UA', label: 'Україна' },
-    { value: 'US', label: 'США' },
-    { value: 'DE', label: 'Німеччина' },
-    { value: 'FR', label: 'Франція' },
-    { value: 'PL', label: 'Польща' }
+    { value: 'UA', label: 'Україна' }
   ]
 
   const roles = [

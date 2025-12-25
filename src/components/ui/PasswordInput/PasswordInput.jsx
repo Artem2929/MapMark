@@ -30,6 +30,8 @@ export function PasswordInput({
         type="button"
         className="password-toggle"
         onClick={() => setShowPassword(!showPassword)}
+        aria-label={showPassword ? "Приховати пароль" : "Показати пароль"}
+        aria-pressed={showPassword}
       >
         {showPassword ? '👀' : '🙈'}
       </button>

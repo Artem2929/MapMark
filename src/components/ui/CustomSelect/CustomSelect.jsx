@@ -1,25 +1,22 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import './CustomSelect.css'
 
 export function CustomSelect({ 
   value, 
   onChange, 
   onBlur,
-  options, 
+  options = [], 
   placeholder, 
   error,
   disabled,
   className = '' 
 }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState(null)
   const selectRef = useRef(null)
 
-  useEffect(() => {
-    if (options && options.length > 0) {
-      const selected = options.find(option => option.value === value)
-      setSelectedOption(selected || null)
-    }
+  const selectedOption = useMemo(() => {
+    if (!options || options.length === 0) return null
+    return options.find(option => option.value === value) || null
   }, [value, options])
 
   useEffect(() => {
@@ -35,10 +32,12 @@ export function CustomSelect({
   }, [onBlur])
 
   const handleOptionClick = (option) => {
-    const syntheticEvent = {
-      target: { value: option.value }
+    if (onChange) {
+      const syntheticEvent = {
+        target: { value: option.value }
+      }
+      onChange(syntheticEvent)
     }
-    onChange(syntheticEvent)
     setIsOpen(false)
   }
 
@@ -48,29 +47,45 @@ export function CustomSelect({
     }
   }
 
+  const filteredOptions = useMemo(() => {
+    return (options || []).filter(option => option.value !== '')
+  }, [options])
+
   return (
     <div className="input-wrapper">
       <div 
         className={`custom-select ${className} ${error ? 'error' : ''} ${disabled ? 'disabled' : ''}`} 
         ref={selectRef}
+        role="combobox"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
       >
         <div 
           className={`custom-select-trigger ${isOpen ? 'open' : ''}`}
           onClick={handleTriggerClick}
+          tabIndex={disabled ? -1 : 0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              handleTriggerClick()
+            }
+          }}
         >
           <span className={`custom-select-value ${!selectedOption || selectedOption.value === '' ? 'placeholder' : ''}`}>
             {selectedOption && selectedOption.value !== '' ? selectedOption.label : placeholder}
           </span>
-          <span className={`custom-select-arrow ${isOpen ? 'up' : 'down'}`}>▼</span>
+          <span className={`custom-select-arrow ${isOpen ? 'up' : 'down'}`} aria-hidden="true">▼</span>
         </div>
         
         {isOpen && !disabled && (
-          <div className="custom-select-dropdown">
-            {options.filter(option => option.value !== '').map((option) => (
+          <div className="custom-select-dropdown" role="listbox">
+            {filteredOptions.map((option) => (
               <div
                 key={option.value}
                 className={`custom-select-option ${value === option.value ? 'selected' : ''}`}
                 onClick={() => handleOptionClick(option)}
+                role="option"
+                aria-selected={value === option.value}
               >
                 {option.label}
               </div>

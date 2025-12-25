@@ -9,36 +9,53 @@ const initialState = {
   isAuthenticated: false
 }
 
+const getStoredData = (key) => {
+  try {
+    const data = localStorage.getItem(key)
+    return data ? (key === 'user' ? JSON.parse(data) : data) : null
+  } catch (error) {
+    console.error(`Error parsing stored ${key}:`, error)
+    localStorage.removeItem(key)
+    return null
+  }
+}
+
 export function AuthProvider({ children }) {
   const [state, setState] = useState(initialState)
 
   useEffect(() => {
-    const savedToken = localStorage.getItem('accessToken')
-    const savedUser = localStorage.getItem('user')
+    const savedToken = getStoredData('accessToken')
+    const savedUser = getStoredData('user')
     
     if (savedToken && savedUser) {
       setState(prev => ({
         ...prev,
         accessToken: savedToken,
-        user: JSON.parse(savedUser),
+        user: savedUser,
         isAuthenticated: true
       }))
     }
   }, [])
 
   const setAuth = (authData) => {
+    if (!authData) return
+    
     setState(prev => ({
       ...prev,
       ...authData,
       isAuthenticated: true
     }))
     
-    if (authData.accessToken) {
-      localStorage.setItem('accessToken', authData.accessToken)
-    }
-    if (authData.user || authData.email) {
-      const userData = authData.user || authData
-      localStorage.setItem('user', JSON.stringify(userData))
+    try {
+      if (authData.accessToken) {
+        localStorage.setItem('accessToken', authData.accessToken)
+      }
+      if (authData.user || authData.email) {
+        const userData = authData.user || authData
+        localStorage.setItem('user', JSON.stringify(userData))
+      }
+    } catch (error) {
+      console.error('Error saving auth data:', error)
     }
   }
 
