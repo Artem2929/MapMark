@@ -22,6 +22,7 @@ const getStoredData = (key) => {
 
 export function AuthProvider({ children }) {
   const [state, setState] = useState(initialState)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const savedToken = getStoredData('accessToken')
@@ -35,24 +36,28 @@ export function AuthProvider({ children }) {
         isAuthenticated: true
       }))
     }
+    setIsLoading(false)
   }, [])
 
   const setAuth = (authData) => {
     if (!authData) return
     
+    const token = authData.token || authData.accessToken
+    const user = authData.data?.user || authData.user
+    
     setState(prev => ({
       ...prev,
-      ...authData,
+      accessToken: token,
+      user: user,
       isAuthenticated: true
     }))
     
     try {
-      if (authData.accessToken) {
-        localStorage.setItem('accessToken', authData.accessToken)
+      if (token) {
+        localStorage.setItem('accessToken', token)
       }
-      if (authData.user || authData.email) {
-        const userData = authData.user || authData
-        localStorage.setItem('user', JSON.stringify(userData))
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user))
       }
     } catch (error) {
       console.error('Error saving auth data:', error)
@@ -67,7 +72,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ ...state, setAuth, clearAuth }}>
+    <AuthContext.Provider value={{ ...state, setAuth, clearAuth, isLoading }}>
       {children}
     </AuthContext.Provider>
   )

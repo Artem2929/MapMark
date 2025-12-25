@@ -21,8 +21,16 @@ class AuthService {
       throw new AppError('Invalid name format', 400, 'INVALID_NAME')
     }
 
+    // Generate custom user ID
+    const userCount = await User.countDocuments()
+    const incrementalId = userCount + 1
+    const country = userData.country.toLowerCase()
+    const name = userData.name.toLowerCase().replace(/[^a-z0-9]/g, '')
+    const customId = `${country}-${name}-${incrementalId}`
+
     // Create new user
     const newUser = await User.create({
+      id: customId,
       name: userData.name,
       email: userData.email,
       password: userData.password,

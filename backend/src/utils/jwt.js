@@ -16,8 +16,8 @@ const signRefreshToken = (id) => {
 }
 
 const createSendToken = (user, statusCode, res) => {
-  const token = signToken(user._id)
-  const refreshToken = signRefreshToken(user._id)
+  const token = signToken(user.id || user._id)
+  const refreshToken = signRefreshToken(user.id || user._id)
   
   const cookieOptions = {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
@@ -34,7 +34,7 @@ const createSendToken = (user, statusCode, res) => {
 
   // Очищені дані користувача
   const userData = {
-    id: user._id,
+    id: user.id || user._id,
     name: user.name,
     email: user.email,
     country: user.country,

@@ -16,7 +16,7 @@ export function useAuth() {
       const userData = await authService.login(credentials)
       setError(null) // Очищаємо тільки при успіху
       setAuth(userData)
-      navigate('/', { replace: true })
+      navigate(`/profile/${userData.data.user.id}`, { replace: true })
       
       return { success: true }
     } catch (err) {
@@ -34,7 +34,7 @@ export function useAuth() {
       
       const user = await authService.register(userData)
       setAuth(user)
-      navigate('/', { replace: true })
+      navigate(`/profile/${user.data.user.id}`, { replace: true })
       
       return { success: true }
     } catch (err) {

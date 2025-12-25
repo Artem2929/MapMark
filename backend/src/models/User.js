@@ -4,6 +4,11 @@ const validator = require('validator')
 const config = require('../config')
 
 const userSchema = new mongoose.Schema({
+  id: {
+    type: String,
+    unique: true,
+    required: true
+  },
   name: {
     type: String,
     required: [true, 'Name is required'],
@@ -126,7 +131,7 @@ userSchema.pre(/^find/, function(next) {
 // Virtual for user's full profile
 userSchema.virtual('profile').get(function() {
   return {
-    id: this._id,
+    id: this.id,
     name: this.name,
     email: this.email,
     country: this.country,
