@@ -2,8 +2,8 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:300
 
 let csrfToken = null
 
-const getCSRFToken = async () => {
-  if (!csrfToken) {
+const getCSRFToken = async (forceRefresh = false) => {
+  if (!csrfToken || forceRefresh) {
     const response = await fetch(`${API_BASE_URL}/auth/csrf-token`, {
       credentials: 'include'
     })
@@ -43,9 +43,9 @@ export const authService = {
     try {
       validateCredentials(credentials)
       
-      const token = await getCSRFToken()
+      let token = await getCSRFToken()
       
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      let response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -54,6 +54,24 @@ export const authService = {
         credentials: 'include',
         body: JSON.stringify(credentials)
       })
+
+      // Якщо CSRF токен недійсний, оновлюємо його і повторюємо запит
+      if (response.status === 403) {
+        const errorData = await response.json()
+        if (errorData.code === 'INVALID_CSRF_TOKEN') {
+          token = await getCSRFToken(true)
+          
+          response = await fetch(`${API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': token
+            },
+            credentials: 'include',
+            body: JSON.stringify(credentials)
+          })
+        }
+      }
 
       const data = await response.json()
       
@@ -72,9 +90,9 @@ export const authService = {
     try {
       validateUserData(userData)
       
-      const token = await getCSRFToken()
+      let token = await getCSRFToken()
       
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      let response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -90,6 +108,31 @@ export const authService = {
           role: userData.role || 'user'
         })
       })
+
+      // Якщо CSRF токен недійсний, оновлюємо його і повторюємо запит
+      if (response.status === 403) {
+        const errorData = await response.json()
+        if (errorData.code === 'INVALID_CSRF_TOKEN') {
+          token = await getCSRFToken(true) // Примусово оновлюємо
+          
+          response = await fetch(`${API_BASE_URL}/auth/register`, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': token
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              email: userData.email,
+              password: userData.password,
+              confirmPassword: userData.confirmPassword || userData.password,
+              name: userData.name,
+              country: userData.country,
+              role: userData.role || 'user'
+            })
+          })
+        }
+      }
 
       const data = await response.json()
       

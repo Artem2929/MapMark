@@ -32,15 +32,23 @@ const createSendToken = (user, statusCode, res) => {
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
   })
 
-  // Remove password from output
-  user.password = undefined
+  // Очищені дані користувача
+  const userData = {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    country: user.country,
+    role: user.role,
+    emailVerified: user.emailVerified,
+    createdAt: user.createdAt
+  }
 
   res.status(statusCode).json({
     status: 'success',
     token,
     refreshToken,
     data: {
-      user
+      user: userData
     }
   })
 }

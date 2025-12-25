@@ -8,7 +8,7 @@ class AuthService {
     // Check if user already exists
     const existingUser = await User.findOne({ email: userData.email })
     if (existingUser) {
-      throw new AppError('User already exists', 409, 'USER_EXISTS')
+      throw new AppError('Користувач вже існує', 409, 'USER_EXISTS')
     }
 
     // Additional security checks

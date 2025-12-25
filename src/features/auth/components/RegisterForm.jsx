@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Input } from '../../../components/ui'
 import { PasswordInput } from '../../../components/ui/PasswordInput/PasswordInput'
+import { PasswordStrength } from '../../../components/ui/PasswordStrength'
 import { CustomSelect } from '../../../components/ui/CustomSelect'
 import { validators, validateField } from '../../../utils/validators'
 import { useAuth } from '../hooks/useAuth'
@@ -109,7 +110,7 @@ export function RegisterForm() {
       name: validateName(data.name),
       email: validateEmail(data.email),
       password: validatePassword(data.password),
-      confirmPassword: validateConfirmPassword(data.confirmPassword),
+      confirmPassword: data.confirmPassword !== data.password ? 'Паролі не співпадають' : (!data.confirmPassword ? 'Підтвердіть пароль' : null),
       country: validateCountry(data.country),
       acceptTerms: validateTerms(data.acceptTerms),
       acceptPrivacy: validatePrivacy(data.acceptPrivacy)
@@ -121,39 +122,22 @@ export function RegisterForm() {
     return !Object.values(errors).some(error => error)
   }, [formData, validateAllFields])
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
-    clearError()
     
-    const nameError = validateName(formData.name)
-    const emailError = validateEmail(formData.email)
-    const passwordError = validatePassword(formData.password)
-    const confirmPasswordError = validateConfirmPassword(formData.confirmPassword)
-    const countryError = validateCountry(formData.country)
-    const termsError = validateTerms(formData.acceptTerms)
-    const privacyError = validatePrivacy(formData.acceptPrivacy)
-    
-    setFieldErrors({
-      name: nameError,
-      email: emailError,
-      password: passwordError,
-      confirmPassword: confirmPasswordError,
-      country: countryError,
-      acceptTerms: termsError,
-      acceptPrivacy: privacyError
-    })
+    const errors = validateAllFields(formData)
+    setFieldErrors(errors)
     setTouched({ 
       name: true, email: true, password: true, confirmPassword: true, 
       country: true, acceptTerms: true, acceptPrivacy: true 
     })
     
-    if (nameError || emailError || passwordError || confirmPasswordError || 
-        countryError || termsError || privacyError) {
+    if (Object.values(errors).some(error => error)) {
       return
     }
 
     await register(formData)
-  }
+  }, [formData, validateAllFields, register])
 
   const countries = [
     { value: 'UA', label: 'Україна' }
@@ -188,6 +172,7 @@ export function RegisterForm() {
           onBlur={handleFieldBlur('name')}
           error={touched.name ? fieldErrors.name : null}
           disabled={loading}
+          autoFocus
         />
         
         <Input
@@ -200,14 +185,17 @@ export function RegisterForm() {
           disabled={loading}
         />
         
-        <PasswordInput
-          placeholder="Пароль"
-          value={formData.password}
-          onChange={handleFieldChange('password')}
-          onBlur={handleFieldBlur('password')}
-          error={touched.password ? fieldErrors.password : null}
-          disabled={loading}
-        />
+        <div>
+          <PasswordInput
+            placeholder="Пароль"
+            value={formData.password}
+            onChange={handleFieldChange('password')}
+            onBlur={handleFieldBlur('password')}
+            error={touched.password ? fieldErrors.password : null}
+            disabled={loading}
+          />
+          <PasswordStrength password={formData.password} />
+        </div>
         
         <PasswordInput
           placeholder="Підтвердіть пароль"

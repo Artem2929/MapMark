@@ -1,4 +1,5 @@
 const express = require('express')
+const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const config = require('./config')
 const logger = require('./utils/logger')
@@ -27,6 +28,18 @@ app.use(requestLogger)
 app.use(express.json({ limit: '10kb' }))
 app.use(express.urlencoded({ extended: true, limit: '10kb' }))
 app.use(cookieParser())
+
+// Session middleware for CSRF
+app.use(session({
+  secret: config.JWT_SECRET || 'fallback-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    secure: config.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}))
 
 // API versioning
 const API_VERSION = '/api/v1'

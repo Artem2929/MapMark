@@ -13,11 +13,11 @@ const csrfProtection = (req, res, next) => {
   const token = req.headers['x-csrf-token'] || req.body._csrf
 
   if (!token) {
-    return next(new AppError('CSRF token missing', 403, 'CSRF_TOKEN_MISSING'))
+    return next(new AppError('Недійсний CSRF токен', 403, 'CSRF_TOKEN_MISSING'))
   }
 
   if (!tokens.verify(secret, token)) {
-    return next(new AppError('Invalid CSRF token', 403, 'INVALID_CSRF_TOKEN'))
+    return next(new AppError('Недійсний CSRF токен', 403, 'INVALID_CSRF_TOKEN'))
   }
 
   // Store secret in session for future requests
