@@ -66,6 +66,16 @@
   line-height: 1.4;
 }
 
+.auth-form__error-container {
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  max-height: 0;
+}
+
+.auth-form__error-container.has-error {
+  max-height: 80px;
+}
+
 .auth-form__error {
   background: linear-gradient(135deg, var(--color-error-light) 0%, #fee2e2 100%);
   color: var(--color-error);
@@ -75,8 +85,15 @@
   font-weight: 500;
   border: 1px solid rgba(220, 38, 38, 0.2);
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
-  animation: slideIn 0.3s ease-out;
   margin-bottom: var(--spacing-lg);
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: all 0.3s ease-out;
+}
+
+.auth-form__error-container.has-error .auth-form__error {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .auth-form__form {

@@ -23,13 +23,16 @@ export function CustomSelect({
     const handleClickOutside = (event) => {
       if (selectRef.current && !selectRef.current.contains(event.target)) {
         setIsOpen(false)
-        if (onBlur) onBlur()
+        // Викликаємо onBlur тільки якщо селект був відкритий
+        if (isOpen && onBlur) {
+          onBlur()
+        }
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [onBlur])
+  }, [onBlur, isOpen])
 
   const handleOptionClick = (option) => {
     if (onChange) {

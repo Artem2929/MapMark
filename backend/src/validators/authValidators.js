@@ -5,13 +5,8 @@ const { AppError } = require('../utils/errorHandler')
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    const errorMessages = errors.array().map(error => ({
-      field: error.path,
-      message: error.msg,
-      value: error.value
-    }))
-    
-    return next(new AppError('Validation failed', 400, 'VALIDATION_ERROR', errorMessages))
+    const errorMessages = errors.array().map(error => error.msg).join('. ')
+    return next(new AppError(errorMessages, 400, 'VALIDATION_ERROR'))
   }
   next()
 }
@@ -54,7 +49,7 @@ const registerValidation = [
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
     .withMessage('Password must contain at least one lowercase letter, one uppercase letter, and one number'),
     
-  body('passwordConfirm')
+  body('confirmPassword')
     .custom((value, { req }) => {
       if (value !== req.body.password) {
         throw new Error('Passwords do not match')
@@ -94,11 +89,9 @@ const changePasswordValidation = [
     
   body('password')
     .isLength({ min: 6, max: 128 })
-    .withMessage('Password must be between 6 and 128 characters')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-    .withMessage('Password must contain at least one lowercase letter, one uppercase letter, and one number'),
+    .withMessage('Password must be between 6 and 128 characters'),
     
-  body('passwordConfirm')
+  body('confirmPassword')
     .custom((value, { req }) => {
       if (value !== req.body.password) {
         throw new Error('Passwords do not match')

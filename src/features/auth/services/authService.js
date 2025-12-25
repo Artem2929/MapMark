@@ -61,7 +61,7 @@ export const authService = {
         body: JSON.stringify({
           email: userData.email,
           password: userData.password,
-          passwordConfirm: userData.confirmPassword || userData.password,
+          confirmPassword: userData.confirmPassword || userData.password,
           name: userData.name,
           country: userData.country,
           role: userData.role || 'user'

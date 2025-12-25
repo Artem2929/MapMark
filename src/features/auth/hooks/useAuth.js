@@ -12,9 +12,9 @@ export function useAuth() {
   const login = async (credentials) => {
     try {
       setLoading(true)
-      setError(null)
       
       const userData = await authService.login(credentials)
+      setError(null) // Очищаємо тільки при успіху
       setAuth(userData)
       navigate('/', { replace: true })
       

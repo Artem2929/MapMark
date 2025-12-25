@@ -13,12 +13,17 @@ export function LoginForm() {
   const { login, loading, error, clearError } = useAuth()
 
   const validateEmail = (value) => {
-    return validateField(value, [validators.required, validators.email])
+    return validateField(value, [
+      validators.required, 
+      validators.onlyLatin('Email може містити тільки латинські символи'),
+      validators.email
+    ])
   }
 
   const validatePassword = (value) => {
     return validateField(value, [
       validators.required,
+      validators.onlyLatin('Пароль може містити тільки латинські символи'),
       validators.minLength(6, 'Пароль має бути мінімум 6 символів')
     ])
   }
@@ -47,7 +52,6 @@ export function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    clearError()
     
     const emailError = validateEmail(formData.email)
     const passwordError = validatePassword(formData.password)
@@ -67,11 +71,13 @@ export function LoginForm() {
         <p className="auth-form__subtitle">Увійдіть до свого акаунту</p>
       </div>
       
-      {error && (
-        <div className="auth-form__error">
-          {error}
-        </div>
-      )}
+      <div className={`auth-form__error-container ${error ? 'has-error' : ''}`}>
+        {error && (
+          <div className="auth-form__error">
+            {error}
+          </div>
+        )}
+      </div>
       
       <form onSubmit={handleSubmit} className="auth-form__form">
         <Input

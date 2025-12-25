@@ -30,13 +30,21 @@ export function RegisterForm() {
   }
 
   const validateEmail = (value) => {
-    return validateField(value, [validators.required, validators.email])
+    return validateField(value, [
+      validators.required, 
+      validators.onlyLatin('Email може містити тільки латинські символи'),
+      validators.email
+    ])
   }
 
   const validatePassword = (value) => {
     return validateField(value, [
       validators.required,
-      validators.minLength(6, 'Пароль має бути мінімум 6 символів')
+      validators.onlyLatin('Пароль може містити тільки латинські символи'),
+      validators.minLength(6, 'Пароль має бути мінімум 6 символів'),
+      validators.hasLowercase('Пароль має містити мінімум одну малу літеру'),
+      validators.hasUppercase('Пароль має містити мінімум одну велику літеру'),
+      validators.hasNumber('Пароль має містити мінімум одну цифру')
     ])
   }
 
@@ -62,6 +70,11 @@ export function RegisterForm() {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
     setFormData(prev => ({ ...prev, [field]: value }))
     
+    // Очищаємо помилку при зміні поля
+    if (error) {
+      clearError()
+    }
+    
     if (touched[field]) {
       let fieldError = null
       switch (field) {
@@ -80,12 +93,13 @@ export function RegisterForm() {
   const handleFieldBlur = (field) => () => {
     setTouched(prev => ({ ...prev, [field]: true }))
     let fieldError = null
+    const value = formData[field]
     switch (field) {
-      case 'name': fieldError = validateName(formData[field]); break
-      case 'email': fieldError = validateEmail(formData[field]); break
-      case 'password': fieldError = validatePassword(formData[field]); break
-      case 'confirmPassword': fieldError = validateConfirmPassword(formData[field]); break
-      case 'country': fieldError = validateCountry(formData[field]); break
+      case 'name': fieldError = validateName(value); break
+      case 'email': fieldError = validateEmail(value); break
+      case 'password': fieldError = validatePassword(value); break
+      case 'confirmPassword': fieldError = validateConfirmPassword(value); break
+      case 'country': fieldError = validateCountry(value); break
     }
     setFieldErrors(prev => ({ ...prev, [field]: fieldError }))
   }
@@ -153,11 +167,13 @@ export function RegisterForm() {
         <p className="auth-form__subtitle">Створіть новий акаунт</p>
       </div>
       
-      {error && (
-        <div className="auth-form__error">
-          {error}
-        </div>
-      )}
+      <div className={`auth-form__error-container ${error ? 'has-error' : ''}`}>
+        {error && (
+          <div className="auth-form__error">
+            {error}
+          </div>
+        )}
+      </div>
       
       <form onSubmit={handleSubmit} className="auth-form__form">
         <Input

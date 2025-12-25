@@ -40,7 +40,7 @@ class AuthService {
     const user = await User.findOne({ email, isActive: true }).select('+password')
 
     if (!user || !(await user.correctPassword(password, user.password))) {
-      throw new AppError('Invalid credentials', 401, 'INVALID_CREDENTIALS')
+      throw new AppError('Невірні дані для входу', 401, 'INVALID_CREDENTIALS')
     }
 
     // Update last login
