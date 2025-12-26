@@ -28,6 +28,18 @@
   width: 100%;
 }
 
+/* Edit Form Container */
+.profile-edit-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 120px);
+  padding: 40px 0;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 /* Loading Screen */
 .loading-screen {
   display: flex;

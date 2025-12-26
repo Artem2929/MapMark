@@ -5,7 +5,7 @@ import ProfileEditForm from './ProfileEditForm'
 import { useProfileEdit } from '../hooks/useProfileEdit'
 import './ProfileHeader.css'
 
-const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate }) => {
+const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateChange }) => {
   const [isEditing, setIsEditing] = useState(false)
   const { saveProfile } = useProfileEdit(user)
   
@@ -13,7 +13,8 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate }) => {
 
   const handleEditProfile = useCallback(() => {
     setIsEditing(true)
-  }, [])
+    if (onEditingStateChange) onEditingStateChange(true)
+  }, [onEditingStateChange])
 
   const handleSaveProfile = useCallback(async (profileData) => {
     const updatedUser = await saveProfile(profileData)
@@ -21,11 +22,13 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate }) => {
       onUserUpdate(updatedUser.data.user)
     }
     setIsEditing(false)
-  }, [saveProfile, onUserUpdate])
+    if (onEditingStateChange) onEditingStateChange(false)
+  }, [saveProfile, onUserUpdate, onEditingStateChange])
 
   const handleCancelEdit = useCallback(() => {
     setIsEditing(false)
-  }, [])
+    if (onEditingStateChange) onEditingStateChange(false)
+  }, [onEditingStateChange])
 
   const formatWebsiteUrl = (url) => {
     if (!url) return ''

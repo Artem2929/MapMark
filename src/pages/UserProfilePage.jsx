@@ -1,4 +1,5 @@
 import { useParams, Navigate } from 'react-router-dom'
+import { useState } from 'react'
 import { useAuthStore } from '../app/store'
 import { Header, ErrorMessage } from '../components/ui'
 import { ErrorBoundary } from '../components/ErrorBoundary'
@@ -12,6 +13,7 @@ import '../features/profile/components/Profile.css'
 
 const UserProfileContent = () => {
   const { user, loading, targetUserId, isOwnProfile, updateUser } = useProfile()
+  const [isEditing, setIsEditing] = useState(false)
 
   if (loading) {
     return (
@@ -37,13 +39,20 @@ const UserProfileContent = () => {
   return (
     <div className="profile-page">
       <div className="profile-container">
-        <ProfileHeader user={user} isOwnProfile={isOwnProfile} onUserUpdate={updateUser} />
+        <ProfileHeader 
+          user={user} 
+          isOwnProfile={isOwnProfile} 
+          onUserUpdate={updateUser}
+          onEditingStateChange={setIsEditing}
+        />
         
-        <div className="profile-main-content">
-          <div className="profile-center-column">
-            <Wall userId={targetUserId} isOwnProfile={isOwnProfile} posts={user?.posts || []} />
+        {!isEditing && (
+          <div className="profile-main-content">
+            <div className="profile-center-column">
+              <Wall userId={targetUserId} isOwnProfile={isOwnProfile} posts={user?.posts || []} />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )
