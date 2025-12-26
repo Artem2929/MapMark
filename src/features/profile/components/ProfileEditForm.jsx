@@ -12,6 +12,7 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
   })
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState({})
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const handleInputChange = useCallback((field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -19,6 +20,22 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
       setErrors(prev => ({ ...prev, [field]: '' }))
     }
   }, [errors])
+
+  const handleTextareaChange = useCallback((e) => {
+    const value = e.target.value
+    handleInputChange('bio', value)
+    
+    // Auto-resize textarea
+    e.target.style.height = 'auto'
+    e.target.style.height = e.target.scrollHeight + 'px'
+  }, [handleInputChange])
+
+  const getCharCountClass = useCallback((length, max) => {
+    const percentage = (length / max) * 100
+    if (percentage >= 90) return 'profile-edit-form__char-count--error'
+    if (percentage >= 75) return 'profile-edit-form__char-count--warning'
+    return ''
+  }, [])
 
   const validateForm = useMemo(() => {
     const newErrors = {}
@@ -50,9 +67,13 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
     }
     
     setIsLoading(true)
+    setShowSuccess(false)
     try {
       await onSave(formData)
-      navigate('/profile')
+      setShowSuccess(true)
+      setTimeout(() => {
+        navigate('/profile')
+      }, 800)
     } catch (error) {
       setErrors({ submit: error.message || 'Помилка збереження профілю' })
     } finally {
@@ -69,7 +90,7 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
   }, [onCancel, navigate])
 
   return (
-    <div className="profile-edit-form">
+    <div className={`profile-edit-form ${showSuccess ? 'profile-edit-form--success' : ''}`}>
       <div className="profile-edit-form__header">
         <h2 className="profile-edit-form__title">Редагувати профіль</h2>
       </div>
@@ -83,8 +104,13 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
             onChange={(e) => handleInputChange('name', e.target.value)}
             className={`profile-edit-form__input ${errors.name ? 'profile-edit-form__input--error' : ''}`}
             placeholder="Введіть ваше ім'я"
+            maxLength="50"
             autoFocus
+            disabled={isLoading}
           />
+          <div className={`profile-edit-form__char-count ${getCharCountClass(formData.name.length, 50)}`}>
+            {formData.name.length}/50
+          </div>
           {errors.name && <span className="profile-edit-form__error">{errors.name}</span>}
         </div>
 
@@ -92,13 +118,15 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
           <label className="profile-edit-form__label">Опис</label>
           <textarea
             value={formData.bio}
-            onChange={(e) => handleInputChange('bio', e.target.value)}
+            onChange={handleTextareaChange}
             className={`profile-edit-form__textarea ${errors.bio ? 'profile-edit-form__textarea--error' : ''}`}
             placeholder="Розкажіть про себе"
-            rows="4"
+            rows="1"
             maxLength="500"
+            disabled={isLoading}
+            style={{ minHeight: '48px', resize: 'none', overflow: 'hidden' }}
           />
-          <div className="profile-edit-form__char-count">
+          <div className={`profile-edit-form__char-count ${getCharCountClass(formData.bio.length, 500)}`}>
             {formData.bio.length}/500
           </div>
           {errors.bio && <span className="profile-edit-form__error">{errors.bio}</span>}
@@ -112,7 +140,12 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
             onChange={(e) => handleInputChange('location', e.target.value)}
             className="profile-edit-form__input"
             placeholder="Місто, країна"
+            maxLength="100"
+            disabled={isLoading}
           />
+          <div className={`profile-edit-form__char-count ${getCharCountClass(formData.location.length, 100)}`}>
+            {formData.location.length}/100
+          </div>
         </div>
 
         <div className="profile-edit-form__field">
@@ -123,7 +156,12 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
             onChange={(e) => handleInputChange('website', e.target.value)}
             className={`profile-edit-form__input ${errors.website ? 'profile-edit-form__input--error' : ''}`}
             placeholder="https://example.com"
+            maxLength="100"
+            disabled={isLoading}
           />
+          <div className={`profile-edit-form__char-count ${getCharCountClass(formData.website.length, 100)}`}>
+            {formData.website.length}/100
+          </div>
           {errors.website && <span className="profile-edit-form__error">{errors.website}</span>}
         </div>
 
@@ -137,17 +175,17 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
           <button
             type="button"
             onClick={handleCancel}
-            className="profile-edit-form__cancel-btn"
+            className="profile-edit-form__btn profile-edit-form__btn--cancel"
             disabled={isLoading}
           >
             Скасувати
           </button>
           <button
             type="submit"
-            className="profile-edit-form__save-btn"
+            className={`profile-edit-form__btn profile-edit-form__btn--save ${isLoading ? 'profile-edit-form__btn--loading' : ''}`}
             disabled={isLoading || Object.keys(validateForm).length > 0}
           >
-            {isLoading ? 'Збереження...' : 'Зберегти'}
+            {isLoading ? '' : showSuccess ? 'Збережено!' : 'Зберегти'}
           </button>
         </div>
       </form>
