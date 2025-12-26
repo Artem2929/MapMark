@@ -9,6 +9,7 @@ const { requestLogger, requestId, responseTime } = require('./middleware/logging
 const authRoutes = require('./routes/authRoutes')
 const userRoutes = require('./routes/userRoutes')
 const healthRoutes = require('./routes/healthRoutes')
+const contactRoutes = require('./routes/contactRoutes')
 
 const app = express()
 
@@ -48,6 +49,7 @@ const API_VERSION = '/api/v1'
 // Routes
 app.use(`${API_VERSION}/auth`, authRoutes)
 app.use(`${API_VERSION}/users`, userRoutes)
+app.use(`${API_VERSION}/contact`, contactRoutes)
 app.use('/health', healthRoutes)
 
 // API info endpoint
@@ -59,6 +61,7 @@ app.get('/api', (req, res) => {
     endpoints: {
       auth: `${API_VERSION}/auth`,
       users: `${API_VERSION}/users`,
+      contact: `${API_VERSION}/contact`,
       health: '/health'
     },
     documentation: '/api/docs' // Future Swagger endpoint

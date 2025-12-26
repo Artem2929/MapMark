@@ -33,15 +33,15 @@
 .header__logo {
   font-size: 28px;
   font-weight: 700;
-  background: linear-gradient(135deg, #1e293b 0%, var(--color-primary) 100%);
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-decoration: none;
   letter-spacing: -0.02em;
   transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
-    Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  display: block;
 }
 
 
@@ -52,7 +52,7 @@
 }
 
 .header__nav--desktop {
-  display: none;
+  display: flex;
 }
 
 .header__link {
@@ -143,7 +143,7 @@
 }
 
 .header__menu-btn {
-  display: block;
+  display: none;
   background: none;
   border: none;
   cursor: pointer;
@@ -251,15 +251,17 @@
   background: rgba(220, 38, 38, 0.1);
 }
 
-@media (min-width: 768px) {
+@media (max-width: 767px) {
   .header__nav--desktop {
-    display: flex;
-  }
-  
-  .header__menu-btn {
     display: none;
   }
   
+  .header__menu-btn {
+    display: block;
+  }
+}
+
+@media (min-width: 768px) {
   .header__nav--mobile {
     display: none;
   }

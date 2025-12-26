@@ -23,6 +23,12 @@ export const Header = React.memo(function Header() {
         </div>
         
         <nav className="header__nav header__nav--desktop">
+          <Link 
+            to={ROUTES.ABOUT} 
+            className="header__link header__link--about"
+          >
+            {NAVIGATION_LABELS.ABOUT}
+          </Link>
           {isAuthenticated ? (
             <>
               <Link 
@@ -55,6 +61,13 @@ export const Header = React.memo(function Header() {
       </div>
 
       <nav className={`header__nav--mobile ${isMenuOpen ? 'header__nav--mobile-open' : ''}`}>
+        <Link 
+          to={ROUTES.ABOUT} 
+          className="header__mobile-link"
+          onClick={closeMenu}
+        >
+          {NAVIGATION_LABELS.ABOUT}
+        </Link>
         {isAuthenticated ? (
           <>
             <Link 

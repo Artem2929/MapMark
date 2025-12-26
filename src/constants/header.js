@@ -8,6 +8,7 @@ export const HEADER_CONFIG = {
 export const ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
+  ABOUT: '/about',
   PROFILE: (userId) => `/profile/${userId}`
 }
 
@@ -16,5 +17,6 @@ export const NAVIGATION_LABELS = {
   LOGOUT: 'Вийти',
   LOGIN: 'Увійти',
   REGISTER: 'Зареєструватись',
+  ABOUT: 'Про нас',
   MENU: 'Меню'
 }
