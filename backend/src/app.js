@@ -7,6 +7,7 @@ const { globalErrorHandler } = require('./utils/errorHandler')
 const { securityMiddleware } = require('./middleware/security')
 const { requestLogger, requestId, responseTime } = require('./middleware/logging')
 const authRoutes = require('./routes/authRoutes')
+const userRoutes = require('./routes/userRoutes')
 const healthRoutes = require('./routes/healthRoutes')
 
 const app = express()
@@ -46,6 +47,7 @@ const API_VERSION = '/api/v1'
 
 // Routes
 app.use(`${API_VERSION}/auth`, authRoutes)
+app.use(`${API_VERSION}/users`, userRoutes)
 app.use('/health', healthRoutes)
 
 // API info endpoint
@@ -56,6 +58,7 @@ app.get('/api', (req, res) => {
     description: 'MapMark Backend API',
     endpoints: {
       auth: `${API_VERSION}/auth`,
+      users: `${API_VERSION}/users`,
       health: '/health'
     },
     documentation: '/api/docs' // Future Swagger endpoint
