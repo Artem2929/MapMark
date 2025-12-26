@@ -29,8 +29,8 @@ export const ProfileProvider = ({ children, userId }) => {
         console.error('Profile fetch error:', err)
         setError(err.message || 'Помилка завантаження профілю')
         
-        // Fallback to mock data for development
-        if (process.env.NODE_ENV === 'development') {
+        // Fallback to mock data for development or when user not found
+        if (process.env.NODE_ENV === 'development' || import.meta.env.DEV || err.message === 'Користувача не знайдено') {
           setUser({
             id: userId || 'ua-artem-6',
             name: 'Артем Поліщук',

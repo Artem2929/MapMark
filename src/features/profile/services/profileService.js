@@ -5,6 +5,10 @@ const getCsrfToken = () => {
          localStorage.getItem('csrfToken')
 }
 
+const getAuthToken = () => {
+  return localStorage.getItem('accessToken') || localStorage.getItem('token')
+}
+
 const validateToken = (token) => {
   if (!token) {
     throw new Error('Токен автентифікації відсутній')
@@ -29,7 +33,7 @@ const validateUrl = (url) => {
 
 export const getUserProfile = async (userId) => {
   try {
-    const token = validateToken(localStorage.getItem('token'))
+    const token = validateToken(getAuthToken())
     const url = validateUrl(`${API_BASE_URL}/api/v1/users/${userId}`)
     
     const response = await fetch(url, {
@@ -58,7 +62,7 @@ export const getUserProfile = async (userId) => {
 
 export const createPost = async (content) => {
   try {
-    const token = validateToken(localStorage.getItem('token'))
+    const token = validateToken(getAuthToken())
     const csrfToken = getCsrfToken()
     
     if (!csrfToken) {
@@ -91,7 +95,7 @@ export const createPost = async (content) => {
 
 export const uploadAvatar = async (formData) => {
   try {
-    const token = validateToken(localStorage.getItem('token'))
+    const token = validateToken(getAuthToken())
     const csrfToken = getCsrfToken()
     
     if (!csrfToken) {
@@ -123,7 +127,7 @@ export const uploadAvatar = async (formData) => {
 
 export const updateProfile = async (userId, profileData) => {
   try {
-    const token = validateToken(localStorage.getItem('token'))
+    const token = validateToken(getAuthToken())
     const csrfToken = getCsrfToken()
     
     if (!csrfToken) {
