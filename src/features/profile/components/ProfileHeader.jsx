@@ -2,14 +2,27 @@ import React, { memo, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import PhotosSection from './PhotosSection'
 import ProfileEditForm from './ProfileEditForm'
+import AvatarUploadModal from './AvatarUploadModal'
 import { useProfileEdit } from '../hooks/useProfileEdit'
+import { uploadAvatar } from '../services/profileService'
 import './ProfileHeader.css'
 
 const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateChange }) => {
   const [isEditing, setIsEditing] = useState(false)
+  const [showAvatarModal, setShowAvatarModal] = useState(false)
   const { saveProfile } = useProfileEdit(user)
   
   if (!user) return null
+
+  const handleAvatarUpload = useCallback(async (file) => {
+    const formData = new FormData()
+    formData.append('avatar', file)
+    
+    const result = await uploadAvatar(formData)
+    if (onUserUpdate && result.data?.user) {
+      onUserUpdate(result.data.user)
+    }
+  }, [onUserUpdate])
 
   const handleEditProfile = useCallback(() => {
     setIsEditing(true)
@@ -59,9 +72,12 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
               }}
             />
             {isOwnProfile && (
-              <button className="profile-header__edit-avatar">
+              <button 
+                className="profile-header__edit-avatar"
+                onClick={() => setShowAvatarModal(true)}
+              >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                  <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/>
                 </svg>
               </button>
             )}
@@ -145,6 +161,14 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
           )}
         </div>
       </div>
+      
+      {showAvatarModal && (
+        <AvatarUploadModal
+          onClose={() => setShowAvatarModal(false)}
+          onUpload={handleAvatarUpload}
+          currentAvatar={user.avatar}
+        />
+      )}
     </div>
   )
 })
