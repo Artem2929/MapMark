@@ -1,0 +1,4 @@
+/* ProfileSkeleton - скелетон завантаження профілю */
+.profile-skeleton-container {
+  padding: var(--space-4);
+}

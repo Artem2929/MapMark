@@ -1,6 +1,9 @@
 import React, { memo, useState, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { validateFileUpload, showNotification, getUserId } from '../utils/profileUtils'
 import './ProfileAvatar.css'
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001'
 
 const ProfileAvatar = memo(({ user, isOwnProfile = false, onAvatarChange }) => {
   const [previewUrl, setPreviewUrl] = useState(null)
@@ -13,25 +16,20 @@ const ProfileAvatar = memo(({ user, isOwnProfile = false, onAvatarChange }) => {
     const file = event.target.files[0]
     if (!file) return
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
-    if (!allowedTypes.includes(file.type)) {
-      alert('Підтримуються лише зображення JPG, PNG або WEBP')
-      return
+    try {
+      validateFileUpload(file)
+      
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl)
+      }
+      
+      const url = URL.createObjectURL(file)
+      setPreviewUrl(url)
+      setSelectedFile(file)
+      setImageError(false)
+    } catch (error) {
+      showNotification(error.message)
     }
-
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Фото занадто велике. Максимальний розмір: 5MB')
-      return
-    }
-
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl)
-    }
-    
-    const url = URL.createObjectURL(file)
-    setPreviewUrl(url)
-    setSelectedFile(file)
-    setImageError(false)
   }
 
   const handleSave = async () => {
@@ -55,9 +53,11 @@ const ProfileAvatar = memo(({ user, isOwnProfile = false, onAvatarChange }) => {
         if (fileInputRef.current) {
           fileInputRef.current.value = ''
         }
+        
+        showNotification('Аватар успішно оновлено', 'success')
       }
     } catch (error) {
-      console.error('Avatar upload error:', error)
+      showNotification(error.message || 'Не вдалося завантажити аватар')
     } finally {
       setIsUploading(false)
     }
@@ -83,18 +83,19 @@ const ProfileAvatar = memo(({ user, isOwnProfile = false, onAvatarChange }) => {
   const avatarUrl = user?.avatar 
     ? (user.avatar.startsWith('data:') || user.avatar.startsWith('http') 
         ? user.avatar 
-        : `http://localhost:3001${user.avatar}`)
+        : `${API_BASE_URL}${user.avatar}`)
     : null
   const displayImage = previewUrl || avatarUrl
   const userInitial = user?.name?.charAt(0)?.toUpperCase() || 'U'
 
   const ProfileAvatarMenu = () => {
     const location = useLocation()
+    const userId = getUserId(user)
     
     const menuItems = [
       { path: '/friends', label: 'Мої друзі', count: user?.followers?.length || 0 },
-      { path: `/messages/${user?.id}`, label: 'Повідомлення', count: 0 },
-      { path: `/photos/${user?._id || user?.id}`, label: 'Фото', count: user?.photos?.length || 0 }
+      { path: `/messages/${userId}`, label: 'Повідомлення', count: 0 },
+      { path: `/photos/${userId}`, label: 'Фото', count: user?.photos?.length || 0 }
     ]
 
     return (

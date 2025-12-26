@@ -9,7 +9,7 @@ const ProfileContent = () => {
   const { user, isOwnProfile, updateUser } = useProfile()
 
   const handleAvatarChange = async (formData) => {
-    // TODO: Implement avatar upload
+    // TODO: Implement avatar upload API call
     console.log('Avatar upload:', formData)
   }
 
@@ -19,9 +19,12 @@ const ProfileContent = () => {
     updateUser(updatedData)
   }
 
-  const handleStatsRefresh = () => {
-    // TODO: Implement stats refresh
-    console.log('Stats refresh')
+  // TODO: Replace with real data from API
+  const profileData = {
+    photos: user?.photos || [],
+    following: user?.following || [],
+    followers: user?.followers || [],
+    posts: user?.posts || []
   }
 
   return (
@@ -45,11 +48,10 @@ const ProfileContent = () => {
           user={user}
           isOwnProfile={isOwnProfile}
           onUpdate={handleProfileUpdate}
-          onStatsRefresh={handleStatsRefresh}
-          photos={[]}
-          following={[]}
-          followers={[]}
-          posts={[]}
+          photos={profileData.photos}
+          following={profileData.following}
+          followers={profileData.followers}
+          posts={profileData.posts}
         />
       </div>
     </div>

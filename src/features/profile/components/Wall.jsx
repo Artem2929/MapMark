@@ -1,45 +1,22 @@
 import React from 'react'
+import './Wall.css'
 
-const Wall = ({ userId, isOwnProfile, user }) => {
+const Wall = ({ userId, isOwnProfile }) => {
   return (
-    <div style={{ 
-      padding: '20px',
-      borderTop: '1px solid #eee',
-      marginTop: '20px'
-    }}>
-      <h3 style={{ marginBottom: '16px' }}>Стіна</h3>
+    <div className="wall-container">
+      <h3 className="wall__title">Стіна</h3>
       {isOwnProfile && (
-        <div style={{ 
-          padding: '16px',
-          backgroundColor: '#f9f9f9',
-          borderRadius: '8px',
-          marginBottom: '16px'
-        }}>
+        <div className="wall__post-form">
           <textarea 
             placeholder="Що у вас нового?"
-            style={{
-              width: '100%',
-              minHeight: '80px',
-              border: '1px solid #ddd',
-              borderRadius: '4px',
-              padding: '8px',
-              resize: 'vertical'
-            }}
+            className="wall__textarea"
           />
-          <button style={{
-            marginTop: '8px',
-            padding: '8px 16px',
-            backgroundColor: '#1976d2',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}>
+          <button className="wall__submit-btn">
             Опублікувати
           </button>
         </div>
       )}
-      <p style={{ color: '#666', textAlign: 'center', padding: '40px 0' }}>
+      <p className="wall__empty">
         Записів поки немає
       </p>
     </div>

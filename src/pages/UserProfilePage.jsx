@@ -6,7 +6,6 @@ import { ProfileProvider, useProfile } from '../contexts/ProfileContext'
 import ProfileContent from '../features/profile/components/ProfileContent'
 import ProfileSkeleton from '../features/profile/components/ProfileSkeleton'
 import ProfileBreadcrumbs from '../features/profile/components/ProfileBreadcrumbs'
-import ProfileHeader from '../features/profile/components/ProfileHeader'
 import Wall from '../features/profile/components/Wall'
 import '../features/profile/components/Profile.css'
 
@@ -38,9 +37,8 @@ const UserProfileContent = () => {
     <div className="page-container profile-user-profile">
       <div className="profile-profile-container">
         <ProfileBreadcrumbs />
-        <ProfileHeader />
         <ProfileContent />
-        <Wall userId={targetUserId} isOwnProfile={isOwnProfile} user={user} />
+        <Wall userId={targetUserId} isOwnProfile={isOwnProfile} />
       </div>
     </div>
   )

@@ -1,0 +1,16 @@
+/* ProfileHeader - заголовок профілю */
+.profile-header-container {
+  padding: var(--space-4);
+  border-bottom: 1px solid #eee;
+  margin-bottom: var(--space-4);
+}
+
+.profile-header__title {
+  margin-bottom: var(--space-2);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.profile-header__description {
+  color: #666;
+  margin: 0;
+}

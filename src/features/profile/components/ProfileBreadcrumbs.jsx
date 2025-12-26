@@ -1,12 +1,12 @@
 import React from 'react'
 import { Breadcrumbs } from '../../../components/ui'
 
-const ProfileBreadcrumbs = () => {
-  const breadcrumbItems = [
-    { href: '/', label: 'Головна' },
-    { label: 'Профіль' }
-  ]
+const breadcrumbItems = [
+  { href: '/', label: 'Головна' },
+  { label: 'Профіль' }
+]
 
+const ProfileBreadcrumbs = () => {
   return <Breadcrumbs items={breadcrumbItems} />
 }
 

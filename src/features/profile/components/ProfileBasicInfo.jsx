@@ -1,82 +1,69 @@
 import React, { memo, useState, useEffect, useCallback } from 'react'
 import { updateProfile } from '../services/profileService'
+import { getInitialFormData, showNotification } from '../utils/profileUtils'
 import CustomSelect from '../../../components/ui/CustomSelect'
 import DatePicker from '../../../components/ui/DatePicker'
 import ProfileStats from './ProfileStats'
 import PhotosSection from './PhotosSection'
 import './ProfileBasicInfo.css'
 
-const ProfileBasicInfo = memo(({  
-  user, 
-  isOwnProfile = false, 
-  onUpdate, 
-  onStatsRefresh, 
-  photos = [], 
-  following = [], 
-  followers = [], 
-  posts = [] 
+const ProfileBasicInfo = memo(({
+  user,
+  isOwnProfile = false,
+  onUpdate,
+  onStatsRefresh,
+  photos = [],
+  following = [],
+  followers = [],
+  posts = []
 }) => {
   const [isEditing, setIsEditing] = useState(false)
-  const [formData, setFormData] = useState({
-    firstName: user?.name?.split(' ')[0] || '',
-    lastName: user?.name?.split(' ')[1] || '',
-    gender: user?.gender || 'чоловіча',
-    birthDate: user?.birthDate || '',
-    birthCity: user?.city || '',
-    about: user?.bio || ''
-  })
+  const [formData, setFormData] = useState(() => getInitialFormData(user))
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     if (user) {
-      setFormData({
-        firstName: user.name?.split(' ')[0] || '',
-        lastName: user.name?.split(' ')[1] || '',
-        gender: user.gender || 'чоловіча',
-        birthDate: user.birthDate || '',
-        birthCity: user.city || '',
-        about: user.bio || ''
-      })
+      setFormData(getInitialFormData(user))
     }
   }, [user])
 
   const handleSave = useCallback(async () => {
+    if (!user?.id) return
+
+    setIsLoading(true)
     try {
-      const userId = localStorage.getItem('userId')
       const profileData = {
-        name: `${formData.firstName} ${formData.lastName}`,
+        name: `${formData.firstName} ${formData.lastName}`.trim(),
         city: formData.birthCity,
         country: 'Україна',
         bio: formData.about,
         gender: formData.gender,
         birthDate: formData.birthDate
       }
-      await updateProfile(userId, profileData)
+      
+      await updateProfile(user.id, profileData)
       onUpdate?.(formData)
       setIsEditing(false)
+      showNotification('Профіль успішно оновлено', 'success')
     } catch (error) {
-      console.error('Failed to save profile:', error)
+      showNotification(error.message || 'Не вдалося зберегти профіль')
+    } finally {
+      setIsLoading(false)
     }
-  }, [formData, onUpdate])
+  }, [formData, onUpdate, user?.id])
 
   const handleCancel = useCallback(() => {
-    setFormData({
-      firstName: user?.name?.split(' ')[0] || '',
-      lastName: user?.name?.split(' ')[1] || '',
-      gender: user?.gender || 'чоловіча',
-      birthDate: user?.birthDate || '',
-      birthCity: user?.city || '',
-      about: user?.bio || ''
-    })
+    setFormData(getInitialFormData(user))
     setIsEditing(false)
   }, [user])
 
   const formatDate = useCallback((dateString) => {
     if (!dateString) return 'не вказано'
     const date = new Date(dateString)
-    return date.toLocaleDateString('uk-UA', { 
-      day: 'numeric', 
-      month: 'long', 
-      year: 'numeric' 
+    return date.toLocaleDateString('uk-UA', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
     })
   }, [])
 
@@ -87,9 +74,10 @@ const ProfileBasicInfo = memo(({
       <div className="profile-basic-info__header">
         <h2 className="profile-basic-info__title">Основна інформація</h2>
         {isOwnProfile && !isEditing && (
-          <button 
+          <button
             className="profile-basic-info__edit-btn"
             onClick={handleEdit}
+            disabled={isLoading}
           >
             редагувати
           </button>
@@ -106,6 +94,7 @@ const ProfileBasicInfo = memo(({
                 value={formData.firstName}
                 onChange={(e) => setFormData({...formData, firstName: e.target.value})}
                 className="input"
+                disabled={isLoading}
               />
             </div>
             <div className="profile-field">
@@ -115,6 +104,7 @@ const ProfileBasicInfo = memo(({
                 value={formData.lastName}
                 onChange={(e) => setFormData({...formData, lastName: e.target.value})}
                 className="input"
+                disabled={isLoading}
               />
             </div>
           </>
@@ -122,7 +112,7 @@ const ProfileBasicInfo = memo(({
           <div className="profile-field">
             <span className="profile-field__label">Повне ім'я:</span>
             <span className="profile-field__value">
-              {formData.firstName} {formData.lastName} 
+              {formData.firstName} {formData.lastName}
             </span>
           </div>
         )}
@@ -138,6 +128,7 @@ const ProfileBasicInfo = memo(({
                 { value: 'жіноча', label: 'жіноча' }
               ]}
               placeholder="Оберіть стать"
+              disabled={isLoading}
             />
           ) : (
             <span className="profile-field__value">{formData.gender}</span>
@@ -151,6 +142,7 @@ const ProfileBasicInfo = memo(({
               value={formData.birthDate}
               onChange={(value) => setFormData({...formData, birthDate: value})}
               placeholder="Оберіть дату народження"
+              disabled={isLoading}
             />
           ) : (
             <span className="profile-field__value">{formatDate(formData.birthDate)}</span>
@@ -165,6 +157,7 @@ const ProfileBasicInfo = memo(({
               value={formData.birthCity}
               onChange={(e) => setFormData({...formData, birthCity: e.target.value})}
               className="input"
+              disabled={isLoading}
             />
           ) : (
             <span className="profile-field__value">{formData.birthCity || 'не вказано'}</span>
@@ -182,6 +175,7 @@ const ProfileBasicInfo = memo(({
               maxLength={200}
               placeholder="Розкажіть про себе"
               style={{ resize: 'none' }}
+              disabled={isLoading}
             />
           ) : (
             <span className="profile-field__value">{formData.about || 'не вказано'}</span>
@@ -190,10 +184,8 @@ const ProfileBasicInfo = memo(({
 
         {!isEditing && (
           <>
-            <ProfileStats 
-              userId={user?._id || user?.id} 
-              isOwnProfile={isOwnProfile}
-              onStatsReady={onStatsRefresh}
+            <ProfileStats
+              userId={user?.id}
               photos={photos}
               following={following}
               followers={followers}
@@ -206,15 +198,17 @@ const ProfileBasicInfo = memo(({
 
       {isEditing && (
         <div className="profile-basic-info__actions">
-          <button 
+          <button
             onClick={handleSave}
             className="profile-basic-info__edit-btn"
+            disabled={isLoading}
           >
-            зберегти
+            {isLoading ? 'Збереження...' : 'зберегти'}
           </button>
-          <button 
+          <button
             onClick={handleCancel}
             className="profile-basic-info__edit-btn"
+            disabled={isLoading}
           >
             скасувати
           </button>

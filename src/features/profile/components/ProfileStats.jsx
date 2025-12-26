@@ -1,14 +1,6 @@
 import React, { memo } from 'react'
 
-const ProfileStats = memo(({ 
-  userId, 
-  isOwnProfile, 
-  onStatsReady, 
-  photos = [], 
-  following = [], 
-  followers = [], 
-  posts = [] 
-}) => {
+const ProfileStats = memo(({ userId, photos = [], following = [], followers = [], posts = [] }) => {
   const stats = [
     { label: 'Фото', count: photos.length },
     { label: 'Підписки', count: following.length },

@@ -1,10 +1,11 @@
 import React from 'react'
 import { Skeleton } from '../../../components/ui'
+import './ProfileSkeleton.css'
 
 const ProfileSkeleton = () => {
   return (
     <div className="profile-skeleton">
-      <div style={{ padding: '20px' }}>
+      <div className="profile-skeleton-container">
         <Skeleton 
           width="120px" 
           height="120px" 

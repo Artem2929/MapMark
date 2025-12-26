@@ -1,14 +1,11 @@
 import React from 'react'
+import './ProfileHeader.css'
 
 const ProfileHeader = () => {
   return (
-    <div style={{ 
-      padding: '20px', 
-      borderBottom: '1px solid #eee',
-      marginBottom: '20px'
-    }}>
-      <h1 style={{ marginBottom: '8px' }}>Профіль користувача</h1>
-      <p style={{ color: '#666' }}>Інформація про користувача</p>
+    <div className="profile-header-container">
+      <h1 className="profile-header__title">Профіль користувача</h1>
+      <p className="profile-header__description">Інформація про користувача</p>
     </div>
   )
 }
