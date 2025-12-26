@@ -1,11 +1,21 @@
 import React from 'react'
 
-const ServicesSection = ({ userId, isOwnProfile, services, onServiceAdded }) => {
+const ServicesSection = ({ userId, isOwnProfile, services = [], onServiceAdded }) => {
+  const handleAddService = () => {
+    // TODO: Replace with proper API call to create service
+    if (onServiceAdded) {
+      onServiceAdded({
+        name: 'Нова послуга',
+        userId
+      })
+    }
+  }
+
   return (
     <div className="services-section">
       <h2>Послуги</h2>
       {isOwnProfile && (
-        <button onClick={() => onServiceAdded({ id: Date.now(), name: 'Нова послуга' })}>
+        <button onClick={handleAddService}>
           Додати послугу
         </button>
       )}

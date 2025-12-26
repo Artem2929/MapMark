@@ -60,11 +60,16 @@ const ProfileBasicInfo = memo(({
   const formatDate = useCallback((dateString) => {
     if (!dateString) return 'не вказано'
     const date = new Date(dateString)
+    if (isNaN(date.getTime())) return 'некоректна дата'
     return date.toLocaleDateString('uk-UA', {
       day: 'numeric',
       month: 'long',
       year: 'numeric'
     })
+  }, [])
+
+  const handleInputChange = useCallback((field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
   }, [])
 
   const handleEdit = useCallback(() => setIsEditing(true), [])
@@ -92,7 +97,7 @@ const ProfileBasicInfo = memo(({
               <input
                 type="text"
                 value={formData.firstName}
-                onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                onChange={(e) => handleInputChange('firstName', e.target.value)}
                 className="input"
                 disabled={isLoading}
               />
@@ -102,7 +107,7 @@ const ProfileBasicInfo = memo(({
               <input
                 type="text"
                 value={formData.lastName}
-                onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                onChange={(e) => handleInputChange('lastName', e.target.value)}
                 className="input"
                 disabled={isLoading}
               />
@@ -122,7 +127,7 @@ const ProfileBasicInfo = memo(({
           {isEditing ? (
             <CustomSelect
               value={formData.gender}
-              onChange={(value) => setFormData({...formData, gender: value})}
+              onChange={(value) => handleInputChange('gender', value)}
               options={[
                 { value: 'чоловіча', label: 'чоловіча' },
                 { value: 'жіноча', label: 'жіноча' }
@@ -140,7 +145,7 @@ const ProfileBasicInfo = memo(({
           {isEditing ? (
             <DatePicker
               value={formData.birthDate}
-              onChange={(value) => setFormData({...formData, birthDate: value})}
+              onChange={(value) => handleInputChange('birthDate', value)}
               placeholder="Оберіть дату народження"
               disabled={isLoading}
             />
@@ -155,7 +160,7 @@ const ProfileBasicInfo = memo(({
             <input
               type="text"
               value={formData.birthCity}
-              onChange={(e) => setFormData({...formData, birthCity: e.target.value})}
+              onChange={(e) => handleInputChange('birthCity', e.target.value)}
               className="input"
               disabled={isLoading}
             />
@@ -169,7 +174,7 @@ const ProfileBasicInfo = memo(({
           {isEditing ? (
             <textarea
               value={formData.about}
-              onChange={(e) => setFormData({...formData, about: e.target.value})}
+              onChange={(e) => handleInputChange('about', e.target.value)}
               className="input"
               rows={3}
               maxLength={200}
@@ -185,13 +190,12 @@ const ProfileBasicInfo = memo(({
         {!isEditing && (
           <>
             <ProfileStats
-              userId={user?.id}
               photos={photos}
               following={following}
               followers={followers}
               posts={posts}
             />
-            <PhotosSection />
+            <PhotosSection photos={photos} />
           </>
         )}
       </div>

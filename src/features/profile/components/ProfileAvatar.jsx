@@ -94,7 +94,7 @@ const ProfileAvatar = memo(({ user, isOwnProfile = false, onAvatarChange }) => {
     
     const menuItems = [
       { path: '/friends', label: 'Мої друзі', count: user?.followers?.length || 0 },
-      { path: `/messages/${userId}`, label: 'Повідомлення', count: 0 },
+      { path: `/messages/${userId}`, label: 'Повідомлення', count: user?.unreadMessages || 0 },
       { path: `/photos/${userId}`, label: 'Фото', count: user?.photos?.length || 0 }
     ]
 

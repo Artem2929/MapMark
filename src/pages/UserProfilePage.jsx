@@ -38,7 +38,7 @@ const UserProfileContent = () => {
       <div className="profile-profile-container">
         <ProfileBreadcrumbs />
         <ProfileContent />
-        <Wall userId={targetUserId} isOwnProfile={isOwnProfile} />
+        <Wall userId={targetUserId} isOwnProfile={isOwnProfile} posts={user?.posts || []} />
       </div>
     </div>
   )

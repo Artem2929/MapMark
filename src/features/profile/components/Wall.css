@@ -39,8 +39,14 @@
   transition: background-color 0.2s ease;
 }
 
-.wall__submit-btn:hover {
+.wall__submit-btn:hover:not(:disabled) {
   background-color: #1565c0;
+}
+
+.wall__submit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .wall__empty {

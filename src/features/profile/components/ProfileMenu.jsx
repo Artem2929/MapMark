@@ -35,8 +35,8 @@ const ProfileMenu = memo(({ userId }) => {
   ]
 
   const isActiveRoute = (itemPath) => {
-    if (itemPath.includes('${userId}')) {
-      return location.pathname.startsWith(itemPath.split('${userId}')[0])
+    if (itemPath.includes('/messages/')) {
+      return location.pathname.startsWith('/messages/')
     }
     return location.pathname === itemPath
   }

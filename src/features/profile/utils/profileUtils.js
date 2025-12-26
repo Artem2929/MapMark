@@ -1,11 +1,14 @@
-export const getInitialFormData = (user) => ({
-  firstName: user?.name?.split(' ')[0] || '',
-  lastName: user?.name?.split(' ').slice(1).join(' ') || '',
-  gender: user?.gender || 'чоловіча',
-  birthDate: user?.birthDate || '',
-  birthCity: user?.city || '',
-  about: user?.bio || ''
-})
+export const getInitialFormData = (user) => {
+  const nameParts = user?.name?.split(' ') || []
+  return {
+    firstName: nameParts[0] || '',
+    lastName: nameParts.slice(1).join(' ') || '',
+    gender: user?.gender || 'чоловіча',
+    birthDate: user?.birthDate || '',
+    birthCity: user?.city || '',
+    about: user?.bio || ''
+  }
+}
 
 export const showNotification = (message, type = 'error') => {
   // TODO: Replace with proper notification system

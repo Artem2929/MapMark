@@ -12,33 +12,44 @@ const validateToken = (token) => {
   return token
 }
 
-export const updateProfile = async (userId, profileData) => {
+const validateUrl = (url) => {
   try {
-    const token = validateToken(localStorage.getItem('token'))
-    const csrfToken = getCsrfToken()
+    const parsedUrl = new URL(url)
+    const allowedHosts = ['localhost', '127.0.0.1', process.env.REACT_APP_API_HOST].filter(Boolean)
     
-    if (!csrfToken) {
-      throw new Error('CSRF токен відсутній')
+    if (!allowedHosts.includes(parsedUrl.hostname)) {
+      throw new Error('Недозволений хост')
     }
-
-    const response = await fetch(`${API_BASE_URL}/api/v1/users/${userId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        'X-CSRF-Token': csrfToken
-      },
-      body: JSON.stringify(profileData)
-    })
-
-    if (!response.ok) {
-      throw new Error('Не вдалося оновити профіль')
-    }
-
-    const data = await response.json()
-    return data
+    
+    return url
   } catch (error) {
-    console.error('Profile update error:', error)
-    throw error
+    throw new Error('Некоректний URL')
   }
+}
+
+export const updateProfile = async (userId, profileData) => {
+  const token = validateToken(localStorage.getItem('token'))
+  const csrfToken = getCsrfToken()
+  
+  if (!csrfToken) {
+    throw new Error('CSRF токен відсутній')
+  }
+
+  const url = validateUrl(`${API_BASE_URL}/api/v1/users/${userId}`)
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      'X-CSRF-Token': csrfToken
+    },
+    body: JSON.stringify(profileData)
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}))
+    throw new Error(errorData.message || 'Не вдалося оновити профіль')
+  }
+
+  return await response.json()
 }

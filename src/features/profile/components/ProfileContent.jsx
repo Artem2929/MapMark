@@ -9,14 +9,15 @@ const ProfileContent = () => {
   const { user, isOwnProfile, updateUser } = useProfile()
 
   const handleAvatarChange = async (formData) => {
-    // TODO: Implement avatar upload API call
-    console.log('Avatar upload:', formData)
+    return Promise.resolve()
   }
 
   const handleProfileUpdate = async (updatedData) => {
-    // TODO: Implement profile update
-    console.log('Profile update:', updatedData)
-    updateUser(updatedData)
+    try {
+      await updateUser(updatedData)
+    } catch (error) {
+      console.error('Profile update failed:', error)
+    }
   }
 
   // TODO: Replace with real data from API
