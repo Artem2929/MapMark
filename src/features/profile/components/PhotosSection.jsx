@@ -18,6 +18,10 @@ const PhotosSection = memo(({ photos = [], isOwnProfile }) => {
     navigate('/photos')
   }, [navigate])
 
+  const handleAddPhoto = useCallback(() => {
+    // TODO: Implement photo upload functionality
+  }, [])
+
   return (
     <div className="photos-section">
       <div className="photos-section__header">
@@ -39,7 +43,7 @@ const PhotosSection = memo(({ photos = [], isOwnProfile }) => {
               {isOwnProfile ? 'Додайте перше фото' : 'Фотографій немає'}
             </p>
             {isOwnProfile && (
-              <button className="photos-section__add-btn">
+              <button className="photos-section__add-btn" onClick={handleAddPhoto}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"/>
                 </svg>
@@ -50,7 +54,7 @@ const PhotosSection = memo(({ photos = [], isOwnProfile }) => {
         ) : (
           <div className="photos-section__grid">
             {photos.slice(0, 3).map((photo, index) => {
-              const photoKey = photo.id || `photo-${photo.url}-${index}`
+              const photoKey = photo.id || `photo-${photo.url || 'unknown'}-${index}`
               const isHidden = failedImages.has(photoKey)
               
               return (

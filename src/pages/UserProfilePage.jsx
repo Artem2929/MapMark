@@ -11,7 +11,7 @@ import FriendsSection from '../features/profile/components/FriendsSection'
 import '../features/profile/components/Profile.css'
 
 const UserProfileContent = () => {
-  const { user, loading, targetUserId, isOwnProfile } = useProfile()
+  const { user, loading, targetUserId, isOwnProfile, updateUser } = useProfile()
 
   if (loading) {
     return (
@@ -37,7 +37,7 @@ const UserProfileContent = () => {
   return (
     <div className="profile-page">
       <div className="profile-container">
-        <ProfileHeader user={user} isOwnProfile={isOwnProfile} />
+        <ProfileHeader user={user} isOwnProfile={isOwnProfile} onUserUpdate={updateUser} />
         
         <div className="profile-main-content">
           <div className="profile-center-column">
@@ -60,6 +60,19 @@ const UserProfile = () => {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
+  }
+
+  if (!targetUserId) {
+    return (
+      <div className="profile-page">
+        <div className="profile-container">
+          <div className="error-message">
+            <h3>Помилка</h3>
+            <p>Не вдалося визначити користувача</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

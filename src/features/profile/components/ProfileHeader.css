@@ -113,7 +113,7 @@
 .profile-header__stats {
   display: flex;
   gap: 24px;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 
 .profile-header__stat {
@@ -178,6 +178,10 @@
   background: #e4e6ea;
 }
 
+.profile-header__actions--hidden {
+  display: none;
+}
+
 .profile-header__menu-item {
   display: block;
   padding: 12px 16px;
@@ -188,6 +192,14 @@
   background: #f7f9fa;
   transition: all 0.2s ease;
   font-weight: 500;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.profile-header__menu-item--button {
+  font-family: inherit;
 }
 
 .profile-header__menu-item:hover {

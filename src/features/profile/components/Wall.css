@@ -231,6 +231,16 @@
   line-height: 1.4;
 }
 
+.wall__error {
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  border: 1px solid #fecaca;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .wall {

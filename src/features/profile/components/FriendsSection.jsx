@@ -1,7 +1,14 @@
-import React, { memo } from 'react'
+import React, { memo, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './FriendsSection.css'
 
 const FriendsSection = memo(({ friends = [] }) => {
+  const navigate = useNavigate()
+
+  const handleShowAllFriends = useCallback(() => {
+    navigate('/friends')
+  }, [navigate])
+
   return (
     <div className="friends-section">
       <div className="friends-section__header">
@@ -21,13 +28,16 @@ const FriendsSection = memo(({ friends = [] }) => {
           </div>
         ) : (
           <div className="friends-section__grid">
-            {friends.slice(0, 6).map((friend, index) => (
-              <div key={friend.id || index} className="friends-section__item">
+            {friends.slice(0, 6).map((friend) => (
+              <div key={friend.id} className="friends-section__item">
                 <div className="friends-section__avatar-wrapper">
                   <img 
-                    src={friend.avatar} 
-                    alt={friend.name}
+                    src={friend.avatar || '/default-avatar.png'} 
+                    alt={friend.name || 'Аватар друга'}
                     className="friends-section__avatar"
+                    onError={(e) => {
+                      e.target.src = '/default-avatar.png'
+                    }}
                   />
                 </div>
                 <span className="friends-section__name">{friend.name}</span>
@@ -37,7 +47,7 @@ const FriendsSection = memo(({ friends = [] }) => {
         )}
         
         {friends.length > 6 && (
-          <button className="friends-section__show-all">
+          <button className="friends-section__show-all" onClick={handleShowAllFriends}>
             Показати всіх друзів ({friends.length})
           </button>
         )}

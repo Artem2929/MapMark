@@ -33,6 +33,7 @@
 
 .photos-section__content {
   position: relative;
+  margin-bottom: 8px;
 }
 
 /* Grid Layout */

@@ -1,9 +1,46 @@
-import React, { memo } from 'react'
+import React, { memo, useState, useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import PhotosSection from './PhotosSection'
+import ProfileEditForm from './ProfileEditForm'
+import { useProfileEdit } from '../hooks/useProfileEdit'
 import './ProfileHeader.css'
 
-const ProfileHeader = memo(({ user, isOwnProfile }) => {
+const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate }) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const { saveProfile } = useProfileEdit(user)
+  
   if (!user) return null
+
+  const handleEditProfile = useCallback(() => {
+    setIsEditing(true)
+  }, [])
+
+  const handleSaveProfile = useCallback(async (profileData) => {
+    const updatedUser = await saveProfile(profileData)
+    if (onUserUpdate) {
+      onUserUpdate(updatedUser.data.user)
+    }
+    setIsEditing(false)
+  }, [saveProfile, onUserUpdate])
+
+  const handleCancelEdit = useCallback(() => {
+    setIsEditing(false)
+  }, [])
+
+  const formatWebsiteUrl = (url) => {
+    if (!url) return ''
+    return url.replace(/^https?:\/\//, '')
+  }
+
+  if (isEditing) {
+    return (
+      <ProfileEditForm
+        user={user}
+        onSave={handleSaveProfile}
+        onCancel={handleCancelEdit}
+      />
+    )
+  }
 
   return (
     <div className="profile-header">
@@ -11,9 +48,12 @@ const ProfileHeader = memo(({ user, isOwnProfile }) => {
         <div className="profile-header__left">
           <div className="profile-header__avatar-section">
             <img 
-              src={user.avatar} 
-              alt={user.name}
+              src={user.avatar || '/default-avatar.png'} 
+              alt={user.name || 'Аватар'}
               className="profile-header__avatar"
+              onError={(e) => {
+                e.target.src = '/default-avatar.png'
+              }}
             />
             {isOwnProfile && (
               <button className="profile-header__edit-avatar">
@@ -26,10 +66,10 @@ const ProfileHeader = memo(({ user, isOwnProfile }) => {
           
           {isOwnProfile && (
             <div className="profile-header__menu">
-              <a href="#" className="profile-header__menu-item">Редагувати профіль</a>
-              <a href="#" className="profile-header__menu-item">Мої друзі</a>
-              <a href="#" className="profile-header__menu-item">Мої повідомлення</a>
-              <a href="#" className="profile-header__menu-item">Мої фото</a>
+              <button onClick={handleEditProfile} className="profile-header__menu-item profile-header__menu-item--button">Редагувати профіль</button>
+              <Link to="/friends" className="profile-header__menu-item">Мої друзі</Link>
+              <Link to="/messages" className="profile-header__menu-item">Мої повідомлення</Link>
+              <Link to="/photos" className="profile-header__menu-item">Мої фото</Link>
             </div>
           )}
         </div>
@@ -54,7 +94,7 @@ const ProfileHeader = memo(({ user, isOwnProfile }) => {
                   <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
                 </svg>
                 <a href={user.website} target="_blank" rel="noopener noreferrer">
-                  {user.website.replace('https://', '')}
+                  {formatWebsiteUrl(user.website)}
                 </a>
               </div>
             )}
@@ -85,9 +125,9 @@ const ProfileHeader = memo(({ user, isOwnProfile }) => {
           <PhotosSection photos={user?.photos || []} isOwnProfile={isOwnProfile} />
         </div>
         
-        <div className="profile-header__actions" style={{ display: 'none' }}>
+        <div className="profile-header__actions profile-header__actions--hidden">
           {isOwnProfile ? (
-            <button className="profile-header__edit-btn">
+            <button className="profile-header__edit-btn" onClick={handleEditProfile}>
               Редагувати профіль
             </button>
           ) : (

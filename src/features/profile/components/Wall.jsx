@@ -1,20 +1,26 @@
 import React, { memo, useState, useCallback, useMemo } from 'react'
+import { useAuthStore } from '../../../app/store'
+import { createPost } from '../services/profileService'
 import './Wall.css'
 
 const Wall = memo(({ userId, isOwnProfile, posts = [] }) => {
   const [postText, setPostText] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState(null)
+  const { user: currentUser } = useAuthStore()
 
   const handleSubmit = useCallback(async () => {
     if (!postText.trim() || isSubmitting) return
     
     setIsSubmitting(true)
+    setError(null)
+    
     try {
-      // TODO: Implement post creation API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await createPost(postText.trim())
       setPostText('')
-    } catch (error) {
-      console.error('Failed to create post:', error)
+    } catch (err) {
+      console.error('Failed to create post:', err)
+      setError(err.message || 'Помилка створення посту')
     } finally {
       setIsSubmitting(false)
     }
@@ -26,13 +32,28 @@ const Wall = memo(({ userId, isOwnProfile, posts = [] }) => {
     }
   }, [handleSubmit])
 
+  const handleLike = useCallback((postId) => {
+    console.log('Like post:', postId)
+    // TODO: Implement like functionality
+  }, [])
+
+  const handleComment = useCallback((postId) => {
+    console.log('Comment on post:', postId)
+    // TODO: Implement comment functionality
+  }, [])
+
+  const handleShare = useCallback((postId) => {
+    console.log('Share post:', postId)
+    // TODO: Implement share functionality
+  }, [])
+
   const renderedPosts = useMemo(() => (
     posts.map(post => (
       <article key={post.id} className="wall__post">
         <div className="wall__post-avatar">
           <img 
-            src={post.author?.avatar} 
-            alt={post.author?.name}
+            src={post.author?.avatar || '/default-avatar.png'} 
+            alt={post.author?.name || 'Аватар'}
             className="wall__post-avatar-img"
           />
         </div>
@@ -55,21 +76,30 @@ const Wall = memo(({ userId, isOwnProfile, posts = [] }) => {
           </div>
           
           <div className="wall__post-actions">
-            <button className="wall__action-btn wall__action-btn--like">
+            <button 
+              className="wall__action-btn wall__action-btn--like"
+              onClick={() => handleLike(post.id)}
+            >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
               <span>{post.likes}</span>
             </button>
             
-            <button className="wall__action-btn wall__action-btn--comment">
+            <button 
+              className="wall__action-btn wall__action-btn--comment"
+              onClick={() => handleComment(post.id)}
+            >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h11c.55 0 1-.45 1-1z"/>
               </svg>
               <span>{post.comments}</span>
             </button>
             
-            <button className="wall__action-btn wall__action-btn--share">
+            <button 
+              className="wall__action-btn wall__action-btn--share"
+              onClick={() => handleShare(post.id)}
+            >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
               </svg>
@@ -79,7 +109,7 @@ const Wall = memo(({ userId, isOwnProfile, posts = [] }) => {
         </div>
       </article>
     ))
-  ), [posts])
+  ), [posts, handleLike, handleComment, handleShare])
 
   return (
     <div className="wall">
@@ -87,8 +117,8 @@ const Wall = memo(({ userId, isOwnProfile, posts = [] }) => {
         <div className="wall__composer">
           <div className="wall__composer-avatar">
             <img 
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" 
-              alt="Ваш аватар"
+              src={currentUser?.avatar || '/default-avatar.png'} 
+              alt={currentUser?.name || 'Ваш аватар'}
               className="wall__composer-avatar-img"
             />
           </div>
@@ -103,6 +133,12 @@ const Wall = memo(({ userId, isOwnProfile, posts = [] }) => {
               disabled={isSubmitting}
               rows={3}
             />
+            
+            {error && (
+              <div className="wall__error">
+                {error}
+              </div>
+            )}
             
             <div className="wall__composer-actions">
               <div className="wall__composer-tools">
