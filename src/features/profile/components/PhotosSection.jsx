@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useState, useCallback } from 'react'
 
 const PhotosSection = memo(({ photos = [] }) => {
   const [failedImages, setFailedImages] = useState(new Set())
