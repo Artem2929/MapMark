@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import './CustomSelect.css'
 
-export function CustomSelect({ 
+const CustomSelect = ({ 
   value, 
   onChange, 
   onBlur,
@@ -10,7 +10,7 @@ export function CustomSelect({
   error,
   disabled,
   className = '' 
-}) {
+}) => {
   const [isOpen, setIsOpen] = useState(false)
   const selectRef = useRef(null)
 
@@ -23,7 +23,6 @@ export function CustomSelect({
     const handleClickOutside = (event) => {
       if (selectRef.current && !selectRef.current.contains(event.target)) {
         setIsOpen(false)
-        // Викликаємо onBlur тільки якщо селект був відкритий
         if (isOpen && onBlur) {
           onBlur()
         }
@@ -100,3 +99,6 @@ export function CustomSelect({
     </div>
   )
 }
+
+export { CustomSelect }
+export default CustomSelect

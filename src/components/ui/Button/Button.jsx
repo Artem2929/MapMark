@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import './Button.css'
 
-export function Button({ 
+const Button = ({ 
   children, 
   onClick, 
   type = 'button', 
@@ -11,7 +11,7 @@ export function Button({
   size = 'md',
   className = '',
   ...props 
-}) {
+}) => {
   const classes = useMemo(() => {
     const baseClass = 'btn'
     const variantClass = `btn--${variant}`
@@ -41,3 +41,6 @@ export function Button({
     </button>
   )
 }
+
+export { Button }
+export default Button
