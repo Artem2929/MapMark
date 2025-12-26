@@ -1,0 +1,129 @@
+.friends-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.friends-section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.friends-section__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+.friends-section__count {
+  font-size: 14px;
+  color: #657786;
+  background: #f7f9fa;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.friends-section__content {
+  position: relative;
+}
+
+/* Empty State */
+.friends-section__empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.friends-section__empty-icon {
+  margin-bottom: 16px;
+  color: #aab8c2;
+}
+
+.friends-section__empty-text {
+  color: #657786;
+  font-size: 15px;
+  margin: 0;
+}
+
+/* Grid Layout */
+.friends-section__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.friends-section__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.friends-section__item:hover {
+  background: #f7f9fa;
+}
+
+.friends-section__avatar-wrapper {
+  flex-shrink: 0;
+}
+
+.friends-section__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.friends-section__name {
+  font-size: 14px;
+  color: #000;
+  font-weight: 500;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+/* Show All Button */
+.friends-section__show-all {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e1e8ed;
+  background: #fff;
+  color: #1da1f2;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.friends-section__show-all:hover {
+  background: #f7f9fa;
+  border-color: #1da1f2;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .friends-section {
+    margin: 0 -12px 20px;
+    border-radius: 0;
+  }
+  
+  .friends-section__grid {
+    grid-template-columns: 1fr;
+  }
+}
