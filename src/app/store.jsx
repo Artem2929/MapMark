@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext } from 'react'
+import { useState, useEffect, createContext, useContext, useCallback } from 'react'
 
 const AuthContext = createContext()
 
@@ -39,15 +39,17 @@ export function AuthProvider({ children }) {
     setIsLoading(false)
   }, [])
 
-  const setAuth = (authData) => {
+  const setAuth = useCallback((authData) => {
     if (!authData) return
     
     const token = authData.token || authData.accessToken
     const user = authData.data?.user || authData.user
+    const refreshToken = authData.refreshToken
     
     setState(prev => ({
       ...prev,
       accessToken: token,
+      refreshToken: refreshToken || prev.refreshToken,
       user: user,
       isAuthenticated: true
     }))
@@ -56,23 +58,50 @@ export function AuthProvider({ children }) {
       if (token) {
         localStorage.setItem('accessToken', token)
       }
+      if (refreshToken) {
+        localStorage.setItem('refreshToken', refreshToken)
+      }
       if (user) {
         localStorage.setItem('user', JSON.stringify(user))
       }
     } catch (error) {
       console.error('Error saving auth data:', error)
     }
-  }
+  }, [])
 
-  const clearAuth = () => {
+  const clearAuth = useCallback(() => {
     setState(initialState)
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('user')
-    localStorage.removeItem('refreshToken')
-  }
+    try {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('user')
+      localStorage.removeItem('refreshToken')
+    } catch (error) {
+      console.error('Error clearing auth data:', error)
+    }
+  }, [])
+
+  const updateUser = useCallback((userData) => {
+    setState(prev => ({
+      ...prev,
+      user: { ...prev.user, ...userData }
+    }))
+    
+    try {
+      const updatedUser = { ...state.user, ...userData }
+      localStorage.setItem('user', JSON.stringify(updatedUser))
+    } catch (error) {
+      console.error('Error updating user data:', error)
+    }
+  }, [state.user])
 
   return (
-    <AuthContext.Provider value={{ ...state, setAuth, clearAuth, isLoading }}>
+    <AuthContext.Provider value={{ 
+      ...state, 
+      setAuth, 
+      clearAuth, 
+      updateUser,
+      isLoading 
+    }}>
       {children}
     </AuthContext.Provider>
   )

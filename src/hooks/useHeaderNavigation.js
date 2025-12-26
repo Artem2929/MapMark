@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../app/store'
 import { ROUTES, NAVIGATION_LABELS } from '../constants/header'
@@ -13,12 +13,12 @@ export function useHeaderNavigation() {
     try {
       clearAuth()
       setIsMenuOpen(false)
-      navigate(ROUTES.LOGIN)
+      navigate(ROUTES.HOME)
     } catch (error) {
       console.error('Помилка виходу:', error)
       clearAuth()
       setIsMenuOpen(false)
-      navigate(ROUTES.LOGIN)
+      navigate(ROUTES.HOME)
     }
   }, [clearAuth, navigate])
 
@@ -30,7 +30,7 @@ export function useHeaderNavigation() {
     setIsMenuOpen(prev => !prev)
   }, [])
 
-  const getAuthLink = useCallback(() => {
+  const authLink = useMemo(() => {
     if (location.pathname === ROUTES.LOGIN) {
       return { to: ROUTES.REGISTER, text: NAVIGATION_LABELS.REGISTER }
     }
@@ -44,7 +44,7 @@ export function useHeaderNavigation() {
     isMenuOpen,
     isAuthenticated,
     user,
-    authLink: getAuthLink(),
+    authLink,
     handleLogout,
     closeMenu,
     toggleMenu
