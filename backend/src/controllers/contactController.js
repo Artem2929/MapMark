@@ -16,7 +16,8 @@ class ContactController {
       const contact = await contactService.createMessage({
         name,
         email,
-        message
+        message,
+        ip: req.ip
       })
 
       logger.info('Contact message sent successfully', { 

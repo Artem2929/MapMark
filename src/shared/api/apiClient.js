@@ -20,13 +20,13 @@ class ApiClient {
     }
 
     const response = await fetch(url, config)
+    const data = await response.json()
     
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Помилка мережі' }))
-      throw new Error(error.message || 'Помилка запиту')
+      throw new Error(data.message || 'Помилка запиту')
     }
 
-    return response.json()
+    return data
   }
 
   async get(endpoint, options = {}) {

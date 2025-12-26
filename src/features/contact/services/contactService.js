@@ -6,6 +6,6 @@ export const contactService = {
       method: 'POST',
       body: data
     })
-    return response.data
+    return response
   }
 }

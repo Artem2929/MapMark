@@ -15,7 +15,7 @@ class CSRFService {
   async refreshToken() {
     try {
       const response = await apiClient.get('/api/v1/auth/csrf-token')
-      this.token = response.data.csrfToken
+      this.token = response.data?.csrfToken || response.csrfToken
       return this.token
     } catch (error) {
       console.error('Failed to get CSRF token:', error)

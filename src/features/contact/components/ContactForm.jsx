@@ -2,7 +2,7 @@ import React from 'react'
 import { useContactForm } from '../hooks/useContactForm'
 
 const ContactForm = () => {
-  const { formData, isSubmitting, toast, handleChange, handleSubmit } = useContactForm()
+  const { formData, isSubmitting, toast, errors, handleChange, handleSubmit } = useContactForm()
 
   return (
     <form className="about-contact-form" onSubmit={handleSubmit}>
@@ -21,7 +21,9 @@ const ContactForm = () => {
           required
           disabled={isSubmitting}
           autoFocus
+          className={errors.name ? 'form-input--error' : ''}
         />
+        {errors.name && <span className="form-error">{errors.name}</span>}
       </div>
       
       <div className="form-group">
@@ -32,7 +34,9 @@ const ContactForm = () => {
           placeholder="Ваш email"
           required
           disabled={isSubmitting}
+          className={errors.email ? 'form-input--error' : ''}
         />
+        {errors.email && <span className="form-error">{errors.email}</span>}
       </div>
       
       <div className="form-group">
@@ -43,7 +47,9 @@ const ContactForm = () => {
           required
           disabled={isSubmitting}
           rows={4}
+          className={errors.message ? 'form-input--error' : ''}
         />
+        {errors.message && <span className="form-error">{errors.message}</span>}
       </div>
       
       <button type="submit" disabled={isSubmitting}>

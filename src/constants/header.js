@@ -6,6 +6,7 @@ export const HEADER_CONFIG = {
 }
 
 export const ROUTES = {
+  HOME: '/',
   LOGIN: '/login',
   REGISTER: '/register',
   ABOUT: '/about',
