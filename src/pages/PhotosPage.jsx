@@ -110,6 +110,16 @@ const Photos = () => {
     }
   };
 
+  const handleToggleLike = async (photoId, type, e) => {
+    e.stopPropagation();
+    try {
+      await photosService.togglePhotoLike(photoId, type);
+      await loadPhotos(userId);
+    } catch (error) {
+      console.error('Like error:', error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="photos-page">
@@ -145,7 +155,7 @@ const Photos = () => {
         )}
         {photos.map((photo) => (
           <div 
-            key={photo.id} 
+            key={photo._id} 
             className="photo-card"
             onClick={() => handlePhotoClick(photo)}
           >
@@ -158,13 +168,41 @@ const Photos = () => {
               {currentUserId === userId && (
                 <button 
                   className="photo-delete-btn"
-                  onClick={(e) => handleDeletePhoto(photo.id, e)}
+                  onClick={(e) => handleDeletePhoto(photo._id, e)}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                   </svg>
                 </button>
               )}
+              <div className="photo-actions">
+                <button 
+                  className={`photo-like-btn ${photo.userReaction === 'like' ? 'active' : ''}`}
+                  onClick={(e) => handleToggleLike(photo._id, 'like', e)}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                  </svg>
+                  <span>{photo.likes || 0}</span>
+                </button>
+                <button 
+                  className={`photo-dislike-btn ${photo.userReaction === 'dislike' ? 'active' : ''}`}
+                  onClick={(e) => handleToggleLike(photo._id, 'dislike', e)}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                  </svg>
+                  <span>{photo.dislikes || 0}</span>
+                </button>
+                <button 
+                  className="photo-comment-btn"
+                  onClick={(e) => { e.stopPropagation(); /* TODO: відкрити коментарі */ }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21.99 4c0-1.1-.89-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         ))}

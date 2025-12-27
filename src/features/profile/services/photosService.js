@@ -47,6 +47,11 @@ class PhotosService {
     const response = await apiClient.get('/api/v1/photos', { params })
     return response.data
   }
+
+  async togglePhotoLike(photoId, type) {
+    const response = await apiClient.post(`/api/v1/photos/${photoId}/like`, { type })
+    return response.data
+  }
 }
 
 export const photosService = new PhotosService()

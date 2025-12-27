@@ -1,4 +1,5 @@
 const Photo = require('../models/Photo')
+const PhotoLike = require('../models/PhotoLike')
 const User = require('../models/User')
 const multer = require('multer')
 const path = require('path')
@@ -60,6 +61,26 @@ class PhotosController {
         .populate('userId', 'name id')
         .select('-__v')
 
+      // Очищаємо відповідь від зайвих полів
+      const cleanPhotos = photos.map(photo => {
+        const photoObj = photo.toObject()
+        if (photoObj.userId) {
+          photoObj.userId = photoObj.userId.id // залишаємо тільки кастомний id
+        }
+        return photoObj
+      })
+
+      // Додаємо інформацію про лайки
+      for (const photo of cleanPhotos) {
+        const likes = await PhotoLike.countDocuments({ photoId: photo._id, type: 'like' })
+        const dislikes = await PhotoLike.countDocuments({ photoId: photo._id, type: 'dislike' })
+        const userLike = req.user ? await PhotoLike.findOne({ photoId: photo._id, userId: req.user._id }) : null
+        
+        photo.likes = likes
+        photo.dislikes = dislikes
+        photo.userReaction = userLike?.type || null
+      }
+
       const total = await Photo.countDocuments({ 
         userId: user._id,
         $or: [
@@ -71,7 +92,7 @@ class PhotosController {
       res.json({
         status: 'success',
         data: {
-          photos,
+          photos: cleanPhotos,
           pagination: {
             page: pageNum,
             limit: limitNum,
@@ -276,6 +297,66 @@ class PhotosController {
       res.status(500).json({
         status: 'error',
         message: 'Помилка при оновленні фотографії',
+      })
+    }
+  }
+
+  // Лайкнути або дізлайкнути фото
+  async togglePhotoLike(req, res) {
+    try {
+      const { photoId } = req.params
+      const { type } = req.body // 'like' або 'dislike'
+      const userId = req.user._id
+
+      if (!['like', 'dislike'].includes(type)) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Невірний тип реакції'
+        })
+      }
+
+      const photo = await Photo.findById(photoId)
+      if (!photo) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Фотографію не знайдено'
+        })
+      }
+
+      const existingLike = await PhotoLike.findOne({ photoId, userId })
+
+      if (existingLike) {
+        if (existingLike.type === type) {
+          // Видаляємо реакцію якщо вона така ж
+          await PhotoLike.deleteOne({ photoId, userId })
+        } else {
+          // Змінюємо тип реакції
+          existingLike.type = type
+          await existingLike.save()
+        }
+      } else {
+        // Створюємо нову реакцію
+        await PhotoLike.create({ photoId, userId, type })
+      }
+
+      // Повертаємо оновлені дані
+      const likes = await PhotoLike.countDocuments({ photoId, type: 'like' })
+      const dislikes = await PhotoLike.countDocuments({ photoId, type: 'dislike' })
+      const userReaction = await PhotoLike.findOne({ photoId, userId })
+
+      res.json({
+        status: 'success',
+        data: {
+          likes,
+          dislikes,
+          userReaction: userReaction?.type || null
+        }
+      })
+    } catch (error) {
+      console.error('Error toggling photo like:', error)
+      res.status(500).json({
+        status: 'error',
+        message: 'Помилка при обробці реакції'
       })
     }
   }

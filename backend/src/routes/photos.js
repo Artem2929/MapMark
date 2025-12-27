@@ -28,4 +28,9 @@ router.delete('/:photoId',
   photosController.deletePhoto
 )
 
+router.post('/:photoId/like',
+  validatePhotoId,
+  photosController.togglePhotoLike
+)
+
 module.exports = router

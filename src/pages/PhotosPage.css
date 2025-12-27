@@ -146,6 +146,127 @@
   background: #b91c1c;
 }
 
+.photo-actions {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%) translateY(10px);
+}
+
+.photo-card:hover .photo-actions {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.photo-like-btn,
+.photo-dislike-btn,
+.photo-comment-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 24px;
+  background: rgba(0, 0, 0, 0.6);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 55px;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.photo-like-btn::before,
+.photo-dislike-btn::before,
+.photo-comment-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.photo-like-btn:hover::before,
+.photo-dislike-btn:hover::before,
+.photo-comment-btn:hover::before {
+  left: 100%;
+}
+
+.photo-like-btn:hover,
+.photo-dislike-btn:hover,
+.photo-comment-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.photo-like-btn.active {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.photo-like-btn.active:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 15px 35px rgba(5, 150, 105, 0.6);
+}
+
+.photo-dislike-btn.active {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.photo-dislike-btn.active:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 15px 35px rgba(220, 38, 38, 0.6);
+}
+
+.photo-like-btn svg,
+.photo-dislike-btn svg,
+.photo-comment-btn svg {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.photo-like-btn:hover svg,
+.photo-dislike-btn:hover svg,
+.photo-comment-btn:hover svg {
+  transform: scale(1.15) rotate(5deg);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.photo-like-btn.active svg {
+  transform: scale(1.1);
+}
+
+.photo-dislike-btn.active svg {
+  transform: scale(1.1);
+}
+
 .photo-card img {
   width: 100%;
   height: 100%;
