@@ -1,10 +1,11 @@
 // MongoDB initialization script
-db = db.getSiblingDB('mapmark');
+const DATABASE_NAME = 'mapmark';
+const db = db.getSiblingDB(DATABASE_NAME);
 
 // Create collections
 db.createCollection('users');
 
-// Create indexes
+// Create indexes for users collection
 db.users.createIndex({ "email": 1 }, { unique: true });
 db.users.createIndex({ "createdAt": -1 });
 db.users.createIndex({ "isActive": 1 });

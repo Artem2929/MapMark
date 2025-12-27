@@ -26,10 +26,22 @@ const validateToken = (token) => {
 const validateUrl = (url) => {
   try {
     const parsedUrl = new URL(url)
-    const allowedHosts = ['localhost', '127.0.0.1', process.env.REACT_APP_API_HOST].filter(Boolean)
+    const allowedHosts = ['localhost', '127.0.0.1']
+    const allowedPorts = ['3001', '5173']
     
+    // Перевіряємо чи хост дозволений
     if (!allowedHosts.includes(parsedUrl.hostname)) {
       throw new Error('Недозволений хост')
+    }
+    
+    // Перевіряємо чи порт дозволений (якщо вказаний)
+    if (parsedUrl.port && !allowedPorts.includes(parsedUrl.port)) {
+      throw new Error('Недозволений порт')
+    }
+    
+    // Перевіряємо протокол
+    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+      throw new Error('Недозволений протокол')
     }
     
     return url

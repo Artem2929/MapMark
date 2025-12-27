@@ -17,7 +17,12 @@ const protect = catchAsync(async (req, res, next) => {
   }
 
   // 2) Verification token
-  const decoded = await verifyToken(token)
+  let decoded
+  try {
+    decoded = await verifyToken(token)
+  } catch (error) {
+    return next(new AppError('Invalid token. Please log in again.', 401, 'INVALID_TOKEN'))
+  }
 
   // 3) Check if user still exists
   let currentUser = await User.findOne({ id: decoded.id }).select('+isActive')

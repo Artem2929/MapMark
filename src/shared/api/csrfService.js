@@ -40,9 +40,8 @@ class CSRFService {
       // If CSRF token is invalid, refresh and retry once
       if (error.message.includes('CSRF') || error.message.includes('403')) {
         await this.refreshToken()
-        const newToken = await this.getToken()
         
-        secureOptions.headers['X-CSRF-Token'] = newToken
+        secureOptions.headers['X-CSRF-Token'] = this.token
         return await apiClient.request(url, secureOptions)
       }
       throw error

@@ -60,14 +60,16 @@ const Wall = memo(({ userId, isOwnProfile, posts = [] }) => {
         
         <div className="wall__post-content">
           <div className="wall__post-header">
-            <span className="wall__post-author">{post.author?.name}</span>
+            <span className="wall__post-author">
+              {post.author?.name || 'Невідомий користувач'}
+            </span>
             <span className="wall__post-date">
-              {new Date(post.createdAt).toLocaleDateString('uk-UA', {
+              {post.createdAt ? new Date(post.createdAt).toLocaleDateString('uk-UA', {
                 day: 'numeric',
                 month: 'short',
                 hour: '2-digit',
                 minute: '2-digit'
-              })}
+              }) : 'Невідома дата'}
             </span>
           </div>
           

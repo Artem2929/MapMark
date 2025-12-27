@@ -75,10 +75,10 @@ const UserProfile = () => {
     return (
       <div className="profile-page">
         <div className="profile-container">
-          <div className="error-message">
-            <h3>Помилка</h3>
-            <p>Не вдалося визначити користувача</p>
-          </div>
+          <ErrorMessage 
+            title="Помилка"
+            message="Не вдалося визначити користувача"
+          />
         </div>
       </div>
     )

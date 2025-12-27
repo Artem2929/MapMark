@@ -44,10 +44,18 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
     if (onEditingStateChange) onEditingStateChange(false)
   }, [onEditingStateChange])
 
-  const formatWebsiteUrl = (url) => {
+  const formatWebsiteUrl = useCallback((url) => {
     if (!url) return ''
     return url.replace(/^https?:\/\//, '')
-  }
+  }, [])
+
+  const formatJoinDate = useCallback((date) => {
+    const joinDate = new Date(date || Date.now())
+    return joinDate.toLocaleDateString('uk-UA', { 
+      month: 'long', 
+      year: 'numeric' 
+    })
+  }, [])
 
   if (isEditing) {
     return (
