@@ -160,28 +160,28 @@ const PhotoUpload = memo(forwardRef(({ photos = [], onPhotosChange, maxPhotos = 
       
       {photos.length > 0 && (
         <div className="photo-preview-container">
-          {photos.map((photo, index) => (
-            <div key={`${photo}-${index}`} className="photo-item">
-              <div className="photo-preview">
-                <img 
-                  src={photo} 
-                  alt={`Preview ${index + 1}`}
-                  className="photo-preview-img"
-                  loading="lazy"
-                />
-              </div>
-              <button
-                type="button"
-                className="photo-remove-btn"
-                onClick={() => removePhoto(index)}
-                aria-label="Видалити фото"
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                </svg>
-              </button>
+          <div className="photo-carousel">
+            <div className="photo-carousel-track">
+              {photos.map((photo, index) => (
+                <div key={`${photo}-${index}`} className="photo-carousel-item">
+                  <img 
+                    src={photo} 
+                    alt={`Preview ${index + 1}`}
+                    className="photo-carousel-img"
+                    loading="lazy"
+                  />
+                  <button
+                    type="button"
+                    className="photo-remove-btn"
+                    onClick={() => removePhoto(index)}
+                    aria-label="Видалити фото"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       )}
     </div>

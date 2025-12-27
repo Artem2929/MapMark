@@ -141,12 +141,12 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
           <div className="photos-section__grid">
             {photos.slice(-3).map((photo) => (
               <div
-                key={photo.id}
+                key={photo._id || photo.id}
                 className="photos-section__item"
                 onClick={() => handlePhotoClick(photo)}
               >
                 <img
-                  src={photoUrls[photo.id]}
+                  src={photoUrls[photo.id] || `data:${photo.mimeType};base64,${photo.data}`}
                   alt={photo.description || 'Фотографія'}
                   className="photos-section__image"
                   loading="lazy"

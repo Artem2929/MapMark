@@ -1,5 +1,6 @@
 const Photo = require('../models/Photo')
 const PhotoLike = require('../models/PhotoLike')
+const PhotoComment = require('../models/PhotoComment')
 const User = require('../models/User')
 const multer = require('multer')
 const path = require('path')
@@ -70,15 +71,17 @@ class PhotosController {
         return photoObj
       })
 
-      // Додаємо інформацію про лайки
+      // Додаємо інформацію про лайки та коментарі
       for (const photo of cleanPhotos) {
         const likes = await PhotoLike.countDocuments({ photoId: photo._id, type: 'like' })
         const dislikes = await PhotoLike.countDocuments({ photoId: photo._id, type: 'dislike' })
         const userLike = req.user ? await PhotoLike.findOne({ photoId: photo._id, userId: req.user._id }) : null
+        const commentsCount = await PhotoComment.countDocuments({ photoId: photo._id })
         
         photo.likes = likes
         photo.dislikes = dislikes
         photo.userReaction = userLike?.type || null
+        photo.commentsCount = commentsCount
       }
 
       const total = await Photo.countDocuments({ 
@@ -357,6 +360,110 @@ class PhotosController {
       res.status(500).json({
         status: 'error',
         message: 'Помилка при обробці реакції'
+      })
+    }
+  }
+
+  // Отримати коментарі до фото
+  async getPhotoComments(req, res) {
+    try {
+      const { photoId } = req.params
+      const { page = 1, limit = 20 } = req.query
+
+      const pageNum = Math.max(1, parseInt(page))
+      const limitNum = Math.min(50, Math.max(1, parseInt(limit)))
+
+      const comments = await PhotoComment.find({ photoId })
+        .populate('userId', 'name id')
+        .sort({ createdAt: -1 })
+        .limit(limitNum)
+        .skip((pageNum - 1) * limitNum)
+        .select('-__v')
+
+      const total = await PhotoComment.countDocuments({ photoId })
+
+      // Очищаємо відповідь
+      const cleanComments = comments.map(comment => {
+        const commentObj = comment.toObject()
+        if (commentObj.userId) {
+          commentObj.user = {
+            id: commentObj.userId.id,
+            name: commentObj.userId.name
+          }
+          delete commentObj.userId
+        }
+        return commentObj
+      })
+
+      res.json({
+        status: 'success',
+        data: {
+          comments: cleanComments,
+          pagination: {
+            page: pageNum,
+            limit: limitNum,
+            total,
+            pages: Math.ceil(total / limitNum)
+          }
+        }
+      })
+    } catch (error) {
+      console.error('Error fetching comments:', error)
+      res.status(500).json({
+        status: 'error',
+        message: 'Помилка при завантаженні коментарів'
+      })
+    }
+  }
+
+  // Додати коментар до фото
+  async addPhotoComment(req, res) {
+    try {
+      const { photoId } = req.params
+      const { text } = req.body
+      const userId = req.user._id
+
+      if (!text || text.trim().length === 0) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Текст коментаря не може бути порожнім'
+        })
+      }
+
+      const photo = await Photo.findById(photoId)
+      if (!photo) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Фотографію не знайдено'
+        })
+      }
+
+      const comment = await PhotoComment.create({
+        photoId,
+        userId,
+        text: text.trim()
+      })
+
+      const populatedComment = await PhotoComment.findById(comment._id)
+        .populate('userId', 'name id')
+        .select('-__v')
+
+      const cleanComment = populatedComment.toObject()
+      cleanComment.user = {
+        id: cleanComment.userId.id,
+        name: cleanComment.userId.name
+      }
+      delete cleanComment.userId
+
+      res.status(201).json({
+        status: 'success',
+        data: { comment: cleanComment }
+      })
+    } catch (error) {
+      console.error('Error adding comment:', error)
+      res.status(500).json({
+        status: 'error',
+        message: 'Помилка при додаванні коментаря'
       })
     }
   }

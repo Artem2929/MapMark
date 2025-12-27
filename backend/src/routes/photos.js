@@ -33,4 +33,14 @@ router.post('/:photoId/like',
   photosController.togglePhotoLike
 )
 
+router.get('/:photoId/comments',
+  validatePhotoId,
+  photosController.getPhotoComments
+)
+
+router.post('/:photoId/comments',
+  validatePhotoId,
+  photosController.addPhotoComment
+)
+
 module.exports = router

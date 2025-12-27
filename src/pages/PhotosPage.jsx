@@ -11,6 +11,9 @@ const Photos = () => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
+  const [loadingComments, setLoadingComments] = useState(false);
   const photoUploadRef = useRef(null);
   const navigate = useNavigate();
   const { userId } = useParams();
@@ -64,10 +67,39 @@ const Photos = () => {
 
   const handlePhotoClick = (photo) => {
     setSelectedPhoto(photo);
+    loadComments(photo._id);
   };
 
   const handleCloseModal = () => {
     setSelectedPhoto(null);
+    setComments([]);
+    setNewComment('');
+  };
+
+  const loadComments = async (photoId) => {
+    try {
+      setLoadingComments(true);
+      const response = await photosService.getPhotoComments(photoId);
+      setComments(response?.data?.comments || response?.comments || []);
+    } catch (error) {
+      console.error('Error loading comments:', error);
+      setComments([]);
+    } finally {
+      setLoadingComments(false);
+    }
+  };
+
+  const handleAddComment = async (e) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
+    
+    try {
+      const response = await photosService.addPhotoComment(selectedPhoto._id, newComment.trim());
+      setComments(prev => [response.data.comment, ...prev]);
+      setNewComment('');
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
   };
 
   const handleOpenUpload = () => {
@@ -115,6 +147,15 @@ const Photos = () => {
     try {
       await photosService.togglePhotoLike(photoId, type);
       await loadPhotos(userId);
+      
+      // Оновлюємо selectedPhoto якщо це той самий фото
+      if (selectedPhoto && selectedPhoto._id === photoId) {
+        const updatedPhotos = await photosService.getUserPhotos(userId);
+        const updatedPhoto = updatedPhotos.find(p => p._id === photoId);
+        if (updatedPhoto) {
+          setSelectedPhoto(updatedPhoto);
+        }
+      }
     } catch (error) {
       console.error('Like error:', error);
     }
@@ -228,15 +269,102 @@ const Photos = () => {
                 src={`data:${selectedPhoto.mimeType};base64,${selectedPhoto.data}`} 
                 alt={selectedPhoto.description || 'Фото'} 
               />
+              <div className="photo-actions">
+                <button 
+                  className={`photo-like-btn ${selectedPhoto.userReaction === 'like' ? 'active' : ''}`}
+                  onClick={() => handleToggleLike(selectedPhoto._id, 'like', { stopPropagation: () => {} })}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                  </svg>
+                  <span>{selectedPhoto.likes || 0}</span>
+                </button>
+                <button 
+                  className={`photo-dislike-btn ${selectedPhoto.userReaction === 'dislike' ? 'active' : ''}`}
+                  onClick={() => handleToggleLike(selectedPhoto._id, 'dislike', { stopPropagation: () => {} })}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                  </svg>
+                  <span>{selectedPhoto.dislikes || 0}</span>
+                </button>
+                <button className="photo-comment-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21.99 4c0-1.1-.89-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
+                  </svg>
+                </button>
+              </div>
             </div>
             
             <div className="photo-modal-sidebar">
               <div className="photo-modal-header">
-                <h4>Фото</h4>
+                <div className="photo-modal-user">
+                  <div className="photo-modal-avatar">
+                    <img 
+                      src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEhUSExIVFhUXFxgYFxcXFxUYFRgXFRUXGhkXFxUYHSggGB" 
+                      alt="Artem Polishchuk"
+                      className="photo-modal-avatar-img"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.parentElement.textContent = 'A';
+                      }}
+                    />
+                  </div>
+                  <div className="photo-modal-user-info">
+                    <h4>Artem Polishchuk</h4>
+                    <div className="photo-modal-date">
+                      {new Date(selectedPhoto.createdAt).toLocaleDateString('uk-UA')}
+                    </div>
+                  </div>
+                </div>
+                <button className="photo-modal-menu">⋯</button>
               </div>
               
-              <div className="photo-modal-description">
-                <p>{selectedPhoto.description || 'Опис не додано'}</p>
+              {selectedPhoto.description && (
+                <div className="photo-modal-description">
+                  <div className="photo-modal-description-content">
+                    <div className="photo-modal-description-avatar">
+                      {selectedPhoto.user?.name?.[0] || 'U'}
+                    </div>
+                    <div className="photo-modal-description-text">
+                      <p>
+                        <span className="username">{selectedPhoto.user?.name || 'Користувач'}</span>
+                        {selectedPhoto.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+
+              <div className="photo-modal-comments">
+                <div className="comments-list">
+                  {loadingComments ? (
+                    <div className="comments-empty">Завантаження...</div>
+                  ) : comments.length > 0 ? (
+                    comments.map(comment => (
+                      <div key={comment._id} className="comment-item">
+                        <div className="comment-avatar">
+                          {comment.user?.name?.[0] || 'U'}
+                        </div>
+                        <div className="comment-content">
+                          <div className="comment-text">
+                            <span className="username">{comment.user?.name || 'Користувач'}</span>
+                            {comment.text}
+                          </div>
+                          <div className="comment-meta">
+                            <span className="comment-date">
+                              {new Date(comment.createdAt).toLocaleDateString('uk-UA')}
+                            </span>
+                            <button className="comment-like">Подобається</button>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="comments-empty">Коментарів немає</div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

@@ -52,6 +52,16 @@ class PhotosService {
     const response = await apiClient.post(`/api/v1/photos/${photoId}/like`, { type })
     return response.data
   }
+
+  async getPhotoComments(photoId, params = {}) {
+    const response = await apiClient.get(`/api/v1/photos/${photoId}/comments`, { params })
+    return response.data
+  }
+
+  async addPhotoComment(photoId, text) {
+    const response = await apiClient.post(`/api/v1/photos/${photoId}/comments`, { text })
+    return response.data
+  }
 }
 
 export const photosService = new PhotosService()

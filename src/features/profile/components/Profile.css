@@ -1,15 +1,15 @@
 /* Profile Page Layout */
 .profile-page {
-  min-height: 100vh;
   background: #f7f9fa;
   padding-top: 20px;
-  overflow-y: auto;
+  padding-bottom: 40px;
 }
 
 .profile-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  width: 100%;
 }
 
 .profile-main-content {

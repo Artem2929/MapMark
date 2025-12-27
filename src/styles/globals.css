@@ -18,7 +18,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   padding-top: 80px;
   overflow-x: hidden;
-  overflow-y: hidden;
 }
 
 #root {
