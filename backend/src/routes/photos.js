@@ -1,16 +1,16 @@
 const express = require('express')
 const { photosController, upload } = require('../controllers/photosController')
-const { authenticateToken } = require('../middleware/auth')
+const { protect } = require('../middleware/auth')
 const { validatePhotoUpload, validatePhotoUpdate, validatePhotoId } = require('../middleware/photoValidation')
 
 const router = express.Router()
 
 // Публічні маршрути
-router.get('/users/:userId/photos', photosController.getUserPhotos)
+router.get('/users/:userId', photosController.getUserPhotos)
 router.get('/:photoId', validatePhotoId, photosController.getPhoto)
 
 // Захищені маршрути
-router.use(authenticateToken)
+router.use(protect)
 
 router.post('/upload', 
   upload.array('photos', 10),

@@ -23,12 +23,8 @@ const photoSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  url: {
-    type: String,
-    required: true,
-  },
-  thumbnailUrl: {
-    type: String,
+  data: {
+    type: String, // Base64 дані зображення
     required: true,
   },
   description: {

@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const config = require('./config')
@@ -55,8 +56,6 @@ app.use(`${API_VERSION}/photos`, photosRoutes)
 app.use('/health', healthRoutes)
 
 // Static files для фотографій
-app.use('/uploads', express.static('uploads'))
-
 // API info endpoint
 app.get('/api', (req, res) => {
   res.json({

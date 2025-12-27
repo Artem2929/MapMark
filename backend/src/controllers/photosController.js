@@ -3,8 +3,8 @@ const User = require('../models/User')
 const multer = require('multer')
 const path = require('path')
 const fs = require('fs').promises
-const sharp = require('sharp')
-const { v4: uuidv4 } = require('uuid')
+// const sharp = require('sharp')
+const crypto = require('crypto')
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
 
@@ -38,24 +38,33 @@ class PhotosController {
       const pageNum = Math.max(1, parseInt(page))
       const limitNum = Math.min(50, Math.max(1, parseInt(limit)))
 
+      // Знаходимо користувача за кастомним id
+      const user = await User.findOne({ id: userId })
+      if (!user) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Користувача не знайдено',
+        })
+      }
+
       const photos = await Photo.find({ 
-        userId,
+        userId: user._id,
         $or: [
           { isPublic: true },
-          { userId: req.user?.id } // власні фото завжди видимі
+          { userId: req.user?._id } // власні фото завжди видимі
         ]
       })
         .sort({ createdAt: -1 })
         .limit(limitNum)
         .skip((pageNum - 1) * limitNum)
-        .populate('userId', 'name username')
+        .populate('userId', 'name id')
         .select('-__v')
 
       const total = await Photo.countDocuments({ 
-        userId,
+        userId: user._id,
         $or: [
           { isPublic: true },
-          { userId: req.user?.id }
+          { userId: req.user?._id }
         ]
       })
 
@@ -83,7 +92,7 @@ class PhotosController {
   // Завантажити фотографії з покращеною безпекою
   async uploadPhotos(req, res) {
     try {
-      const userId = req.user.id
+      const userId = req.user._id
       const files = req.files
 
       if (!files || files.length === 0) {
@@ -105,60 +114,21 @@ class PhotosController {
       }
 
       const uploadedPhotos = []
-      const uploadsDir = path.join(__dirname, '../../uploads/photos')
-      const thumbnailsDir = path.join(__dirname, '../../uploads/thumbnails')
-      
-      // Створюємо директорії
-      await fs.mkdir(uploadsDir, { recursive: true })
-      await fs.mkdir(thumbnailsDir, { recursive: true })
 
       for (const file of files) {
         try {
-          const photoId = uuidv4()
+          const photoId = crypto.randomUUID()
           const filename = `${photoId}.jpg`
-          const thumbnailFilename = `${photoId}_thumb.jpg`
-          const photoPath = path.join(uploadsDir, filename)
-          const thumbnailPath = path.join(thumbnailsDir, thumbnailFilename)
 
-          // Обробляємо зображення з sharp (безпечно)
-          const metadata = await sharp(file.buffer).metadata()
-          
-          // Перевіряємо розміри
-          if (metadata.width > 8000 || metadata.height > 8000) {
-            continue // пропускаємо занадто великі зображення
-          }
-
-          // Основне зображення
-          await sharp(file.buffer)
-            .resize(1920, 1080, { 
-              fit: 'inside',
-              withoutEnlargement: true 
-            })
-            .jpeg({ quality: 85, mozjpeg: true })
-            .toFile(photoPath)
-
-          // Мініатюра
-          await sharp(file.buffer)
-            .resize(300, 300, { 
-              fit: 'cover',
-              position: 'center' 
-            })
-            .jpeg({ quality: 80, mozjpeg: true })
-            .toFile(thumbnailPath)
-
-          // Зберігаємо в БД
+          // Зберігаємо в БД як Base64
           const photo = new Photo({
             userId,
             filename,
-            originalName: file.originalname.substring(0, 255), // обмежуємо довжину
+            originalName: Buffer.from(file.originalname, 'latin1').toString('utf8').substring(0, 255),
             mimeType: file.mimetype,
             size: file.size,
-            url: `/uploads/photos/${filename}`,
-            thumbnailUrl: `/uploads/thumbnails/${thumbnailFilename}`,
-            metadata: {
-              width: metadata.width,
-              height: metadata.height,
-            },
+            data: file.buffer.toString('base64'), // Зберігаємо файл як Base64
+            metadata: {},
           })
 
           await photo.save()
@@ -196,7 +166,7 @@ class PhotosController {
   async deletePhoto(req, res) {
     try {
       const { photoId } = req.params
-      const userId = req.user.id
+      const userId = req.user._id
 
       const photo = await Photo.findOne({ _id: photoId, userId })
 
@@ -276,7 +246,7 @@ class PhotosController {
     try {
       const { photoId } = req.params
       const { description, tags, isPublic } = req.body
-      const userId = req.user.id
+      const userId = req.user._id
 
       const updateData = {}
       if (description !== undefined) updateData.description = description

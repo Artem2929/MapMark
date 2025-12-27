@@ -3,7 +3,7 @@ import { apiClient } from '../../../utils/apiClient'
 class PhotosService {
   async getUserPhotos(userId, params = {}) {
     try {
-      const response = await apiClient.get(`/api/v1/users/${userId}/photos`, { params })
+      const response = await apiClient.get(`/api/v1/photos/users/${userId}`, { params })
       return response.data?.photos || []
     } catch (error) {
       console.error('Error fetching user photos:', error)

@@ -1,7 +1,7 @@
-import React, { memo, useCallback, useRef, useMemo } from 'react'
+import React, { memo, useCallback, useRef, useMemo, forwardRef, useImperativeHandle } from 'react'
 import './PhotoUpload.css'
 
-const PhotoUpload = memo(({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
+const PhotoUpload = memo(forwardRef(({ photos = [], onPhotosChange, maxPhotos = 10 }, ref) => {
   const fileInputRef = useRef(null)
   const fileObjectsRef = useRef(new Map())
   const dragCounterRef = useRef(0)
@@ -92,7 +92,7 @@ const PhotoUpload = memo(({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
     }).filter(Boolean)
   }, [photos])
 
-  React.useImperativeHandle(fileInputRef, () => ({
+  useImperativeHandle(ref, () => ({
     getFilesForUpload
   }), [getFilesForUpload])
 
@@ -186,7 +186,7 @@ const PhotoUpload = memo(({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
       )}
     </div>
   )
-})
+}))
 
 PhotoUpload.displayName = 'PhotoUpload'
 

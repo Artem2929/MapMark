@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback, useEffect } from 'react'
+import React, { memo, useState, useCallback, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PhotoUpload from '../../../components/PhotoUpload/PhotoUpload'
 import { photosService } from '../services/photosService'
@@ -11,6 +11,7 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState([])
   const [uploading, setUploading] = useState(false)
+  const photoUploadRef = useRef(null)
   const navigate = useNavigate()
   const { user } = useAuth()
 
@@ -35,8 +36,10 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
   }, [userId])
 
   useEffect(() => {
-    loadPhotos()
-  }, [loadPhotos])
+    if (userId) {
+      loadPhotos()
+    }
+  }, [userId]) // Спрощені залежності
 
   const openPhotosPage = useCallback(() => {
     navigate(`/photos/${userId}`)
@@ -61,10 +64,12 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
     try {
       setUploading(true)
       // Отримуємо оригінальні файли для завантаження
-      const filesToUpload = selectedFiles.map(url => {
-        // Потрібно отримати File об'єкти з PhotoUpload компонента
-        return url // Тимчасово
-      })
+      const filesToUpload = photoUploadRef.current?.getFilesForUpload() || []
+      
+      if (filesToUpload.length === 0) {
+        console.error('No files to upload')
+        return
+      }
       
       await photosService.uploadPhotos(filesToUpload)
       await loadPhotos() // Перезавантажуємо фото після успішного завантаження
@@ -133,7 +138,7 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
                 onClick={() => handlePhotoClick(photo)}
               >
                 <img 
-                  src={photo.thumbnailUrl || photo.url} 
+                  src={`data:${photo.mimeType};base64,${photo.data}`} 
                   alt={photo.description || 'Фотографія'}
                   className="photos-section__image"
                   loading="lazy"
@@ -174,6 +179,7 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
               
               <div className="upload-modal-body">
                 <PhotoUpload 
+                  ref={photoUploadRef}
                   photos={selectedFiles}
                   onPhotosChange={handleFilesChange}
                   maxPhotos={10}

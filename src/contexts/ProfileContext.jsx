@@ -73,10 +73,10 @@ export const ProfileProvider = ({ children, userId }) => {
     }
 
     // Перевіряємо чи є всі необхідні дані перед викликом
-    if (userId && currentUser?.id) {
+    if (userId || currentUser?.id) {
       fetchProfile()
     }
-  }, [userId, currentUser?.id]) // Оптимізовані залежності
+  }, [userId]) // Видалили currentUser?.id з залежностей
 
   const updateUser = useCallback((updatedUserData) => {
     setUser(prev => ({ ...prev, ...updatedUserData }))
