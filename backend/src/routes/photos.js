@@ -1,7 +1,7 @@
 const express = require('express')
 const { photosController, upload } = require('../controllers/photosController')
 const { authenticateToken } = require('../middleware/auth')
-const { validatePhotoUpload, validatePhotoUpdate } = require('../middleware/validation')
+const { validatePhotoUpload, validatePhotoUpdate } = require('../middleware/photoValidation')
 const rateLimit = require('express-rate-limit')
 
 const router = express.Router()

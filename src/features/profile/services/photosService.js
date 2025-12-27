@@ -1,10 +1,10 @@
 import { apiClient } from '../../../utils/apiClient'
 
 class PhotosService {
-  async getUserPhotos(userId) {
+  async getUserPhotos(userId, params = {}) {
     try {
-      const response = await apiClient.get(`/api/v1/users/${userId}/photos`)
-      return response.data.photos || []
+      const response = await apiClient.get(`/api/v1/users/${userId}/photos`, { params })
+      return response.data?.photos || []
     } catch (error) {
       console.error('Error fetching user photos:', error)
       return []
@@ -14,13 +14,8 @@ class PhotosService {
   async uploadPhotos(files) {
     const formData = new FormData()
     
-    files.forEach((file, index) => {
-      // Якщо file це blob URL, конвертуємо назад в File
-      if (typeof file === 'string' && file.startsWith('blob:')) {
-        // Для blob URLs потрібно отримати оригінальний файл
-        // Це буде реалізовано в PhotoUpload компоненті
-        return
-      }
+    // Додаємо файли до FormData
+    files.forEach((file) => {
       formData.append('photos', file)
     })
 

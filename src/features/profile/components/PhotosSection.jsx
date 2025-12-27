@@ -54,7 +54,13 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
     
     try {
       setUploading(true)
-      await photosService.uploadPhotos(selectedFiles)
+      // Отримуємо оригінальні файли для завантаження
+      const filesToUpload = selectedFiles.map(url => {
+        // Потрібно отримати File об'єкти з PhotoUpload компонента
+        return url // Тимчасово
+      })
+      
+      await photosService.uploadPhotos(filesToUpload)
       await loadPhotos() // Перезавантажуємо фото після успішного завантаження
       handleCloseUpload()
     } catch (error) {

@@ -1,3 +1,4 @@
+/* Photos Section Styles */
 .photos-section {
   background: transparent;
   border-radius: 0;
@@ -23,17 +24,16 @@
   margin: 0;
 }
 
-.photos-section__count {
-  font-size: 13px;
-  color: #657786;
-  background: #f7f9fa;
-  padding: 2px 6px;
-  border-radius: 8px;
-}
-
 .photos-section__content {
   position: relative;
   margin-bottom: 8px;
+}
+
+.photos-section__loading {
+  text-align: center;
+  padding: 20px;
+  color: #64748b;
+  font-size: 14px;
 }
 
 /* Grid Layout */
@@ -83,7 +83,7 @@
   opacity: 1;
 }
 
-/* Add Photo Button */
+/* Add Photo Buttons */
 .photos-section__add-item {
   aspect-ratio: 1;
   display: flex;
@@ -94,26 +94,6 @@
   border-radius: 6px;
 }
 
-.photos-section__add-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border: none;
-  background: #1da1f2;
-  color: #fff;
-  border-radius: 16px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.photos-section__add-btn:hover {
-  background: #1991db;
-}
-
 .photos-section__add-btn--grid {
   width: 100%;
   height: 100%;
@@ -122,6 +102,8 @@
   color: #aab8c2;
   border: none;
   padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .photos-section__add-btn--grid:hover {
@@ -219,19 +201,11 @@
 
 .photos-section__show-all:disabled {
   opacity: 0.6;
-
   color: #aab8c2;
   border-color: #e1e8ed;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .photos-section__grid {
-    gap: 2px;
-  }
-}
-
-/* Photo Modal */
+/* Modal Styles */
 .photo-modal {
   position: fixed;
   top: 0;
@@ -318,6 +292,7 @@
   justify-content: flex-end;
 }
 
+/* Button Styles */
 .upload-cancel-btn {
   padding: 10px 20px;
   border: 1px solid #e0e0e0;
@@ -359,4 +334,11 @@
 .upload-submit-btn:disabled {
   background: #b2dffc;
   cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .photos-section__grid {
+    gap: 2px;
+  }
 }
