@@ -14,6 +14,13 @@
   font-style: italic;
 }
 
+.photos-section__empty--dragging {
+  border-color: #3b82f6 !important;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
 .photo-upload-add-more {
   display: inline-flex;
   align-items: center;

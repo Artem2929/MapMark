@@ -1,30 +1,36 @@
-import React, { memo, useCallback, useRef } from 'react'
+import React, { memo, useCallback, useRef, useMemo } from 'react'
 import './PhotoUpload.css'
 
 const PhotoUpload = memo(({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
   const fileInputRef = useRef(null)
-  const fileObjectsRef = useRef(new Map()) // Зберігаємо оригінальні файли
+  const fileObjectsRef = useRef(new Map())
+  const dragCounterRef = useRef(0)
+  const [isDragging, setIsDragging] = React.useState(false)
+
+  // Мемоізовані обчислення
+  const remainingSlots = useMemo(() => maxPhotos - photos.length, [maxPhotos, photos.length])
+  const isMaxReached = useMemo(() => photos.length >= maxPhotos, [photos.length, maxPhotos])
 
   const handleFileSelect = useCallback((files) => {
-    const newFiles = Array.from(files).slice(0, maxPhotos - photos.length)
+    if (isMaxReached) return
+    
+    const newFiles = Array.from(files).slice(0, remainingSlots)
     const newPhotos = [...photos]
     
     newFiles.forEach(file => {
-      if (file.type.startsWith('image/')) {
+      if (file.type.startsWith('image/') && file.size <= 10 * 1024 * 1024) {
         const localUrl = URL.createObjectURL(file)
         newPhotos.push(localUrl)
-        // Зберігаємо оригінальний файл для завантаження
         fileObjectsRef.current.set(localUrl, file)
       }
     })
     
     onPhotosChange(newPhotos)
-  }, [photos, onPhotosChange, maxPhotos])
+  }, [photos, onPhotosChange, remainingSlots, isMaxReached])
 
   const handleFileInput = useCallback((e) => {
     if (e.target.files?.length) {
       handleFileSelect(e.target.files)
-      // Очищаємо input для можливості вибору тих самих файлів знову
       e.target.value = ''
     }
   }, [handleFileSelect])
@@ -33,7 +39,6 @@ const PhotoUpload = memo(({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
     const photoToRemove = photos[index]
     const newPhotos = photos.filter((_, i) => i !== index)
     
-    // Очищаємо blob URL та видаляємо з кешу
     if (photoToRemove?.startsWith('blob:')) {
       URL.revokeObjectURL(photoToRemove)
       fileObjectsRef.current.delete(photoToRemove)
@@ -41,6 +46,24 @@ const PhotoUpload = memo(({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
     
     onPhotosChange(newPhotos)
   }, [photos, onPhotosChange])
+
+  const handleDragEnter = useCallback((e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    dragCounterRef.current++
+    if (!isDragging) {
+      setIsDragging(true)
+    }
+  }, [isDragging])
+
+  const handleDragLeave = useCallback((e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    dragCounterRef.current--
+    if (dragCounterRef.current === 0) {
+      setIsDragging(false)
+    }
+  }, [])
 
   const handleDragOver = useCallback((e) => {
     e.preventDefault()
@@ -51,13 +74,15 @@ const PhotoUpload = memo(({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
     e.preventDefault()
     e.stopPropagation()
     
+    dragCounterRef.current = 0
+    setIsDragging(false)
+    
     const files = e.dataTransfer.files
-    if (files?.length) {
+    if (files?.length && !isMaxReached) {
       handleFileSelect(files)
     }
-  }, [handleFileSelect])
+  }, [handleFileSelect, isMaxReached])
 
-  // Функція для отримання оригінальних файлів для завантаження
   const getFilesForUpload = useCallback(() => {
     return photos.map(photoUrl => {
       if (photoUrl.startsWith('blob:')) {
@@ -67,16 +92,28 @@ const PhotoUpload = memo(({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
     }).filter(Boolean)
   }, [photos])
 
-  // Експортуємо функцію через ref
   React.useImperativeHandle(fileInputRef, () => ({
     getFilesForUpload
   }), [getFilesForUpload])
+
+  // Очищення при розмонтуванні
+  React.useEffect(() => {
+    return () => {
+      photos.forEach(photo => {
+        if (photo.startsWith('blob:')) {
+          URL.revokeObjectURL(photo)
+        }
+      })
+    }
+  }, [])
 
   return (
     <div className="photo-upload">
       {photos.length === 0 && (
         <div 
-          className="photos-section__empty"
+          className={`photos-section__empty ${isDragging ? 'photos-section__empty--dragging' : ''}`}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
@@ -90,8 +127,12 @@ const PhotoUpload = memo(({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
               </svg>
             </label>
           </div>
-          <p className="photos-section__empty-text">Додайте фото</p>
-          <p className="photo-upload__hint">Перетягніть файли сюди або натисніть кнопку</p>
+          <p className="photos-section__empty-text">
+            {isDragging ? 'Відпустіть для завантаження' : 'Додайте фото'}
+          </p>
+          <p className="photo-upload__hint">
+            Перетягніть файли сюди або натисніть кнопку
+          </p>
         </div>
       )}
       
@@ -100,13 +141,14 @@ const PhotoUpload = memo(({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
           ref={fileInputRef}
           type="file"
           id="photo-upload-input"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp,image/gif"
           multiple
           onChange={handleFileInput}
           hidden
+          disabled={isMaxReached}
         />
         
-        {photos.length > 0 && (
+        {photos.length > 0 && !isMaxReached && (
           <label htmlFor="photo-upload-input" className="photo-upload-add-more">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
@@ -125,6 +167,7 @@ const PhotoUpload = memo(({ photos = [], onPhotosChange, maxPhotos = 10 }) => {
                   src={photo} 
                   alt={`Preview ${index + 1}`}
                   className="photo-preview-img"
+                  loading="lazy"
                 />
               </div>
               <button

@@ -2,29 +2,55 @@ import axios from 'axios'
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001'
 
+// Білий список дозволених доменів
+const ALLOWED_DOMAINS = [
+  'localhost:3001',
+  'localhost:5173',
+  process.env.REACT_APP_API_DOMAIN
+].filter(Boolean)
+
 class ApiClient {
   constructor() {
+    // Перевіряємо домен
+    const url = new URL(API_BASE_URL)
+    if (!ALLOWED_DOMAINS.includes(url.host)) {
+      throw new Error('Invalid API domain')
+    }
+
     this.client = axios.create({
       baseURL: API_BASE_URL,
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
       },
+      withCredentials: true, // Для CSRF захисту
     })
 
-    // Request interceptor для додавання токена
+    // Request interceptor
     this.client.interceptors.request.use(
       (config) => {
         const token = localStorage.getItem('accessToken')
         if (token) {
-          config.headers.Authorization = `Bearer ${token}`
+          // Перевіряємо формат токена
+          const parts = token.split('.')
+          if (parts.length === 3) {
+            try {
+              const payload = JSON.parse(atob(parts[1]))
+              // Перевіряємо термін дії
+              if (!payload.exp || payload.exp * 1000 > Date.now()) {
+                config.headers.Authorization = `Bearer ${token}`
+              }
+            } catch (e) {
+              localStorage.removeItem('accessToken')
+            }
+          }
         }
         return config
       },
       (error) => Promise.reject(error)
     )
 
-    // Response interceptor для обробки помилок
+    // Response interceptor
     this.client.interceptors.response.use(
       (response) => response,
       async (error) => {
@@ -46,8 +72,7 @@ class ApiClient {
               return this.client(originalRequest)
             }
           } catch (refreshError) {
-            localStorage.removeItem('accessToken')
-            localStorage.removeItem('refreshToken')
+            this.clearTokens()
             window.location.href = '/login'
           }
         }
@@ -55,6 +80,11 @@ class ApiClient {
         return Promise.reject(error)
       }
     )
+  }
+
+  clearTokens() {
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
   }
 
   async get(url, config = {}) {

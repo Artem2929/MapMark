@@ -5,47 +5,69 @@ const path = require('path')
 const fs = require('fs').promises
 const sharp = require('sharp')
 const { v4: uuidv4 } = require('uuid')
+const rateLimit = require('express-rate-limit')
+const helmet = require('helmet')
 
-// Налаштування multer для завантаження файлів
+// Налаштування multer з безпечними обмеженнями
 const storage = multer.memoryStorage()
 const upload = multer({
   storage,
   limits: {
     fileSize: 10 * 1024 * 1024, // 10MB
+    files: 10, // максимум 10 файлів
   },
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
+    // Строга перевірка MIME типів
+    const allowedMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+    if (allowedMimes.includes(file.mimetype)) {
       cb(null, true)
     } else {
-      cb(new Error('Тільки зображення дозволені'), false)
+      cb(new Error('Недозволений тип файлу'), false)
     }
   },
 })
 
 class PhotosController {
-  // Отримати фотографії користувача
+  // Отримати фотографії користувача з пагінацією
   async getUserPhotos(req, res) {
     try {
       const { userId } = req.params
       const { page = 1, limit = 20 } = req.query
 
-      const photos = await Photo.find({ userId })
-        .sort({ createdAt: -1 })
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
-        .populate('userId', 'name username')
+      // Валідація параметрів
+      const pageNum = Math.max(1, parseInt(page))
+      const limitNum = Math.min(50, Math.max(1, parseInt(limit)))
 
-      const total = await Photo.countDocuments({ userId })
+      const photos = await Photo.find({ 
+        userId,
+        $or: [
+          { isPublic: true },
+          { userId: req.user?.id } // власні фото завжди видимі
+        ]
+      })
+        .sort({ createdAt: -1 })
+        .limit(limitNum)
+        .skip((pageNum - 1) * limitNum)
+        .populate('userId', 'name username')
+        .select('-__v')
+
+      const total = await Photo.countDocuments({ 
+        userId,
+        $or: [
+          { isPublic: true },
+          { userId: req.user?.id }
+        ]
+      })
 
       res.json({
         status: 'success',
         data: {
           photos,
           pagination: {
-            page: parseInt(page),
-            limit: parseInt(limit),
+            page: pageNum,
+            limit: limitNum,
             total,
-            pages: Math.ceil(total / limit),
+            pages: Math.ceil(total / limitNum),
           },
         },
       })
@@ -58,7 +80,7 @@ class PhotosController {
     }
   }
 
-  // Завантажити фотографії
+  // Завантажити фотографії з покращеною безпекою
   async uploadPhotos(req, res) {
     try {
       const userId = req.user.id
@@ -71,54 +93,87 @@ class PhotosController {
         })
       }
 
+      // Перевіряємо ліміт користувача
+      const userPhotoCount = await Photo.countDocuments({ userId })
+      const maxPhotosPerUser = 1000
+      
+      if (userPhotoCount + files.length > maxPhotosPerUser) {
+        return res.status(400).json({
+          status: 'fail',
+          message: `Перевищено ліміт фотографій (${maxPhotosPerUser})`,
+        })
+      }
+
       const uploadedPhotos = []
+      const uploadsDir = path.join(__dirname, '../../uploads/photos')
+      const thumbnailsDir = path.join(__dirname, '../../uploads/thumbnails')
+      
+      // Створюємо директорії
+      await fs.mkdir(uploadsDir, { recursive: true })
+      await fs.mkdir(thumbnailsDir, { recursive: true })
 
       for (const file of files) {
-        const photoId = uuidv4()
-        const filename = `${photoId}.jpg`
-        const thumbnailFilename = `${photoId}_thumb.jpg`
+        try {
+          const photoId = uuidv4()
+          const filename = `${photoId}.jpg`
+          const thumbnailFilename = `${photoId}_thumb.jpg`
+          const photoPath = path.join(uploadsDir, filename)
+          const thumbnailPath = path.join(thumbnailsDir, thumbnailFilename)
 
-        // Створюємо директорії якщо не існують
-        const uploadsDir = path.join(__dirname, '../../uploads/photos')
-        const thumbnailsDir = path.join(__dirname, '../../uploads/thumbnails')
-        
-        await fs.mkdir(uploadsDir, { recursive: true })
-        await fs.mkdir(thumbnailsDir, { recursive: true })
+          // Обробляємо зображення з sharp (безпечно)
+          const metadata = await sharp(file.buffer).metadata()
+          
+          // Перевіряємо розміри
+          if (metadata.width > 8000 || metadata.height > 8000) {
+            continue // пропускаємо занадто великі зображення
+          }
 
-        const photoPath = path.join(uploadsDir, filename)
-        const thumbnailPath = path.join(thumbnailsDir, thumbnailFilename)
+          // Основне зображення
+          await sharp(file.buffer)
+            .resize(1920, 1080, { 
+              fit: 'inside',
+              withoutEnlargement: true 
+            })
+            .jpeg({ quality: 85, mozjpeg: true })
+            .toFile(photoPath)
 
-        // Обробляємо основне зображення
-        await sharp(file.buffer)
-          .resize(1920, 1080, { 
-            fit: 'inside',
-            withoutEnlargement: true 
+          // Мініатюра
+          await sharp(file.buffer)
+            .resize(300, 300, { 
+              fit: 'cover',
+              position: 'center' 
+            })
+            .jpeg({ quality: 80, mozjpeg: true })
+            .toFile(thumbnailPath)
+
+          // Зберігаємо в БД
+          const photo = new Photo({
+            userId,
+            filename,
+            originalName: file.originalname.substring(0, 255), // обмежуємо довжину
+            mimeType: file.mimetype,
+            size: file.size,
+            url: `/uploads/photos/${filename}`,
+            thumbnailUrl: `/uploads/thumbnails/${thumbnailFilename}`,
+            metadata: {
+              width: metadata.width,
+              height: metadata.height,
+            },
           })
-          .jpeg({ quality: 85 })
-          .toFile(photoPath)
 
-        // Створюємо мініатюру
-        await sharp(file.buffer)
-          .resize(300, 300, { 
-            fit: 'cover',
-            position: 'center' 
-          })
-          .jpeg({ quality: 80 })
-          .toFile(thumbnailPath)
+          await photo.save()
+          uploadedPhotos.push(photo)
+        } catch (fileError) {
+          console.error('Error processing file:', fileError)
+          // продовжуємо з наступним файлом
+        }
+      }
 
-        // Зберігаємо в базу даних
-        const photo = new Photo({
-          userId,
-          filename,
-          originalName: file.originalname,
-          mimeType: file.mimetype,
-          size: file.size,
-          url: `/uploads/photos/${filename}`,
-          thumbnailUrl: `/uploads/thumbnails/${thumbnailFilename}`,
+      if (uploadedPhotos.length === 0) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Не вдалося обробити жоден файл',
         })
-
-        await photo.save()
-        uploadedPhotos.push(photo)
       }
 
       res.status(201).json({
@@ -137,7 +192,7 @@ class PhotosController {
     }
   }
 
-  // Видалити фотографію
+  // Видалити фотографію з перевіркою прав
   async deletePhoto(req, res) {
     try {
       const { photoId } = req.params
@@ -148,11 +203,11 @@ class PhotosController {
       if (!photo) {
         return res.status(404).json({
           status: 'fail',
-          message: 'Фотографію не знайдено',
+          message: 'Фотографію не знайдено або немає прав доступу',
         })
       }
 
-      // Видаляємо файли
+      // Видаляємо файли безпечно
       const photoPath = path.join(__dirname, '../../uploads/photos', photo.filename)
       const thumbnailPath = path.join(__dirname, '../../uploads/thumbnails', photo.filename.replace('.jpg', '_thumb.jpg'))
 
@@ -161,9 +216,9 @@ class PhotosController {
         await fs.unlink(thumbnailPath)
       } catch (fileError) {
         console.error('Error deleting files:', fileError)
+        // продовжуємо видалення з БД навіть якщо файли не видалилися
       }
 
-      // Видаляємо з бази даних
       await Photo.findByIdAndDelete(photoId)
 
       res.json({
@@ -184,12 +239,22 @@ class PhotosController {
     try {
       const { photoId } = req.params
 
-      const photo = await Photo.findById(photoId).populate('userId', 'name username')
+      const photo = await Photo.findById(photoId)
+        .populate('userId', 'name username')
+        .select('-__v')
 
       if (!photo) {
         return res.status(404).json({
           status: 'fail',
           message: 'Фотографію не знайдено',
+        })
+      }
+
+      // Перевіряємо права доступу
+      if (!photo.isPublic && photo.userId._id.toString() !== req.user?.id) {
+        return res.status(403).json({
+          status: 'fail',
+          message: 'Немає доступу до цієї фотографії',
         })
       }
 
@@ -206,23 +271,28 @@ class PhotosController {
     }
   }
 
-  // Оновити опис фотографії
+  // Оновити фотографію з валідацією
   async updatePhoto(req, res) {
     try {
       const { photoId } = req.params
-      const { description } = req.body
+      const { description, tags, isPublic } = req.body
       const userId = req.user.id
+
+      const updateData = {}
+      if (description !== undefined) updateData.description = description
+      if (tags !== undefined) updateData.tags = tags
+      if (isPublic !== undefined) updateData.isPublic = isPublic
 
       const photo = await Photo.findOneAndUpdate(
         { _id: photoId, userId },
-        { description },
-        { new: true }
-      )
+        updateData,
+        { new: true, runValidators: true }
+      ).select('-__v')
 
       if (!photo) {
         return res.status(404).json({
           status: 'fail',
-          message: 'Фотографію не знайдено',
+          message: 'Фотографію не знайдено або немає прав доступу',
         })
       }
 
