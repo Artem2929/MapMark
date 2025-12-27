@@ -26,12 +26,13 @@ const AvatarUploadModal = memo(({ onClose, onUpload, currentAvatar }) => {
     try {
       setUploading(true)
       await onUpload(selectedPhoto.file)
+      onClose() // Закриваємо модальне вікно після успішного завантаження
     } catch (error) {
       console.error('Avatar upload error:', error)
     } finally {
       setUploading(false)
     }
-  }, [selectedPhoto, onUpload])
+  }, [selectedPhoto, onUpload, onClose])
 
   const handleRemovePhoto = useCallback(() => {
     setSelectedPhoto(null)
@@ -53,8 +54,11 @@ const AvatarUploadModal = memo(({ onClose, onUpload, currentAvatar }) => {
           <div className="avatar-preview-section">
             <div className="avatar-current">
               <img 
-                src={selectedPhoto?.preview || currentAvatar || '/default-avatar.png'} 
+                src={selectedPhoto?.preview || currentAvatar || '/default-avatar-modal.svg'} 
                 alt="Аватар"
+                onError={(e) => {
+                  e.target.src = '/default-avatar-modal.svg'
+                }}
               />
             </div>
           </div>

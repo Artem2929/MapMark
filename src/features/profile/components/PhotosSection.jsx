@@ -42,18 +42,17 @@ const PhotosSection = memo(({ photos = [], isOwnProfile }) => {
               <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
               </svg>
+              {isOwnProfile && (
+                <button className="photos-section__add-icon-btn" onClick={handleAddPhoto}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                  </svg>
+                </button>
+              )}
             </div>
             <p className="photos-section__empty-text">
               {isOwnProfile ? 'Додайте перше фото' : 'Фотографій немає'}
             </p>
-            {isOwnProfile && (
-              <button className="photos-section__add-btn" onClick={handleAddPhoto}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"/>
-                </svg>
-                Додати фото
-              </button>
-            )}
           </div>
         ) : (
           <div className="photos-section__grid">
