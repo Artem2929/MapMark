@@ -7,6 +7,9 @@ import { LoginPage } from '../pages/LoginPage'
 import { RegisterPage } from '../pages/RegisterPage'
 import UserProfile from '../pages/UserProfilePage'
 import AboutPage from '../pages/AboutPage'
+import Friends from '../pages/FriendsPage'
+import Messages from '../pages/MessagesPage'
+import Photos from '../pages/PhotosPage'
 
 export function App() {
   return (
@@ -20,6 +23,12 @@ export function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/profile/:userId" element={<UserProfile />} />
+            <Route path="/friends/:userId" element={<Friends />} />
+            <Route path="/friends" element={<Friends />} />
+            <Route path="/messages/:userId" element={<Messages />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/photos/:userId" element={<Photos />} />
+            <Route path="/photos" element={<Photos />} />
             <Route path="*" element={<div style={{padding: '2rem', textAlign: 'center'}}>404 - Сторінка не знайдена</div>} />
           </Routes>
         </AuthProvider>

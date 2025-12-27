@@ -1,9 +1,12 @@
 import React, { memo, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import PhotoUpload from '../../../components/PhotoUpload/PhotoUpload'
 import './PhotosSection.css'
 
 const PhotosSection = memo(({ photos = [], isOwnProfile }) => {
   const [failedImages, setFailedImages] = useState(new Set())
+  const [showUploadModal, setShowUploadModal] = useState(false)
+  const [selectedFiles, setSelectedFiles] = useState([])
   const navigate = useNavigate()
 
   const handleImageError = useCallback((photoId) => {
@@ -15,12 +18,40 @@ const PhotosSection = memo(({ photos = [], isOwnProfile }) => {
   }, [])
 
   const openPhotosPage = useCallback(() => {
-    navigate('/photos')
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userId = payload.id;
+      navigate(`/photos/${userId}`);
+    } else {
+      navigate('/photos');
+    }
   }, [navigate])
 
   const handleAddPhoto = useCallback(() => {
-    // TODO: Implement photo upload functionality
+    setShowUploadModal(true)
   }, [])
+
+  const handleCloseUpload = useCallback(() => {
+    setShowUploadModal(false)
+    setSelectedFiles([])
+  }, [])
+
+  const handleFilesChange = useCallback((files) => {
+    setSelectedFiles(files)
+  }, [])
+
+  const handleUploadSubmit = useCallback(async () => {
+    if (selectedFiles.length === 0) return
+    
+    try {
+      // TODO: Implement actual upload logic
+      console.log('Uploading files:', selectedFiles)
+      handleCloseUpload()
+    } catch (error) {
+      console.error('Upload error:', error)
+    }
+  }, [selectedFiles, handleCloseUpload])
 
   return (
     <div className="photos-section">
@@ -51,7 +82,7 @@ const PhotosSection = memo(({ photos = [], isOwnProfile }) => {
               )}
             </div>
             <p className="photos-section__empty-text">
-              {isOwnProfile ? 'Додайте перше фото' : 'Фотографій немає'}
+              {isOwnProfile ? 'Додайте фото' : 'Фотографій немає'}
             </p>
           </div>
         ) : (
@@ -84,6 +115,48 @@ const PhotosSection = memo(({ photos = [], isOwnProfile }) => {
           </div>
         )}
       </div>
+      
+      {showUploadModal && (
+        <div className="photo-modal" onClick={handleCloseUpload}>
+          <div className="photo-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="photo-modal-close" onClick={handleCloseUpload}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              </svg>
+            </button>
+            
+            <div className="upload-modal-content">
+              <div className="upload-modal-header">
+                <h4>Додати фото</h4>
+              </div>
+              
+              <div className="upload-modal-body">
+                <PhotoUpload 
+                  photos={selectedFiles}
+                  onPhotosChange={handleFilesChange}
+                  maxPhotos={10}
+                />
+              </div>
+              
+              <div className="upload-modal-footer">
+                <button 
+                  className="upload-cancel-btn" 
+                  onClick={handleCloseUpload}
+                >
+                  Скасувати
+                </button>
+                <button 
+                  className="upload-submit-btn" 
+                  onClick={handleUploadSubmit}
+                  disabled={selectedFiles.length === 0}
+                >
+                  Завантажити ({selectedFiles.length})
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 })

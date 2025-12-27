@@ -17,17 +17,21 @@
 .toast__close {
   background: none;
   border: none;
-  font-size: var(--font-size-lg);
   cursor: pointer;
-  padding: 0;
+  padding: 4px;
   margin-left: var(--space-2);
   color: inherit;
   opacity: 0.7;
   transition: opacity var(--transition-fast);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .toast__close:hover {
   opacity: 1;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .toast--success {
