@@ -17,10 +17,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   padding-top: 80px;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 #root {
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* Global button styles */

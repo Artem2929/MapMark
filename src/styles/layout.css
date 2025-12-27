@@ -1,6 +1,8 @@
 /* Page layouts */
 .page-container {
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
+  height: calc(100vh - 80px);
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,10 +13,8 @@
 
 @media (min-width: 769px) {
   .page-container {
-    height: 100vh;
-    overflow: hidden;
     align-items: flex-start;
-    padding-top: 15vh;
+    padding-top: 6vh;
   }
 }
 
@@ -47,7 +47,7 @@
   .page-container {
     padding: var(--space-3);
   }
-  
+
   .content-container {
     padding: 0 var(--space-3);
   }

@@ -59,8 +59,23 @@ const uploadAvatar = catchAsync(async (req, res, next) => {
   success(res, { user: updatedUser }, 'Аватар оновлено успішно')
 })
 
+const searchUsers = catchAsync(async (req, res, next) => {
+  const { query, currentUserId, country, city, ageRange } = req.query
+  
+  const users = await userService.searchUsers({
+    query,
+    currentUserId,
+    country,
+    city,
+    ageRange
+  })
+  
+  success(res, { data: users }, 'Пошук користувачів виконано успішно')
+})
+
 module.exports = {
   getUserProfile,
   updateProfile,
-  uploadAvatar
+  uploadAvatar,
+  searchUsers
 }

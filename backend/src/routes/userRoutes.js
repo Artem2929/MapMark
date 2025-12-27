@@ -10,6 +10,9 @@ const router = express.Router()
 // All user routes require authentication
 router.use(protect)
 
+// Search users
+router.get('/search', userController.searchUsers)
+
 // Get user profile
 router.get('/:userId', userController.getUserProfile)
 

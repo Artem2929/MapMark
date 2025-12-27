@@ -19,7 +19,7 @@ const getUserById = async (userId) => {
 
 const updateProfile = async (userId, updateData) => {
   // Validate allowed fields
-  const allowedFields = ['name', 'bio', 'location', 'website']
+  const allowedFields = ['name', 'surname', 'bio', 'location', 'website']
   const filteredData = {}
   
   Object.keys(updateData).forEach(key => {
@@ -83,8 +83,38 @@ const uploadAvatar = async (userId, file) => {
   }
 }
 
+const searchUsers = async ({ query, currentUserId, country, city, ageRange }) => {
+  const searchCriteria = {}
+  
+  // Виключаємо поточного користувача
+  if (currentUserId) {
+    searchCriteria.id = { $ne: currentUserId }
+  }
+  
+  // Пошук за ім'ям або email
+  if (query) {
+    searchCriteria.$or = [
+      { name: { $regex: query, $options: 'i' } },
+      { email: { $regex: query, $options: 'i' } }
+    ]
+  }
+  
+  // Фільтр за країною
+  if (country) {
+    searchCriteria.country = country
+  }
+  
+  const users = await User.find(searchCriteria)
+    .select('id name email country avatar createdAt')
+    .limit(20)
+    .sort({ createdAt: -1 })
+  
+  return users
+}
+
 module.exports = {
   getUserById,
   updateProfile,
-  uploadAvatar
+  uploadAvatar,
+  searchUsers
 }

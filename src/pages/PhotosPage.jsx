@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PhotoUpload from '../components/PhotoUpload/PhotoUpload';
+import { photosService } from '../features/profile/services/photosService';
 import './PhotosPage.css';
 
 const Photos = () => {
@@ -10,6 +11,7 @@ const Photos = () => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const photoUploadRef = useRef(null);
   const navigate = useNavigate();
   const { userId } = useParams();
 
@@ -52,8 +54,8 @@ const Photos = () => {
 
   const loadPhotos = async (targetUserId) => {
     try {
-      // Поки що використовуємо заглушку
-      setPhotos([]);
+      const userPhotos = await photosService.getUserPhotos(targetUserId);
+      setPhotos(userPhotos);
     } catch (error) {
       console.error('Error loading photos:', error);
       setPhotos([]);
@@ -82,14 +84,29 @@ const Photos = () => {
   };
 
   const handleUploadSubmit = async () => {
-    if (selectedFiles.length === 0) return;
-    
     try {
-      // TODO: Implement actual upload logic
-      console.log('Uploading files:', selectedFiles);
-      handleCloseUpload();
+      const filesToUpload = photoUploadRef.current?.getFilesForUpload() || []
+      
+      if (filesToUpload.length === 0) {
+        console.error('No files to upload')
+        return
+      }
+      
+      await photosService.uploadPhotos(filesToUpload)
+      await loadPhotos(userId)
+      handleCloseUpload()
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error('Upload error:', error)
+    }
+  };
+
+  const handleDeletePhoto = async (photoId, e) => {
+    e.stopPropagation();
+    try {
+      await photosService.deletePhoto(photoId);
+      await loadPhotos(userId);
+    } catch (error) {
+      console.error('Delete error:', error);
     }
   };
 
@@ -134,10 +151,20 @@ const Photos = () => {
           >
             <div className="photo-image">
               <img 
-                src={photo.url} 
+                src={`data:${photo.mimeType};base64,${photo.data}`} 
                 alt={photo.description || 'Фото'}
                 loading="lazy"
               />
+              {currentUserId === userId && (
+                <button 
+                  className="photo-delete-btn"
+                  onClick={(e) => handleDeletePhoto(photo.id, e)}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -160,7 +187,7 @@ const Photos = () => {
             
             <div className="photo-modal-image">
               <img 
-                src={selectedPhoto.url} 
+                src={`data:${selectedPhoto.mimeType};base64,${selectedPhoto.data}`} 
                 alt={selectedPhoto.description || 'Фото'} 
               />
             </div>
@@ -194,6 +221,7 @@ const Photos = () => {
               
               <div className="upload-modal-body">
                 <PhotoUpload 
+                  ref={photoUploadRef}
                   photos={selectedFiles}
                   onPhotosChange={handleFilesChange}
                   maxPhotos={10}

@@ -47,10 +47,10 @@
 
 .photos-section__item {
   position: relative;
-  aspect-ratio: 1;
   cursor: pointer;
   overflow: hidden;
   background: #f7f9fa;
+  border-radius: 8px;
 }
 
 .photos-section__image {
@@ -66,17 +66,20 @@
 
 .photos-section__overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity 0.2s ease;
   color: #fff;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
 }
 
 .photos-section__item:hover .photos-section__overlay {
@@ -85,13 +88,13 @@
 
 /* Add Photo Buttons */
 .photos-section__add-item {
-  aspect-ratio: 1;
+  aspect-ratio: 16/9;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #f7f9fa;
   border: 2px dashed #aab8c2;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 .photos-section__add-btn--grid {

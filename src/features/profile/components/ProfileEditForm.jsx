@@ -6,6 +6,7 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     name: user?.name || '',
+    surname: user?.surname || '',
     bio: user?.bio || '',
     location: user?.location || '',
     website: user?.website || ''
@@ -50,8 +51,8 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
       newErrors.bio = 'Опис не може перевищувати 500 символів'
     }
     
-    if (formData.website && !formData.website.match(/^https?:\/\/.+/)) {
-      newErrors.website = 'Веб-сайт повинен починатися з http:// або https://'
+    if (formData.website && formData.website.trim() && !formData.website.match(/^(https?:\/\/)?[\w.-]+\.[a-z]{2,}(\/.*)?$/i)) {
+      newErrors.website = 'Введіть коректний веб-сайт (наприклад: example.com або https://example.com)'
     }
     
     return newErrors
@@ -66,10 +67,18 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
       return
     }
     
+    // Автоматично додаємо https:// до website якщо протокол не вказано
+    const processedFormData = {
+      ...formData,
+      website: formData.website && !formData.website.match(/^https?:\/\//) 
+        ? `https://${formData.website}` 
+        : formData.website
+    }
+    
     setIsLoading(true)
     setShowSuccess(false)
     try {
-      await onSave(formData)
+      await onSave(processedFormData)
       setShowSuccess(true)
       setTimeout(() => {
         navigate(`/profile/${user.id}`)
@@ -115,6 +124,22 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
         </div>
 
         <div className="profile-edit-form__field">
+          <label className="profile-edit-form__label">Прізвище</label>
+          <input
+            type="text"
+            value={formData.surname}
+            onChange={(e) => handleInputChange('surname', e.target.value)}
+            className="profile-edit-form__input"
+            placeholder="Введіть ваше прізвище"
+            maxLength="50"
+            disabled={isLoading}
+          />
+          <div className={`profile-edit-form__char-count ${getCharCountClass(formData.surname.length, 50)}`}>
+            {formData.surname.length}/50
+          </div>
+        </div>
+
+        <div className="profile-edit-form__field">
           <label className="profile-edit-form__label">Опис</label>
           <textarea
             value={formData.bio}
@@ -151,11 +176,11 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
         <div className="profile-edit-form__field">
           <label className="profile-edit-form__label">Веб-сайт</label>
           <input
-            type="url"
+            type="text"
             value={formData.website}
             onChange={(e) => handleInputChange('website', e.target.value)}
             className={`profile-edit-form__input ${errors.website ? 'profile-edit-form__input--error' : ''}`}
-            placeholder="https://example.com"
+            placeholder="example.com"
             maxLength="100"
             disabled={isLoading}
           />

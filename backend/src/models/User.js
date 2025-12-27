@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema({
     minlength: [2, 'Name must be at least 2 characters long'],
     maxlength: [50, 'Name cannot exceed 50 characters']
   },
+  surname: {
+    type: String,
+    trim: true,
+    maxlength: [50, 'Surname cannot exceed 50 characters']
+  },
   email: {
     type: String,
     required: [true, 'Email is required'],
@@ -72,9 +77,9 @@ const userSchema = new mongoose.Schema({
     trim: true,
     validate: {
       validator: function(v) {
-        return !v || /^https?:\/\/.+/.test(v)
+        return !v || /^(https?:\/\/)?[\w.-]+\.[a-z]{2,}(\/.*)?$/i.test(v)
       },
-      message: 'Website must start with http:// or https://'
+      message: 'Website must be a valid URL (e.g., example.com or https://example.com)'
     }
   },
   avatar: {

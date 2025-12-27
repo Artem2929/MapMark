@@ -119,6 +119,33 @@
   background: #f8f9fa;
 }
 
+.photo-delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.photo-card:hover .photo-delete-btn {
+  opacity: 1;
+}
+
+.photo-delete-btn:hover {
+  background: #b91c1c;
+}
+
 .photo-card img {
   width: 100%;
   height: 100%;
