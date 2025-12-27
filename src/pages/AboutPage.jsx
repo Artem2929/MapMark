@@ -1,4 +1,5 @@
 import React from 'react'
+import { User, Image, MessageCircle, Star } from 'lucide-react'
 import ContactForm from '../features/contact/components/ContactForm'
 import './AboutPage.css'
 
@@ -25,19 +26,27 @@ const AboutPage = () => {
             <h2>Що ми пропонуємо</h2>
             <div className="about-features">
               <div className="about-feature">
-                <span className="about-feature-icon">👤</span>
+                <span className="about-feature-icon">
+                  <User size={20} />
+                </span>
                 <span>Створення персонального профілю</span>
               </div>
               <div className="about-feature">
-                <span className="about-feature-icon">📸</span>
+                <span className="about-feature-icon">
+                  <Image size={20} />
+                </span>
                 <span>Обмін фотографіями та історіями</span>
               </div>
               <div className="about-feature">
-                <span className="about-feature-icon">💬</span>
+                <span className="about-feature-icon">
+                  <MessageCircle size={20} />
+                </span>
                 <span>Спілкування з друзями</span>
               </div>
               <div className="about-feature">
-                <span className="about-feature-icon">💾</span>
+                <span className="about-feature-icon">
+                  <Star size={20} />
+                </span>
                 <span>Збереження спогадів назавжди</span>
               </div>
             </div>
