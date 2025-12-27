@@ -10,6 +10,7 @@ const authRoutes = require('./routes/authRoutes')
 const userRoutes = require('./routes/userRoutes')
 const healthRoutes = require('./routes/healthRoutes')
 const contactRoutes = require('./routes/contactRoutes')
+const photosRoutes = require('./routes/photos')
 
 const app = express()
 
@@ -50,7 +51,11 @@ const API_VERSION = '/api/v1'
 app.use(`${API_VERSION}/auth`, authRoutes)
 app.use(`${API_VERSION}/users`, userRoutes)
 app.use(`${API_VERSION}/contact`, contactRoutes)
+app.use(`${API_VERSION}/photos`, photosRoutes)
 app.use('/health', healthRoutes)
+
+// Static files для фотографій
+app.use('/uploads', express.static('uploads'))
 
 // API info endpoint
 app.get('/api', (req, res) => {
@@ -62,6 +67,7 @@ app.get('/api', (req, res) => {
       auth: `${API_VERSION}/auth`,
       users: `${API_VERSION}/users`,
       contact: `${API_VERSION}/contact`,
+      photos: `${API_VERSION}/photos`,
       health: '/health'
     },
     documentation: '/api/docs' // Future Swagger endpoint
