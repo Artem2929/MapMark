@@ -1,4 +1,6 @@
 const User = require('../models/User')
+const Post = require('../models/Post')
+const Follow = require('../models/Follow')
 const AppError = require('../utils/errorHandler').AppError
 
 const getUserById = async (userId) => {
@@ -14,7 +16,20 @@ const getUserById = async (userId) => {
     throw new AppError('Користувача не знайдено', 404)
   }
   
-  return user
+  // Get user stats
+  const userObjectId = user._id
+  const [postsCount, followersCount, followingCount] = await Promise.all([
+    Post.countDocuments({ author: userObjectId }),
+    Follow.countDocuments({ following: userObjectId }),
+    Follow.countDocuments({ follower: userObjectId })
+  ])
+  
+  return {
+    ...user.toObject(),
+    postsCount,
+    followersCount,
+    followingCount
+  }
 }
 
 const updateProfile = async (userId, updateData) => {

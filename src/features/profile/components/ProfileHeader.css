@@ -166,15 +166,39 @@
   background: #2787f5;
   color: #fff;
   margin-right: 8px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.profile-header__follow-btn:hover {
+.profile-header__follow-btn:hover:not(:disabled) {
   background: #1976d2;
+}
+
+.profile-header__follow-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.profile-header__follow-btn--following {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.profile-header__follow-btn--following:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
 }
 
 .profile-header__message-btn {
   background: #f0f2f5;
   color: #000;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-header__message-btn:hover {

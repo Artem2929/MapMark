@@ -7,7 +7,11 @@ export const friendsService = {
     }
     
     try {
-      return await apiClient.request(`/friends/${userId}`)
+      const result = await apiClient.request(`/friends/${userId}`)
+      return {
+        success: true,
+        data: result.data || []
+      }
     } catch (error) {
       // Return empty result if endpoint doesn't exist
       if (error.message.includes('404') || error.message.includes("Can't find")) {
@@ -23,7 +27,11 @@ export const friendsService = {
     }
     
     try {
-      return await apiClient.request(`/friends/${userId}/requests`)
+      const result = await apiClient.request(`/friends/${userId}/requests`)
+      return {
+        success: true,
+        data: result.data || []
+      }
     } catch (error) {
       // Return empty result if endpoint doesn't exist
       if (error.message.includes('404') || error.message.includes("Can't find")) {
@@ -39,9 +47,13 @@ export const friendsService = {
     }
     
     try {
-      return await apiClient.request('/users/search', {
-        params: { query, ...filters }
-      })
+      const params = new URLSearchParams({ query, ...filters })
+      const result = await apiClient.request(`/users/search?${params}`)
+      // API returns data.data, so we need to normalize it
+      return {
+        success: true,
+        data: result.data?.data || result.data || []
+      }
     } catch (error) {
       // Return empty result if endpoint doesn't exist
       if (error.message.includes('404') || error.message.includes("Can't find")) {

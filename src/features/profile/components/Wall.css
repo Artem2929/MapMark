@@ -240,6 +240,21 @@
   border: 1px solid #fecaca;
 }
 
+.wall__loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+  font-size: 16px;
+}
+
+.wall__action-btn--active {
+  color: #ef4444;
+}
+
+.wall__action-btn--active svg {
+  fill: #ef4444;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .wall {

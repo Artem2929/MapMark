@@ -1,11 +1,34 @@
-import { memo, useState, useCallback, useMemo } from 'react'
-import { profileService } from '../services/profileService'
+import { memo, useState, useCallback, useMemo, useEffect } from 'react'
+import { postsService } from '../services/postsService'
 import './Wall.css'
 
-const Wall = memo(({ userId, isOwnProfile, posts = [], user }) => {
+const Wall = memo(({ userId, isOwnProfile, user }) => {
   const [postText, setPostText] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState(null)
+  const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      if (!userId) return
+      
+      setLoading(true)
+      try {
+        const result = await postsService.getUserPosts(userId, 1, 10)
+        if (result.success) {
+          setPosts(result.data.posts || [])
+        }
+      } catch (err) {
+        console.error('Failed to load posts:', err)
+        setError('Помилка завантаження постів')
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadPosts()
+  }, [userId])
 
   const handleSubmit = useCallback(async () => {
     if (!postText.trim() || isSubmitting) return
@@ -14,8 +37,11 @@ const Wall = memo(({ userId, isOwnProfile, posts = [], user }) => {
     setError(null)
     
     try {
-      await profileService.createPost(postText.trim())
-      setPostText('')
+      const result = await postsService.createPost(postText.trim())
+      if (result.success) {
+        setPosts(prev => [result.data, ...prev])
+        setPostText('')
+      }
     } catch (err) {
       console.error('Failed to create post:', err)
       setError(err.message || 'Помилка створення посту')
@@ -30,14 +56,40 @@ const Wall = memo(({ userId, isOwnProfile, posts = [], user }) => {
     }
   }, [handleSubmit])
 
-  const handleLike = useCallback((postId) => {
-    console.log('Like post:', postId)
-    // TODO: Implement like functionality
+  const handleLike = useCallback(async (postId) => {
+    try {
+      const result = await postsService.likePost(postId)
+      if (result.success) {
+        setPosts(prev => prev.map(post => 
+          post.id === postId 
+            ? { ...post, likesCount: result.data.likesCount, isLiked: result.data.liked }
+            : post
+        ))
+      }
+    } catch (err) {
+      console.error('Failed to like post:', err)
+    }
   }, [])
 
-  const handleComment = useCallback((postId) => {
-    console.log('Comment on post:', postId)
-    // TODO: Implement comment functionality
+  const handleComment = useCallback(async (postId, content) => {
+    if (!content || !content.trim()) return
+    
+    try {
+      const result = await postsService.addComment(postId, content.trim())
+      if (result.success) {
+        setPosts(prev => prev.map(post => 
+          post.id === postId 
+            ? { 
+                ...post, 
+                commentsCount: post.commentsCount + 1,
+                comments: [...(post.comments || []), result.data]
+              }
+            : post
+        ))
+      }
+    } catch (err) {
+      console.error('Failed to add comment:', err)
+    }
   }, [])
 
   const handleShare = useCallback((postId) => {
@@ -77,13 +129,13 @@ const Wall = memo(({ userId, isOwnProfile, posts = [], user }) => {
           
           <div className="wall__post-actions">
             <button 
-              className="wall__action-btn wall__action-btn--like"
+              className={`wall__action-btn wall__action-btn--like ${post.isLiked ? 'wall__action-btn--active' : ''}`}
               onClick={() => handleLike(post.id)}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
-              <span>{post.likes}</span>
+              <span>{post.likesCount || 0}</span>
             </button>
             
             <button 
@@ -93,7 +145,7 @@ const Wall = memo(({ userId, isOwnProfile, posts = [], user }) => {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h11c.55 0 1-.45 1-1z"/>
               </svg>
-              <span>{post.comments}</span>
+              <span>{post.commentsCount || 0}</span>
             </button>
             
             <button 
@@ -103,7 +155,7 @@ const Wall = memo(({ userId, isOwnProfile, posts = [], user }) => {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
               </svg>
-              <span>{post.shares}</span>
+              <span>0</span>
             </button>
           </div>
         </div>
@@ -168,7 +220,11 @@ const Wall = memo(({ userId, isOwnProfile, posts = [], user }) => {
       )}
       
       <div className="wall__posts">
-        {posts.length === 0 ? (
+        {loading ? (
+          <div className="wall__loading">
+            Завантаження постів...
+          </div>
+        ) : posts.length === 0 ? (
           <div className="wall__empty">
             <div className="wall__empty-icon">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">

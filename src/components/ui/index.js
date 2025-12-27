@@ -1,6 +1,7 @@
 export { Button } from './Button'
 export { Input } from './Input'
 export { Header } from './Header'
+export { Footer } from './Footer'
 export { Loading } from './Loading'
 export { Toast } from './Toast'
 export { FormField } from './FormField'

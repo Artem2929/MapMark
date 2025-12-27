@@ -1,16 +1,71 @@
-import { memo, useState, useCallback } from 'react'
+import { memo, useState, useCallback, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PhotosSection from './PhotosSection'
 import ProfileEditForm from './ProfileEditForm'
 import AvatarUploadModal from './AvatarUploadModal'
 import { useProfileEdit } from '../hooks/useProfileEdit'
 import { profileService } from '../services/profileService'
+import { followsService } from '../services/followsService'
 import './ProfileHeader.css'
 
 const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateChange }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [showAvatarModal, setShowAvatarModal] = useState(false)
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [followLoading, setFollowLoading] = useState(false)
   const { saveProfile } = useProfileEdit(user)
+  
+  useEffect(() => {
+    const checkFollowStatus = async () => {
+      if (!isOwnProfile && user?.id) {
+        try {
+          const result = await followsService.checkFollowing(user.id)
+          if (result.success) {
+            setIsFollowing(result.data.isFollowing)
+          }
+        } catch (err) {
+          console.error('Failed to check follow status:', err)
+        }
+      }
+    }
+    
+    checkFollowStatus()
+  }, [user?.id, isOwnProfile])
+
+  const handleFollowToggle = useCallback(async () => {
+    if (followLoading || !user?.id) return
+    
+    setFollowLoading(true)
+    try {
+      if (isFollowing) {
+        const result = await followsService.unfollowUser(user.id)
+        if (result.success) {
+          setIsFollowing(false)
+          if (onUserUpdate) {
+            onUserUpdate({
+              ...user,
+              followersCount: Math.max(0, (user.followersCount || 0) - 1)
+            })
+          }
+        }
+      } else {
+        const result = await followsService.followUser(user.id)
+        if (result.success) {
+          setIsFollowing(true)
+          if (onUserUpdate) {
+            onUserUpdate({
+              ...user,
+              followersCount: (user.followersCount || 0) + 1
+            })
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Failed to toggle follow:', err)
+    } finally {
+      setFollowLoading(false)
+    }
+  }, [isFollowing, followLoading, user, onUserUpdate])
   
   if (!user) return null
 
@@ -161,12 +216,16 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
             </button>
           ) : (
             <>
-              <button className="profile-header__follow-btn">
-                Підписатися
+              <button 
+                className={`profile-header__follow-btn ${isFollowing ? 'profile-header__follow-btn--following' : ''}`}
+                onClick={handleFollowToggle}
+                disabled={followLoading}
+              >
+                {followLoading ? 'Завантаження...' : isFollowing ? 'Відписатися' : 'Підписатися'}
               </button>
-              <button className="profile-header__message-btn">
+              <Link to={`/messages/${user.id}`} className="profile-header__message-btn">
                 Написати
-              </button>
+              </Link>
             </>
           )}
         </div>
