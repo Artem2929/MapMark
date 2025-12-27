@@ -1,76 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { messagesService } from '../features/messages/services/messagesService';
-import './MessagesPage.css';
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { messagesService } from '../features/messages/services/messagesService'
+import Breadcrumbs from '../components/ui/Breadcrumbs'
+import './MessagesPage.css'
 
 const Messages = () => {
-  const navigate = useNavigate();
-  const [conversations, setConversations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const navigate = useNavigate()
+  const [conversations, setConversations] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const initializeMessages = async () => {
-      try {
-        setLoading(true);
-        
-        const authToken = localStorage.getItem('accessToken');
-        if (!authToken) {
-          navigate('/login');
-          return;
-        }
-
-        await loadConversations();
-      } catch (error) {
-        console.error('Error initializing messages:', error);
-        setError('Помилка завантаження повідомлень');
-      } finally {
-        setLoading(false);
+      setLoading(true)
+      
+      const authToken = localStorage.getItem('accessToken')
+      if (!authToken) {
+        navigate('/login')
+        return
       }
-    };
 
-    initializeMessages();
-  }, [navigate]);
+      await loadConversations()
+      setLoading(false)
+    }
+
+    initializeMessages()
+  }, [navigate])
 
   const loadConversations = async () => {
-    try {
-      const result = await messagesService.getConversations();
-      if (result.success) {
-        setConversations(result.data || []);
-      } else {
-        setError(result.error);
-        setConversations([]);
-      }
-    } catch (error) {
-      console.error('Error loading conversations:', error);
-      setConversations([]);
+    const result = await messagesService.getConversations()
+    if (result.success) {
+      setConversations(result.data || [])
+    } else {
+      setError(result.error)
+      setConversations([])
     }
-  };
+  }
 
   const handleConversationClick = (conversationId) => {
-    navigate(`/messages/${conversationId}`);
-  };
+    navigate(`/messages/${conversationId}`)
+  }
 
   if (loading) {
     return (
       <div className="messages-page">
         <div className="loading">Завантаження...</div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="messages-page">
       <div className="messages-container">
-        <nav className="breadcrumbs">
-          <span className="breadcrumb-item">
-            <a className="breadcrumb-link" href="/profile">Профіль</a>
-          </span>
-          <span className="breadcrumb-item">
-            <span className="breadcrumb-separator">›</span>
-            <span className="breadcrumb-current">Повідомлення</span>
-          </span>
-        </nav>
+        <Breadcrumbs 
+          items={[
+            { label: 'Профіль', href: '/profile' },
+            { label: 'Повідомлення' }
+          ]}
+        />
 
         <div className="messages-header">
           <h1>Мої повідомлення</h1>
@@ -134,7 +121,7 @@ const Messages = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Messages;
+export default Messages

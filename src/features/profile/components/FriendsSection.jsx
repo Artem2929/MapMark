@@ -32,11 +32,11 @@ const FriendsSection = memo(({ friends = [] }) => {
               <div key={friend.id} className="friends-section__item">
                 <div className="friends-section__avatar-wrapper">
                   <img 
-                    src={friend.avatar || '/default-avatar.png'} 
+                    src={friend.avatar || '/default-avatar.svg'} 
                     alt={friend.name || 'Аватар друга'}
                     className="friends-section__avatar"
                     onError={(e) => {
-                      e.target.src = '/default-avatar.png'
+                      e.target.src = '/default-avatar.svg'
                     }}
                   />
                 </div>

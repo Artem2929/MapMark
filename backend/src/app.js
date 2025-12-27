@@ -12,6 +12,8 @@ const userRoutes = require('./routes/userRoutes')
 const healthRoutes = require('./routes/healthRoutes')
 const contactRoutes = require('./routes/contactRoutes')
 const photosRoutes = require('./routes/photos')
+const friendsRoutes = require('./routes/friendsRoutes')
+const messagesRoutes = require('./routes/messagesRoutes')
 
 const app = express()
 
@@ -53,6 +55,8 @@ app.use(`${API_VERSION}/auth`, authRoutes)
 app.use(`${API_VERSION}/users`, userRoutes)
 app.use(`${API_VERSION}/contact`, contactRoutes)
 app.use(`${API_VERSION}/photos`, photosRoutes)
+app.use(`${API_VERSION}/friends`, friendsRoutes)
+app.use(`${API_VERSION}/messages`, messagesRoutes)
 app.use('/health', healthRoutes)
 
 // Static files для фотографій
@@ -67,6 +71,8 @@ app.get('/api', (req, res) => {
       users: `${API_VERSION}/users`,
       contact: `${API_VERSION}/contact`,
       photos: `${API_VERSION}/photos`,
+      friends: `${API_VERSION}/friends`,
+      messages: `${API_VERSION}/messages`,
       health: '/health'
     },
     documentation: '/api/docs' // Future Swagger endpoint

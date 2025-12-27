@@ -1,252 +1,215 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { friendsService } from '../features/friends/services/friendsService';
-import './FriendsPage.css';
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { friendsService } from '../features/friends/services/friendsService'
+import Breadcrumbs from '../components/ui/Breadcrumbs'
+import './FriendsPage.css'
 
 const Friends = () => {
-  const { userId } = useParams();
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [userSearchQuery, setUserSearchQuery] = useState('');
-  const [filters, setFilters] = useState({ country: '', city: '', ageRange: '' });
-  const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchLoading, setSearchLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [friends, setFriends] = useState([]);
-  const [requests, setRequests] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [cities, setCities] = useState([]);
-  const [dropdownOpen, setDropdownOpen] = useState(null);
-  const dataLoaded = useRef(false);
+  const { userId } = useParams()
+  const navigate = useNavigate()
+  const [activeTab, setActiveTab] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [userSearchQuery, setUserSearchQuery] = useState('')
+  const [filters, setFilters] = useState({ country: '', city: '', ageRange: '' })
+  const [searchResults, setSearchResults] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [searchLoading, setSearchLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [friends, setFriends] = useState([])
+  const [requests, setRequests] = useState([])
+  const [currentUser, setCurrentUser] = useState(null)
+  const [cities, setCities] = useState([])
+  const [dropdownOpen, setDropdownOpen] = useState(null)
+  const dataLoaded = useRef(false)
 
   useEffect(() => {
     const initializeFriends = async () => {
-      try {
-        setLoading(true);
-        
-        const authToken = localStorage.getItem('accessToken');
-        if (!authToken) {
-          navigate('/login');
-          return;
-        }
-        
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          const currentUserId = payload.id;
-          setCurrentUser({ id: currentUserId });
-          
-          if (!userId || userId !== currentUserId) {
-            navigate(`/friends/${currentUserId}`, { replace: true });
-            return;
-          }
-        }
-        
-        await Promise.all([
-          loadFriends(),
-          loadRequests()
-        ]);
-        
-      } catch (error) {
-        console.error('Error initializing friends:', error);
-      } finally {
-        setLoading(false);
+      setLoading(true)
+      
+      const authToken = localStorage.getItem('accessToken')
+      if (!authToken) {
+        navigate('/login')
+        return
       }
-    };
-    
-    if (!dataLoaded.current) {
-      dataLoaded.current = true;
-      initializeFriends();
+      
+      const token = localStorage.getItem('accessToken')
+      if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]))
+        const currentUserId = payload.id
+        setCurrentUser({ id: currentUserId })
+        
+        if (!userId || userId !== currentUserId) {
+          navigate(`/friends/${currentUserId}`, { replace: true })
+          return
+        }
+      }
+      
+      await Promise.all([
+        loadFriends(),
+        loadRequests()
+      ])
+      
+      setLoading(false)
     }
-  }, [userId, navigate]);
+    
+    // Reset dataLoaded when userId changes
+    dataLoaded.current = false
+    initializeFriends()
+  }, [userId, navigate])
 
   useEffect(() => {
     if (filters.country) {
-      loadCities(filters.country);
+      loadCities(filters.country)
     } else {
-      setCities([]);
+      setCities([])
     }
-  }, [filters.country]);
+  }, [filters.country])
 
   const loadFriends = async () => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) return;
-      
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const currentUserId = payload.id;
-      
-      const result = await friendsService.getFriends(currentUserId);
-      if (result.success) {
-        setFriends(result.data || []);
-      } else {
-        setFriends([]);
-      }
-    } catch (error) {
-      console.error('Error loading friends:', error);
-      setFriends([]);
+    const token = localStorage.getItem('accessToken')
+    if (!token) return
+    
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    const currentUserId = payload.id
+    
+    const result = await friendsService.getFriends(currentUserId)
+    if (result.success) {
+      setFriends(result.data || [])
+    } else {
+      setFriends([])
     }
-  };
+  }
 
   const loadRequests = async () => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) return;
-      
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const currentUserId = payload.id;
-      
-      const result = await friendsService.getFriendRequests(currentUserId);
-      if (result.success) {
-        setRequests(result.data || []);
-      } else {
-        setRequests([]);
-      }
-    } catch (error) {
-      console.error('Error loading requests:', error);
-      setRequests([]);
+    const token = localStorage.getItem('accessToken')
+    if (!token) return
+    
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    const currentUserId = payload.id
+    
+    const result = await friendsService.getFriendRequests(currentUserId)
+    if (result.success) {
+      setRequests(result.data || [])
+    } else {
+      setRequests([])
     }
-  };
+  }
 
   const loadCities = async (country) => {
-    setCities([]);
-  };
+    setCities([])
+  }
 
   const searchUsers = async (query, searchFilters = {}) => {
     if (!query.trim() || query.trim().length < 3) {
-      setSearchResults([]);
-      setSearchLoading(false);
-      return;
+      setSearchResults([])
+      setSearchLoading(false)
+      return
     }
 
-    setSearchLoading(true);
-    setError('');
+    setSearchLoading(true)
+    setError('')
 
-    try {
-      const result = await friendsService.searchUsers(query, searchFilters);
-      if (result.success) {
-        setSearchResults(result.data || []);
-      } else {
-        setError(result.error || 'Помилка пошуку');
-        setSearchResults([]);
-      }
-    } catch (err) {
-      setError('Помилка пошуку. Спробуйте ще раз.');
-      setSearchResults([]);
-    } finally {
-      setSearchLoading(false);
+    const result = await friendsService.searchUsers(query, searchFilters)
+    if (result.success) {
+      setSearchResults(result.data || [])
+    } else {
+      setError(result.error || 'Помилка пошуку')
+      setSearchResults([])
     }
-  };
+    setSearchLoading(false)
+  }
 
   const debouncedSearch = useCallback(
     (query, searchFilters) => {
       const timeoutId = setTimeout(() => {
-        searchUsers(query, searchFilters);
-      }, 300);
-      return () => clearTimeout(timeoutId);
+        searchUsers(query, searchFilters)
+      }, 300)
+      return () => clearTimeout(timeoutId)
     },
     []
-  );
+  )
 
   useEffect(() => {
-    const cleanup = debouncedSearch(userSearchQuery, filters);
-    return cleanup;
-  }, [userSearchQuery, filters, debouncedSearch]);
+    const cleanup = debouncedSearch(userSearchQuery, filters)
+    return cleanup
+  }, [userSearchQuery, filters, debouncedSearch])
 
   const handleUserSearchChange = (e) => {
-    setUserSearchQuery(e.target.value);
-  };
+    setUserSearchQuery(e.target.value)
+  }
 
   const handleFilterChange = (filterType, value) => {
-    const newFilters = { ...filters, [filterType]: value };
+    const newFilters = { ...filters, [filterType]: value }
     if (filterType === 'country' && value !== filters.country) {
-      newFilters.city = ''; // Reset city when country changes
+      newFilters.city = ''
     }
-    setFilters(newFilters);
+    setFilters(newFilters)
     if (searchQuery.trim()) {
-      debouncedSearch(searchQuery, newFilters);
+      debouncedSearch(searchQuery, newFilters)
     }
-  };
+  }
 
   const handleSearch = () => {
-    searchUsers(searchQuery, filters);
-  };
+    searchUsers(searchQuery, filters)
+  }
 
   const handleAddFriend = async (userId) => {
-    try {
-      const result = await friendsService.sendFriendRequest(userId);
-      if (result.success) {
+    const result = await friendsService.sendFriendRequest(userId)
+    if (result.success) {
+      setSearchResults(prev => prev.map(user => 
+        user.id === userId ? { ...user, requestSent: true } : user
+      ))
+    } else {
+      if (result.error === 'Friendship request already exists') {
         setSearchResults(prev => prev.map(user => 
           user.id === userId ? { ...user, requestSent: true } : user
-        ));
+        ))
       } else {
-        if (result.error === 'Friendship request already exists') {
-          setSearchResults(prev => prev.map(user => 
-            user.id === userId ? { ...user, requestSent: true } : user
-          ));
-        } else {
-          setError(result.error || 'Помилка відправки заявки');
-        }
+        setError(result.error || 'Помилка відправки заявки')
       }
-    } catch (err) {
-      setError('Помилка відправки заявки');
     }
-  };
+  }
 
   const handleRemoveFriend = async (userId) => {
-    try {
-      const result = await friendsService.removeFriend(userId);
-      if (result.success) {
-        setSearchResults(prev => prev.map(user => 
-          user.id === userId ? { ...user, isFriend: false } : user
-        ));
-        await loadFriends(); // Reload friends list
-      } else {
-        setError(result.error || 'Помилка видалення з друзів');
-      }
-    } catch (err) {
-      setError('Помилка видалення з друзів');
+    const result = await friendsService.removeFriend(userId)
+    if (result.success) {
+      setSearchResults(prev => prev.map(user => 
+        user.id === userId ? { ...user, isFriend: false } : user
+      ))
+      await loadFriends()
+    } else {
+      setError(result.error || 'Помилка видалення з друзів')
     }
-  };
+  }
 
   const filteredFriends = friends.filter(friend => {
-    const searchLower = searchQuery.toLowerCase();
-    const name = friend.name || `${friend.firstName || ''} ${friend.lastName || ''}`.trim();
-    return name.toLowerCase().includes(searchLower);
-  });
+    const searchLower = searchQuery.toLowerCase()
+    const name = friend.name || `${friend.firstName || ''} ${friend.lastName || ''}`.trim()
+    return name.toLowerCase().includes(searchLower)
+  })
 
   const handleAcceptRequest = async (id) => {
-    try {
-      const result = await friendsService.acceptFriendRequest(id);
-      if (result.success) {
-        await loadFriends();
-        await loadRequests();
-      } else {
-        setError(result.error || 'Помилка прийняття заявки');
-      }
-    } catch (err) {
-      setError('Помилка прийняття заявки');
+    const result = await friendsService.acceptFriendRequest(id)
+    if (result.success) {
+      await loadFriends()
+      await loadRequests()
+    } else {
+      setError(result.error || 'Помилка прийняття заявки')
     }
-  };
+  }
 
   const handleRejectRequest = async (id) => {
-    try {
-      const result = await friendsService.rejectFriendRequest(id);
-      if (result.success) {
-        await loadRequests();
-      } else {
-        setError(result.error || 'Помилка відхилення заявки');
-      }
-    } catch (err) {
-      setError('Помилка відхилення заявки');
+    const result = await friendsService.rejectFriendRequest(id)
+    if (result.success) {
+      await loadRequests()
+    } else {
+      setError(result.error || 'Помилка відхилення заявки')
     }
-  };
+  }
 
   const handleSendMessage = (friendId) => {
-    navigate(`/messages/${friendId}`);
-  };
+    navigate(`/messages/${friendId}`)
+  }
 
   const renderFriendCard = (friend, type = 'friend') => (
     <div 
@@ -298,8 +261,8 @@ const Friends = () => {
               <button 
                 className="btn-menu" 
                 onClick={(e) => {
-                  e.stopPropagation();
-                  setDropdownOpen(dropdownOpen === friend.id ? null : friend.id);
+                  e.stopPropagation()
+                  setDropdownOpen(dropdownOpen === friend.id ? null : friend.id)
                 }}
               >
                 ⋯
@@ -309,9 +272,9 @@ const Friends = () => {
                   <button 
                     className="btn-delete"
                     onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveFriend(friend.id);
-                      setDropdownOpen(null);
+                      e.stopPropagation()
+                      handleRemoveFriend(friend.id)
+                      setDropdownOpen(null)
                     }}
                   >
                     Видалити
@@ -319,8 +282,8 @@ const Friends = () => {
                   <button 
                     className="btn-block"
                     onClick={(e) => {
-                      e.stopPropagation();
-                      setDropdownOpen(null);
+                      e.stopPropagation()
+                      setDropdownOpen(null)
                     }}
                   >
                     Заблокувати
@@ -364,28 +327,25 @@ const Friends = () => {
         )}
       </div>
     </div>
-  );
+  )
 
   if (loading) {
     return (
       <div className="friends-page">
         <div className="loading">Завантаження...</div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="friends-page">
       <div className="friends-container">
-        <nav className="breadcrumbs">
-          <span className="breadcrumb-item">
-            <a className="breadcrumb-link" href={`/profile/${userId}`}>Профіль</a>
-          </span>
-          <span className="breadcrumb-item">
-            <span className="breadcrumb-separator">›</span>
-            <span className="breadcrumb-current">Друзі</span>
-          </span>
-        </nav>
+        <Breadcrumbs 
+          items={[
+            { label: 'Профіль', href: `/profile/${userId}` },
+            { label: 'Друзі' }
+          ]}
+        />
 
         <div className="friends-header">
           <h1>Друзі</h1>
@@ -487,7 +447,7 @@ const Friends = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Friends;
+export default Friends

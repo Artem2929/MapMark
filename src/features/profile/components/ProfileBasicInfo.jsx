@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect, useCallback } from 'react'
-import { updateProfile } from '../services/profileService'
+import { profileService } from '../services/profileService'
 import { getInitialFormData, showNotification } from '../utils/profileUtils'
 import CustomSelect from '../../../components/ui/CustomSelect'
 import DatePicker from '../../../components/ui/DatePicker'
@@ -41,7 +41,7 @@ const ProfileBasicInfo = memo(({
         birthDate: formData.birthDate
       }
       
-      await updateProfile(user.id, profileData)
+      await profileService.updateProfile(user.id, profileData)
       onUpdate?.(formData)
       setIsEditing(false)
       showNotification('Профіль успішно оновлено', 'success')

@@ -1,9 +1,10 @@
-import React, { memo, useState, useCallback, useMemo } from 'react'
+import { memo, useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './ProfileEditForm.css'
 
 const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
   const navigate = useNavigate()
+  const textareaRef = useRef(null)
   const [formData, setFormData] = useState({
     name: user?.name || '',
     surname: user?.surname || '',
@@ -14,6 +15,14 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [showSuccess, setShowSuccess] = useState(false)
+
+  // Auto-resize textarea on mount and when bio changes
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px'
+    }
+  }, [formData.bio])
 
   const handleInputChange = useCallback((field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -142,6 +151,7 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
         <div className="profile-edit-form__field">
           <label className="profile-edit-form__label">Опис</label>
           <textarea
+            ref={textareaRef}
             value={formData.bio}
             onChange={handleTextareaChange}
             className={`profile-edit-form__textarea ${errors.bio ? 'profile-edit-form__textarea--error' : ''}`}

@@ -1,10 +1,10 @@
-import React, { memo, useState, useCallback } from 'react'
+import { memo, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import PhotosSection from './PhotosSection'
 import ProfileEditForm from './ProfileEditForm'
 import AvatarUploadModal from './AvatarUploadModal'
 import { useProfileEdit } from '../hooks/useProfileEdit'
-import { uploadAvatar } from '../services/profileService'
+import { profileService } from '../services/profileService'
 import './ProfileHeader.css'
 
 const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateChange }) => {
@@ -18,7 +18,7 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
     const formData = new FormData()
     formData.append('avatar', file)
     
-    const result = await uploadAvatar(formData)
+    const result = await profileService.uploadAvatar(formData)
     if (onUserUpdate && result.data?.user) {
       onUserUpdate(result.data.user)
     }
@@ -104,7 +104,6 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
         
         <div className="profile-header__info">
           <h1 className="profile-header__name">{user.name}{user.surname ? ` ${user.surname}` : ''}</h1>
-          <p className="profile-header__bio">{user.bio || 'Опис не додано'}</p>
           
           <div className="profile-header__details">
             <div className="profile-header__detail">
@@ -134,6 +133,8 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
               <span>Приєднався {new Date(user.createdAt || user.joinDate).toLocaleDateString('uk-UA', { month: 'long', year: 'numeric' })}</span>
             </div>
           </div>
+          
+          <p className="profile-header__bio">{user.bio || 'Опис не додано'}</p>
           
           <div className="profile-header__stats">
             <div className="profile-header__stat">

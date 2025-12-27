@@ -1,11 +1,14 @@
-import { csrfService } from '../../../shared/api/csrfService'
+import { apiClient } from '../../../shared/api/client.js'
 
 export const contactService = {
   async sendMessage(data) {
-    const response = await csrfService.makeSecureRequest('/api/v1/contact/send', {
+    if (!data?.name || !data?.email || !data?.message) {
+      throw new Error('Всі поля обов\'язкові')
+    }
+    
+    return apiClient.secureRequest('/contact/send', {
       method: 'POST',
-      body: data
+      body: JSON.stringify(data)
     })
-    return response
   }
 }

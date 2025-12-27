@@ -1,13 +1,11 @@
-import React, { memo, useState, useCallback, useMemo } from 'react'
-import { useAuthStore } from '../../../app/store'
-import { createPost } from '../services/profileService'
+import { memo, useState, useCallback, useMemo } from 'react'
+import { profileService } from '../services/profileService'
 import './Wall.css'
 
-const Wall = memo(({ userId, isOwnProfile, posts = [] }) => {
+const Wall = memo(({ userId, isOwnProfile, posts = [], user }) => {
   const [postText, setPostText] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState(null)
-  const { user: currentUser } = useAuthStore()
 
   const handleSubmit = useCallback(async () => {
     if (!postText.trim() || isSubmitting) return
@@ -16,7 +14,7 @@ const Wall = memo(({ userId, isOwnProfile, posts = [] }) => {
     setError(null)
     
     try {
-      await createPost(postText.trim())
+      await profileService.createPost(postText.trim())
       setPostText('')
     } catch (err) {
       console.error('Failed to create post:', err)
@@ -52,7 +50,7 @@ const Wall = memo(({ userId, isOwnProfile, posts = [] }) => {
       <article key={post.id} className="wall__post">
         <div className="wall__post-avatar">
           <img 
-            src={post.author?.avatar || '/default-avatar.png'} 
+            src={post.author?.avatar || '/default-avatar.svg'} 
             alt={post.author?.name || 'Аватар'}
             className="wall__post-avatar-img"
           />
@@ -119,8 +117,8 @@ const Wall = memo(({ userId, isOwnProfile, posts = [] }) => {
         <div className="wall__composer">
           <div className="wall__composer-avatar">
             <img 
-              src={currentUser?.avatar || '/default-avatar.png'} 
-              alt={currentUser?.name || 'Ваш аватар'}
+              src={user?.avatar || '/default-avatar.svg'} 
+              alt={user?.name || 'Ваш аватар'}
               className="wall__composer-avatar-img"
             />
           </div>

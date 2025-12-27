@@ -1,99 +1,126 @@
-import { apiClient } from '../../../shared/api/apiClient';
+import { apiClient } from '../../../shared/api/client.js'
 
 export const friendsService = {
   async getFriends(userId) {
+    if (!userId) {
+      throw new Error('ID користувача обов\'язковий')
+    }
+    
     try {
-      const response = await apiClient.get(`/api/v1/friends/${userId}`);
-      return { success: true, data: response.data.data };
+      return await apiClient.request(`/friends/${userId}`)
     } catch (error) {
-      return { success: false, error: error.response?.data?.error || 'Помилка завантаження друзів' };
+      // Return empty result if endpoint doesn't exist
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: true, data: [] }
+      }
+      throw error
     }
   },
 
   async getFriendRequests(userId) {
+    if (!userId) {
+      throw new Error('ID користувача обов\'язковий')
+    }
+    
     try {
-      const response = await apiClient.get(`/api/v1/friends/${userId}/requests`);
-      return { success: true, data: response.data.data };
+      return await apiClient.request(`/friends/${userId}/requests`)
     } catch (error) {
-      return { success: false, error: error.response?.data?.error || 'Помилка завантаження заявок' };
+      // Return empty result if endpoint doesn't exist
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: true, data: [] }
+      }
+      throw error
     }
   },
 
   async searchUsers(query, filters = {}) {
+    if (!query) {
+      throw new Error('Запит для пошуку обов\'язковий')
+    }
+    
     try {
-      const token = localStorage.getItem('accessToken');
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const currentUserId = payload.id;
-      
-      const params = new URLSearchParams({ 
-        query, 
-        currentUserId,
-        ...filters 
-      });
-      const response = await apiClient.get(`/api/v1/users/search?${params}`);
-      return { success: true, data: response.data.data };
+      return await apiClient.request('/users/search', {
+        params: { query, ...filters }
+      })
     } catch (error) {
-      return { success: false, error: error.response?.data?.error || 'Помилка пошуку' };
+      // Return empty result if endpoint doesn't exist
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: true, data: [] }
+      }
+      throw error
     }
   },
 
   async sendFriendRequest(userId) {
+    if (!userId) {
+      throw new Error('ID користувача обов\'язковий')
+    }
+    
     try {
-      const token = localStorage.getItem('accessToken');
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const requesterId = payload.id;
-      
-      const response = await apiClient.post(`/api/v1/friends/${userId}/request`, {
-        requesterId
-      });
-      return { success: true, data: response.data };
+      return await apiClient.secureRequest('/friends/request', {
+        method: 'POST',
+        body: JSON.stringify({ userId })
+      })
     } catch (error) {
-      return { success: false, error: error.response?.data?.error || 'Помилка відправки заявки' };
+      // Return error result if endpoint doesn't exist
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: false, error: 'Функція друзів поки недоступна' }
+      }
+      throw error
     }
   },
 
-  async acceptFriendRequest(requesterId) {
+  async acceptFriendRequest(requestId) {
+    if (!requestId) {
+      throw new Error('ID заявки обов\'язковий')
+    }
+    
     try {
-      const token = localStorage.getItem('accessToken');
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const recipientId = payload.id;
-      
-      const response = await apiClient.post(`/api/v1/friends/${requesterId}/accept`, {
-        recipientId
-      });
-      return { success: true, data: response.data };
+      return await apiClient.secureRequest(`/friends/request/${requestId}/accept`, {
+        method: 'POST'
+      })
     } catch (error) {
-      return { success: false, error: error.response?.data?.error || 'Помилка прийняття заявки' };
+      // Return error result if endpoint doesn't exist
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: false, error: 'Функція друзів поки недоступна' }
+      }
+      throw error
     }
   },
 
-  async rejectFriendRequest(requesterId) {
+  async rejectFriendRequest(requestId) {
+    if (!requestId) {
+      throw new Error('ID заявки обов\'язковий')
+    }
+    
     try {
-      const token = localStorage.getItem('accessToken');
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const recipientId = payload.id;
-      
-      const response = await apiClient.post(`/api/v1/friends/${requesterId}/reject`, {
-        recipientId
-      });
-      return { success: true, data: response.data };
+      return await apiClient.secureRequest(`/friends/request/${requestId}/reject`, {
+        method: 'POST'
+      })
     } catch (error) {
-      return { success: false, error: error.response?.data?.error || 'Помилка відхилення заявки' };
+      // Return error result if endpoint doesn't exist
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: false, error: 'Функція друзів поки недоступна' }
+      }
+      throw error
     }
   },
 
   async removeFriend(userId) {
+    if (!userId) {
+      throw new Error('ID користувача обов\'язковий')
+    }
+    
     try {
-      const token = localStorage.getItem('accessToken');
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const currentUserId = payload.id;
-      
-      const response = await apiClient.delete(`/api/v1/friends/${userId}`, {
-        data: { currentUserId }
-      });
-      return { success: true, data: response.data };
+      return await apiClient.secureRequest(`/friends/${userId}`, {
+        method: 'DELETE'
+      })
     } catch (error) {
-      return { success: false, error: error.response?.data?.error || 'Помилка видалення друга' };
+      // Return error result if endpoint doesn't exist
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: false, error: 'Функція друзів поки недоступна' }
+      }
+      throw error
     }
   }
-};
+}

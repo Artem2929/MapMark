@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { useAuthStore } from '../app/store'
-import { getUserProfile } from '../features/profile/services/profileService'
+import { profileService } from '../features/profile/services/profileService'
 
 const ProfileContext = createContext()
 
@@ -26,7 +26,7 @@ export const ProfileProvider = ({ children, userId }) => {
       try {
         setLoading(true)
         setError(null)
-        const profileData = await getUserProfile(validUserId)
+        const profileData = await profileService.getUserProfile(validUserId)
         setUser(profileData.data?.user || profileData)
       } catch (err) {
         console.error('Profile fetch error:', err)

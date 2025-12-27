@@ -1,67 +1,90 @@
-import { apiClient } from '../../../utils/apiClient'
+import { apiClient } from '../../../shared/api/client.js'
 
-class PhotosService {
+export const photosService = {
   async getUserPhotos(userId, params = {}) {
-    try {
-      const response = await apiClient.get(`/api/v1/photos/users/${userId}`, { params })
-      return response.data?.photos || []
-    } catch (error) {
-      console.error('Error fetching user photos:', error)
-      return []
+    if (!userId) {
+      throw new Error('ID користувача обов\'язковий')
     }
-  }
+    
+    const data = await apiClient.request(`/photos/users/${userId}`, { params })
+    return data.photos || []
+  },
 
   async uploadPhotos(files) {
-    const formData = new FormData()
+    if (!files || files.length === 0) {
+      throw new Error('Файли для завантаження обов\'язкові')
+    }
     
-    // Додаємо файли до FormData
-    files.forEach((file) => {
-      formData.append('photos', file)
-    })
+    const formData = new FormData()
+    files.forEach(file => formData.append('photos', file))
 
-    const response = await apiClient.post('/api/v1/photos/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    return apiClient.secureRequest('/photos/upload', {
+      method: 'POST',
+      body: formData,
+      headers: {}
     })
-
-    return response.data
-  }
+  },
 
   async deletePhoto(photoId) {
-    const response = await apiClient.delete(`/api/v1/photos/${photoId}`)
-    return response.data
-  }
+    if (!photoId) {
+      throw new Error('ID фото обов\'язковий')
+    }
+    
+    return apiClient.secureRequest(`/photos/${photoId}`, {
+      method: 'DELETE'
+    })
+  },
 
   async updatePhoto(photoId, data) {
-    const response = await apiClient.put(`/api/v1/photos/${photoId}`, data)
-    return response.data
-  }
+    if (!photoId || !data) {
+      throw new Error('ID фото та дані обов\'язкові')
+    }
+    
+    return apiClient.secureRequest(`/photos/${photoId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    })
+  },
 
   async getPhoto(photoId) {
-    const response = await apiClient.get(`/api/v1/photos/${photoId}`)
-    return response.data
-  }
+    if (!photoId) {
+      throw new Error('ID фото обов\'язковий')
+    }
+    
+    return apiClient.request(`/photos/${photoId}`)
+  },
 
   async getPhotos(params = {}) {
-    const response = await apiClient.get('/api/v1/photos', { params })
-    return response.data
-  }
+    return apiClient.request('/photos', { params })
+  },
 
   async togglePhotoLike(photoId, type) {
-    const response = await apiClient.post(`/api/v1/photos/${photoId}/like`, { type })
-    return response.data
-  }
+    if (!photoId || !type) {
+      throw new Error('ID фото та тип обов\'язкові')
+    }
+    
+    return apiClient.secureRequest(`/photos/${photoId}/like`, {
+      method: 'POST',
+      body: JSON.stringify({ type })
+    })
+  },
 
   async getPhotoComments(photoId, params = {}) {
-    const response = await apiClient.get(`/api/v1/photos/${photoId}/comments`, { params })
-    return response.data
-  }
+    if (!photoId) {
+      throw new Error('ID фото обов\'язковий')
+    }
+    
+    return apiClient.request(`/photos/${photoId}/comments`, { params })
+  },
 
   async addPhotoComment(photoId, text) {
-    const response = await apiClient.post(`/api/v1/photos/${photoId}/comments`, { text })
-    return response.data
+    if (!photoId || !text) {
+      throw new Error('ID фото та текст коментаря обов\'язкові')
+    }
+    
+    return apiClient.secureRequest(`/photos/${photoId}/comments`, {
+      method: 'POST',
+      body: JSON.stringify({ text })
+    })
   }
 }
-
-export const photosService = new PhotosService()

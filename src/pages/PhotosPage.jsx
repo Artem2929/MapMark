@@ -1,172 +1,137 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import PhotoUpload from '../components/PhotoUpload/PhotoUpload';
-import { photosService } from '../features/profile/services/photosService';
-import './PhotosPage.css';
+import { useState, useEffect, useRef } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import PhotoUpload from '../components/PhotoUpload/PhotoUpload'
+import { photosService } from '../features/profile/services/photosService'
+import './PhotosPage.css'
 
 const Photos = () => {
-  const [photos, setPhotos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const [currentUserId, setCurrentUserId] = useState(null);
-  const [showUploadModal, setShowUploadModal] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState('');
-  const [loadingComments, setLoadingComments] = useState(false);
-  const photoUploadRef = useRef(null);
-  const navigate = useNavigate();
-  const { userId } = useParams();
+  const [photos, setPhotos] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [selectedPhoto, setSelectedPhoto] = useState(null)
+  const [currentUserId, setCurrentUserId] = useState(null)
+  const [showUploadModal, setShowUploadModal] = useState(false)
+  const [selectedFiles, setSelectedFiles] = useState([])
+  const [comments, setComments] = useState([])
+  const [newComment, setNewComment] = useState('')
+  const [loadingComments, setLoadingComments] = useState(false)
+  const photoUploadRef = useRef(null)
+  const navigate = useNavigate()
+  const { userId } = useParams()
 
   useEffect(() => {
     const initializePhotos = async () => {
-      try {
-        setLoading(true);
-        
-        const authToken = localStorage.getItem('accessToken');
-        if (!authToken) {
-          navigate('/login');
-          return;
-        }
-
-        // Отримуємо userId з токена якщо не передано в URL
-        let targetUserId = userId;
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          const tokenUserId = payload.id;
-          setCurrentUserId(tokenUserId);
-          
-          if (!targetUserId) {
-            targetUserId = tokenUserId;
-            navigate(`/photos/${targetUserId}`, { replace: true });
-            return;
-          }
-        }
-
-        await loadPhotos(targetUserId);
-      } catch (error) {
-        console.error('Error initializing photos:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initializePhotos();
-  }, [userId, navigate]);
-
-  const loadPhotos = async (targetUserId) => {
-    try {
-      const userPhotos = await photosService.getUserPhotos(targetUserId);
-      setPhotos(userPhotos);
-    } catch (error) {
-      console.error('Error loading photos:', error);
-      setPhotos([]);
-    }
-  };
-
-  const handlePhotoClick = (photo) => {
-    setSelectedPhoto(photo);
-    loadComments(photo._id);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedPhoto(null);
-    setComments([]);
-    setNewComment('');
-  };
-
-  const loadComments = async (photoId) => {
-    try {
-      setLoadingComments(true);
-      const response = await photosService.getPhotoComments(photoId);
-      setComments(response?.data?.comments || response?.comments || []);
-    } catch (error) {
-      console.error('Error loading comments:', error);
-      setComments([]);
-    } finally {
-      setLoadingComments(false);
-    }
-  };
-
-  const handleAddComment = async (e) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
-    
-    try {
-      const response = await photosService.addPhotoComment(selectedPhoto._id, newComment.trim());
-      setComments(prev => [response.data.comment, ...prev]);
-      setNewComment('');
-    } catch (error) {
-      console.error('Error adding comment:', error);
-    }
-  };
-
-  const handleOpenUpload = () => {
-    setShowUploadModal(true);
-  };
-
-  const handleCloseUpload = () => {
-    setShowUploadModal(false);
-    setSelectedFiles([]);
-  };
-
-  const handleFilesChange = (files) => {
-    setSelectedFiles(files);
-  };
-
-  const handleUploadSubmit = async () => {
-    try {
-      const filesToUpload = photoUploadRef.current?.getFilesForUpload() || []
+      setLoading(true)
       
-      if (filesToUpload.length === 0) {
-        console.error('No files to upload')
+      const authToken = localStorage.getItem('accessToken')
+      if (!authToken) {
+        navigate('/login')
         return
       }
-      
-      await photosService.uploadPhotos(filesToUpload)
-      await loadPhotos(userId)
-      handleCloseUpload()
-    } catch (error) {
-      console.error('Upload error:', error)
-    }
-  };
 
-  const handleDeletePhoto = async (photoId, e) => {
-    e.stopPropagation();
-    try {
-      await photosService.deletePhoto(photoId);
-      await loadPhotos(userId);
-    } catch (error) {
-      console.error('Delete error:', error);
-    }
-  };
-
-  const handleToggleLike = async (photoId, type, e) => {
-    e.stopPropagation();
-    try {
-      await photosService.togglePhotoLike(photoId, type);
-      await loadPhotos(userId);
-      
-      // Оновлюємо selectedPhoto якщо це той самий фото
-      if (selectedPhoto && selectedPhoto._id === photoId) {
-        const updatedPhotos = await photosService.getUserPhotos(userId);
-        const updatedPhoto = updatedPhotos.find(p => p._id === photoId);
-        if (updatedPhoto) {
-          setSelectedPhoto(updatedPhoto);
+      let targetUserId = userId
+      const token = localStorage.getItem('accessToken')
+      if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]))
+        const tokenUserId = payload.id
+        setCurrentUserId(tokenUserId)
+        
+        if (!targetUserId) {
+          targetUserId = tokenUserId
+          navigate(`/photos/${targetUserId}`, { replace: true })
+          return
         }
       }
-    } catch (error) {
-      console.error('Like error:', error);
+
+      await loadPhotos(targetUserId)
+      setLoading(false)
     }
-  };
+
+    initializePhotos()
+  }, [userId, navigate])
+
+  const loadPhotos = async (targetUserId) => {
+    const userPhotos = await photosService.getUserPhotos(targetUserId)
+    setPhotos(userPhotos)
+  }
+
+  const handlePhotoClick = (photo) => {
+    setSelectedPhoto(photo)
+    loadComments(photo._id)
+  }
+
+  const handleCloseModal = () => {
+    setSelectedPhoto(null)
+    setComments([])
+    setNewComment('')
+  }
+
+  const loadComments = async (photoId) => {
+    setLoadingComments(true)
+    const response = await photosService.getPhotoComments(photoId)
+    setComments(response?.data?.comments || response?.comments || [])
+    setLoadingComments(false)
+  }
+
+  const handleAddComment = async (e) => {
+    e.preventDefault()
+    if (!newComment.trim()) return
+    
+    const response = await photosService.addPhotoComment(selectedPhoto._id, newComment.trim())
+    setComments(prev => [response.data.comment, ...prev])
+    setNewComment('')
+  }
+
+  const handleOpenUpload = () => {
+    setShowUploadModal(true)
+  }
+
+  const handleCloseUpload = () => {
+    setShowUploadModal(false)
+    setSelectedFiles([])
+  }
+
+  const handleFilesChange = (files) => {
+    setSelectedFiles(files)
+  }
+
+  const handleUploadSubmit = async () => {
+    const filesToUpload = photoUploadRef.current?.getFilesForUpload() || []
+    
+    if (filesToUpload.length === 0) {
+      return
+    }
+    
+    await photosService.uploadPhotos(filesToUpload)
+    await loadPhotos(userId)
+    handleCloseUpload()
+  }
+
+  const handleDeletePhoto = async (photoId, e) => {
+    e.stopPropagation()
+    await photosService.deletePhoto(photoId)
+    await loadPhotos(userId)
+  }
+
+  const handleToggleLike = async (photoId, type, e) => {
+    e.stopPropagation()
+    await photosService.togglePhotoLike(photoId, type)
+    await loadPhotos(userId)
+    
+    if (selectedPhoto && selectedPhoto._id === photoId) {
+      const updatedPhotos = await photosService.getUserPhotos(userId)
+      const updatedPhoto = updatedPhotos.find(p => p._id === photoId)
+      if (updatedPhoto) {
+        setSelectedPhoto(updatedPhoto)
+      }
+    }
+  }
 
   if (loading) {
     return (
       <div className="photos-page">
         <div className="loading">Завантаження...</div>
       </div>
-    );
+    )
   }
 
   return (
@@ -237,7 +202,7 @@ const Photos = () => {
                 </button>
                 <button 
                   className="photo-comment-btn"
-                  onClick={(e) => { e.stopPropagation(); /* TODO: відкрити коментарі */ }}
+                  onClick={(e) => { e.stopPropagation() }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M21.99 4c0-1.1-.89-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
@@ -305,8 +270,8 @@ const Photos = () => {
                       alt="Artem Polishchuk"
                       className="photo-modal-avatar-img"
                       onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.parentElement.textContent = 'A';
+                        e.target.style.display = 'none'
+                        e.target.parentElement.textContent = 'A'
                       }}
                     />
                   </div>
@@ -414,7 +379,7 @@ const Photos = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Photos;
+export default Photos

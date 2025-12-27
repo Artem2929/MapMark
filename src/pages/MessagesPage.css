@@ -12,65 +12,6 @@
   gap: var(--space-4);
 }
 
-.breadcrumbs {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin: 26px 0 24px 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: #64748b;
-}
-
-.breadcrumb-item {
-  display: flex;
-  align-items: center;
-}
-
-.breadcrumb-link {
-  color: #64748b;
-  text-decoration: none;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 8px 12px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 500;
-  position: relative;
-  overflow: hidden;
-}
-
-.breadcrumb-link:hover {
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.05);
-  text-decoration: none;
-}
-
-.breadcrumb-current {
-  color: #1e293b;
-  font-weight: 600;
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: linear-gradient(
-    135deg,
-    rgba(59, 130, 246, 0.08) 0%,
-    rgba(147, 51, 234, 0.08) 100%
-  );
-  border-radius: 12px;
-  border: 1px solid rgba(59, 130, 246, 0.15);
-}
-
-.breadcrumb-separator {
-  color: #cbd5e1;
-  margin: 0 4px;
-  font-size: 16px;
-  font-weight: 300;
-  user-select: none;
-}
-
 .messages-header h1 {
   margin: 0;
   font-size: 28px;

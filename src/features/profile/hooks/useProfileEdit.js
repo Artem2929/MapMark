@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { updateProfile } from '../services/profileService'
+import { profileService } from '../services/profileService'
 
 export const useProfileEdit = (user) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -14,7 +14,7 @@ export const useProfileEdit = (user) => {
     setError(null)
 
     try {
-      const response = await updateProfile(user.id, profileData)
+      const response = await profileService.updateProfile(user.id, profileData)
       return response
     } catch (err) {
       setError(err.message)
