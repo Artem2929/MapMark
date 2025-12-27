@@ -1,12 +1,11 @@
 /* Page layouts */
 .page-container {
   min-height: 100vh;
-  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-md);
-  background-color: var(--color-gray-50);
+  padding: var(--space-4);
+  background-color: var(--color-bg-secondary);
   position: relative;
 }
 
@@ -33,7 +32,7 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--spacing-lg);
+  padding: 0 var(--space-6);
 }
 
 .content-container--narrow {
@@ -44,69 +43,12 @@
   max-width: 1400px;
 }
 
-/* Responsive */
-@media (max-width: 374px) {
+@media (max-width: 768px) {
   .page-container {
-    padding: var(--spacing-xs);
+    padding: var(--space-3);
   }
   
   .content-container {
-    padding: 0 var(--spacing-xs);
-  }
-}
-
-@media (min-width: 375px) and (max-width: 480px) {
-  .page-container {
-    padding: var(--spacing-sm);
-  }
-  
-  .content-container {
-    padding: 0 var(--spacing-sm);
-  }
-}
-
-@media (min-width: 481px) and (max-width: 768px) {
-  .page-container {
-    padding: var(--spacing-md);
-  }
-  
-  .page-container--top {
-    padding-top: 60px;
-  }
-  
-  .content-container {
-    padding: 0 var(--spacing-md);
-  }
-}
-
-@media (min-width: 769px) {
-  .page-container {
-    padding: var(--spacing-lg);
-  }
-  
-  .page-container--top {
-    padding-top: 100px;
-  }
-}
-
-/* Landscape orientation adjustments */
-@media (max-height: 600px) and (orientation: landscape) {
-  .page-container {
-    min-height: 100vh;
-    align-items: flex-start;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    justify-content: center;
-  }
-  
-  .page-container--top {
-    padding-top: var(--spacing-sm);
-  }
-}
-
-/* Very small screens */
-@media (max-height: 500px) {
-  .page-container {
-    align-items: flex-start;
-    padding-top: var(--spacing-xs);
+    padding: 0 var(--space-3);
   }
 }

@@ -63,8 +63,8 @@
 }
 
 .avatar-current {
- width: 370px;
-    height: 225px;
+  width: 370px;
+  height: 225px;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #dbdbdb;
@@ -148,5 +148,4 @@
 
 .avatar-save-btn:disabled {
   background: #b2dffc;
-  cursor: not-allowed;
 }

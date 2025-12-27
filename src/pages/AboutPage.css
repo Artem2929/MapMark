@@ -178,35 +178,34 @@
 
 .about-contact-form button:disabled {
   background: var(--color-border-medium);
-  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {
   .about-page {
     padding: var(--space-6) var(--space-3);
   }
-  
+
   .about-header h1 {
     font-size: var(--font-size-2xl);
   }
-  
+
   .about-subtitle {
     font-size: var(--font-size-lg);
   }
-  
+
   .about-section {
     padding: var(--space-6);
   }
-  
+
   .about-features {
     grid-template-columns: 1fr;
   }
-  
+
   .about-contact-content {
     grid-template-columns: 1fr;
     gap: var(--space-6);
   }
-  
+
   .about-contact-form {
     padding: var(--space-5);
   }

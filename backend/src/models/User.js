@@ -56,6 +56,30 @@ const userSchema = new mongoose.Schema({
     },
     default: 'user'
   },
+  bio: {
+    type: String,
+    maxlength: [500, 'Bio cannot exceed 500 characters'],
+    trim: true
+  },
+  location: {
+    type: String,
+    maxlength: [100, 'Location cannot exceed 100 characters'],
+    trim: true
+  },
+  website: {
+    type: String,
+    maxlength: [100, 'Website cannot exceed 100 characters'],
+    trim: true,
+    validate: {
+      validator: function(v) {
+        return !v || /^https?:\/\/.+/.test(v)
+      },
+      message: 'Website must start with http:// or https://'
+    }
+  },
+  avatar: {
+    type: String
+  },
   isActive: {
     type: Boolean,
     default: true,

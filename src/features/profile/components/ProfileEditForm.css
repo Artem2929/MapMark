@@ -178,7 +178,8 @@
   border-radius: var(--form-radius);
   font-size: 0.75rem;
   font-weight: 500;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    sans-serif;
   cursor: pointer;
   transition: var(--form-transition);
   outline: none;
@@ -215,7 +216,7 @@
 
 .profile-edit-form__btn:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
+
   box-shadow: none;
 }
 
@@ -239,8 +240,12 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .profile-edit-form__field:focus-within .profile-edit-form__label {
@@ -271,11 +276,11 @@
     margin: 1rem;
     padding: 1.25rem;
   }
-  
+
   .profile-edit-form__actions {
     flex-direction: column-reverse;
   }
-  
+
   .profile-edit-form__btn {
     width: 100%;
     padding: 0.25rem 0.5rem;

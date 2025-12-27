@@ -14,7 +14,10 @@ export const ProfileProvider = ({ children, userId }) => {
   
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!userId) {
+      // Використовуємо currentUser.id якщо userId невалідний або відсутній
+      const validUserId = userId && userId.match(/^[0-9a-fA-F]{24}$/) ? userId : currentUser?.id
+      
+      if (!validUserId) {
         setError('Не вказано ID користувача')
         setLoading(false)
         return
@@ -23,7 +26,7 @@ export const ProfileProvider = ({ children, userId }) => {
       try {
         setLoading(true)
         setError(null)
-        const profileData = await getUserProfile(userId)
+        const profileData = await getUserProfile(validUserId)
         setUser(profileData.data?.user || profileData)
       } catch (err) {
         console.error('Profile fetch error:', err)
@@ -32,7 +35,7 @@ export const ProfileProvider = ({ children, userId }) => {
         // Fallback to mock data for development or when user not found
         if (process.env.NODE_ENV === 'development' || import.meta.env.DEV || err.message === 'Користувача не знайдено') {
           setUser({
-            id: userId || 'ua-artem-6',
+            id: validUserId || currentUser?.id || 'unknown',
             name: 'Артем Поліщук',
             email: 'artem@example.com',
             avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',

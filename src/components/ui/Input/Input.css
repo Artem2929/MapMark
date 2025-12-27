@@ -30,7 +30,6 @@
 .input:disabled {
   background: var(--color-bg-secondary);
   color: var(--color-text-muted);
-  cursor: not-allowed;
 }
 
 .input--error {

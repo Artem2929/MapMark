@@ -20,7 +20,13 @@ const protect = catchAsync(async (req, res, next) => {
   const decoded = await verifyToken(token)
 
   // 3) Check if user still exists
-  const currentUser = await User.findById(decoded.id).select('+isActive')
+  let currentUser = await User.findOne({ id: decoded.id }).select('+isActive')
+  
+  if (!currentUser && decoded.id.match(/^[0-9a-fA-F]{24}$/)) {
+    // Якщо не знайшли за кастомним id і decoded.id схожий на ObjectId
+    currentUser = await User.findById(decoded.id).select('+isActive')
+  }
+  
   if (!currentUser) {
     return next(new AppError('The user belonging to this token does no longer exist.', 401, 'USER_NOT_FOUND'))
   }
@@ -60,7 +66,11 @@ const optionalAuth = catchAsync(async (req, res, next) => {
   if (token) {
     try {
       const decoded = await verifyToken(token)
-      const currentUser = await User.findById(decoded.id).select('+isActive')
+      let currentUser = await User.findOne({ id: decoded.id }).select('+isActive')
+      
+      if (!currentUser && decoded.id.match(/^[0-9a-fA-F]{24}$/)) {
+        currentUser = await User.findById(decoded.id).select('+isActive')
+      }
       
       if (currentUser && !currentUser.changedPasswordAfter(decoded.iat)) {
         req.user = currentUser

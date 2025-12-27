@@ -28,7 +28,6 @@
 .form-field:disabled {
   background: var(--color-bg-secondary);
   color: var(--color-text-muted);
-  cursor: not-allowed;
 }
 
 .form-field::placeholder {

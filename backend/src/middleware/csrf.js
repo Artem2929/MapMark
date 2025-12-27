@@ -2,6 +2,7 @@ const csrf = require('csrf')
 const { AppError } = require('../utils/errorHandler')
 
 const tokens = new csrf()
+const globalSecret = tokens.secretSync() // Глобальний секрет для спрощення
 
 const csrfProtection = (req, res, next) => {
   // Skip CSRF for GET requests
@@ -9,33 +10,21 @@ const csrfProtection = (req, res, next) => {
     return next()
   }
 
-  const secret = req.session?.csrfSecret || tokens.secretSync()
   const token = req.headers['x-csrf-token'] || req.body._csrf
 
   if (!token) {
     return next(new AppError('Недійсний CSRF токен', 403, 'CSRF_TOKEN_MISSING'))
   }
 
-  if (!tokens.verify(secret, token)) {
+  if (!tokens.verify(globalSecret, token)) {
     return next(new AppError('Недійсний CSRF токен', 403, 'INVALID_CSRF_TOKEN'))
-  }
-
-  // Store secret in session for future requests
-  if (req.session) {
-    req.session.csrfSecret = secret
   }
 
   next()
 }
 
 const generateCSRFToken = (req, res) => {
-  const secret = req.session?.csrfSecret || tokens.secretSync()
-  const token = tokens.create(secret)
-  
-  if (req.session) {
-    req.session.csrfSecret = secret
-  }
-
+  const token = tokens.create(globalSecret)
   res.json({ csrfToken: token })
 }
 

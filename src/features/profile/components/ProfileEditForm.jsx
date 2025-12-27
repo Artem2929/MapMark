@@ -72,7 +72,7 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
       await onSave(formData)
       setShowSuccess(true)
       setTimeout(() => {
-        navigate('/profile')
+        navigate(`/profile/${user.id}`)
       }, 800)
     } catch (error) {
       setErrors({ submit: error.message || 'Помилка збереження профілю' })
@@ -85,9 +85,9 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
     if (onCancel) {
       onCancel()
     } else {
-      navigate('/profile')
+      navigate(`/profile/${user.id}`)
     }
-  }, [onCancel, navigate])
+  }, [onCancel, navigate, user.id])
 
   return (
     <div className={`profile-edit-form ${showSuccess ? 'profile-edit-form--success' : ''}`}>

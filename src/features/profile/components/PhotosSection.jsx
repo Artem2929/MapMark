@@ -26,7 +26,11 @@ const PhotosSection = memo(({ photos = [], isOwnProfile }) => {
     <div className="photos-section">
       <div className="photos-section__header">
         <h3 className="photos-section__title">Фотографії</h3>
-        <button className="photos-section__show-all" onClick={openPhotosPage}>
+        <button 
+          className="photos-section__show-all" 
+          onClick={openPhotosPage}
+          disabled={photos.length === 0}
+        >
           Показати всі фотографії ({photos.length})
         </button>
       </div>

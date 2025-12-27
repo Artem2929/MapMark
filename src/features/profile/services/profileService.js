@@ -1,8 +1,15 @@
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001'
 
-const getCsrfToken = () => {
-  return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
-         localStorage.getItem('csrfToken')
+const getCsrfToken = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/csrf-token`, {
+      credentials: 'include'
+    })
+    const data = await response.json()
+    return data.csrfToken
+  } catch (error) {
+    throw new Error('Не вдалося отримати CSRF токен')
+  }
 }
 
 const getAuthToken = () => {
@@ -63,12 +70,8 @@ export const getUserProfile = async (userId) => {
 export const createPost = async (content) => {
   try {
     const token = validateToken(getAuthToken())
-    const csrfToken = getCsrfToken()
+    const csrfToken = await getCsrfToken()
     
-    if (!csrfToken) {
-      throw new Error('CSRF токен відсутній')
-    }
-
     const url = validateUrl(`${API_BASE_URL}/api/v1/posts`)
     const response = await fetch(url, {
       method: 'POST',
@@ -96,11 +99,7 @@ export const createPost = async (content) => {
 export const uploadAvatar = async (formData) => {
   try {
     const token = validateToken(getAuthToken())
-    const csrfToken = getCsrfToken()
-    
-    if (!csrfToken) {
-      throw new Error('CSRF токен відсутній')
-    }
+    const csrfToken = await getCsrfToken()
 
     const url = validateUrl(`${API_BASE_URL}/api/v1/users/avatar`)
     const response = await fetch(url, {
@@ -128,11 +127,7 @@ export const uploadAvatar = async (formData) => {
 export const updateProfile = async (userId, profileData) => {
   try {
     const token = validateToken(getAuthToken())
-    const csrfToken = getCsrfToken()
-    
-    if (!csrfToken) {
-      throw new Error('CSRF токен відсутній')
-    }
+    const csrfToken = await getCsrfToken()
 
     const url = validateUrl(`${API_BASE_URL}/api/v1/users/${userId}`)
     const response = await fetch(url, {

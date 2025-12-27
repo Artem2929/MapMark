@@ -160,9 +160,16 @@
   transition: all 0.2s ease;
 }
 
-.photos-section__show-all:hover {
+.photos-section__show-all:hover:not(:disabled) {
   background: #f7f9fa;
   border-color: #1da1f2;
+}
+
+.photos-section__show-all:disabled {
+  opacity: 0.6;
+
+  color: #aab8c2;
+  border-color: #e1e8ed;
 }
 
 /* Responsive */

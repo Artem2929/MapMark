@@ -14,7 +14,7 @@ router.use(protect)
 router.get('/:userId', userController.getUserProfile)
 
 // Update user profile
-router.put('/:userId', csrfProtection, userValidation, userController.updateProfile)
+router.put('/:userId', csrfProtection, ...userValidation, userController.updateProfile)
 
 // Upload avatar
 router.post('/avatar', csrfProtection, uploadAvatar, userController.uploadAvatar)

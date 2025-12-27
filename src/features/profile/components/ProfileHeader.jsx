@@ -31,6 +31,7 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
 
   const handleSaveProfile = useCallback(async (profileData) => {
     const updatedUser = await saveProfile(profileData)
+    console.log('Updated user data:', updatedUser)
     if (onUserUpdate) {
       onUserUpdate(updatedUser.data.user)
     }
@@ -64,11 +65,11 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
         <div className="profile-header__left">
           <div className="profile-header__avatar-section">
             <img 
-              src={user.avatar || '/default-avatar.png'} 
+              src={user.avatar || '/default-avatar.svg'} 
               alt={user.name || 'Аватар'}
               className="profile-header__avatar"
               onError={(e) => {
-                e.target.src = '/default-avatar.png'
+                e.target.src = '/default-avatar.svg'
               }}
             />
             {isOwnProfile && (
@@ -122,21 +123,21 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
               </svg>
-              <span>Приєднався {new Date(user.joinDate).toLocaleDateString('uk-UA', { month: 'long', year: 'numeric' })}</span>
+              <span>Приєднався {new Date(user.createdAt || user.joinDate).toLocaleDateString('uk-UA', { month: 'long', year: 'numeric' })}</span>
             </div>
           </div>
           
           <div className="profile-header__stats">
             <div className="profile-header__stat">
-              <span className="profile-header__stat-number">{user.postsCount}</span>
+              <span className="profile-header__stat-number">{user.postsCount || 0}</span>
               <span className="profile-header__stat-label">Записів</span>
             </div>
             <div className="profile-header__stat">
-              <span className="profile-header__stat-number">{user.followingCount}</span>
+              <span className="profile-header__stat-number">{user.followingCount || 0}</span>
               <span className="profile-header__stat-label">Підписок</span>
             </div>
             <div className="profile-header__stat">
-              <span className="profile-header__stat-number">{user.followersCount}</span>
+              <span className="profile-header__stat-number">{user.followersCount || 0}</span>
               <span className="profile-header__stat-label">Підписників</span>
             </div>
           </div>

@@ -14,6 +14,12 @@ const updateProfile = catchAsync(async (req, res, next) => {
   const { userId } = req.params
   const updateData = req.body
   
+  logger.info('Profile update attempt', {
+    requestUserId: userId,
+    authenticatedUserId: req.user.id,
+    authenticatedUserData: req.user
+  })
+  
   // Ensure user can only update their own profile
   if (req.user.id !== userId) {
     return res.status(403).json({

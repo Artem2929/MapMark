@@ -2,7 +2,7 @@ const express = require('express')
 const rateLimit = require('express-rate-limit')
 const contactController = require('../controllers/contactController')
 const { createContactValidation } = require('../validators/contactValidators')
-const csrfProtection = require('../middleware/csrf')
+const { csrfProtection } = require('../middleware/csrf')
 
 const router = express.Router()
 
@@ -22,7 +22,7 @@ const contactRateLimit = rateLimit({
 router.post('/send', 
   contactRateLimit,
   csrfProtection,
-  createContactValidation,
+  ...createContactValidation,
   contactController.sendMessage
 )
 

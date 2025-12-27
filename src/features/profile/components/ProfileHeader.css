@@ -113,7 +113,7 @@
 .profile-header__stats {
   display: flex;
   gap: 24px;
-  margin-bottom: 8px;
+  margin-bottom: 76px; /* Зменшено на кілька пікселів для точного вирівнювання */
 }
 
 .profile-header__stat {

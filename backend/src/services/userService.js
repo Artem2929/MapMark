@@ -2,7 +2,13 @@ const User = require('../models/User')
 const AppError = require('../utils/errorHandler').AppError
 
 const getUserById = async (userId) => {
-  const user = await User.findById(userId).select('-password -refreshToken')
+  // Перш пробуємо знайти за кастомним id, потім за MongoDB _id
+  let user = await User.findOne({ id: userId }).select('-password -refreshToken')
+  
+  if (!user && userId.match(/^[0-9a-fA-F]{24}$/)) {
+    // Якщо не знайшли за кастомним id і userId схожий на ObjectId
+    user = await User.findById(userId).select('-password -refreshToken')
+  }
   
   if (!user) {
     throw new AppError('Користувача не знайдено', 404)
@@ -22,11 +28,21 @@ const updateProfile = async (userId, updateData) => {
     }
   })
   
-  const user = await User.findByIdAndUpdate(
-    userId,
+  // Перш пробуємо оновити за кастомним id
+  let user = await User.findOneAndUpdate(
+    { id: userId },
     filteredData,
     { new: true, runValidators: true }
   ).select('-password -refreshToken')
+  
+  if (!user && userId.match(/^[0-9a-fA-F]{24}$/)) {
+    // Якщо не знайшли за кастомним id і userId схожий на ObjectId
+    user = await User.findByIdAndUpdate(
+      userId,
+      filteredData,
+      { new: true, runValidators: true }
+    ).select('-password -refreshToken')
+  }
   
   if (!user) {
     throw new AppError('Користувача не знайдено', 404)
@@ -41,12 +57,21 @@ const uploadAvatar = async (userId, file) => {
     const base64Data = file.buffer.toString('base64')
     const avatarData = `data:${file.mimetype};base64,${base64Data}`
     
-    // Update user with new avatar
-    const user = await User.findByIdAndUpdate(
-      userId,
+    // Перш пробуємо оновити за кастомним id
+    let user = await User.findOneAndUpdate(
+      { id: userId },
       { avatar: avatarData },
       { new: true, runValidators: true }
     ).select('-password -refreshToken')
+    
+    if (!user && userId.match(/^[0-9a-fA-F]{24}$/)) {
+      // Якщо не знайшли за кастомним id і userId схожий на ObjectId
+      user = await User.findByIdAndUpdate(
+        userId,
+        { avatar: avatarData },
+        { new: true, runValidators: true }
+      ).select('-password -refreshToken')
+    }
     
     if (!user) {
       throw new AppError('Користувача не знайдено', 404)

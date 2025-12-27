@@ -1,5 +1,16 @@
-const { body } = require('express-validator')
-const { handleValidationErrors } = require('../utils/errorHandler')
+const { body, validationResult } = require('express-validator')
+
+const handleValidationErrors = (req, res, next) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Помилка валідації',
+      errors: errors.array()
+    })
+  }
+  next()
+}
 
 const userValidation = [
   body('name')
@@ -32,11 +43,10 @@ const userValidation = [
         throw new Error('Веб-сайт повинен починатися з http:// або https://')
       }
       return true
-    }),
-    
-  handleValidationErrors
+    })
 ]
 
 module.exports = {
-  userValidation
+  userValidation,
+  handleValidationErrors
 }
