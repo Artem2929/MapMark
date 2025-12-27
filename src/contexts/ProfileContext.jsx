@@ -72,8 +72,11 @@ export const ProfileProvider = ({ children, userId }) => {
       }
     }
 
-    fetchProfile()
-  }, [userId, currentUser])
+    // Перевіряємо чи є всі необхідні дані перед викликом
+    if (userId && currentUser?.id) {
+      fetchProfile()
+    }
+  }, [userId, currentUser?.id]) // Оптимізовані залежності
 
   const updateUser = useCallback((updatedUserData) => {
     setUser(prev => ({ ...prev, ...updatedUserData }))
