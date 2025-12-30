@@ -60,7 +60,8 @@ const uploadAvatar = catchAsync(async (req, res, next) => {
 })
 
 const searchUsers = catchAsync(async (req, res, next) => {
-  const { query, currentUserId, country, city, ageRange } = req.query
+  const { query, country, city, ageRange } = req.query
+  const currentUserId = req.user.id // Використовуємо ID автентифікованого користувача
   
   const users = await userService.searchUsers({
     query,

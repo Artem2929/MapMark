@@ -45,7 +45,7 @@ class FriendsService {
     const requests = await Friend.find({
       recipient: userObjectId,
       status: 'pending'
-    }).populate('requester', 'id name email country')
+    }).populate('requester', 'id name email country avatar')
 
     return requests.map(request => ({
       id: request._id,
@@ -53,7 +53,8 @@ class FriendsService {
         id: request.requester.id || request.requester._id,
         name: request.requester.name,
         email: request.requester.email,
-        country: request.requester.country
+        country: request.requester.country,
+        avatar: request.requester.avatar
       },
       createdAt: request.createdAt
     }))
@@ -104,11 +105,15 @@ class FriendsService {
       throw new Error('Користувача не знайдено')
     }
 
+    logger.info('Accepting friend request', { requestId, userId, userObjectId }) // Debug
+
     const request = await Friend.findOne({
       _id: requestId,
       recipient: userObjectId,
       status: 'pending'
     })
+
+    logger.info('Found request', { request }) // Debug
 
     if (!request) {
       throw new Error('Заявку не знайдено')
@@ -162,6 +167,28 @@ class FriendsService {
 
     await Friend.deleteOne({ _id: friendship._id })
     logger.info('Friendship removed', { userId, friendId })
+  }
+
+  async cancelFriendRequest(requesterId, recipientId) {
+    const requesterObjectId = await this.getUserObjectId(requesterId)
+    const recipientObjectId = await this.getUserObjectId(recipientId)
+    
+    if (!requesterObjectId || !recipientObjectId) {
+      throw new Error('Користувача не знайдено')
+    }
+
+    const request = await Friend.findOne({
+      requester: requesterObjectId,
+      recipient: recipientObjectId,
+      status: 'pending'
+    })
+
+    if (!request) {
+      throw new Error('Заявку не знайдено')
+    }
+
+    await Friend.deleteOne({ _id: request._id })
+    logger.info('Friend request cancelled', { requesterId, recipientId })
   }
 }
 

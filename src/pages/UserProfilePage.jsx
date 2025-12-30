@@ -61,7 +61,7 @@ const UserProfileContent = () => {
 const UserProfile = () => {
   const { userId } = useParams()
   const { user: currentUser, isAuthenticated, isLoading } = useAuthStore()
-  const targetUserId = userId || currentUser?.id
+  const targetUserId = userId
 
   if (isLoading) {
     return <div className="loading-screen">Завантаження...</div>
@@ -72,16 +72,8 @@ const UserProfile = () => {
   }
 
   if (!targetUserId) {
-    return (
-      <div className="profile-page">
-        <div className="profile-container">
-          <ErrorMessage 
-            title="Помилка"
-            message="Не вдалося визначити користувача"
-          />
-        </div>
-      </div>
-    )
+    // Якщо немає userId в URL, перенаправляємо на власний профіль
+    return <Navigate to={`/profile/${currentUser?.id}`} replace />
   }
 
   return (

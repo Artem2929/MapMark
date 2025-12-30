@@ -23,6 +23,8 @@ const Friends = () => {
   const dataLoaded = useRef(false)
 
   useEffect(() => {
+    if (dataLoaded.current) return // Захист від повторних викликів
+    
     const initializeFriends = async () => {
       setLoading(true)
       
@@ -50,10 +52,9 @@ const Friends = () => {
       ])
       
       setLoading(false)
+      dataLoaded.current = true // Позначаємо, що дані завантажені
     }
     
-    // Reset dataLoaded when userId changes
-    dataLoaded.current = false
     initializeFriends()
   }, [userId, navigate])
 
@@ -154,19 +155,22 @@ const Friends = () => {
   }
 
   const handleAddFriend = async (userId) => {
-    const result = await friendsService.sendFriendRequest(userId)
-    if (result.success) {
-      setSearchResults(prev => prev.map(user => 
-        user.id === userId ? { ...user, requestSent: true } : user
-      ))
-    } else {
-      if (result.error === 'Friendship request already exists') {
+    try {
+      const result = await friendsService.sendFriendRequest(userId)
+      
+      if (result.success || result.status === 'success') {
+        setSearchResults(prev => prev.map(user => 
+          user.id === userId ? { ...user, requestSent: true } : user
+        ))
+      } else if (result.message === 'Заявка вже надіслана' || result.error === 'Friendship request already exists') {
         setSearchResults(prev => prev.map(user => 
           user.id === userId ? { ...user, requestSent: true } : user
         ))
       } else {
-        setError(result.error || 'Помилка відправки заявки')
+        setError(result.message || result.error || 'Помилка відправки заявки')
       }
+    } catch (error) {
+      setError('Помилка відправки заявки')
     }
   }
 
@@ -182,6 +186,38 @@ const Friends = () => {
     }
   }
 
+  const handleCancelRequest = async (userId) => {
+    try {
+      const result = await friendsService.cancelFriendRequest(userId)
+      
+      if (result.success || result.status === 'success') {
+        setSearchResults(prev => prev.map(user => 
+          user.id === userId ? { ...user, requestSent: false } : user
+        ))
+      } else {
+        setError(result.message || result.error || 'Помилка скасування заявки')
+      }
+    } catch (error) {
+      setError('Помилка скасування заявки')
+    }
+  }
+
+  const handleRejectFollower = async (userId) => {
+    try {
+      const result = await friendsService.removeFollower(userId)
+      
+      if (result.success || result.status === 'success') {
+        setSearchResults(prev => prev.map(user => 
+          user.id === userId ? { ...user, relationshipStatus: 'none', requestReceived: false } : user
+        ))
+      } else {
+        setError(result.message || result.error || 'Помилка видалення підписника')
+      }
+    } catch (error) {
+      setError('Помилка видалення підписника')
+    }
+  }
+
   const filteredFriends = friends.filter(friend => {
     const searchLower = searchQuery.toLowerCase()
     const name = friend.name || `${friend.firstName || ''} ${friend.lastName || ''}`.trim()
@@ -189,21 +225,22 @@ const Friends = () => {
   })
 
   const handleAcceptRequest = async (id) => {
+    console.log('Accepting request with ID:', id) // Debug
     const result = await friendsService.acceptFriendRequest(id)
-    if (result.success) {
+    if (result.success || result.status === 'success') {
       await loadFriends()
       await loadRequests()
     } else {
-      setError(result.error || 'Помилка прийняття заявки')
+      setError(result.message || result.error || 'Помилка прийняття заявки')
     }
   }
 
   const handleRejectRequest = async (id) => {
     const result = await friendsService.rejectFriendRequest(id)
-    if (result.success) {
-      await loadRequests()
+    if (result.success || result.status === 'success') {
+      setRequests(prev => prev.filter(request => request.id !== id))
     } else {
-      setError(result.error || 'Помилка відхилення заявки')
+      setError(result.message || result.error || 'Помилка відхилення заявки')
     }
   }
 
@@ -215,41 +252,37 @@ const Friends = () => {
     <div 
       key={friend.id} 
       className="friend-card"
-      onClick={() => setDropdownOpen(null)}
+      onClick={(e) => {
+        // Перевіряємо, чи клік не по кнопці
+        if (!e.target.closest('button')) {
+          navigate(`/profile/${friend.id}`)
+        }
+        setDropdownOpen(null)
+      }}
+      style={{ cursor: 'pointer' }}
     >
-      <div 
-        className="friend-avatar"
-        onClick={() => navigate(`/profile/${friend.id}`)}
-        style={{ cursor: 'pointer' }}
-      >
+      <div className="friend-avatar">
         {friend.avatar ? (
           <img 
-            src={friend.avatar.startsWith('http') ? friend.avatar : `http://localhost:3001${friend.avatar}`} 
+            src={friend.avatar.startsWith('data:') || friend.avatar.startsWith('http') ? friend.avatar : `http://localhost:3001${friend.avatar}`} 
             alt={friend.name || `${friend.firstName || ''} ${friend.lastName || ''}`.trim() || 'User avatar'} 
           />
         ) : (
           <div className="avatar-placeholder">
-            {friend.name ? friend.name.charAt(0) : friend.firstName.charAt(0)}
+            {friend.name ? friend.name.charAt(0) : (friend.firstName ? friend.firstName.charAt(0) : '?')}
           </div>
-        )}
-        {(type === 'friend' || type === 'search') && (
-          <div className={`online-status ${(friend.isOnline || friend.status === 'online') ? 'online' : 'offline'}`}></div>
         )}
       </div>
       <div className="friend-info">
-        <h3 
-          className="friend-name"
-          onClick={() => navigate(`/profile/${friend.id}`)}
-          style={{ cursor: 'pointer' }}
-        >
+        <h3 className="friend-name">
           {friend.name || `${friend.firstName} ${friend.lastName}`}
           {friend.age && `, ${friend.age}`}
         </h3>
         <p className="friend-meta">
           {friend.city && friend.country && `${friend.city}, ${friend.country}`}
+          {friend.country && !friend.city && friend.country}
           {friend.mutualFriends > 0 && ` • ${friend.mutualFriends} спільних друзів`}
           {type === 'friend' && friend.lastSeen && ` • ${friend.lastSeen}`}
-          {type === 'request' && ` • ${friend.requestDate}`}
           {type === 'suggestion' && ` • ${friend.reason}`}
         </p>
       </div>
@@ -295,11 +328,14 @@ const Friends = () => {
         )}
         {type === 'request' && (
           <>
-            <button className="btn-accept" onClick={() => handleAcceptRequest(friend.id)}>
+            <button className="btn-accept" onClick={() => handleAcceptRequest(friend.requestId)}>
               Прийняти
             </button>
-            <button className="btn-reject" onClick={() => handleRejectRequest(friend.id)}>
+            <button className="btn-reject" onClick={() => handleRejectRequest(friend.requestId)}>
               Відхилити
+            </button>
+            <button className="btn-add" onClick={() => handleAddFriend(friend.id)}>
+              Підписатися у відповідь
             </button>
           </>
         )}
@@ -310,18 +346,23 @@ const Friends = () => {
         )}
         {type === 'search' && (
           <>
-            {friend.isFriend ? (
-              <button className="btn-reject" onClick={() => handleRemoveFriend(friend.id)}>
-                Видалити з друзів
-              </button>
-            ) : friend.requestSent ? (
-              <button className="btn-pending" disabled>
-                Заявка відправлена
-              </button>
+            {friend.relationshipStatus === 'friends' ? (
+              <>
+                <button className="btn-message" onClick={() => handleSendMessage(friend.id)}>Написати</button>
+                <button className="btn-reject" onClick={() => handleRemoveFriend(friend.id)}>Видалити з друзів</button>
+              </>
+            ) : friend.relationshipStatus === 'following' ? (
+              <>
+                <button className="btn-pending" disabled>Підписка відправлена</button>
+                <button className="btn-reject" onClick={() => handleCancelRequest(friend.id)}>Відписатися</button>
+              </>
+            ) : friend.relationshipStatus === 'follower' ? (
+              <>
+                <button className="btn-accept" onClick={() => handleAddFriend(friend.id)}>Підписатися у відповідь</button>
+                <button className="btn-reject" onClick={() => handleRejectFollower(friend.id)}>Видалити підписника</button>
+              </>
             ) : (
-              <button className="btn-add" onClick={() => handleAddFriend(friend.id)}>
-                Додати в друзі
-              </button>
+              <button className="btn-add" onClick={() => handleAddFriend(friend.id)}>Підписатися</button>
             )}
           </>
         )}
@@ -391,7 +432,10 @@ const Friends = () => {
           {activeTab === 'requests' && (
             <div className="friends-list">
               {requests.length > 0 ? (
-                requests.map(request => renderFriendCard(request, 'request'))
+                requests.map(request => {
+                  console.log('Request object:', request) // Debug
+                  return renderFriendCard({...request.requester, requestId: request.id}, 'request')
+                })
               ) : (
                 <div className="empty-state">
                   <p>Немає нових заявок</p>

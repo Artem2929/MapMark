@@ -17,11 +17,14 @@ const getUserById = async (userId) => {
   }
   
   // Get user stats
+  const Friend = require('../models/Friend')
   const userObjectId = user._id
-  const [postsCount, followersCount, followingCount] = await Promise.all([
+  const [postsCount, followingCount, followersCount] = await Promise.all([
     Post.countDocuments({ author: userObjectId }),
-    Follow.countDocuments({ following: userObjectId }),
-    Follow.countDocuments({ follower: userObjectId })
+    // Підписки - всі на кого я підписаний (відправив заявку)
+    Friend.countDocuments({ requester: userObjectId }),
+    // Підписники - всі хто на мене підписаний (відправив мені заявку)
+    Friend.countDocuments({ recipient: userObjectId })
   ])
   
   return {
@@ -99,33 +102,84 @@ const uploadAvatar = async (userId, file) => {
 }
 
 const searchUsers = async ({ query, currentUserId, country, city, ageRange }) => {
-  const searchCriteria = {}
-  
-  // Виключаємо поточного користувача
-  if (currentUserId) {
-    searchCriteria.id = { $ne: currentUserId }
+    const Friend = require('../models/Friend')
+    
+    const searchCriteria = {}
+    
+    // Виключаємо поточного користувача
+    if (currentUserId) {
+      searchCriteria.id = { $ne: currentUserId }
+    }
+    
+    // Пошук за ім'ям або email
+    if (query) {
+      searchCriteria.$or = [
+        { name: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } }
+      ]
+    }
+    
+    // Фільтр за країною
+    if (country) {
+      searchCriteria.country = country
+    }
+    
+    const users = await User.find(searchCriteria)
+      .select('id name email country avatar createdAt')
+      .limit(20)
+      .sort({ createdAt: -1 })
+    
+    // Додаємо інформацію про статус відносин для кожного користувача
+    if (currentUserId && users.length > 0) {
+      const currentUser = await User.findOne({ id: currentUserId })
+      if (currentUser) {
+        // Перевіряємо існуючі відносини
+        const friendships = await Friend.find({
+          $or: [
+            { requester: currentUser._id, recipient: { $in: users.map(u => u._id) } },
+            { recipient: currentUser._id, requester: { $in: users.map(u => u._id) } }
+          ]
+        }).populate('requester recipient', 'id')
+        
+        // Додаємо статус до кожного користувача
+        return users.map(user => {
+          const outgoingRequest = friendships.find(f => 
+            f.requester.id === currentUserId && f.recipient.id === user.id
+          )
+          const incomingRequest = friendships.find(f => 
+            f.recipient.id === currentUserId && f.requester.id === user.id
+          )
+          
+          let relationshipStatus = 'none' // none, following, follower, friends
+          let requestSent = false
+          let requestReceived = false
+          
+          if (outgoingRequest && incomingRequest) {
+            // Взаємні підписки = друзі
+            relationshipStatus = 'friends'
+          } else if (outgoingRequest) {
+            // Я підписаний на нього
+            relationshipStatus = 'following'
+            requestSent = true
+          } else if (incomingRequest) {
+            // Він підписаний на мене
+            relationshipStatus = 'follower'
+            requestReceived = true
+          }
+          
+          return {
+            ...user.toObject(),
+            relationshipStatus,
+            requestSent,
+            requestReceived,
+            isFriend: relationshipStatus === 'friends'
+          }
+        })
+      }
+    }
+    
+    return users
   }
-  
-  // Пошук за ім'ям або email
-  if (query) {
-    searchCriteria.$or = [
-      { name: { $regex: query, $options: 'i' } },
-      { email: { $regex: query, $options: 'i' } }
-    ]
-  }
-  
-  // Фільтр за країною
-  if (country) {
-    searchCriteria.country = country
-  }
-  
-  const users = await User.find(searchCriteria)
-    .select('id name email country avatar createdAt')
-    .limit(20)
-    .sort({ createdAt: -1 })
-  
-  return users
-}
 
 module.exports = {
   getUserById,

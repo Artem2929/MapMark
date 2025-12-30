@@ -17,6 +17,9 @@ router.get('/:userId/requests', friendsController.getFriendRequests)
 // POST /api/v1/friends/request - Send friend request
 router.post('/request', csrfProtection, friendsController.sendFriendRequest)
 
+// POST /api/v1/friends/request/cancel - Cancel friend request
+router.post('/request/cancel', csrfProtection, friendsController.cancelFriendRequest)
+
 // POST /api/v1/friends/request/:requestId/accept - Accept friend request
 router.post('/request/:requestId/accept', csrfProtection, friendsController.acceptFriendRequest)
 

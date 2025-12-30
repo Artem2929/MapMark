@@ -108,6 +108,31 @@ const friendsController = {
     }
   },
 
+  async cancelFriendRequest(req, res) {
+    try {
+      const { userId } = req.body
+      const requesterId = req.user.id
+      
+      await friendsService.cancelFriendRequest(requesterId, userId)
+      
+      success(res, null, 'Заявку скасовано')
+    } catch (error) {
+      logger.error('Cancel friend request error', { error: error.message, requesterId: req.user.id })
+      
+      if (error.message.includes('не знайдено')) {
+        return res.status(404).json({
+          status: 'fail',
+          message: error.message
+        })
+      }
+      
+      return res.status(500).json({
+        status: 'error',
+        message: error.message
+      })
+    }
+  },
+
   async removeFriend(req, res) {
     try {
       const { userId: friendId } = req.params

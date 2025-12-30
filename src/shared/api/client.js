@@ -65,7 +65,7 @@ export const apiClient = {
       if (errorData.code === 'INVALID_CSRF_TOKEN') {
         const newToken = await getCSRFToken(true)
         
-        return fetch(`${API_BASE_URL}${url}`, {
+        const retryResponse = await fetch(`${API_BASE_URL}${url}`, {
           ...options,
           headers: {
             'X-CSRF-Token': newToken,
@@ -73,6 +73,14 @@ export const apiClient = {
           },
           credentials: 'include'
         })
+        
+        const retryData = await retryResponse.json().catch(() => ({ message: 'Invalid response format' }))
+        
+        if (!retryResponse.ok) {
+          throw new Error(retryData.message || 'Помилка запиту')
+        }
+        
+        return retryData
       }
     }
 
