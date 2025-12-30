@@ -26,6 +26,10 @@ export const ProfileProvider = ({ children, userId }) => {
       try {
         setLoading(true)
         setError(null)
+        
+        // Додаємо мінімальну затримку для показу skeleton
+        await new Promise(resolve => setTimeout(resolve, 200))
+        
         const profileData = await profileService.getUserProfile(validUserId)
         setUser(profileData.data?.user || profileData)
       } catch (err) {

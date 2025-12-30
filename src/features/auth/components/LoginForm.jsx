@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Input } from '../../../components/ui'
 import { PasswordInput } from '../../../components/ui/PasswordInput/PasswordInput'
+import Skeleton from '../../../components/ui/Skeleton/Skeleton'
 import { validators, validateField } from '../../../utils/validators'
 import { useAuth } from '../hooks/useAuth'
 import './LoginForm.css'
@@ -57,6 +58,22 @@ export function LoginForm() {
     
     await login(formData)
   }, [formData, isFormValid, login])
+
+  if (loading) {
+    return (
+      <div className="auth-form">
+        <div className="auth-form__header">
+          <Skeleton width="200px" height="32px" className="mb-2" />
+          <Skeleton width="150px" height="16px" />
+        </div>
+        <div className="auth-form__form">
+          <Skeleton width="100%" height="48px" className="mb-3" />
+          <Skeleton width="100%" height="48px" className="mb-3" />
+          <Skeleton width="100%" height="48px" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="auth-form">

@@ -1,20 +1,15 @@
-import React from 'react'
+import React, { memo } from 'react'
 import './Skeleton.css'
 
-const Skeleton = ({ width, height, variant = 'rectangular', className = '' }) => {
-  const classes = [
-    'skeleton',
-    variant === 'circular' && 'skeleton--circular',
-    variant === 'text' && 'skeleton--text',
-    className
-  ].filter(Boolean).join(' ')
-
+const Skeleton = memo(({ width, height, className = '', variant = 'rectangular' }) => {
   return (
     <div 
-      className={classes}
+      className={`skeleton skeleton--${variant} ${className}`}
       style={{ width, height }}
     />
   )
-}
+})
+
+Skeleton.displayName = 'Skeleton'
 
 export default Skeleton

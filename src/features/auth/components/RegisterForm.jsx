@@ -4,6 +4,7 @@ import { Button, Input } from '../../../components/ui'
 import { PasswordInput } from '../../../components/ui/PasswordInput/PasswordInput'
 import { PasswordStrength } from '../../../components/ui/PasswordStrength'
 import { CustomSelect } from '../../../components/ui/CustomSelect'
+import Skeleton from '../../../components/ui/Skeleton/Skeleton'
 import { validators, validateField } from '../../../utils/validators'
 import { useAuth } from '../hooks/useAuth'
 import './LoginForm.css'
@@ -147,6 +148,26 @@ export function RegisterForm() {
     { value: 'user', label: 'Користувач' },
     { value: 'seller', label: 'Продавець' }
   ]
+
+  if (loading) {
+    return (
+      <div className="auth-form">
+        <div className="auth-form__header">
+          <Skeleton width="250px" height="32px" className="mb-2" />
+          <Skeleton width="180px" height="16px" />
+        </div>
+        <div className="auth-form__form">
+          <Skeleton width="100%" height="48px" className="mb-3" />
+          <Skeleton width="100%" height="48px" className="mb-3" />
+          <Skeleton width="100%" height="48px" className="mb-3" />
+          <Skeleton width="100%" height="48px" className="mb-3" />
+          <Skeleton width="100%" height="48px" className="mb-3" />
+          <Skeleton width="100%" height="48px" className="mb-3" />
+          <Skeleton width="100%" height="48px" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="auth-form">

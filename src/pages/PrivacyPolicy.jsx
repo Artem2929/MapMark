@@ -1,7 +1,38 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import Skeleton from '../components/ui/Skeleton/Skeleton'
 import './PrivacyPolicy.css'
 
 const PrivacyPolicy = () => {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(false)
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="privacy-policy">
+        <div className="privacy-container">
+          <header className="privacy-header">
+            <Skeleton width="350px" height="40px" className="mb-3" />
+            <Skeleton width="450px" height="20px" className="mb-2" />
+            <Skeleton width="200px" height="16px" />
+          </header>
+
+          <div className="privacy-content">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => (
+              <section key={i} className="privacy-section">
+                <Skeleton width="200px" height="28px" className="mb-3" />
+                <Skeleton width="100%" height="16px" className="mb-2" />
+                <Skeleton width="85%" height="16px" className="mb-2" />
+                <Skeleton width="70%" height="16px" />
+              </section>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
   return (
     <div className="privacy-policy">
       <div className="privacy-container">

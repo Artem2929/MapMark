@@ -1,9 +1,56 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { User, Image, MessageCircle, Star } from 'lucide-react'
 import ContactForm from '../features/contact/components/ContactForm'
+import Skeleton from '../components/ui/Skeleton/Skeleton'
 import './AboutPage.css'
 
 const AboutPage = () => {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(false)
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="about-page">
+        <div className="about-container">
+          <header className="about-header">
+            <Skeleton width="200px" height="40px" className="mb-3" />
+            <Skeleton width="300px" height="20px" />
+          </header>
+          
+          <section className="about-content">
+            <div className="about-section">
+              <Skeleton width="150px" height="28px" className="mb-3" />
+              <Skeleton width="100%" height="16px" className="mb-2" />
+              <Skeleton width="100%" height="16px" className="mb-2" />
+              <Skeleton width="80%" height="16px" />
+            </div>
+            
+            <div className="about-section">
+              <Skeleton width="180px" height="28px" className="mb-3" />
+              <div className="about-features">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="about-feature">
+                    <Skeleton width="20px" height="20px" variant="circular" />
+                    <Skeleton width="200px" height="16px" />
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="about-section">
+              <Skeleton width="140px" height="28px" className="mb-3" />
+              <Skeleton width="100%" height="16px" className="mb-2" />
+              <Skeleton width="100%" height="16px" className="mb-2" />
+              <Skeleton width="90%" height="16px" />
+            </div>
+          </section>
+        </div>
+      </div>
+    )
+  }
   return (
     <div className="about-page">
       <div className="about-container">

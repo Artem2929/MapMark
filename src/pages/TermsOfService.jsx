@@ -1,7 +1,37 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import Skeleton from '../components/ui/Skeleton/Skeleton'
 import './TermsOfService.css'
 
 const TermsOfService = () => {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(false)
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="terms-of-service">
+        <div className="terms-container">
+          <header className="terms-header">
+            <Skeleton width="300px" height="40px" className="mb-3" />
+            <Skeleton width="400px" height="20px" className="mb-2" />
+            <Skeleton width="200px" height="16px" />
+          </header>
+
+          <div className="terms-content">
+            {[1, 2, 3, 4, 5].map(i => (
+              <section key={i} className="terms-section">
+                <Skeleton width="250px" height="28px" className="mb-3" />
+                <Skeleton width="100%" height="16px" className="mb-2" />
+                <Skeleton width="90%" height="16px" />
+              </section>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
   return (
     <div className="terms-of-service">
       <div className="terms-container">
