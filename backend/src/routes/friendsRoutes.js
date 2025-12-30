@@ -29,4 +29,7 @@ router.post('/request/:requestId/reject', csrfProtection, friendsController.reje
 // DELETE /api/v1/friends/:userId - Remove friend
 router.delete('/:userId', csrfProtection, friendsController.removeFriend)
 
+// POST /api/v1/friends/follower/remove - Remove follower
+router.post('/follower/remove', csrfProtection, friendsController.removeFollower)
+
 module.exports = router

@@ -156,6 +156,31 @@ const friendsController = {
         message: error.message
       })
     }
+  },
+
+  async removeFollower(req, res) {
+    try {
+      const { userId: followerId } = req.body
+      const userId = req.user.id
+      
+      await friendsService.removeFollower(userId, followerId)
+      
+      success(res, null, 'Підписника видалено')
+    } catch (error) {
+      logger.error('Remove follower error', { error: error.message, followerId: req.body.userId })
+      
+      if (error.message.includes('не знайдено')) {
+        return res.status(404).json({
+          status: 'fail',
+          message: error.message
+        })
+      }
+      
+      return res.status(500).json({
+        status: 'error',
+        message: error.message
+      })
+    }
   }
 }
 

@@ -61,7 +61,7 @@ const uploadAvatar = catchAsync(async (req, res, next) => {
 })
 
 const searchUsers = catchAsync(async (req, res, next) => {
-  const { query, country, city, ageRange } = req.query
+  const { query, country, city, ageRange, limit = 20, random } = req.query
   const currentUserId = req.user.id // Використовуємо ID автентифікованого користувача
   
   const users = await userService.searchUsers({
@@ -69,7 +69,9 @@ const searchUsers = catchAsync(async (req, res, next) => {
     currentUserId,
     country,
     city,
-    ageRange
+    ageRange,
+    limit: parseInt(limit),
+    random: random === 'true'
   })
   
   success(res, { data: users }, 'Пошук користувачів виконано успішно')

@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { friendsService } from '../features/friends/services/friendsService'
 import Breadcrumbs from '../components/ui/Breadcrumbs'
+import FriendCardSkeleton from '../components/ui/FriendCardSkeleton'
+import '../components/ui/Button/Button.css'
 import './FriendsPage.css'
 
 const Friends = () => {
@@ -12,6 +14,7 @@ const Friends = () => {
   const [userSearchQuery, setUserSearchQuery] = useState('')
   const [filters, setFilters] = useState({ country: '', city: '', ageRange: '' })
   const [searchResults, setSearchResults] = useState([])
+  const [randomUsers, setRandomUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchLoading, setSearchLoading] = useState(false)
   const [error, setError] = useState('')
@@ -100,6 +103,20 @@ const Friends = () => {
     setCities([])
   }
 
+  const loadRandomUsers = async () => {
+    setSearchLoading(true)
+    setError('')
+    
+    const result = await friendsService.searchUsers('', { random: true, limit: 100 })
+    if (result.success) {
+      setRandomUsers(result.data || [])
+    } else {
+      setError(result.error || 'Помилка завантаження користувачів')
+      setRandomUsers([])
+    }
+    setSearchLoading(false)
+  }
+
   const searchUsers = async (query, searchFilters = {}) => {
     if (!query.trim() || query.trim().length < 3) {
       setSearchResults([])
@@ -159,12 +176,20 @@ const Friends = () => {
       const result = await friendsService.sendFriendRequest(userId)
       
       if (result.success || result.status === 'success') {
+        // Оновлюємо стан в searchResults
         setSearchResults(prev => prev.map(user => 
-          user.id === userId ? { ...user, requestSent: true } : user
+          user.id === userId ? { ...user, relationshipStatus: 'following', requestSent: true } : user
+        ))
+        // Оновлюємо стан в randomUsers
+        setRandomUsers(prev => prev.map(user => 
+          user.id === userId ? { ...user, relationshipStatus: 'following', requestSent: true } : user
         ))
       } else if (result.message === 'Заявка вже надіслана' || result.error === 'Friendship request already exists') {
         setSearchResults(prev => prev.map(user => 
-          user.id === userId ? { ...user, requestSent: true } : user
+          user.id === userId ? { ...user, relationshipStatus: 'following', requestSent: true } : user
+        ))
+        setRandomUsers(prev => prev.map(user => 
+          user.id === userId ? { ...user, relationshipStatus: 'following', requestSent: true } : user
         ))
       } else {
         setError(result.message || result.error || 'Помилка відправки заявки')
@@ -191,8 +216,13 @@ const Friends = () => {
       const result = await friendsService.cancelFriendRequest(userId)
       
       if (result.success || result.status === 'success') {
+        // Оновлюємо стан в searchResults
         setSearchResults(prev => prev.map(user => 
-          user.id === userId ? { ...user, requestSent: false } : user
+          user.id === userId ? { ...user, relationshipStatus: 'none', requestSent: false } : user
+        ))
+        // Оновлюємо стан в randomUsers
+        setRandomUsers(prev => prev.map(user => 
+          user.id === userId ? { ...user, relationshipStatus: 'none', requestSent: false } : user
         ))
       } else {
         setError(result.message || result.error || 'Помилка скасування заявки')
@@ -251,15 +281,14 @@ const Friends = () => {
   const renderFriendCard = (friend, type = 'friend') => (
     <div 
       key={friend.id} 
-      className="friend-card"
+      className="friend-card friend-card--clickable"
       onClick={(e) => {
         // Перевіряємо, чи клік не по кнопці
-        if (!e.target.closest('button')) {
+        if (!e.target.closest('.btn')) {
           navigate(`/profile/${friend.id}`)
         }
         setDropdownOpen(null)
       }}
-      style={{ cursor: 'pointer' }}
     >
       <div className="friend-avatar">
         {friend.avatar ? (
@@ -279,8 +308,8 @@ const Friends = () => {
           {friend.age && `, ${friend.age}`}
         </h3>
         <p className="friend-meta">
-          {friend.city && friend.country && `${friend.city}, ${friend.country}`}
-          {friend.country && !friend.city && friend.country}
+          {friend.city && friend.country && `Локація: ${friend.city}, ${friend.country}`}
+          {friend.country && !friend.city && `Локація: ${friend.country}`}
           {friend.mutualFriends > 0 && ` • ${friend.mutualFriends} спільних друзів`}
           {type === 'friend' && friend.lastSeen && ` • ${friend.lastSeen}`}
           {type === 'suggestion' && ` • ${friend.reason}`}
@@ -289,10 +318,10 @@ const Friends = () => {
       <div className="friend-actions">
         {type === 'friend' && (
           <>
-            <button className="btn-message" onClick={() => handleSendMessage(friend.id)}>Написати</button>
+            <button className="btn btn--primary" onClick={() => handleSendMessage(friend.id)}>Написати</button>
             <div className="menu-wrapper">
               <button 
-                className="btn-menu" 
+                className="btn btn--secondary" 
                 onClick={(e) => {
                   e.stopPropagation()
                   setDropdownOpen(dropdownOpen === friend.id ? null : friend.id)
@@ -303,7 +332,7 @@ const Friends = () => {
               {dropdownOpen === friend.id && (
                 <div className="friend-menu-buttons">
                   <button 
-                    className="btn-delete"
+                    className="btn btn--danger"
                     onClick={(e) => {
                       e.stopPropagation()
                       handleRemoveFriend(friend.id)
@@ -313,7 +342,7 @@ const Friends = () => {
                     Видалити
                   </button>
                   <button 
-                    className="btn-block"
+                    className="btn btn--warning"
                     onClick={(e) => {
                       e.stopPropagation()
                       setDropdownOpen(null)
@@ -328,19 +357,25 @@ const Friends = () => {
         )}
         {type === 'request' && (
           <>
-            <button className="btn-accept" onClick={() => handleAcceptRequest(friend.requestId)}>
-              Прийняти
+            <button className="btn btn--primary" onClick={() => handleAcceptRequest(friend.requestId)} title="Прийняти заявку">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+              </svg>
             </button>
-            <button className="btn-reject" onClick={() => handleRejectRequest(friend.requestId)}>
-              Відхилити
+            <button className="btn btn--danger" onClick={() => handleRejectRequest(friend.requestId)} title="Відхилити заявку">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              </svg>
             </button>
-            <button className="btn-add" onClick={() => handleAddFriend(friend.id)}>
-              Підписатися у відповідь
+            <button className="btn btn--secondary" onClick={() => handleAddFriend(friend.id)} title="Підписатися у відповідь">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+              </svg>
             </button>
           </>
         )}
         {type === 'suggestion' && (
-          <button className="btn-add" onClick={() => handleAddFriend(friend.id)}>
+          <button className="btn btn--primary" onClick={() => handleAddFriend(friend.id)}>
             Додати в друзі
           </button>
         )}
@@ -348,21 +383,33 @@ const Friends = () => {
           <>
             {friend.relationshipStatus === 'friends' ? (
               <>
-                <button className="btn-message" onClick={() => handleSendMessage(friend.id)}>Написати</button>
-                <button className="btn-reject" onClick={() => handleRemoveFriend(friend.id)}>Видалити з друзів</button>
+                <button className="btn btn--primary" onClick={() => handleSendMessage(friend.id)}>Написати</button>
+                <button className="btn btn--danger" onClick={() => handleRemoveFriend(friend.id)}>Видалити з друзів</button>
               </>
             ) : friend.relationshipStatus === 'following' ? (
               <>
-                <button className="btn-pending" disabled>Підписка відправлена</button>
-                <button className="btn-reject" onClick={() => handleCancelRequest(friend.id)}>Відписатися</button>
+                <button 
+                  className="btn btn--following" 
+                  onClick={() => handleCancelRequest(friend.id)}
+                  title="Підписка активна"
+                >
+                  <svg className="following-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H16c-.8 0-1.5.7-1.5 1.5v9c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5V15h1v5c0 1.1-.9 2-2 2s-2-.9-2-2z"/>
+                  </svg>
+                  <svg className="unfollow-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                  </svg>
+                  <span className="following-text">Підписка</span>
+                  <span className="unfollow-text">Відписатися</span>
+                </button>
               </>
             ) : friend.relationshipStatus === 'follower' ? (
               <>
-                <button className="btn-accept" onClick={() => handleAddFriend(friend.id)}>Підписатися у відповідь</button>
-                <button className="btn-reject" onClick={() => handleRejectFollower(friend.id)}>Видалити підписника</button>
+                <button className="btn btn--primary" onClick={() => handleAddFriend(friend.id)}>Підписатися у відповідь</button>
+                <button className="btn btn--danger" onClick={() => handleRejectFollower(friend.id)}>Видалити підписника</button>
               </>
             ) : (
-              <button className="btn-add" onClick={() => handleAddFriend(friend.id)}>Підписатися</button>
+              <button className="btn btn--primary" onClick={() => handleAddFriend(friend.id)}>Підписатися</button>
             )}
           </>
         )}
@@ -409,7 +456,12 @@ const Friends = () => {
               </button>
               <button
                 className={`tab ${activeTab === 'search' ? 'active' : ''}`}
-                onClick={() => setActiveTab('search')}
+                onClick={() => {
+                  setActiveTab('search')
+                  if (randomUsers.length === 0) {
+                    loadRandomUsers()
+                  }
+                }}
               >
                 Пошук друзів
               </button>
@@ -465,9 +517,10 @@ const Friends = () => {
                   </div>
                 )}
                 {searchLoading ? (
-                  <div className="loading-state">
-                    <div className="spinner"></div>
-                    <p>Пошук...</p>
+                  <div className="friends-list">
+                    {Array.from({ length: 6 }).map((_, index) => (
+                      <FriendCardSkeleton key={index} />
+                    ))}
                   </div>
                 ) : userSearchQuery.trim() ? (
                   searchResults.length > 0 ? (
@@ -479,6 +532,10 @@ const Friends = () => {
                       <p>Користувачів не знайдено</p>
                     </div>
                   )
+                ) : randomUsers.length > 0 ? (
+                  <div className="friends-list">
+                    {randomUsers.map(user => renderFriendCard(user, 'search'))}
+                  </div>
                 ) : (
                   <div className="empty-state">
                     <p>Введіть запит для пошуку друзів</p>

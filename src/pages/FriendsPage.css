@@ -90,6 +90,12 @@
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.friend-card--clickable {
+  cursor: pointer;
 }
 
 .friend-card:hover {
@@ -164,69 +170,6 @@
   align-items: center;
 }
 
-.btn-message,
-.btn-accept,
-.btn-add {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-message:hover,
-.btn-accept:hover,
-.btn-add:hover {
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-}
-
-.btn-reject {
-  background: rgba(239, 68, 68, 0.1);
-  color: #dc2626;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-reject:hover {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.3);
-}
-
-.btn-menu {
-  background: rgba(59, 130, 246, 0.08);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-menu:hover {
-  background: rgba(59, 130, 246, 0.12);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.btn-pending {
-  background: rgba(156, 163, 175, 0.1);
-  color: #6b7280;
-  border: 1px solid rgba(156, 163, 175, 0.2);
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-}
-
 .menu-wrapper {
   position: relative;
   display: flex;
@@ -245,34 +188,106 @@
   z-index: 10;
 }
 
-.btn-delete {
-  background: #ef4444;
+/* Професійна кнопка підписки як у LinkedIn/Twitter */
+.friend-actions .btn {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  min-width: 100px;
+  height: 36px;
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  position: relative;
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+  border: 1px solid;
+}
+
+.friend-actions .btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Кнопка підписки - стан за замовчуванням */
+.friend-actions .btn--following {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
   color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
   cursor: pointer;
-  transition: background 0.2s;
+  pointer-events: auto;
 }
 
-.btn-delete:hover {
-  background: #dc2626;
+.friend-actions .btn--following .unfollow-icon,
+.friend-actions .btn--following .unfollow-text {
+  display: none;
 }
 
-.btn-block {
-  background: #f59e0b;
+.friend-actions .btn--following .following-icon,
+.friend-actions .btn--following .following-text {
+  display: block;
+}
+
+/* При ховері - перетворення на відписатися */
+.friend-actions .btn--following:hover {
+  background: var(--color-error);
+  border-color: var(--color-error);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.friend-actions .btn--following:hover .following-icon,
+.friend-actions .btn--following:hover .following-text {
+  display: none;
+}
+
+.friend-actions .btn--following:hover .unfollow-icon,
+.friend-actions .btn--following:hover .unfollow-text {
+  display: block;
+}
+
+/* Кнопка відписатися */
+.friend-actions .btn--danger {
+  background: transparent;
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.friend-actions .btn--danger:hover {
+  background: var(--color-error);
   color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: background 0.2s;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
-.btn-block:hover {
-  background: #d97706;
+/* Кнопка підписатися */
+.friend-actions .btn--primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.friend-actions .btn--primary:hover {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* Кнопка підписатися у відповідь */
+.friend-actions .btn--secondary {
+  background: transparent;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.friend-actions .btn--secondary:hover {
+  background: var(--color-primary);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 .search-section {
@@ -396,16 +411,6 @@
   .friend-actions {
     flex-direction: column;
     gap: 6px;
-  }
-
-  .btn-message,
-  .btn-accept,
-  .btn-add,
-  .btn-reject,
-  .btn-menu {
-    padding: 6px 12px;
-    font-size: 12px;
-    width: 100%;
   }
 
   .search-input-group {

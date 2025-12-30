@@ -130,7 +130,7 @@ const uploadAvatar = async (userId, file) => {
   }
 }
 
-const searchUsers = async ({ query, currentUserId, country, city, ageRange }) => {
+const searchUsers = async ({ query, currentUserId, country, city, ageRange, limit = 20, random = false }) => {
     const Friend = require('../models/Friend')
     
     const searchCriteria = {}
@@ -140,7 +140,7 @@ const searchUsers = async ({ query, currentUserId, country, city, ageRange }) =>
       searchCriteria.id = { $ne: currentUserId }
     }
     
-    // Пошук за ім'ям або email
+    // Пошук за ім'ям або email (тільки якщо є query)
     if (query) {
       searchCriteria.$or = [
         { name: { $regex: query, $options: 'i' } },
@@ -153,62 +153,80 @@ const searchUsers = async ({ query, currentUserId, country, city, ageRange }) =>
       searchCriteria.country = country
     }
     
-    const users = await User.find(searchCriteria)
+    let usersQuery = User.find(searchCriteria)
       .select('id name email country avatar createdAt')
-      .limit(20)
-      .sort({ createdAt: -1 })
+      .limit(limit)
     
-    // Додаємо інформацію про статус відносин для кожного користувача
-    if (currentUserId && users.length > 0) {
-      const currentUser = await User.findOne({ id: currentUserId })
-      if (currentUser) {
-        // Перевіряємо існуючі відносини
-        const friendships = await Friend.find({
-          $or: [
-            { requester: currentUser._id, recipient: { $in: users.map(u => u._id) } },
-            { recipient: currentUser._id, requester: { $in: users.map(u => u._id) } }
-          ]
-        }).populate('requester recipient', 'id')
-        
-        // Додаємо статус до кожного користувача
-        return users.map(user => {
-          const outgoingRequest = friendships.find(f => 
-            f.requester.id === currentUserId && f.recipient.id === user.id
-          )
-          const incomingRequest = friendships.find(f => 
-            f.recipient.id === currentUserId && f.requester.id === user.id
-          )
-          
-          let relationshipStatus = 'none' // none, following, follower, friends
-          let requestSent = false
-          let requestReceived = false
-          
-          if (outgoingRequest && incomingRequest) {
-            // Взаємні підписки = друзі
-            relationshipStatus = 'friends'
-          } else if (outgoingRequest) {
-            // Я підписаний на нього
-            relationshipStatus = 'following'
-            requestSent = true
-          } else if (incomingRequest) {
-            // Він підписаний на мене
-            relationshipStatus = 'follower'
-            requestReceived = true
-          }
-          
-          return {
-            ...user.toObject(),
-            relationshipStatus,
-            requestSent,
-            requestReceived,
-            isFriend: relationshipStatus === 'friends'
-          }
-        })
+    // Якщо потрібні рандомні користувачі
+    if (random) {
+      // Використовуємо MongoDB aggregation для рандомної вибірки
+      const users = await User.aggregate([
+        { $match: searchCriteria },
+        { $sample: { size: limit } },
+        { $project: { id: 1, name: 1, email: 1, country: 1, avatar: 1, createdAt: 1 } }
+      ])
+      
+      // Додаємо інформацію про статус відносин
+      if (currentUserId && users.length > 0) {
+        return await addRelationshipStatus(users, currentUserId)
       }
+      
+      return users
+    } else {
+      const users = await usersQuery.sort({ createdAt: -1 })
+      
+      // Додаємо інформацію про статус відносин
+      if (currentUserId && users.length > 0) {
+        return await addRelationshipStatus(users, currentUserId)
+      }
+      
+      return users
+    }
+  }
+
+// Допоміжна функція для додавання статусу відносин
+const addRelationshipStatus = async (users, currentUserId) => {
+  const Friend = require('../models/Friend')
+  
+  const currentUser = await User.findOne({ id: currentUserId })
+  if (!currentUser) return users
+  
+  // Перевіряємо існуючі відносини
+  const friendships = await Friend.find({
+    $or: [
+      { requester: currentUser._id, recipient: { $in: users.map(u => u._id) } },
+      { recipient: currentUser._id, requester: { $in: users.map(u => u._id) } }
+    ]
+  }).populate('requester recipient', 'id')
+  
+  // Додаємо статус до кожного користувача
+  return users.map(user => {
+    const outgoingRequest = friendships.find(f => 
+      f.requester.id === currentUserId && f.recipient.id === user.id
+    )
+    const incomingRequest = friendships.find(f => 
+      f.recipient.id === currentUserId && f.requester.id === user.id
+    )
+    
+    let relationshipStatus = 'none'
+    
+    if (outgoingRequest && incomingRequest) {
+      relationshipStatus = 'friends'
+    } else if (outgoingRequest) {
+      relationshipStatus = 'following'
+    } else if (incomingRequest) {
+      relationshipStatus = 'follower'
     }
     
-    return users
-  }
+    return {
+      ...user,
+      relationshipStatus,
+      requestSent: !!outgoingRequest,
+      requestReceived: !!incomingRequest,
+      isFriend: relationshipStatus === 'friends'
+    }
+  })
+}
 
 module.exports = {
   getUserById,

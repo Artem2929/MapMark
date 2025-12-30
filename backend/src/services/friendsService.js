@@ -72,20 +72,42 @@ class FriendsService {
       throw new Error('Не можна надіслати заявку самому собі')
     }
 
-    const existingRequest = await Friend.findOne({
+    // Перевіряємо чи вже друзі
+    const existingFriendship = await Friend.findOne({
       $or: [
-        { requester: requesterObjectId, recipient: recipientObjectId },
-        { requester: recipientObjectId, recipient: requesterObjectId }
+        { requester: requesterObjectId, recipient: recipientObjectId, status: 'accepted' },
+        { requester: recipientObjectId, recipient: requesterObjectId, status: 'accepted' }
       ]
     })
 
+    if (existingFriendship) {
+      throw new Error('Ви вже друзі')
+    }
+
+    // Перевіряємо чи вже є заявка від цього користувача
+    const existingRequest = await Friend.findOne({
+      requester: requesterObjectId,
+      recipient: recipientObjectId,
+      status: 'pending'
+    })
+
     if (existingRequest) {
-      if (existingRequest.status === 'accepted') {
-        throw new Error('Ви вже друзі')
-      }
-      if (existingRequest.status === 'pending') {
-        throw new Error('Заявка вже надіслана')
-      }
+      throw new Error('Заявка вже надіслана')
+    }
+
+    // Перевіряємо чи є зворотна заявка (тоді автоматично приймаємо)
+    const reverseRequest = await Friend.findOne({
+      requester: recipientObjectId,
+      recipient: requesterObjectId,
+      status: 'pending'
+    })
+
+    if (reverseRequest) {
+      // Автоматично приймаємо зворотну заявку
+      reverseRequest.status = 'accepted'
+      await reverseRequest.save()
+      logger.info('Mutual friend request accepted', { requesterId, recipientId })
+      return reverseRequest
     }
 
     const friendRequest = new Friend({
@@ -189,6 +211,29 @@ class FriendsService {
 
     await Friend.deleteOne({ _id: request._id })
     logger.info('Friend request cancelled', { requesterId, recipientId })
+  }
+
+  async removeFollower(userId, followerId) {
+    const userObjectId = await this.getUserObjectId(userId)
+    const followerObjectId = await this.getUserObjectId(followerId)
+    
+    if (!userObjectId || !followerObjectId) {
+      throw new Error('Користувача не знайдено')
+    }
+
+    // Шукаємо заявку, де follower підписаний на user
+    const request = await Friend.findOne({
+      requester: followerObjectId,
+      recipient: userObjectId,
+      status: 'pending'
+    })
+
+    if (!request) {
+      throw new Error('Підписку не знайдено')
+    }
+
+    await Friend.deleteOne({ _id: request._id })
+    logger.info('Follower removed', { userId, followerId })
   }
 }
 

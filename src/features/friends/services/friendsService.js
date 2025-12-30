@@ -41,21 +41,41 @@ export const friendsService = {
     }
   },
 
-  async searchUsers(query, filters = {}) {
-    if (!query) {
-      throw new Error('Запит для пошуку обов\'язковий')
-    }
-    
+  async searchUsers(query = '', filters = {}) {
     try {
-      const params = new URLSearchParams({ query, ...filters })
+      const params = new URLSearchParams()
+      
+      if (query) {
+        params.append('query', query)
+      }
+      
+      if (filters.country) {
+        params.append('country', filters.country)
+      }
+      
+      if (filters.city) {
+        params.append('city', filters.city)
+      }
+      
+      if (filters.ageRange) {
+        params.append('ageRange', filters.ageRange)
+      }
+      
+      if (filters.limit) {
+        params.append('limit', filters.limit)
+      }
+      
+      if (filters.random) {
+        params.append('random', 'true')
+        params.append('limit', filters.limit || 100)
+      }
+      
       const result = await apiClient.request(`/users/search?${params}`)
-      // API returns data.data, so we need to normalize it
       return {
         success: true,
         data: result.data?.data || result.data || []
       }
     } catch (error) {
-      // Return empty result if endpoint doesn't exist
       if (error.message.includes('404') || error.message.includes("Can't find")) {
         return { success: true, data: [] }
       }
