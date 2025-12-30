@@ -11,26 +11,16 @@ import './ProfileHeader.css'
 const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateChange }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [showAvatarModal, setShowAvatarModal] = useState(false)
-  const [isFollowing, setIsFollowing] = useState(false)
+  const [isFollowing, setIsFollowing] = useState(user?.isFollowing || false)
   const [followLoading, setFollowLoading] = useState(false)
   const { saveProfile } = useProfileEdit(user)
   
+  // Оновлюємо статус підписки коли змінюється user
   useEffect(() => {
-    const checkFollowStatus = async () => {
-      if (!isOwnProfile && user?.id) {
-        try {
-          const result = await followsService.checkFollowing(user.id)
-          if (result.success) {
-            setIsFollowing(result.data.isFollowing)
-          }
-        } catch (err) {
-          console.error('Failed to check follow status:', err)
-        }
-      }
+    if (user?.isFollowing !== undefined) {
+      setIsFollowing(user.isFollowing)
     }
-    
-    checkFollowStatus()
-  }, [user?.id, isOwnProfile])
+  }, [user?.isFollowing])
 
   const handleFollowToggle = useCallback(async () => {
     if (followLoading || !user?.id) return

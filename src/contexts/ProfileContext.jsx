@@ -1,14 +1,18 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
 import { useAuthStore } from '../app/store'
 import { profileService } from '../features/profile/services/profileService'
 
 const ProfileContext = createContext()
+
+// Простий кеш для профілів
+const profileCache = new Map()
 
 export const ProfileProvider = ({ children, userId }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { user: currentUser } = useAuthStore()
+  const fetchingRef = useRef(false)
   
   const isOwnProfile = currentUser?.id === userId
   
@@ -20,7 +24,22 @@ export const ProfileProvider = ({ children, userId }) => {
         return
       }
 
+      // Перевіряємо чи вже виконується запит
+      if (fetchingRef.current) {
+        return
+      }
+
+      // Перевіряємо кеш
+      const cacheKey = `${userId}-${currentUser?.id || 'anonymous'}`
+      if (profileCache.has(cacheKey)) {
+        const cachedData = profileCache.get(cacheKey)
+        setUser(cachedData)
+        setLoading(false)
+        return
+      }
+
       try {
+        fetchingRef.current = true
         setLoading(true)
         setError(null)
         
@@ -28,12 +47,17 @@ export const ProfileProvider = ({ children, userId }) => {
         await new Promise(resolve => setTimeout(resolve, 200))
         
         const profileData = await profileService.getUserProfile(userId)
-        setUser(profileData.data?.user || profileData)
+        const userData = profileData.data?.user || profileData
+        
+        // Зберігаємо в кеш
+        profileCache.set(cacheKey, userData)
+        setUser(userData)
       } catch (err) {
         console.error('Profile fetch error:', err)
         setError(err.message || 'Помилка завантаження профілю')
       } finally {
         setLoading(false)
+        fetchingRef.current = false
       }
     }
 
@@ -41,11 +65,16 @@ export const ProfileProvider = ({ children, userId }) => {
     if (userId) {
       fetchProfile()
     }
-  }, [userId]) // Видалили currentUser?.id з залежностей
+  }, [userId, currentUser?.id]) // Додали currentUser?.id для правильного кешування
 
   const updateUser = useCallback((updatedUserData) => {
-    setUser(prev => ({ ...prev, ...updatedUserData }))
-  }, [])
+    const newUserData = { ...user, ...updatedUserData }
+    setUser(newUserData)
+    
+    // Оновлюємо кеш
+    const cacheKey = `${userId}-${currentUser?.id || 'anonymous'}`
+    profileCache.set(cacheKey, newUserData)
+  }, [user, userId, currentUser?.id])
 
   return (
     <ProfileContext.Provider value={{

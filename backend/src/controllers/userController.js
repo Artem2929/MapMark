@@ -5,7 +5,8 @@ const logger = require('../utils/logger')
 
 const getUserProfile = catchAsync(async (req, res, next) => {
   const { userId } = req.params
-  const user = await userService.getUserById(userId)
+  const currentUserId = req.user?.id // ID автентифікованого користувача
+  const user = await userService.getUserById(userId, currentUserId)
   
   success(res, { user }, 'Профіль користувача отримано успішно')
 })

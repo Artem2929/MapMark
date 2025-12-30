@@ -3,7 +3,7 @@ const Post = require('../models/Post')
 const Follow = require('../models/Follow')
 const AppError = require('../utils/errorHandler').AppError
 
-const getUserById = async (userId) => {
+const getUserById = async (userId, currentUserId = null) => {
   // Перш пробуємо знайти за кастомним id, потім за MongoDB _id
   let user = await User.findOne({ id: userId }).select('-password -refreshToken')
   
@@ -27,12 +27,41 @@ const getUserById = async (userId) => {
     Friend.countDocuments({ recipient: userObjectId })
   ])
   
-  return {
+  const userResult = {
     ...user.toObject(),
     postsCount,
     followersCount,
     followingCount
   }
+  
+  // Додаємо статус підписки, якщо є currentUserId
+  if (currentUserId && currentUserId !== userId) {
+    const currentUser = await User.findOne({ id: currentUserId })
+    if (currentUser) {
+      const outgoingRequest = await Friend.findOne({
+        requester: currentUser._id,
+        recipient: user._id
+      })
+      const incomingRequest = await Friend.findOne({
+        recipient: currentUser._id,
+        requester: user._id
+      })
+      
+      let relationshipStatus = 'none'
+      if (outgoingRequest && incomingRequest) {
+        relationshipStatus = 'friends'
+      } else if (outgoingRequest) {
+        relationshipStatus = 'following'
+      } else if (incomingRequest) {
+        relationshipStatus = 'follower'
+      }
+      
+      userResult.relationshipStatus = relationshipStatus
+      userResult.isFollowing = relationshipStatus === 'following' || relationshipStatus === 'friends'
+    }
+  }
+  
+  return userResult
 }
 
 const updateProfile = async (userId, updateData) => {
