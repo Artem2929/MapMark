@@ -275,17 +275,6 @@
   background: #d97706;
 }
 
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #64748b;
-}
-
-.empty-state p {
-  font-size: 16px;
-  margin: 0;
-}
-
 .search-section {
   display: flex;
   flex-direction: column;

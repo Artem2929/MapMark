@@ -1,0 +1,1 @@
+import './EmptyState.css'\n\nexport function EmptyState({ children, size = 'default' }) {\n  const className = `empty-state ${size !== 'default' ? `empty-state--${size}` : ''}`\n  \n  return (\n    <div className={className}>\n      {children}\n    </div>\n  )\n}

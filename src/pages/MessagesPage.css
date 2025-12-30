@@ -495,13 +495,6 @@
   display: none;
 }
 
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #64748b;
-  font-size: 16px;
-}
-
 .no-results {
   text-align: center;
   padding: 20px;
@@ -516,16 +509,6 @@
   border-radius: 8px;
   margin-bottom: 16px;
   text-align: center;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #64748b;
-}
-
-.empty-state p {
-  margin: 8px 0;
 }
 
 /* No Chat Selected */

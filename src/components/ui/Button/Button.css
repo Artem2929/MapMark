@@ -36,6 +36,19 @@
   box-shadow: var(--shadow-md);
 }
 
+.btn--success {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: white;
+}
+
+.btn--success:hover:not(:disabled) {
+  background: #059669;
+  border-color: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+}
+
 .btn--secondary {
   background: transparent;
   border-color: var(--color-border-medium);
