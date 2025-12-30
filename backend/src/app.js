@@ -16,6 +16,7 @@ const friendsRoutes = require('./routes/friendsRoutes')
 const messagesRoutes = require('./routes/messagesRoutes')
 const postsRoutes = require('./routes/postsRoutes')
 const followsRoutes = require('./routes/followsRoutes')
+const devRoutes = require('./routes/devRoutes')
 
 const app = express()
 
@@ -32,8 +33,13 @@ app.use(securityMiddleware)
 // Request logging
 app.use(requestLogger)
 
-// Body parser middleware
-app.use(express.json({ limit: '10kb' }))
+// Body parser middleware - skip JSON parsing for multipart requests
+app.use((req, res, next) => {
+  if (req.headers['content-type'] && req.headers['content-type'].includes('multipart/form-data')) {
+    return next()
+  }
+  express.json({ limit: '10kb' })(req, res, next)
+})
 app.use(express.urlencoded({ extended: true, limit: '10kb' }))
 app.use(cookieParser())
 
@@ -61,6 +67,7 @@ app.use(`${API_VERSION}/friends`, friendsRoutes)
 app.use(`${API_VERSION}/messages`, messagesRoutes)
 app.use(`${API_VERSION}/posts`, postsRoutes)
 app.use(`${API_VERSION}/follows`, followsRoutes)
+app.use(`${API_VERSION}/dev`, devRoutes)
 app.use('/health', healthRoutes)
 
 // Static files для фотографій

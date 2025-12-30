@@ -12,6 +12,7 @@ export const getInitialFormData = (user) => {
 
 export const showNotification = (message, type = 'error') => {
   // TODO: Replace with proper notification system
+  // eslint-disable-next-line no-console
   console.warn(`${type.toUpperCase()}: ${message}`)
 }
 

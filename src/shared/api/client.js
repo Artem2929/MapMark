@@ -45,34 +45,38 @@ export const apiClient = {
   async secureRequest(url, options = {}) {
     const token = await getCSRFToken()
     
+    // Don't set Content-Type for FormData (multipart)
+    const headers = { ...options.headers }
+    if (!(options.body instanceof FormData)) {
+      headers['Content-Type'] = 'application/json'
+    }
+    
     const response = await fetch(`${API_BASE_URL}${url}`, {
       ...options,
       headers: {
-        'Content-Type': 'application/json',
         'X-CSRF-Token': token,
-        ...options.headers
+        ...headers
       },
       credentials: 'include'
     })
 
     if (response.status === 403) {
-      const errorData = await response.clone().json()
+      const errorData = await response.clone().json().catch(() => ({}))
       if (errorData.code === 'INVALID_CSRF_TOKEN') {
         const newToken = await getCSRFToken(true)
         
         return fetch(`${API_BASE_URL}${url}`, {
           ...options,
           headers: {
-            'Content-Type': 'application/json',
             'X-CSRF-Token': newToken,
-            ...options.headers
+            ...headers
           },
           credentials: 'include'
         })
       }
     }
 
-    const data = await response.json()
+    const data = await response.json().catch(() => ({ message: 'Invalid response format' }))
     
     if (!response.ok) {
       throw new Error(data.message || 'Помилка запиту')

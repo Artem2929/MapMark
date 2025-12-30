@@ -43,6 +43,7 @@ export const useAuth = () => {
       setLoading(false)
       return currentUser
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error parsing token:', error)
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')

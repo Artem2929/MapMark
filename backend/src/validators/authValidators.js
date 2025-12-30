@@ -18,7 +18,7 @@ const registerValidation = [
     .isLength({ min: 2, max: 50 })
     .withMessage('Name must be between 2 and 50 characters')
     .matches(/^[a-zA-Zа-яА-ЯіІїЇєЄ'\-\s]+$/)
-    .withMessage('Name can only contain letters, spaces, hyphens and apostrophes')
+    .withMessage('Ім\'я може містити тільки літери, пробіли, дефіси та апострофи')
     .custom((value) => {
       // Check for consecutive spaces
       if (/\s{2,}/.test(value)) {
@@ -109,7 +109,7 @@ const updateProfileValidation = [
     .isLength({ min: 2, max: 50 })
     .withMessage('Name must be between 2 and 50 characters')
     .matches(/^[a-zA-Zа-яА-ЯіІїЇєЄ'\-\s]+$/)
-    .withMessage('Name can only contain letters, spaces, hyphens and apostrophes'),
+    .withMessage('Ім\'я може містити тільки літери, пробіли, дефіси та апострофи'),
     
   body('email')
     .optional()

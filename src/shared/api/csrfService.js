@@ -18,6 +18,7 @@ class CSRFService {
       this.token = response.data?.csrfToken || response.csrfToken
       return this.token
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to get CSRF token:', error)
       throw error
     }

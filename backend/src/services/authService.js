@@ -7,6 +7,16 @@ class AuthService {
   async register(userData) {
     // Check if user already exists
     const existingUser = await User.findOne({ email: userData.email })
+    
+    logger.info('Registration attempt', {
+      email: userData.email,
+      existingUser: existingUser ? {
+        id: existingUser.id,
+        email: existingUser.email,
+        createdAt: existingUser.createdAt
+      } : null
+    })
+    
     if (existingUser) {
       throw new AppError('Користувач вже існує', 409, 'USER_EXISTS')
     }

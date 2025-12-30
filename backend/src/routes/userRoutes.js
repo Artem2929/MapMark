@@ -20,6 +20,6 @@ router.get('/:userId', userController.getUserProfile)
 router.put('/:userId', csrfProtection, ...userValidation, userController.updateProfile)
 
 // Upload avatar
-router.post('/avatar', csrfProtection, uploadAvatar, userController.uploadAvatar)
+router.post('/avatar', uploadAvatar, userController.uploadAvatar)
 
 module.exports = router

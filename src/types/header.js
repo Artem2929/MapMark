@@ -1,21 +1,25 @@
-export interface User {
-  id: string
-  name: string
-  email: string
+// User type definition
+export const UserType = {
+  id: 'string',
+  name: 'string',
+  email: 'string'
 }
 
-export interface AuthLink {
-  to: string
-  text: string
+// Auth link type definition
+export const AuthLinkType = {
+  to: 'string',
+  text: 'string'
 }
 
-export interface HeaderProps {
-  className?: string
+// Header props type definition
+export const HeaderPropsType = {
+  className: 'string' // optional
 }
 
-export interface NavigationState {
-  isMenuOpen: boolean
-  isAuthenticated: boolean
-  user: User | null
-  currentPath: string
+// Navigation state type definition
+export const NavigationStateType = {
+  isMenuOpen: 'boolean',
+  isAuthenticated: 'boolean',
+  user: 'object', // User | null
+  currentPath: 'string'
 }

@@ -15,6 +15,7 @@ export function useHeaderNavigation() {
       setIsMenuOpen(false)
       navigate(ROUTES.HOME)
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Помилка виходу:', error)
       clearAuth()
       setIsMenuOpen(false)

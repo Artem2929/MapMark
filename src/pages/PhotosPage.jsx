@@ -21,7 +21,7 @@ const Photos = () => {
   useEffect(() => {
     const initializePhotos = async () => {
       setLoading(true)
-      
+
       const authToken = localStorage.getItem('accessToken')
       if (!authToken) {
         navigate('/login')
@@ -34,7 +34,7 @@ const Photos = () => {
         const payload = JSON.parse(atob(token.split('.')[1]))
         const tokenUserId = payload.id
         setCurrentUserId(tokenUserId)
-        
+
         if (!targetUserId) {
           targetUserId = tokenUserId
           navigate(`/photos/${targetUserId}`, { replace: true })
@@ -75,7 +75,7 @@ const Photos = () => {
   const handleAddComment = async (e) => {
     e.preventDefault()
     if (!newComment.trim()) return
-    
+
     const response = await photosService.addPhotoComment(selectedPhoto._id, newComment.trim())
     setComments(prev => [response.data.comment, ...prev])
     setNewComment('')
@@ -96,11 +96,11 @@ const Photos = () => {
 
   const handleUploadSubmit = async () => {
     const filesToUpload = photoUploadRef.current?.getFilesForUpload() || []
-    
+
     if (filesToUpload.length === 0) {
       return
     }
-    
+
     await photosService.uploadPhotos(filesToUpload)
     await loadPhotos(userId)
     handleCloseUpload()
@@ -116,7 +116,7 @@ const Photos = () => {
     e.stopPropagation()
     await photosService.togglePhotoLike(photoId, type)
     await loadPhotos(userId)
-    
+
     if (selectedPhoto && selectedPhoto._id === photoId) {
       const updatedPhotos = await photosService.getUserPhotos(userId)
       const updatedPhoto = updatedPhotos.find(p => p._id === photoId)
@@ -160,19 +160,19 @@ const Photos = () => {
           </div>
         )}
         {photos.map((photo) => (
-          <div 
-            key={photo._id} 
+          <div
+            key={photo._id}
             className="photo-card"
             onClick={() => handlePhotoClick(photo)}
           >
             <div className="photo-image">
-              <img 
-                src={`data:${photo.mimeType};base64,${photo.data}`} 
+              <img
+                src={`data:${photo.mimeType};base64,${photo.data}`}
                 alt={photo.description || 'Фото'}
                 loading="lazy"
               />
               {currentUserId === userId && (
-                <button 
+                <button
                   className="photo-delete-btn"
                   onClick={(e) => handleDeletePhoto(photo._id, e)}
                 >
@@ -182,7 +182,7 @@ const Photos = () => {
                 </button>
               )}
               <div className="photo-actions">
-                <button 
+                <button
                   className={`photo-like-btn ${photo.userReaction === 'like' ? 'active' : ''}`}
                   onClick={(e) => handleToggleLike(photo._id, 'like', e)}
                 >
@@ -191,7 +191,7 @@ const Photos = () => {
                   </svg>
                   <span>{photo.likes || 0}</span>
                 </button>
-                <button 
+                <button
                   className={`photo-dislike-btn ${photo.userReaction === 'dislike' ? 'active' : ''}`}
                   onClick={(e) => handleToggleLike(photo._id, 'dislike', e)}
                 >
@@ -200,7 +200,7 @@ const Photos = () => {
                   </svg>
                   <span>{photo.dislikes || 0}</span>
                 </button>
-                <button 
+                <button
                   className="photo-comment-btn"
                   onClick={(e) => { e.stopPropagation() }}
                 >
@@ -228,14 +228,14 @@ const Photos = () => {
                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
               </svg>
             </button>
-            
+
             <div className="photo-modal-image">
-              <img 
-                src={`data:${selectedPhoto.mimeType};base64,${selectedPhoto.data}`} 
-                alt={selectedPhoto.description || 'Фото'} 
+              <img
+                src={`data:${selectedPhoto.mimeType};base64,${selectedPhoto.data}`}
+                alt={selectedPhoto.description || 'Фото'}
               />
               <div className="photo-actions">
-                <button 
+                <button
                   className={`photo-like-btn ${selectedPhoto.userReaction === 'like' ? 'active' : ''}`}
                   onClick={() => handleToggleLike(selectedPhoto._id, 'like', { stopPropagation: () => {} })}
                 >
@@ -244,7 +244,7 @@ const Photos = () => {
                   </svg>
                   <span>{selectedPhoto.likes || 0}</span>
                 </button>
-                <button 
+                <button
                   className={`photo-dislike-btn ${selectedPhoto.userReaction === 'dislike' ? 'active' : ''}`}
                   onClick={() => handleToggleLike(selectedPhoto._id, 'dislike', { stopPropagation: () => {} })}
                 >
@@ -260,13 +260,13 @@ const Photos = () => {
                 </button>
               </div>
             </div>
-            
+
             <div className="photo-modal-sidebar">
               <div className="photo-modal-header">
                 <div className="photo-modal-user">
                   <div className="photo-modal-avatar">
-                    <img 
-                      src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEhUSExIVFhUXFxgYFxcXFxUYFRgXFRUXGhkXFxUYHSggGB" 
+                    <img
+                      src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEhUSExIVFhUXFxgYFxcXFxUYFRgXFRUXGhkXFxUYHSggGB"
                       alt="Artem Polishchuk"
                       className="photo-modal-avatar-img"
                       onError={(e) => {
@@ -284,7 +284,7 @@ const Photos = () => {
                 </div>
                 <button className="photo-modal-menu">⋯</button>
               </div>
-              
+
               {selectedPhoto.description && (
                 <div className="photo-modal-description">
                   <div className="photo-modal-description-content">
@@ -301,7 +301,6 @@ const Photos = () => {
                 </div>
               )}
               
-
               <div className="photo-modal-comments">
                 <div className="comments-list">
                   {loadingComments ? (
@@ -344,30 +343,30 @@ const Photos = () => {
                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
               </svg>
             </button>
-            
+
             <div className="upload-modal-content">
               <div className="upload-modal-header">
                 <h4>Додати фото</h4>
               </div>
-              
+
               <div className="upload-modal-body">
-                <PhotoUpload 
+                <PhotoUpload
                   ref={photoUploadRef}
                   photos={selectedFiles}
                   onPhotosChange={handleFilesChange}
                   maxPhotos={10}
                 />
               </div>
-              
+
               <div className="upload-modal-footer">
-                <button 
-                  className="upload-cancel-btn" 
+                <button
+                  className="upload-cancel-btn"
                   onClick={handleCloseUpload}
                 >
                   Скасувати
                 </button>
-                <button 
-                  className="upload-submit-btn" 
+                <button
+                  className="upload-submit-btn"
                   onClick={handleUploadSubmit}
                   disabled={selectedFiles.length === 0}
                 >

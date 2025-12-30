@@ -1,0 +1,12 @@
+dist/
+build/
+node_modules/
+*.config.js
+*.config.ts
+public/
+backend/
+.env
+.env.local
+.env.example
+*.log
+coverage/
