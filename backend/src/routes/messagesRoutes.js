@@ -11,6 +11,9 @@ router.use(protect)
 // GET /api/v1/messages/conversations - Get user's conversations
 router.get('/conversations', messagesController.getConversations)
 
+// POST /api/v1/messages/conversations - Create conversation
+router.post('/conversations', csrfProtection, messagesController.createConversation)
+
 // GET /api/v1/messages/:otherUserId - Get messages with specific user
 router.get('/:otherUserId', messagesController.getMessages)
 

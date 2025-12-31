@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useAuthStore } from '../../../app/store'
 import { useConversations } from '../hooks/useConversations'
 import { useActiveChat } from '../hooks/useActiveChat'
 import { useMessagesSocket } from '../hooks/useMessagesSocket'
@@ -13,9 +14,12 @@ import './MessagesPage.css'
 const MessagesPage = () => {
   const navigate = useNavigate()
   const { userId } = useParams()
+  const { user: currentUser, isAuthenticated } = useAuthStore()
   const { activeChat, selectChat, clearChat } = useActiveChat()
   const [showNewChatModal, setShowNewChatModal] = React.useState(false)
   const [searchQuery, setSearchQuery] = React.useState('')
+  const [searchResults, setSearchResults] = React.useState([])
+  const [isSearching, setIsSearching] = React.useState(false)
 
   const {
     conversations,
@@ -25,20 +29,37 @@ const MessagesPage = () => {
     addConversation,
     removeConversation,
     markAsRead,
-    incrementUnread
+    incrementUnread,
+    createOrFindConversation
   } = useConversations()
 
-  const currentUser = useMemo(() => {
-    const token = localStorage.getItem('accessToken')
-    if (!token) return null
-    
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]))
-      return { id: payload.id }
-    } catch {
-      return null
+  // Перевірка автентифікації
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login')
     }
-  }, [])
+  }, [isAuthenticated, navigate])
+
+  // Автоматично відкриваємо чат з користувачем, якщо передано userId
+  useEffect(() => {
+    if (userId && currentUser && !loading) {
+      const existingConversation = conversations.find(conv => 
+        conv.participant?.id === userId || conv.participant?._id === userId
+      )
+      
+      if (existingConversation) {
+        selectChat(existingConversation._id)
+        markAsRead(existingConversation._id)
+      } else {
+        // Створюємо новий чат з користувачем
+        createOrFindConversation(userId).then(conversation => {
+          if (conversation) {
+            selectChat(conversation._id)
+          }
+        })
+      }
+    }
+  }, [userId, currentUser, conversations, loading, selectChat, markAsRead, createOrFindConversation])
 
   const { sendTyping } = useMessagesSocket({
     activeChat,
@@ -113,8 +134,18 @@ const MessagesPage = () => {
     setShowNewChatModal(false)
   }
 
-  if (!currentUser) {
-    navigate('/login')
+  const handleCreateChatFromSearch = async (userId) => {
+    try {
+      const conversation = await createOrFindConversation(userId)
+      if (conversation) {
+        selectChat(conversation._id)
+      }
+    } catch (error) {
+      console.error('Помилка створення чату:', error)
+    }
+  }
+
+  if (!isAuthenticated || !currentUser) {
     return null
   }
 
@@ -123,7 +154,7 @@ const MessagesPage = () => {
       <div className="messages-container">
         <Breadcrumbs 
           items={[
-            { label: 'Профіль', href: `/profile/${userId}` },
+            { label: 'Профіль', href: `/profile/${currentUser?.id}` },
             { label: 'Повідомлення' }
           ]}
         />
@@ -142,6 +173,7 @@ const MessagesPage = () => {
             onConversationDelete={handleConversationDelete}
             onSearchChange={setSearchQuery}
             onNewChatClick={() => setShowNewChatModal(true)}
+            onCreateChat={handleCreateChatFromSearch}
           />
 
           <ChatArea

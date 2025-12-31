@@ -1,5 +1,6 @@
 const Message = require('../models/Message')
 const User = require('../models/User')
+const mongoose = require('mongoose')
 const logger = require('../utils/logger')
 
 class MessagesService {
@@ -173,6 +174,36 @@ class MessagesService {
     )
 
     logger.info('Messages marked as read', { userId, conversationId })
+  }
+
+  async createOrFindConversation(userId, otherUserId) {
+    const userObjectId = await this.getUserObjectId(userId)
+    const otherUserObjectId = await this.getUserObjectId(otherUserId)
+    
+    if (!userObjectId || !otherUserObjectId) {
+      throw new Error('Користувача не знайдено')
+    }
+
+    // Створюємо новий ObjectId для conversationId
+    const conversationId = new mongoose.Types.ObjectId()
+    
+    const otherUser = await User.findById(otherUserObjectId)
+    
+    return {
+      _id: conversationId,
+      participant: {
+        _id: otherUser._id,
+        id: otherUser.id,
+        username: otherUser.username,
+        firstName: otherUser.firstName,
+        lastName: otherUser.lastName,
+        avatar: otherUser.avatar,
+        isOnline: false
+      },
+      lastMessage: null,
+      unreadCount: 0,
+      lastActivity: new Date()
+    }
   }
 }
 

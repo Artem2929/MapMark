@@ -62,6 +62,22 @@ export const useConversations = () => {
     )
   }, [])
 
+  const createOrFindConversation = useCallback(async (userId) => {
+    try {
+      const result = await messagesService.createOrFindConversation(userId)
+      
+      if (result.success) {
+        const conversation = result.data
+        addConversation(conversation)
+        return conversation
+      }
+      return null
+    } catch (err) {
+      console.error('Помилка створення розмови:', err)
+      return null
+    }
+  }, [addConversation])
+
   useEffect(() => {
     loadConversations()
   }, [loadConversations])
@@ -75,6 +91,7 @@ export const useConversations = () => {
     addConversation,
     removeConversation,
     markAsRead,
-    incrementUnread
+    incrementUnread,
+    createOrFindConversation
   }
 }

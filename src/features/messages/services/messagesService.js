@@ -1,5 +1,19 @@
 import { apiClient } from '../../../shared/api/client.js'
 
+// Функція для отримання поточного користувача з localStorage
+const getCurrentUser = () => {
+  try {
+    const token = localStorage.getItem('accessToken')
+    if (!token) return null
+    
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    return { id: payload.id }
+  } catch (error) {
+    console.error('Помилка отримання користувача:', error)
+    return null
+  }
+}
+
 export const messagesService = {
   async getConversations() {
     try {
@@ -125,18 +139,44 @@ export const messagesService = {
   },
 
   async searchUsers(query) {
-    if (!query || query.trim().length < 3) {
+    if (!query || query.trim().length < 2) {
       return []
     }
     
     try {
-      const result = await apiClient.request(`/users/search?q=${encodeURIComponent(query)}`)
-      return result.success ? result.data : []
-    } catch (error) {
-      if (error.message.includes('404') || error.message.includes("Can't find")) {
+      const currentUser = getCurrentUser()
+      if (!currentUser) {
+        console.log('Користувач не авторизований')
         return []
       }
-      throw error
+      
+      const result = await apiClient.request(`/friends/${currentUser.id}`)
+      console.log('API response:', result)
+      
+      if (!result.success) return []
+      
+      const friends = result.data || []
+      console.log('Friends data:', friends)
+      
+      const filteredFriends = friends.filter(friend => {
+        const matchName = friend.name?.toLowerCase().includes(query.toLowerCase())
+        const matchEmail = friend.email?.toLowerCase().includes(query.toLowerCase())
+        const matchFirstName = friend.firstName?.toLowerCase().includes(query.toLowerCase())
+        const matchLastName = friend.lastName?.toLowerCase().includes(query.toLowerCase())
+        const matchUsername = friend.username?.toLowerCase().includes(query.toLowerCase())
+        
+        console.log(`Checking friend:`, friend, `Query: ${query}`, {
+          matchName, matchEmail, matchFirstName, matchLastName, matchUsername
+        })
+        
+        return matchName || matchEmail || matchFirstName || matchLastName || matchUsername
+      })
+      
+      console.log('Filtered friends:', filteredFriends)
+      return filteredFriends
+    } catch (error) {
+      console.error('Помилка пошуку друзів:', error)
+      return []
     }
   },
 
@@ -156,6 +196,10 @@ export const messagesService = {
       }
       throw error
     }
+  },
+
+  async createOrFindConversation(userId) {
+    return this.createConversation(userId)
   },
 
   async markAsRead(conversationId) {

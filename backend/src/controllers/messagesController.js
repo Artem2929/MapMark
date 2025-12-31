@@ -80,6 +80,30 @@ const messagesController = {
       
       error(res, err.message, 500)
     }
+  },
+
+  // POST /api/messages/conversations
+  async createConversation(req, res) {
+    try {
+      const userId = req.user.id
+      const { userId: otherUserId } = req.body
+      
+      if (!otherUserId) {
+        return error(res, 'ID користувача обов\'\'язковий', 400)
+      }
+      
+      const conversation = await messagesService.createOrFindConversation(userId, otherUserId)
+      
+      success(res, conversation, 'Розмова створена', 201)
+    } catch (err) {
+      logger.error('Create conversation error', { error: err.message, userId: req.user.id })
+      
+      if (err.message.includes('не знайдено')) {
+        return error(res, err.message, 404)
+      }
+      
+      error(res, err.message, 500)
+    }
   }
 }
 
