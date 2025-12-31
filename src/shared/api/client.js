@@ -24,10 +24,14 @@ const getCSRFToken = async (forceRefresh = false) => {
 
 export const apiClient = {
   async request(url, options = {}) {
+    // Отримуємо токен з localStorage
+    const token = localStorage.getItem('accessToken')
+    
     const response = await fetch(`${API_BASE_URL}${url}`, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
         ...options.headers
       },
       credentials: 'include'
@@ -43,7 +47,8 @@ export const apiClient = {
   },
 
   async secureRequest(url, options = {}) {
-    const token = await getCSRFToken()
+    const token = localStorage.getItem('accessToken')
+    const csrfToken = await getCSRFToken()
     
     // Don't set Content-Type for FormData (multipart)
     const headers = { ...options.headers }
@@ -51,10 +56,14 @@ export const apiClient = {
       headers['Content-Type'] = 'application/json'
     }
     
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+    
     const response = await fetch(`${API_BASE_URL}${url}`, {
       ...options,
       headers: {
-        'X-CSRF-Token': token,
+        'X-CSRF-Token': csrfToken,
         ...headers
       },
       credentials: 'include'

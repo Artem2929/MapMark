@@ -9,6 +9,10 @@
   transition: box-shadow 0.2s ease;
   width: 100%;
   justify-content: space-between;
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
 }
 
 .friend-card:hover {

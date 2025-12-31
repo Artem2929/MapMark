@@ -1,6 +1,7 @@
 import React, { memo } from 'react'
 import ConversationItem from './ConversationItem'
 import SearchInput from './SearchInput'
+import NewChatButton from './NewChatButton'
 import { Loading } from '../../../components/ui/Loading'
 
 const ConversationsSidebar = memo(({
@@ -11,6 +12,7 @@ const ConversationsSidebar = memo(({
   onConversationSelect,
   onConversationDelete,
   onSearchChange,
+  onNewChatClick,
   onCreateChat
 }) => {
   if (loading) {
@@ -22,6 +24,7 @@ const ConversationsSidebar = memo(({
             placeholder="Пошук розмов..."
             disabled
           />
+          <NewChatButton onClick={() => {}} disabled />
         </div>
         <div className="conversations-list">
           <Loading />
@@ -38,6 +41,7 @@ const ConversationsSidebar = memo(({
           onCreateChat={onCreateChat}
           placeholder="Пошук розмов..."
         />
+        <NewChatButton onClick={onNewChatClick} />
       </div>
 
       <div className="conversations-list">
