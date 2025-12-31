@@ -21,8 +21,8 @@ class FriendsService {
         { recipient: userObjectId, status: 'accepted' }
       ]
     })
-    .populate('requester', 'id name email country')
-    .populate('recipient', 'id name email country')
+    .populate('requester', 'id name email country avatar')
+    .populate('recipient', 'id name email country avatar')
 
     return friends.map(friend => {
       const friendUser = friend.requester._id.toString() === userObjectId.toString() 
@@ -33,6 +33,7 @@ class FriendsService {
         name: friendUser.name,
         email: friendUser.email,
         country: friendUser.country,
+        avatar: friendUser.avatar,
         friendshipId: friend._id
       }
     })
