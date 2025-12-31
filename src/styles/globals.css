@@ -24,13 +24,11 @@ body {
   color: var(--color-text-primary);
   background-color: var(--color-bg-secondary);
   padding-top: 80px;
-  overflow-x: hidden;
   min-height: 100vh;
 }
 
 #root {
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
 /* Focus styles */

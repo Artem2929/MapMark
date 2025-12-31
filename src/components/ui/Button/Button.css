@@ -25,21 +25,17 @@
 
 .btn--primary {
   background: var(--color-primary);
-  border-color: var(--color-primary);
   color: white;
 }
 
 .btn--primary:hover:not(:disabled) {
   background: var(--color-primary-dark);
-  border-color: var(--color-primary-dark);
-
   box-shadow: var(--shadow-md);
 }
 
 .btn--success {
-  background: var(--color-success);
-  border-color: var(--color-success);
-  color: white;
+  background: linear-gradient(135deg, rgba(29, 78, 216, 0.1) 0%, rgba(29, 78, 216, 0.05) 100%);
+  color: var(--color-primary-dark);
 }
 
 .btn--success:hover:not(:disabled) {
@@ -83,14 +79,12 @@
 }
 
 .btn--danger {
-  background: var(--color-error);
-  border-color: var(--color-error);
-  color: white;
+  background: transparent;
+  color: var(--color-error);
 }
 
 .btn--danger:hover:not(:disabled) {
   background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.4);
   color: #b91c1c;
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }

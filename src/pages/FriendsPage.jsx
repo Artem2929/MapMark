@@ -1,452 +1,226 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../app/store'
 import { friendsService } from '../features/friends/services/friendsService'
 import Breadcrumbs from '../components/ui/Breadcrumbs'
+import FriendCard from '../components/FriendCard'
 import FriendCardSkeleton from '../components/ui/FriendCardSkeleton'
-import '../components/ui/Button/Button.css'
+import { useFriends } from '../hooks/useFriends'
+import { useFriendRequests } from '../hooks/useFriendRequests'
+import { useUserSearch } from '../hooks/useUserSearch'
 import './FriendsPage.css'
 
-
 const Friends = () => {
-  const { userId } = useParams()
+  const { userId: urlUserId } = useParams()
+  const { user } = useAuthStore()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('all')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [userSearchQuery, setUserSearchQuery] = useState('')
-  const [filters, setFilters] = useState({ country: '', city: '', ageRange: '' })
-  const [searchResults, setSearchResults] = useState([])
-  const [randomUsers, setRandomUsers] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [searchLoading, setSearchLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [friends, setFriends] = useState([])
-  const [requests, setRequests] = useState([])
-  const [currentUser, setCurrentUser] = useState(null)
-  const [cities, setCities] = useState([])
   const [dropdownOpen, setDropdownOpen] = useState(null)
-  const dataLoaded = useRef(false)
 
-  useEffect(() => {
-    if (dataLoaded.current) return // Захист від повторних викликів
+  // Використовуємо userId з URL або поточного користувача
+  const userId = urlUserId || user?.id
 
-    const initializeFriends = async () => {
-      setLoading(true)
+  const { friends, loading: friendsLoading, removeFriend, reloadFriends, setFriends } = useFriends(userId)
+  const { requests, loading: requestsLoading, acceptRequest, rejectRequest, setRequests } = useFriendRequests(userId)
+  const { 
+    query, 
+    setQuery, 
+    results, 
+    randomUsers, 
+    loading: searchLoading, 
+    loadRandomUsers, 
+    sendFriendRequest,
+    cancelFriendRequest
+  } = useUserSearch()
 
-      const authToken = localStorage.getItem('accessToken')
-      if (!authToken) {
-        navigate('/login')
-        return
-      }
+  const handleDropdownToggle = useCallback((friendId) => {
+    setDropdownOpen(prev => prev === friendId ? null : friendId)
+  }, [])
 
-      const token = localStorage.getItem('accessToken')
-      if (token) {
-        const payload = JSON.parse(atob(token.split('.')[1]))
-        const currentUserId = payload.id
-        setCurrentUser({ id: currentUserId })
+  const handleDropdownClose = useCallback(() => {
+    setDropdownOpen(null)
+  }, [])
 
-        if (!userId || userId !== currentUserId) {
-          navigate(`/friends/${currentUserId}`, { replace: true })
-          return
-        }
-      }
+  const handleRemoveFriendFromMenu = useCallback(async (friendId) => {
+    const success = await removeFriend(friendId)
+    // Функція removeFriend вже оновлює стан friends
+  }, [removeFriend])
 
-      await Promise.all([
-        loadFriends(),
-        loadRequests()
-      ])
-
-      setLoading(false)
-      dataLoaded.current = true // Позначаємо, що дані завантажені
-    }
-
-    initializeFriends()
-  }, [userId, navigate])
-
-  useEffect(() => {
-    if (filters.country) {
-      loadCities(filters.country)
-    } else {
-      setCities([])
-    }
-  }, [filters.country])
-
-  const loadFriends = async () => {
-    const token = localStorage.getItem('accessToken')
-    if (!token) return
-
-    const payload = JSON.parse(atob(token.split('.')[1]))
-    const currentUserId = payload.id
-
-    const result = await friendsService.getFriends(currentUserId)
-    if (result.success) {
-      setFriends(result.data || [])
-    } else {
-      setFriends([])
-    }
-  }
-
-  const loadRequests = async () => {
-    const token = localStorage.getItem('accessToken')
-    if (!token) return
-
-    const payload = JSON.parse(atob(token.split('.')[1]))
-    const currentUserId = payload.id
-
-    const result = await friendsService.getFriendRequests(currentUserId)
-    if (result.success) {
-      setRequests(result.data || [])
-    } else {
-      setRequests([])
-    }
-  }
-
-  const loadCities = async (country) => {
-    setCities([])
-  }
-
-  const loadRandomUsers = async () => {
-    setSearchLoading(true)
-    setError('')
-
-    const result = await friendsService.searchUsers('', { random: true, limit: 100 })
-    if (result.success) {
-      setRandomUsers(result.data || [])
-    } else {
-      setError(result.error || 'Помилка завантаження користувачів')
-      setRandomUsers([])
-    }
-    setSearchLoading(false)
-  }
-
-  const searchUsers = async (query, searchFilters = {}) => {
-    if (!query.trim() || query.trim().length < 3) {
-      setSearchResults([])
-      setSearchLoading(false)
-      return
-    }
-
-    setSearchLoading(true)
-    setError('')
-
-    const result = await friendsService.searchUsers(query, searchFilters)
-    if (result.success) {
-      setSearchResults(result.data || [])
-    } else {
-      setError(result.error || 'Помилка пошуку')
-      setSearchResults([])
-    }
-    setSearchLoading(false)
-  }
-
-  const debouncedSearch = useCallback(
-    (query, searchFilters) => {
-      const timeoutId = setTimeout(() => {
-        searchUsers(query, searchFilters)
-      }, 300)
-      return () => clearTimeout(timeoutId)
-    },
-    []
-  )
-
-  useEffect(() => {
-    const cleanup = debouncedSearch(userSearchQuery, filters)
-    return cleanup
-  }, [userSearchQuery, filters, debouncedSearch])
-
-  const handleUserSearchChange = (e) => {
-    setUserSearchQuery(e.target.value)
-  }
-
-  const handleFilterChange = (filterType, value) => {
-    const newFilters = { ...filters, [filterType]: value }
-    if (filterType === 'country' && value !== filters.country) {
-      newFilters.city = ''
-    }
-    setFilters(newFilters)
-    if (searchQuery.trim()) {
-      debouncedSearch(searchQuery, newFilters)
-    }
-  }
-
-  const handleSearch = () => {
-    searchUsers(searchQuery, filters)
-  }
-
-  const handleAddFriend = async (userId) => {
+  const handleBlockUserFromMenu = useCallback(async (friendId) => {
     try {
-      const result = await friendsService.sendFriendRequest(userId)
-
+      const result = await friendsService.blockUser(friendId)
       if (result.success || result.status === 'success') {
-        // Оновлюємо стан в searchResults
-        setSearchResults(prev => prev.map(user =>
-          user.id === userId ? { ...user, relationshipStatus: 'following', requestSent: true } : user
-        ))
-        // Оновлюємо стан в randomUsers
-        setRandomUsers(prev => prev.map(user =>
-          user.id === userId ? { ...user, relationshipStatus: 'following', requestSent: true } : user
-        ))
-        // Оновлюємо списки для випадку взаємної заявки
-        await loadFriends()
-        await loadRequests()
-      } else if (result.message === 'Заявка вже надіслана' || result.error === 'Friendship request already exists') {
-        setSearchResults(prev => prev.map(user =>
-          user.id === userId ? { ...user, relationshipStatus: 'following', requestSent: true } : user
-        ))
-        setRandomUsers(prev => prev.map(user =>
-          user.id === userId ? { ...user, relationshipStatus: 'following', requestSent: true } : user
-        ))
-      } else {
-        setError(result.message || result.error || 'Помилка відправки заявки')
+        // Видаляємо заблокованого користувача зі списку друзів
+        setFriends(prev => prev.filter(friend => friend.id !== friendId))
       }
     } catch (error) {
-      setError('Помилка відправки заявки')
+      console.error('Помилка блокування:', error)
     }
-  }
+  }, [setFriends])
 
-  const handleRemoveFriend = async (userId) => {
-    const result = await friendsService.removeFriend(userId)
-    if (result.success) {
-      // Миттєво видаляємо з списку друзів
-      setFriends(prev => prev.filter(friend => friend.id !== userId))
-      // Оновлюємо стан в пошуку
-      setSearchResults(prev => prev.map(user =>
-        user.id === userId ? { ...user, isFriend: false, relationshipStatus: 'none' } : user
-      ))
-      setRandomUsers(prev => prev.map(user =>
-        user.id === userId ? { ...user, isFriend: false, relationshipStatus: 'none' } : user
-      ))
-    } else {
-      setError(result.error || 'Помилка видалення з друзів')
-    }
-  }
-
-  const handleCancelRequest = async (userId) => {
-    try {
-      const result = await friendsService.cancelFriendRequest(userId)
-
-      if (result.success || result.status === 'success') {
-        // Оновлюємо стан в searchResults
-        setSearchResults(prev => prev.map(user =>
-          user.id === userId ? { ...user, relationshipStatus: 'none', requestSent: false } : user
-        ))
-        // Оновлюємо стан в randomUsers
-        setRandomUsers(prev => prev.map(user =>
-          user.id === userId ? { ...user, relationshipStatus: 'none', requestSent: false } : user
-        ))
-      } else {
-        setError(result.message || result.error || 'Помилка скасування заявки')
-      }
-    } catch (error) {
-      setError('Помилка скасування заявки')
-    }
-  }
-
-  const handleRejectFollower = async (userId) => {
-    try {
-      const result = await friendsService.removeFollower(userId)
-
-      if (result.success || result.status === 'success') {
-        setSearchResults(prev => prev.map(user =>
-          user.id === userId ? { ...user, relationshipStatus: 'none', requestReceived: false } : user
-        ))
-      } else {
-        setError(result.message || result.error || 'Помилка видалення підписника')
-      }
-    } catch (error) {
-      setError('Помилка видалення підписника')
-    }
-  }
-
-  const filteredFriends = friends.filter(friend => {
-    const searchLower = searchQuery.toLowerCase()
-    const name = friend.name || `${friend.firstName || ''} ${friend.lastName || ''}`.trim()
-    return name.toLowerCase().includes(searchLower)
-  })
-
-  const handleAcceptRequest = async (id) => {
-    console.log('Accepting request with ID:', id) // Debug
-    const result = await friendsService.acceptFriendRequest(id)
-    if (result.success || result.status === 'success') {
-      // Видаляємо заявку зі списку requests
-      setRequests(prev => prev.filter(request => request.id !== id))
-      // Оновлюємо списки
-      await loadFriends()
-    } else {
-      setError(result.message || result.error || 'Помилка прийняття заявки')
-    }
-  }
-
-  const handleRejectRequest = async (id) => {
-    const result = await friendsService.rejectFriendRequest(id)
-    if (result.success || result.status === 'success') {
-      // Видаляємо заявку зі списку requests
-      setRequests(prev => prev.filter(request => request.id !== id))
-    } else {
-      setError(result.message || result.error || 'Помилка відхилення заявки')
-    }
-  }
-
-  const handleSendMessage = (friendId) => {
+  const handleSendMessageFromMenu = useCallback((friendId) => {
     navigate(`/messages/${friendId}`)
-  }
+  }, [navigate])
 
-  const renderFriendCard = (friend, type = 'friend') => (
-    <article
-      key={friend.id}
-      className="friend-card"
-      tabIndex="0"
-      onClick={() => setDropdownOpen(null)}
-    >
-      <div 
-        className="friend-main"
-        onClick={(e) => {
-          e.stopPropagation()
-          navigate(`/profile/${friend.id}`)
-        }}
-      >
-        <div className="friend-avatar">
-          {friend.avatar ? (
-            <img
-              src={friend.avatar.startsWith('data:') || friend.avatar.startsWith('http') ? friend.avatar : `http://localhost:3001${friend.avatar}`}
-              alt={friend.name || `${friend.firstName || ''} ${friend.lastName || ''}`.trim() || 'User avatar'}
-            />
+  const handleAcceptRequest = useCallback(async (requestId) => {
+    const success = await acceptRequest(requestId)
+    if (success) {
+      reloadFriends()
+      // Заявка вже видалена в хуку acceptRequest
+    }
+  }, [acceptRequest, reloadFriends])
+
+  const handleRejectRequest = useCallback(async (requestId) => {
+    const success = await rejectRequest(requestId)
+    if (success) {
+      // Заявка вже видалена в хуку rejectRequest
+    }
+  }, [rejectRequest])
+
+  const handleSendFriendRequestFromRequests = useCallback(async (userId) => {
+    const success = await sendFriendRequest(userId)
+    if (success) {
+      // Знаходимо користувача з заявок
+      const userRequest = requests.find(request => 
+        request.requester?.id === userId || request.id === userId
+      )
+      
+      if (userRequest) {
+        // Додаємо до списку друзів
+        const newFriend = userRequest.requester || userRequest
+        setFriends(prev => [...prev, newFriend])
+        
+        // Видаляємо з заявок
+        setRequests(prev => prev.filter(request => 
+          request.requester?.id !== userId && request.id !== userId
+        ))
+      }
+    }
+  }, [sendFriendRequest, setRequests, setFriends, requests])
+
+  const handleTabChange = useCallback((tab) => {
+    setActiveTab(tab)
+    if (tab === 'search' && randomUsers.length === 0) {
+      loadRandomUsers()
+    }
+  }, [randomUsers.length, loadRandomUsers])
+
+  const renderContent = () => {
+    if (activeTab === 'all') {
+      if (friendsLoading) return <div className="loading">Завантаження...</div>
+      
+      return (
+        <div className="friends-list">
+          {friends.length > 0 ? (
+            friends.map(friend => (
+              <FriendCard
+                key={friend.id}
+                friend={friend}
+                type="friend"
+                dropdownOpen={dropdownOpen}
+                onDropdownToggle={handleDropdownToggle}
+                onDropdownClose={handleDropdownClose}
+                onSendMessage={handleSendMessageFromMenu}
+                onRemoveFriend={handleRemoveFriendFromMenu}
+                onBlockUser={handleBlockUserFromMenu}
+              />
+            ))
           ) : (
-            <div className="avatar-placeholder">
-              {friend.name ? friend.name.charAt(0) : (friend.firstName ? friend.firstName.charAt(0) : '?')}
+            <div className="empty-state">
+              <p>Друзів не знайдено</p>
             </div>
           )}
         </div>
+      )
+    }
 
-        <div className="friend-info">
-          <h3 className="friend-name">
-            {friend.name || `${friend.firstName} ${friend.lastName}`}
-            {friend.age && `, ${friend.age}`}
-          </h3>
-          <p className="friend-meta">
-            {friend.city && friend.country && `Локація: ${friend.city}, ${friend.country}`}
-            {friend.country && !friend.city && `Локація: ${friend.country}`}
-            {friend.mutualFriends > 0 && ` • ${friend.mutualFriends} спільних друзів`}
-            {type === 'friend' && friend.lastSeen && ` • ${friend.lastSeen}`}
-            {type === 'suggestion' && ` • ${friend.reason}`}
-          </p>
-        </div>
-      </div>
-
-      <div className="friend-actions">
-        {type === 'friend' && (
-          <>
-            <button className="btn btn--primary" onClick={() => handleSendMessage(friend.id)} aria-label="Написати повідомлення">
-              <span className="btn__text">Написати</span>
-            </button>
-            <div className="menu">
-              <button
-                className="btn btn--ghost"
-                aria-haspopup="true"
-                aria-expanded={dropdownOpen === friend.id}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setDropdownOpen(dropdownOpen === friend.id ? null : friend.id)
-                }}
-              >
-                ⋯
-              </button>
-              {dropdownOpen === friend.id && (
-                <div className="menu-panel">
-                  <button
-                    className="btn btn--danger"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleRemoveFriend(friend.id)
-                      setDropdownOpen(null)
-                    }}
-                  >
-                    ✕ Видалити
-                  </button>
-                  <button
-                    className="btn btn--warning"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setDropdownOpen(null)
-                    }}
-                  >
-                    🚫 Заблокувати
-                  </button>
-                </div>
-              )}
+    if (activeTab === 'requests') {
+      if (requestsLoading) return <div className="loading">Завантаження...</div>
+      
+      return (
+        <div className="friends-list">
+          {requests.length > 0 ? (
+            requests.map(request => (
+              <FriendCard
+                key={request.id}
+                friend={{...request.requester, requestId: request.id}}
+                type="request"
+                dropdownOpen={dropdownOpen}
+                onDropdownToggle={handleDropdownToggle}
+                onDropdownClose={handleDropdownClose}
+                onAcceptRequest={handleAcceptRequest}
+                onRejectRequest={handleRejectRequest}
+                onSendFriendRequest={handleSendFriendRequestFromRequests}
+              />
+            ))
+          ) : (
+            <div className="empty-state">
+              <p>Немає нових заявок</p>
             </div>
-          </>
-        )}
-        {type === 'request' && (
-          <>
-            <button className="btn btn--primary" onClick={() => handleAcceptRequest(friend.requestId)} title="Прийняти заявку">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-              </svg>
-              <span className="btn__text">Прийняти</span>
-            </button>
-            <button className="btn btn--danger" onClick={() => handleRejectRequest(friend.requestId)} title="Відхилити заявку">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-              </svg>
-              <span className="btn__text">Відхилити</span>
-            </button>
-            <button className="btn btn--secondary" onClick={() => handleAddFriend(friend.id)} title="Підписатися у відповідь">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-              </svg>
-              <span className="btn__text">Підписатися</span>
-            </button>
-          </>
-        )}
-        {type === 'suggestion' && (
-          <button className="btn btn--primary" onClick={() => handleAddFriend(friend.id)}>
-            Додати в друзі
-          </button>
-        )}
-        {type === 'search' && (
-          <>
-            {friend.relationshipStatus === 'friends' ? (
-              <>
-                <button className="btn btn--primary" onClick={() => handleSendMessage(friend.id)}>Написати</button>
-                <button className="btn btn--danger" onClick={() => handleRemoveFriend(friend.id)}>Видалити з друзів</button>
-              </>
-            ) : friend.relationshipStatus === 'following' ? (
-              <>
-                <button
-                  className="btn btn--following"
-                  onClick={() => handleCancelRequest(friend.id)}
-                  title="Підписка активна"
-                >
-                  <svg className="following-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H16c-.8 0-1.5.7-1.5 1.5v9c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5V15h1v5c0 1.1-.9 2-2 2s-2-.9-2-2z"/>
-                  </svg>
-                  <svg className="unfollow-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                  </svg>
-                  <span className="following-text">Підписка</span>
-                  <span className="unfollow-text">Відписатися</span>
-                </button>
-              </>
-            ) : friend.relationshipStatus === 'follower' ? (
-              <>
-                <button className="btn btn--primary" onClick={() => handleAddFriend(friend.id)}>Підписатися у відповідь</button>
-                <button className="btn btn--danger" onClick={() => handleRejectFollower(friend.id)}>Видалити підписника</button>
-              </>
-            ) : (
-              <button className="btn btn--primary" onClick={() => handleAddFriend(friend.id)}>Підписатися</button>
-            )}
-          </>
-        )}
-      </div>
-    </article>
-  )
+          )}
+        </div>
+      )
+    }
 
-  if (loading) {
-    return (
-      <div className="friends-page">
-        <div className="loading">Завантаження...</div>
-      </div>
-    )
+    if (activeTab === 'search') {
+      return (
+        <div className="search-section">
+          <div className="search-form">
+            <input
+              type="text"
+              placeholder="Введіть ім'я або прізвище..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="search-input"
+            />
+          </div>
+          
+          <div className="search-results">
+            {searchLoading ? (
+              <div className="friends-list">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <FriendCardSkeleton key={index} />
+                ))}
+              </div>
+            ) : query.trim() ? (
+              results.length > 0 ? (
+                <div className="friends-list">
+                  {results.map(user => (
+                    <FriendCard
+                      key={user.id}
+                      friend={user}
+                      type="search"
+                      onSendFriendRequest={sendFriendRequest}
+                      onCancelRequest={cancelFriendRequest}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <p>Користувачів не знайдено</p>
+                </div>
+              )
+            ) : randomUsers.length > 0 ? (
+              <div className="friends-list">
+                {randomUsers.map(user => (
+                  <FriendCard
+                    key={user.id}
+                    friend={user}
+                    type="search"
+                    onSendFriendRequest={sendFriendRequest}
+                    onCancelRequest={cancelFriendRequest}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state">
+                <p>Введіть запит для пошуку друзів</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )
+    }
   }
 
   return (
@@ -468,24 +242,19 @@ const Friends = () => {
             <div className="friends-tabs">
               <button
                 className={`tab ${activeTab === 'all' ? 'active' : ''}`}
-                onClick={() => setActiveTab('all')}
+                onClick={() => handleTabChange('all')}
               >
                 Всі друзі ({friends.length})
               </button>
               <button
                 className={`tab ${activeTab === 'requests' ? 'active' : ''}`}
-                onClick={() => setActiveTab('requests')}
+                onClick={() => handleTabChange('requests')}
               >
                 Заявки ({requests.length})
               </button>
               <button
                 className={`tab ${activeTab === 'search' ? 'active' : ''}`}
-                onClick={() => {
-                  setActiveTab('search')
-                  if (randomUsers.length === 0) {
-                    loadRandomUsers()
-                  }
-                }}
+                onClick={() => handleTabChange('search')}
               >
                 Пошук друзів
               </button>
@@ -493,81 +262,7 @@ const Friends = () => {
           </div>
 
           <div className="friends-main-content">
-          {activeTab === 'all' && (
-            <div className="friends-list">
-              {filteredFriends.length > 0 ? (
-                filteredFriends.map(friend => renderFriendCard(friend, 'friend'))
-              ) : (
-                <div className="empty-state">
-                  <p>Друзів не знайдено</p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'requests' && (
-            <div className="friends-list">
-              {requests.length > 0 ? (
-                requests.map(request => {
-                  console.log('Request object:', request) // Debug
-                  return renderFriendCard({...request.requester, requestId: request.id}, 'request')
-                })
-              ) : (
-                <div className="empty-state">
-                  <p>Немає нових заявок</p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'search' && (
-            <div className="search-section">
-              <div className="search-form">
-                <div className="search-input-group">
-                  <input
-                    type="text"
-                    placeholder="Введіть ім'я або прізвище..."
-                    value={userSearchQuery}
-                    onChange={handleUserSearchChange}
-                    className="search-input"
-                  />
-                </div>
-
-              </div>
-              <div className="search-results">
-                {error && (
-                  <div className="error-message">
-                    <p>{error}</p>
-                  </div>
-                )}
-                {searchLoading ? (
-                  <div className="friends-list">
-                    {Array.from({ length: 6 }).map((_, index) => (
-                      <FriendCardSkeleton key={index} />
-                    ))}
-                  </div>
-                ) : userSearchQuery.trim() ? (
-                  searchResults.length > 0 ? (
-                    <div className="friends-list">
-                      {searchResults.map(user => renderFriendCard(user, 'search'))}
-                    </div>
-                  ) : (
-                    <div className="empty-state">
-                      <p>Користувачів не знайдено</p>
-                    </div>
-                  )
-                ) : randomUsers.length > 0 ? (
-                  <div className="friends-list">
-                    {randomUsers.map(user => renderFriendCard(user, 'search'))}
-                  </div>
-                ) : (
-                  <div className="empty-state">
-                    <p>Введіть запит для пошуку друзів</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+            {renderContent()}
           </div>
         </div>
       </div>

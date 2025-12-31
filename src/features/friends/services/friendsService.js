@@ -190,5 +190,23 @@ export const friendsService = {
       }
       throw error
     }
+  },
+
+  async blockUser(userId) {
+    if (!userId) {
+      throw new Error('ID користувача обов\'язковий')
+    }
+    
+    try {
+      return await apiClient.secureRequest('/users/block', {
+        method: 'POST',
+        body: JSON.stringify({ userId })
+      })
+    } catch (error) {
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: false, error: 'Функція блокування поки недоступна' }
+      }
+      throw error
+    }
   }
 }
