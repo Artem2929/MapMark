@@ -3,12 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useAuthStore } from '../../../app/store'
 import { useConversations } from '../hooks/useConversations'
 import { useActiveChat } from '../hooks/useActiveChat'
-import { useMessagesSocket } from '../hooks/useMessagesSocket'
-import { useTyping } from '../hooks/useTyping'
 import ConversationsSidebar from './ConversationsSidebar'
 import ChatArea from './ChatArea'
-import NewChatModal from './NewChatModal'
-import Breadcrumbs from '../../../components/ui/Breadcrumbs'
 import './MessagesPage.css'
 
 const MessagesPage = () => {
@@ -16,10 +12,7 @@ const MessagesPage = () => {
   const { userId } = useParams()
   const { user: currentUser, isAuthenticated } = useAuthStore()
   const { activeChat, selectChat, clearChat } = useActiveChat()
-  const [showNewChatModal, setShowNewChatModal] = React.useState(false)
   const [searchQuery, setSearchQuery] = React.useState('')
-  const [searchResults, setSearchResults] = React.useState([])
-  const [isSearching, setIsSearching] = React.useState(false)
 
   const {
     conversations,
@@ -29,7 +22,6 @@ const MessagesPage = () => {
     addConversation,
     removeConversation,
     markAsRead,
-    incrementUnread,
     createOrFindConversation
   } = useConversations()
 
@@ -51,7 +43,6 @@ const MessagesPage = () => {
         selectChat(existingConversation._id)
         markAsRead(existingConversation._id)
       } else {
-        // Створюємо новий чат з користувачем
         createOrFindConversation(userId).then(conversation => {
           if (conversation) {
             selectChat(conversation._id)
@@ -60,40 +51,6 @@ const MessagesPage = () => {
       }
     }
   }, [userId, currentUser, conversations, loading, selectChat, markAsRead, createOrFindConversation])
-
-  const { sendTyping } = useMessagesSocket({
-    activeChat,
-    currentUserId: currentUser?.id,
-    onNewMessage: (message) => {
-      if (message.conversation !== activeChat) {
-        incrementUnread(message.conversation)
-      }
-      updateConversation(message.conversation, {
-        lastMessage: message,
-        lastActivity: new Date()
-      })
-    },
-    onUserOnline: (userId) => {
-      conversations.forEach(conv => {
-        if (conv.participant?._id === userId) {
-          updateConversation(conv._id, {
-            participant: { ...conv.participant, isOnline: true }
-          })
-        }
-      })
-    },
-    onUserOffline: (userId) => {
-      conversations.forEach(conv => {
-        if (conv.participant?._id === userId) {
-          updateConversation(conv._id, {
-            participant: { ...conv.participant, isOnline: false }
-          })
-        }
-      })
-    }
-  })
-
-  const { startTyping } = useTyping(sendTyping)
 
   const filteredConversations = useMemo(() => {
     if (!searchQuery.trim()) return conversations
@@ -128,12 +85,6 @@ const MessagesPage = () => {
     }
   }
 
-  const handleNewChat = (conversation) => {
-    addConversation(conversation)
-    selectChat(conversation._id)
-    setShowNewChatModal(false)
-  }
-
   const handleCreateChatFromSearch = async (userId) => {
     try {
       const conversation = await createOrFindConversation(userId)
@@ -152,13 +103,6 @@ const MessagesPage = () => {
   return (
     <div className="messages-page">
       <div className="messages-container">
-        <Breadcrumbs 
-          items={[
-            { label: 'Профіль', href: `/profile/${currentUser?.id}` },
-            { label: 'Повідомлення' }
-          ]}
-        />
-
         <div className="messages-header">
           <h1>Повідомлення</h1>
         </div>
@@ -172,26 +116,17 @@ const MessagesPage = () => {
             onConversationSelect={handleConversationSelect}
             onConversationDelete={handleConversationDelete}
             onSearchChange={setSearchQuery}
-            onNewChatClick={() => setShowNewChatModal(true)}
             onCreateChat={handleCreateChatFromSearch}
           />
 
           <ChatArea
             conversation={activeConversation}
             currentUser={currentUser}
-            onTyping={startTyping}
             onConversationUpdate={(updates) => 
               activeChat && updateConversation(activeChat, updates)
             }
           />
         </div>
-
-        {showNewChatModal && (
-          <NewChatModal
-            onClose={() => setShowNewChatModal(false)}
-            onChatCreated={handleNewChat}
-          />
-        )}
       </div>
     </div>
   )
