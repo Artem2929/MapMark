@@ -196,7 +196,7 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
             </div>
           </div>
           
-          <PhotosSection userId={user.id} isOwnProfile={isOwnProfile} />
+          <PhotosSection key={user.id} userId={user.id} isOwnProfile={isOwnProfile} />
         </div>
         
         <div className="profile-header__actions profile-header__actions--hidden">

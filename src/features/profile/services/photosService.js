@@ -7,7 +7,8 @@ export const photosService = {
     }
     
     const data = await apiClient.request(`/photos/users/${userId}`, { params })
-    return data.photos || []
+    console.log('Photos API response:', data)
+    return data.data?.photos || data.photos || []
   },
 
   async uploadPhotos(files) {

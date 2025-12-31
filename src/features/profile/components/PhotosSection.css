@@ -60,10 +60,6 @@
   transition: transform 0.2s ease;
 }
 
-.photos-section__item:hover .photos-section__image {
-  transform: scale(1.05);
-}
-
 .photos-section__overlay {
   position: absolute;
   top: 50%;
@@ -130,6 +126,30 @@
   color: #94a3b8;
   position: relative;
   display: inline-block;
+}
+
+.photos-section__add-icon-btn {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  width: 32px;
+  height: 32px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.photos-section__add-icon-btn:hover {
+  background: #1d4ed8;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
 .photos-section__empty-text {
