@@ -1,4 +1,5 @@
 import { apiClient } from '../../../shared/api/client.js'
+import socketService from '../../../services/socketService.js'
 
 // Функція для отримання поточного користувача з localStorage
 const getCurrentUser = () => {
@@ -59,20 +60,14 @@ export const messagesService = {
     }
   },
 
-  async sendFileMessage(conversationId, file, content = '') {
-    if (!conversationId || !file) {
-      throw new Error('ID розмови та файл обов\'язкові')
+  async markAsRead(conversationId) {
+    if (!conversationId) {
+      throw new Error('ID розмови обов\'язковий')
     }
     
     try {
-      const formData = new FormData()
-      formData.append('conversationId', conversationId)
-      formData.append('file', file)
-      if (content) formData.append('content', content)
-      
-      return await apiClient.secureRequest('/messages/file', {
-        method: 'POST',
-        body: formData
+      return await apiClient.secureRequest(`/messages/conversations/${conversationId}/read`, {
+        method: 'POST'
       })
     } catch (error) {
       if (error.message.includes('404') || error.message.includes("Can't find")) {
@@ -82,36 +77,15 @@ export const messagesService = {
     }
   },
 
-  async sendVoiceMessage(conversationId, audioFile) {
-    if (!conversationId || !audioFile) {
-      throw new Error('ID розмови та аудіо файл обов\'язкові')
+  async createConversation(userId) {
+    if (!userId) {
+      throw new Error('ID користувача обов\'язковий')
     }
     
     try {
-      const formData = new FormData()
-      formData.append('conversationId', conversationId)
-      formData.append('voice', audioFile)
-      
-      return await apiClient.secureRequest('/messages/voice', {
+      return await apiClient.secureRequest('/messages/conversations', {
         method: 'POST',
-        body: formData
-      })
-    } catch (error) {
-      if (error.message.includes('404') || error.message.includes("Can't find")) {
-        return { success: false, error: 'Функція повідомлень поки недоступна' }
-      }
-      throw error
-    }
-  },
-
-  async deleteMessage(messageId) {
-    if (!messageId) {
-      throw new Error('ID повідомлення обов\'язковий')
-    }
-    
-    try {
-      return await apiClient.secureRequest(`/messages/${messageId}`, {
-        method: 'DELETE'
+        body: JSON.stringify({ userId })
       })
     } catch (error) {
       if (error.message.includes('404') || error.message.includes("Can't find")) {
@@ -180,92 +154,76 @@ export const messagesService = {
     }
   },
 
-  async createConversation(userId) {
-    if (!userId) {
-      throw new Error('ID користувача обов\'язковий')
-    }
-    
-    try {
-      return await apiClient.secureRequest('/messages/conversations', {
-        method: 'POST',
-        body: JSON.stringify({ userId })
-      })
-    } catch (error) {
-      if (error.message.includes('404') || error.message.includes("Can't find")) {
-        return { success: false, error: 'Функція повідомлень поки недоступна' }
-      }
-      throw error
-    }
-  },
-
   async createOrFindConversation(userId) {
     return this.createConversation(userId)
   },
 
-  async markAsRead(conversationId) {
-    if (!conversationId) {
-      throw new Error('ID розмови обов\'язковий')
-    }
-    
-    try {
-      return await apiClient.secureRequest(`/messages/conversations/${conversationId}/read`, {
-        method: 'POST'
-      })
-    } catch (error) {
-      if (error.message.includes('404') || error.message.includes("Can't find")) {
-        return { success: false, error: 'Функція повідомлень поки недоступна' }
-      }
-      throw error
-    }
-  },
-
-  // WebSocket methods (placeholder for future implementation)
-  setToken(token) {
-    // Implementation depends on WebSocket service
-  },
-
+  // WebSocket методи
   initSocket() {
-    // Implementation depends on WebSocket service
+    const token = localStorage.getItem('accessToken')
+    if (token) {
+      return socketService.connect(token)
+    }
     return null
   },
 
-  onNewMessage(callback) {
-    // Implementation depends on WebSocket service
-  },
-
-  onMessageDeleted(callback) {
-    // Implementation depends on WebSocket service
-  },
-
-  onUserTyping(callback) {
-    // Implementation depends on WebSocket service
-  },
-
-  onUserOnline(callback) {
-    // Implementation depends on WebSocket service
-  },
-
-  onUserOffline(callback) {
-    // Implementation depends on WebSocket service
-  },
-
-  off(event, callback) {
-    // Implementation depends on WebSocket service
-  },
-
-  disconnect() {
-    // Implementation depends on WebSocket service
-  },
-
   joinConversation(conversationId) {
-    // Implementation depends on WebSocket service
+    socketService.joinConversation(conversationId)
   },
 
   leaveConversation(conversationId) {
-    // Implementation depends on WebSocket service
+    socketService.leaveConversation(conversationId)
+  },
+
+  startTyping(conversationId) {
+    socketService.startTyping(conversationId)
+  },
+
+  stopTyping(conversationId) {
+    socketService.stopTyping(conversationId)
+  },
+
+  onNewMessage(callback) {
+    socketService.on('message:new', callback)
+  },
+
+  onMessageRead(callback) {
+    socketService.on('message:read', callback)
+  },
+
+  onMessageDeleted(callback) {
+    socketService.on('message:deleted', callback)
+  },
+
+  onUserTyping(callback) {
+    socketService.on('typing:start', callback)
+  },
+
+  onUserStoppedTyping(callback) {
+    socketService.on('typing:stop', callback)
+  },
+
+  onUserOnline(callback) {
+    socketService.on('user:online', callback)
+  },
+
+  onUserOffline(callback) {
+    socketService.on('user:offline', callback)
+  },
+
+  off(event, callback) {
+    socketService.off(event, callback)
+  },
+
+  disconnect() {
+    socketService.disconnect()
   },
 
   sendTyping(conversationId, isTyping) {
-    // Implementation depends on WebSocket service
+    if (isTyping) {
+      this.startTyping(conversationId)
+    } else {
+      this.stopTyping(conversationId)
+    }
   }
 }

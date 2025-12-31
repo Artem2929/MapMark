@@ -1,98 +1,123 @@
 const Message = require('../models/Message')
 const Conversation = require('../models/Conversation')
+const User = require('../models/User')
+const socketService = require('./socketService')
 const mongoose = require('mongoose')
 
 class MessageService {
-  async getMessages(conversationId, userId, cursor = null, limit = 50) {
+  async getMessages(conversationId, userId, page = 1, limit = 50) {
+    // Перевіряємо доступ до розмови
     const conversation = await Conversation.findById(conversationId)
-    if (!conversation) {
-      throw new Error('Розмову не знайдено')
+    if (!conversation || !conversation.hasParticipant(userId)) {
+      throw new Error('Розмову не знайдено або доступ заборонено')
     }
 
-    if (!conversation.hasParticipant(userId)) {
-      throw new Error('Доступ заборонено')
-    }
-
-    const query = { conversationId }
-    
-    if (cursor) {
-      query.createdAt = { $lt: new Date(cursor) }
-    }
-
-    const messages = await Message.find(query)
-      .populate({
-        path: 'senderId',
-        select: 'name username avatar'
-      })
+    const messages = await Message.find({ conversationId })
+      .populate('senderId', 'id username firstName lastName avatar')
       .sort({ createdAt: -1 })
-      .limit(limit + 1)
+      .limit(limit)
+      .skip((page - 1) * limit)
       .lean()
 
-    const hasMore = messages.length > limit
-    if (hasMore) {
-      messages.pop()
-    }
-
-    const nextCursor = messages.length > 0 ? messages[messages.length - 1].createdAt : null
-
-    return {
-      messages: messages.reverse(),
-      hasMore,
-      nextCursor
-    }
+    return messages.reverse().map(msg => ({
+      _id: msg._id,
+      text: msg.text,
+      senderId: msg.senderId._id,
+      sender: {
+        id: msg.senderId.id,
+        username: msg.senderId.username,
+        firstName: msg.senderId.firstName,
+        lastName: msg.senderId.lastName,
+        avatar: msg.senderId.avatar
+      },
+      createdAt: msg.createdAt,
+      readBy: msg.readBy,
+      messageType: msg.messageType,
+      fileUrl: msg.fileUrl,
+      fileName: msg.fileName
+    }))
   }
 
   async sendMessage(conversationId, senderId, text) {
+    // Перевіряємо доступ до розмови
     const conversation = await Conversation.findById(conversationId)
-    if (!conversation) {
-      throw new Error('Розмову не знайдено')
+    if (!conversation || !conversation.hasParticipant(senderId)) {
+      throw new Error('Розмову не знайдено або доступ заборонено')
     }
 
-    if (!conversation.hasParticipant(senderId)) {
-      throw new Error('Доступ заборонено')
-    }
-
+    // Створюємо повідомлення
     const message = new Message({
       conversationId,
       senderId,
       text: text.trim(),
-      readBy: [senderId]
+      messageType: 'text'
     })
 
     await message.save()
-    await this.updateConversationAfterMessage(conversation, message)
 
-    return await Message.findById(message._id)
-      .populate({
-        path: 'senderId',
-        select: 'name username avatar'
-      })
-      .lean()
+    // Оновлюємо розмову
+    conversation.lastMessage = message._id
+    conversation.updatedAt = new Date()
+    
+    // Збільшуємо лічильник непрочитаних для інших учасників
+    conversation.participants.forEach(participantId => {
+      if (participantId.toString() !== senderId.toString()) {
+        const currentCount = conversation.unreadCount.get(participantId.toString()) || 0
+        conversation.unreadCount.set(participantId.toString(), currentCount + 1)
+      }
+    })
+
+    await conversation.save()
+
+    // Повертаємо повідомлення з populated даними
+    await message.populate('senderId', 'id username firstName lastName avatar')
+
+    const messageData = {
+      _id: message._id,
+      text: message.text,
+      senderId: message.senderId._id,
+      sender: {
+        id: message.senderId.id,
+        username: message.senderId.username,
+        firstName: message.senderId.firstName,
+        lastName: message.senderId.lastName,
+        avatar: message.senderId.avatar
+      },
+      createdAt: message.createdAt,
+      readBy: message.readBy,
+      messageType: message.messageType,
+      conversation: conversationId
+    }
+
+    // Відправляємо через WebSocket
+    socketService.emitNewMessage(conversationId, messageData, senderId)
+
+    return messageData
   }
 
   async markAsRead(conversationId, userId) {
+    // Перевіряємо доступ до розмови
     const conversation = await Conversation.findById(conversationId)
-    if (!conversation) {
-      throw new Error('Розмову не знайдено')
+    if (!conversation || !conversation.hasParticipant(userId)) {
+      throw new Error('Розмову не знайдено або доступ заборонено')
     }
 
-    if (!conversation.hasParticipant(userId)) {
-      throw new Error('Доступ заборонено')
-    }
-
+    // Позначаємо повідомлення як прочитані
     await Message.updateMany(
-      {
+      { 
         conversationId,
         senderId: { $ne: userId },
         readBy: { $ne: userId }
       },
-      {
-        $addToSet: { readBy: userId }
-      }
+      { $addToSet: { readBy: userId } }
     )
 
+    // Скидаємо лічильник непрочитаних
     conversation.unreadCount.set(userId.toString(), 0)
     await conversation.save()
+
+    // Повідомляємо через WebSocket
+    socketService.emitMessageRead(conversationId, userId)
 
     return { success: true }
   }
@@ -105,26 +130,12 @@ class MessageService {
     }
 
     if (message.senderId.toString() !== userId.toString()) {
-      throw new Error('Доступ заборонено')
+      throw new Error('Ви можете видаляти тільки свої повідомлення')
     }
 
     await Message.findByIdAndDelete(messageId)
+    
     return { success: true }
-  }
-
-  async updateConversationAfterMessage(conversation, message) {
-    conversation.lastMessage = message._id
-    conversation.updatedAt = new Date()
-
-    conversation.participants.forEach(participantId => {
-      const participantIdStr = participantId.toString()
-      if (participantIdStr !== message.senderId.toString()) {
-        const currentCount = conversation.unreadCount.get(participantIdStr) || 0
-        conversation.unreadCount.set(participantIdStr, currentCount + 1)
-      }
-    })
-
-    await conversation.save()
   }
 }
 

@@ -14,13 +14,16 @@ router.get('/conversations', messagesController.getConversations)
 // POST /api/v1/messages/conversations - Create conversation
 router.post('/conversations', csrfProtection, messagesController.createConversation)
 
-// GET /api/v1/messages/:otherUserId - Get messages with specific user
-router.get('/:otherUserId', messagesController.getMessages)
+// GET /api/v1/messages/conversations/:conversationId - Get messages in conversation
+router.get('/conversations/:conversationId', messagesController.getMessages)
 
-// POST /api/v1/messages/send - Send message
-router.post('/send', csrfProtection, messagesController.sendMessage)
+// POST /api/v1/messages/conversations/:conversationId/read - Mark conversation as read
+router.post('/conversations/:conversationId/read', csrfProtection, messagesController.markAsRead)
 
-// PUT /api/v1/messages/:conversationId/read - Mark conversation as read
-router.put('/:conversationId/read', csrfProtection, messagesController.markAsRead)
+// DELETE /api/v1/messages/conversations/:conversationId - Delete conversation
+router.delete('/conversations/:conversationId', csrfProtection, messagesController.deleteConversation)
+
+// POST /api/v1/messages - Send message
+router.post('/', csrfProtection, messagesController.sendMessage)
 
 module.exports = router
