@@ -46,5 +46,5 @@ build:
 
 # Health check
 health:
-	curl -f http://localhost:3001/health || exit 1
+	curl -f http://localhost:3002/health || exit 1
 	curl -f http://localhost:5173 || exit 1

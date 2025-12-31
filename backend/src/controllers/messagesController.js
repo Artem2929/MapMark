@@ -1,23 +1,23 @@
 const messagesService = require('../services/messagesService')
-const { success } = require('../utils/response')
+const { success, error } = require('../utils/response')
+const { validationResult } = require('express-validator')
 const logger = require('../utils/logger')
 
 const messagesController = {
+  // GET /api/conversations
   async getConversations(req, res) {
     try {
       const userId = req.user.id
       const conversations = await messagesService.getConversations(userId)
       
       success(res, conversations, 'Розмови отримано')
-    } catch (error) {
-      logger.error('Get conversations error', { error: error.message, userId: req.user.id })
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
+    } catch (err) {
+      logger.error('Get conversations error', { error: err.message, userId: req.user.id })
+      error(res, err.message, 500)
     }
   },
 
+  // GET /api/messages/:otherUserId
   async getMessages(req, res) {
     try {
       const userId = req.user.id
@@ -27,55 +27,42 @@ const messagesController = {
       const messages = await messagesService.getMessages(userId, otherUserId, parseInt(page), parseInt(limit))
       
       success(res, messages, 'Повідомлення отримано')
-    } catch (error) {
-      logger.error('Get messages error', { error: error.message, userId: req.user.id })
+    } catch (err) {
+      logger.error('Get messages error', { error: err.message, userId: req.user.id })
       
-      if (error.message.includes('не знайдено')) {
-        return res.status(404).json({
-          status: 'fail',
-          message: error.message
-        })
+      if (err.message.includes('не знайдено')) {
+        return error(res, err.message, 404)
       }
       
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
+      error(res, err.message, 500)
     }
   },
 
+  // POST /api/messages/send
   async sendMessage(req, res) {
     try {
       const senderId = req.user.id
       const { recipientId, content } = req.body
       
       if (!content || !content.trim()) {
-        return res.status(400).json({
-          status: 'fail',
-          message: 'Повідомлення не може бути порожнім'
-        })
+        return error(res, 'Повідомлення не може бути порожнім', 400)
       }
       
       const message = await messagesService.sendMessage(senderId, recipientId, content)
       
       success(res, message, 'Повідомлення надіслано', 201)
-    } catch (error) {
-      logger.error('Send message error', { error: error.message, senderId: req.user.id })
+    } catch (err) {
+      logger.error('Send message error', { error: err.message, senderId: req.user.id })
       
-      if (error.message.includes('не знайдено')) {
-        return res.status(404).json({
-          status: 'fail',
-          message: error.message
-        })
+      if (err.message.includes('не знайдено')) {
+        return error(res, err.message, 404)
       }
       
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
+      error(res, err.message, 500)
     }
   },
 
+  // PUT /api/messages/:conversationId/read
   async markAsRead(req, res) {
     try {
       const userId = req.user.id
@@ -84,20 +71,14 @@ const messagesController = {
       await messagesService.markAsRead(userId, conversationId)
       
       success(res, null, 'Повідомлення позначено як прочитане')
-    } catch (error) {
-      logger.error('Mark as read error', { error: error.message, userId: req.user.id })
+    } catch (err) {
+      logger.error('Mark as read error', { error: err.message, userId: req.user.id })
       
-      if (error.message.includes('не знайдено')) {
-        return res.status(404).json({
-          status: 'fail',
-          message: error.message
-        })
+      if (err.message.includes('не знайдено')) {
+        return error(res, err.message, 404)
       }
       
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
+      error(res, err.message, 500)
     }
   }
 }

@@ -1,0 +1,13 @@
+// Main components
+export { default as MessagesPage } from './MessagesPage'
+export { default as ConversationsSidebar } from './ConversationsSidebar'
+export { default as ConversationItem } from './ConversationItem'
+export { default as ChatArea } from './ChatArea'
+export { default as ChatHeader } from './ChatHeader'
+export { default as MessagesList } from './MessagesList'
+export { default as MessageBubble } from './MessageBubble'
+export { default as MessageInput } from './MessageInput'
+export { default as NewChatModal } from './NewChatModal'
+export { default as ContextMenu } from './ContextMenu'
+export { default as SearchInput } from './SearchInput'
+export { default as NewChatButton } from './NewChatButton'

@@ -5,7 +5,7 @@ const { csrfProtection } = require('../middleware/csrf')
 
 const router = express.Router()
 
-// All messages routes require authentication
+// Всі routes потребують авторизації
 router.use(protect)
 
 // GET /api/v1/messages/conversations - Get user's conversations

@@ -6,7 +6,7 @@ dotenv.config({ path: path.join(__dirname, '../../.env') })
 
 const config = {
   // Server
-  PORT: process.env.PORT || 3001,
+  PORT: process.env.PORT || 3002,
   NODE_ENV: process.env.NODE_ENV || 'development',
   
   // Database
