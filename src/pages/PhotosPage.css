@@ -273,7 +273,14 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -330,7 +337,14 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -445,7 +459,14 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -565,7 +586,6 @@
 
 .add-photo-card:hover {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
 }
 
 .add-photo-grid-btn {
@@ -673,7 +693,6 @@
 
 .upload-submit-btn:disabled {
   background: #9ca3af;
-  cursor: not-allowed;
 }
 
 @media (max-width: 1024px) {

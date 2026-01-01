@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react'
+import { memo, useRef, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import DropdownMenu from '../ui/DropdownMenu'
 import './FriendCard.css'
@@ -19,28 +19,37 @@ const FriendCard = memo(({
   const navigate = useNavigate()
   const menuButtonRef = useRef(null)
 
-  const handleProfileClick = (e) => {
+  const avatarData = useMemo(() => {
+    const avatarUrl = friend.avatar?.startsWith('data:') || friend.avatar?.startsWith('http') 
+      ? friend.avatar 
+      : friend.avatar ? `http://localhost:3001${friend.avatar}` : null
+    
+    const altText = friend.name || `${friend.firstName || ''} ${friend.lastName || ''}`.trim() || 'User avatar'
+    const placeholder = friend.name ? friend.name.charAt(0) : (friend.firstName ? friend.firstName.charAt(0) : '?')
+    
+    return { avatarUrl, altText, placeholder }
+  }, [friend.avatar, friend.name, friend.firstName, friend.lastName])
+
+  const handleProfileClick = useCallback((e) => {
     e.stopPropagation()
     navigate(`/profile/${friend.id}`)
-  }
+  }, [navigate, friend.id])
 
-  const handleMenuToggle = (e) => {
+  const handleMenuToggle = useCallback((e) => {
     e.stopPropagation()
     onDropdownToggle(friend.id)
-  }
+  }, [onDropdownToggle, friend.id])
 
   const renderAvatar = () => (
     <div className="friend-avatar">
-      {friend.avatar ? (
+      {avatarData.avatarUrl ? (
         <img
-          src={friend.avatar.startsWith('data:') || friend.avatar.startsWith('http') 
-            ? friend.avatar 
-            : `http://localhost:3001${friend.avatar}`}
-          alt={friend.name || `${friend.firstName || ''} ${friend.lastName || ''}`.trim() || 'User avatar'}
+          src={avatarData.avatarUrl}
+          alt={avatarData.altText}
         />
       ) : (
         <div className="avatar-placeholder">
-          {friend.name ? friend.name.charAt(0) : (friend.firstName ? friend.firstName.charAt(0) : '?')}
+          {avatarData.placeholder}
         </div>
       )}
     </div>

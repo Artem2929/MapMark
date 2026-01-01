@@ -1,4 +1,4 @@
-const conversationService = require('../services/conversationService')
+const messagesService = require("../services/messagesService")
 const messageService = require('../services/messageService')
 const { success, error } = require('../utils/response')
 const logger = require('../utils/logger')
@@ -8,7 +8,7 @@ const messagesController = {
   async getConversations(req, res) {
     try {
       const userId = req.user.id
-      const conversations = await conversationService.getConversations(userId)
+      const conversations = await messagesService.getConversations(userId)
       
       success(res, conversations, 'Розмови отримано')
     } catch (err) {
@@ -92,7 +92,7 @@ const messagesController = {
         return error(res, 'ID користувача обов\'язковий', 400)
       }
       
-      const conversation = await conversationService.createConversation(userId, otherUserId)
+      const conversation = await messagesService.createConversation(userId, otherUserId)
       
       success(res, conversation, 'Розмова створена', 201)
     } catch (err) {
@@ -112,7 +112,7 @@ const messagesController = {
       const userId = req.user.id
       const { conversationId } = req.params
       
-      await conversationService.deleteConversation(userId, conversationId)
+      await messagesService.deleteConversation(userId, conversationId)
       
       success(res, null, 'Розмова видалена')
     } catch (err) {

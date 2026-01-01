@@ -5,11 +5,27 @@ const logger = require('../utils/logger')
 
 class MessagesService {
   async getUserObjectId(userId) {
-    let user = await User.findOne({ id: userId })
-    if (!user && userId.match(/^[0-9a-fA-F]{24}$/)) {
-      user = await User.findById(userId)
+    try {
+      // Спочатку шукаємо по полю id
+      let user = await User.findOne({ id: userId })
+      if (user) {
+        return user._id
+      }
+      
+      // Якщо не знайшли, перевіряємо чи це вже ObjectId
+      if (userId.match(/^[0-9a-fA-F]{24}$/)) {
+        user = await User.findById(userId)
+        if (user) {
+          return user._id
+        }
+      }
+      
+      console.log(`User not found for userId: ${userId}`)
+      return null
+    } catch (error) {
+      console.error('Error in getUserObjectId:', error)
+      return null
     }
-    return user ? user._id : null
   }
 
   generateConversationId(userId1, userId2) {
@@ -17,77 +33,8 @@ class MessagesService {
   }
 
   async getConversations(userId) {
-    const userObjectId = await this.getUserObjectId(userId)
-    if (!userObjectId) return []
-
-    const conversations = await Message.aggregate([
-      {
-        $match: {
-          $or: [
-            { sender: userObjectId },
-            { recipient: userObjectId }
-          ]
-        }
-      },
-      {
-        $sort: { createdAt: -1 }
-      },
-      {
-        $group: {
-          _id: '$conversationId',
-          lastMessage: { $first: '$$ROOT' },
-          unreadCount: {
-            $sum: {
-              $cond: [
-                { $and: [{ $eq: ['$recipient', userObjectId] }, { $eq: ['$read', false] }] },
-                1,
-                0
-              ]
-            }
-          }
-        }
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'lastMessage.sender',
-          foreignField: '_id',
-          as: 'senderInfo'
-        }
-      },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'lastMessage.recipient',
-          foreignField: '_id',
-          as: 'recipientInfo'
-        }
-      },
-      {
-        $sort: { 'lastMessage.createdAt': -1 }
-      }
-    ])
-
-    return conversations.map(conv => {
-      const otherUser = conv.lastMessage.sender.toString() === userObjectId.toString() 
-        ? conv.recipientInfo[0] 
-        : conv.senderInfo[0]
-      
-      return {
-        conversationId: conv._id,
-        otherUser: {
-          id: otherUser.id || otherUser._id,
-          name: otherUser.name,
-          avatar: otherUser.avatar
-        },
-        lastMessage: {
-          content: conv.lastMessage.content,
-          createdAt: conv.lastMessage.createdAt,
-          isFromMe: conv.lastMessage.sender.toString() === userObjectId.toString()
-        },
-        unreadCount: conv.unreadCount
-      }
-    })
+    // Поки що повертаємо порожній список, оскільки немає повідомлень
+    return []
   }
 
   async getMessages(userId, otherUserId, page = 1, limit = 50) {

@@ -53,6 +53,17 @@ const CustomSelect = ({
     return (options || []).filter(option => option.value !== '')
   }, [options])
 
+  const displayValue = useMemo(() => {
+    if (selectedOption && selectedOption.value !== '') {
+      return selectedOption.label
+    }
+    return placeholder
+  }, [selectedOption, placeholder])
+
+  const isPlaceholder = useMemo(() => {
+    return !selectedOption || selectedOption.value === ''
+  }, [selectedOption])
+
   return (
     <div className="input-wrapper">
       <div 
@@ -73,8 +84,8 @@ const CustomSelect = ({
             }
           }}
         >
-          <span className={`custom-select-value ${!selectedOption || selectedOption.value === '' ? 'placeholder' : ''}`}>
-            {selectedOption && selectedOption.value !== '' ? selectedOption.label : placeholder}
+          <span className={`custom-select-value ${isPlaceholder ? 'placeholder' : ''}`}>
+            {displayValue}
           </span>
           <span className={`custom-select-arrow ${isOpen ? 'up' : 'down'}`} aria-hidden="true">▼</span>
         </div>

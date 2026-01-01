@@ -2,10 +2,19 @@ import React, { memo } from 'react'
 
 const MessageBubble = memo(({ message, isOwn, onDelete }) => {
   const formatTime = (timestamp) => {
-    return new Date(timestamp).toLocaleTimeString('uk-UA', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    })
+    try {
+      if (!timestamp) return '--:--'
+      const date = new Date(timestamp)
+      if (isNaN(date.getTime())) return '--:--'
+      
+      return date.toLocaleTimeString('uk-UA', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      })
+    } catch (error) {
+      console.error('Помилка форматування часу:', error)
+      return '--:--'
+    }
   }
 
   const getFileIcon = (fileName) => {
@@ -22,12 +31,43 @@ const MessageBubble = memo(({ message, isOwn, onDelete }) => {
   }
 
   const formatFileSize = (bytes) => {
-    if (!bytes) return '0 Bytes'
-    
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+    try {
+      if (!bytes || bytes === 0) return '0 Bytes'
+      if (typeof bytes !== 'number' || bytes < 0) return '0 Bytes'
+      
+      const k = 1024
+      const sizes = ['Bytes', 'KB', 'MB', 'GB']
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+      
+      if (i >= sizes.length) return '0 Bytes'
+      
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+    } catch (error) {
+      console.error('Помилка форматування розміру файла:', error)
+      return '0 Bytes'
+    }
+  }
+
+  const handleImageClick = (url) => {
+    try {
+      const newWindow = window.open(url, '_blank')
+      if (!newWindow) {
+        console.error('Не вдалося відкрити зображення')
+      }
+    } catch (error) {
+      console.error('Помилка відкриття зображення:', error)
+    }
+  }
+
+  const handleFileClick = (url) => {
+    try {
+      const newWindow = window.open(url, '_blank')
+      if (!newWindow) {
+        console.error('Не вдалося відкрити файл')
+      }
+    } catch (error) {
+      console.error('Помилка відкриття файла:', error)
+    }
   }
 
   const renderAttachment = () => {
@@ -40,10 +80,14 @@ const MessageBubble = memo(({ message, isOwn, onDelete }) => {
         <div className="message-attachment">
           <img 
             src={fileUrl}
-            alt={message.fileName}
+            alt={message.fileName || 'Зображення'}
             className="message-image"
-            onClick={() => window.open(fileUrl, '_blank')}
+            onClick={() => handleImageClick(fileUrl)}
             loading="lazy"
+            onError={(e) => {
+              e.target.style.display = 'none'
+              console.error('Помилка завантаження зображення:', fileUrl)
+            }}
           />
         </div>
       )
@@ -53,13 +97,13 @@ const MessageBubble = memo(({ message, isOwn, onDelete }) => {
       <div className="message-attachment">
         <div 
           className="message-file"
-          onClick={() => window.open(fileUrl, '_blank')}
+          onClick={() => handleFileClick(fileUrl)}
         >
           <div className="message-file-icon">
             {getFileIcon(message.fileName)}
           </div>
           <div className="message-file-info">
-            <div className="message-file-name">{message.fileName}</div>
+            <div className="message-file-name">{message.fileName || 'Невідомий файл'}</div>
             <div className="message-file-size">{formatFileSize(message.fileSize)}</div>
           </div>
         </div>
@@ -114,7 +158,15 @@ const MessageBubble = memo(({ message, isOwn, onDelete }) => {
         {isOwn && (
           <button 
             className="message-delete-btn"
-            onClick={onDelete}
+            onClick={() => {
+              try {
+                if (onDelete && typeof onDelete === 'function') {
+                  onDelete()
+                }
+              } catch (error) {
+                console.error('Помилка видалення повідомлення:', error)
+              }
+            }}
             title="Видалити повідомлення"
           >
             ×

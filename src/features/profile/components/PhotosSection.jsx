@@ -114,28 +114,27 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
           onClick={openPhotosPage}
           disabled={photos.length === 0}
         >
-          Показати всі фотографії ({photos.length})
+          Показати всі фотографії {photos.length}
         </button>
       </div>
 
       <div className="photos-section__content">
         {photos.length === 0 ? (
-          <div className="photos-section__empty">
-            <div className="photos-section__empty-icon">
+          <div className="photo-empty">
+            <div className="photo-empty__icon">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h11c.55 0 1-.45 1-1z"/>
               </svg>
-              {isOwnProfile && (
-                <button className="photos-section__add-icon-btn" onClick={handleAddPhoto}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                  </svg>
-                </button>
-              )}
             </div>
-            <p className="photos-section__empty-text">
-              {isOwnProfile ? 'Додайте фото' : 'Фотографій немає'}
-            </p>
+
+         
+            <p>Перетягніть зображення або натисніть кнопку</p>
+
+            {isOwnProfile && (
+              <button className="photo-empty__btn" onClick={handleAddPhoto}>
+                <span>＋</span> Додати фото
+              </button>
+            )}
           </div>
         ) : (
           <div className="photos-section__grid">
@@ -172,45 +171,45 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
       </div>
 
       {showUploadModal && (
-        <div className="photo-modal" onClick={handleCloseUpload}>
-          <div className="photo-modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="photo-modal-close" onClick={handleCloseUpload}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-              </svg>
-            </button>
+        <div className="avatar-modal" onClick={handleCloseUpload}>
+          <div className="avatar-modal" onClick={(e) => e.stopPropagation()}>
+            
+            <header className="avatar-header">
+              <h2>Додати фото</h2>
+              <button className="avatar-close" onClick={handleCloseUpload}>
+                ✕
+              </button>
+            </header>
 
-            <div className="upload-modal-content">
-              <div className="upload-modal-header">
-                <h4>Додати фото</h4>
-              </div>
+            <div className="avatar-body">
+              
+              <PhotoUpload
+                ref={photoUploadRef}
+                photos={selectedFiles}
+                onPhotosChange={handleFilesChange}
+                maxPhotos={10}
+              />
 
-              <div className="upload-modal-body">
-                <PhotoUpload
-                  ref={photoUploadRef}
-                  photos={selectedFiles}
-                  onPhotosChange={handleFilesChange}
-                  maxPhotos={10}
-                />
-              </div>
-
-              <div className="upload-modal-footer">
-                <button
-                  className="upload-cancel-btn"
+              <div className="avatar-actions">
+                <button 
+                  className="btn secondary" 
                   onClick={handleCloseUpload}
                   disabled={uploading}
                 >
                   Скасувати
                 </button>
-                <button
-                  className="upload-submit-btn"
+                <button 
+                  className="btn primary" 
                   onClick={handleUploadSubmit}
                   disabled={selectedFiles.length === 0 || uploading}
                 >
                   {uploading ? 'Завантаження...' : `Завантажити (${selectedFiles.length})`}
                 </button>
               </div>
+
             </div>
+
+            <input type="file" accept="image/*" hidden />
           </div>
         </div>
       )}

@@ -222,7 +222,7 @@
 
 /* Cursor */
 .cursor-pointer { cursor: pointer; }
-.cursor-not-allowed { cursor: not-allowed; }
+.cursor-not-allowed {  }
 .cursor-default { cursor: default; }
 
 /* Overflow */
@@ -263,16 +263,16 @@
   .md\:block { display: block; }
   .md\:flex { display: flex; }
   .md\:grid { display: grid; }
-  
+
   .md\:flex-col { flex-direction: column; }
   .md\:flex-row { flex-direction: row; }
-  
+
   .md\:text-sm { font-size: var(--font-size-sm); }
   .md\:text-base { font-size: var(--font-size-base); }
-  
+
   .md\:p-2 { padding: var(--space-2); }
   .md\:p-4 { padding: var(--space-4); }
-  
+
   .md\:m-2 { margin: var(--space-2); }
   .md\:m-4 { margin: var(--space-4); }
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext, useCallback } from 'react'
+import { useState, useEffect, createContext, useContext, useCallback, useMemo } from 'react'
 
 const AuthContext = createContext()
 
@@ -81,27 +81,32 @@ export function AuthProvider({ children }) {
   }, [])
 
   const updateUser = useCallback((userData) => {
-    setState(prev => ({
-      ...prev,
-      user: { ...prev.user, ...userData }
-    }))
-    
-    try {
-      const updatedUser = { ...state.user, ...userData }
-      localStorage.setItem('user', JSON.stringify(updatedUser))
-    } catch (error) {
-      console.error('Error updating user data:', error)
-    }
-  }, [state.user])
+    setState(prev => {
+      const updatedUser = { ...prev.user, ...userData }
+      
+      try {
+        localStorage.setItem('user', JSON.stringify(updatedUser))
+      } catch (error) {
+        console.error('Error updating user data:', error)
+      }
+      
+      return {
+        ...prev,
+        user: updatedUser
+      }
+    })
+  }, [])
+
+  const contextValue = useMemo(() => ({
+    ...state,
+    setAuth,
+    clearAuth,
+    updateUser,
+    isLoading
+  }), [state, setAuth, clearAuth, updateUser, isLoading])
 
   return (
-    <AuthContext.Provider value={{ 
-      ...state, 
-      setAuth, 
-      clearAuth, 
-      updateUser,
-      isLoading 
-    }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   )

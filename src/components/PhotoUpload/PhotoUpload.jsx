@@ -99,11 +99,12 @@ const PhotoUpload = memo(forwardRef(({ photos = [], onPhotosChange, maxPhotos = 
   // Очищення при розмонтуванні
   React.useEffect(() => {
     return () => {
-      photos.forEach(photo => {
-        if (photo.startsWith('blob:')) {
-          URL.revokeObjectURL(photo)
+      fileObjectsRef.current.forEach((file, url) => {
+        if (url.startsWith('blob:')) {
+          URL.revokeObjectURL(url)
         }
       })
+      fileObjectsRef.current.clear()
     }
   }, [])
 
@@ -162,24 +163,27 @@ const PhotoUpload = memo(forwardRef(({ photos = [], onPhotosChange, maxPhotos = 
         <div className="photo-preview-container">
           <div className="photo-carousel">
             <div className="photo-carousel-track">
-              {photos.map((photo, index) => (
-                <div key={`${photo}-${index}`} className="photo-carousel-item">
-                  <img 
-                    src={photo} 
-                    alt={`Preview ${index + 1}`}
-                    className="photo-carousel-img"
-                    loading="lazy"
-                  />
-                  <button
-                    type="button"
-                    className="photo-remove-btn"
-                    onClick={() => removePhoto(index)}
-                    aria-label="Видалити фото"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
+              {photos.map((photo, index) => {
+                const key = photo.startsWith('blob:') ? photo : `${photo}-${index}`
+                return (
+                  <div key={key} className="photo-carousel-item">
+                    <img 
+                      src={photo} 
+                      alt={`Preview ${index + 1}`}
+                      className="photo-carousel-img"
+                      loading="lazy"
+                    />
+                    <button
+                      type="button"
+                      className="photo-remove-btn"
+                      onClick={() => removePhoto(index)}
+                      aria-label="Видалити фото"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )
+              })}
             </div>
           </div>
         </div>

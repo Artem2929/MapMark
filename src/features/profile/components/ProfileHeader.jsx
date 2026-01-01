@@ -181,19 +181,25 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
           
           <p className="profile-header__bio">{user.bio || 'Опис не додано'}</p>
           
-          <div className="profile-header__stats">
-            <div className="profile-header__stat">
-              <span className="profile-header__stat-number">{user.postsCount || 0}</span>
-              <span className="profile-header__stat-label">Записів</span>
+          <div className="profile-stats">
+            
+            <div className="stat-card">
+              <span className="stat-number">{user.postsCount || 0}</span>
+              <span className="stat-label">Записів</span>
             </div>
-            <div className="profile-header__stat">
-              <span className="profile-header__stat-number">{user.followingCount || 0}</span>
-              <span className="profile-header__stat-label">Підписок</span>
+
+            <div className="stat-card">
+              <span className="stat-number">{user.followingCount || 0}</span>
+              <span className="stat-label">Підписок</span>
             </div>
-            <div className="profile-header__stat">
-              <span className="profile-header__stat-number">{user.followersCount || 0}</span>
-              <span className="profile-header__stat-label">Підписників</span>
+
+            <div className="stat-card">
+              <span className="stat-number">{user.followersCount || 0}</span>
+              <span className="stat-label">Підписників</span>
             </div>
+
+
+
           </div>
           
           <PhotosSection key={user.id} userId={user.id} isOwnProfile={isOwnProfile} />

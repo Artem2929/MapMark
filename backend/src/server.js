@@ -1,7 +1,6 @@
 const config = require('./config')
 const logger = require('./utils/logger')
 const database = require('./utils/database')
-const socketService = require('./services/socketService')
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
@@ -27,9 +26,6 @@ database.connect()
         pid: process.pid
       })
     })
-
-    // Initialize WebSocket
-    socketService.init(server)
 
     // Graceful shutdown handlers
     const gracefulShutdown = (signal) => {

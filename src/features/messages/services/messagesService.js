@@ -1,5 +1,4 @@
 import { apiClient } from '../../../shared/api/client.js'
-import socketService from '../../../services/socketService.js'
 
 // Функція для отримання поточного користувача з localStorage
 const getCurrentUser = () => {
@@ -20,7 +19,11 @@ export const messagesService = {
     try {
       return await apiClient.request('/messages/conversations')
     } catch (error) {
+      console.error('Error getting conversations:', error)
       if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: true, data: [] }
+      }
+      if (error.message.includes('500')) {
         return { success: true, data: [] }
       }
       throw error
@@ -156,74 +159,5 @@ export const messagesService = {
 
   async createOrFindConversation(userId) {
     return this.createConversation(userId)
-  },
-
-  // WebSocket методи
-  initSocket() {
-    const token = localStorage.getItem('accessToken')
-    if (token) {
-      return socketService.connect(token)
-    }
-    return null
-  },
-
-  joinConversation(conversationId) {
-    socketService.joinConversation(conversationId)
-  },
-
-  leaveConversation(conversationId) {
-    socketService.leaveConversation(conversationId)
-  },
-
-  startTyping(conversationId) {
-    socketService.startTyping(conversationId)
-  },
-
-  stopTyping(conversationId) {
-    socketService.stopTyping(conversationId)
-  },
-
-  onNewMessage(callback) {
-    socketService.on('message:new', callback)
-  },
-
-  onMessageRead(callback) {
-    socketService.on('message:read', callback)
-  },
-
-  onMessageDeleted(callback) {
-    socketService.on('message:deleted', callback)
-  },
-
-  onUserTyping(callback) {
-    socketService.on('typing:start', callback)
-  },
-
-  onUserStoppedTyping(callback) {
-    socketService.on('typing:stop', callback)
-  },
-
-  onUserOnline(callback) {
-    socketService.on('user:online', callback)
-  },
-
-  onUserOffline(callback) {
-    socketService.on('user:offline', callback)
-  },
-
-  off(event, callback) {
-    socketService.off(event, callback)
-  },
-
-  disconnect() {
-    socketService.disconnect()
-  },
-
-  sendTyping(conversationId, isTyping) {
-    if (isTyping) {
-      this.startTyping(conversationId)
-    } else {
-      this.stopTyping(conversationId)
-    }
   }
 }

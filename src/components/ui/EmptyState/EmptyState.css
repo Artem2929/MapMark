@@ -1,1 +1,1 @@
-.empty-state {\n  text-align: center;\n  padding: 40px 20px;\n  color: #64748b;\n}\n\n.empty-state p {\n  margin: 8px 0;\n  font-size: 16px;\n}\n\n.empty-state--sm {\n  padding: 20px;\n}\n\n.empty-state--lg {\n  padding: 60px 20px;\n}
+/* EmptyState component uses global .empty-state from components.css */

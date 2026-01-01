@@ -1,7 +1,6 @@
 const Message = require('../models/Message')
 const Conversation = require('../models/Conversation')
 const User = require('../models/User')
-const socketService = require('./socketService')
 const mongoose = require('mongoose')
 
 class MessageService {
@@ -89,8 +88,8 @@ class MessageService {
       conversation: conversationId
     }
 
-    // Відправляємо через WebSocket
-    socketService.emitNewMessage(conversationId, messageData, senderId)
+    // Відправляємо через WebSocket (поки відключено)
+    // socketService.emitNewMessage(conversationId, messageData, senderId)
 
     return messageData
   }
@@ -116,8 +115,8 @@ class MessageService {
     conversation.unreadCount.set(userId.toString(), 0)
     await conversation.save()
 
-    // Повідомляємо через WebSocket
-    socketService.emitMessageRead(conversationId, userId)
+    // Повідомляємо через WebSocket (поки відключено)
+    // socketService.emitMessageRead(conversationId, userId)
 
     return { success: true }
   }

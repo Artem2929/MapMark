@@ -49,7 +49,7 @@
 
 .new-chat-button:disabled {
   background: var(--color-gray-300);
-  cursor: not-allowed;
+
   transform: none;
 }
 
@@ -404,7 +404,7 @@
 
 .new-chat-btn:disabled {
   background: var(--color-gray-300);
-  cursor: not-allowed;
+
 }
 
 .conversations-list {
@@ -886,7 +886,7 @@
 
 .send-btn:disabled {
   background: var(--color-gray-300);
-  cursor: not-allowed;
+
 }
 
 .file-input {
@@ -1247,7 +1247,7 @@
 
 .context-menu__item:disabled {
   color: var(--color-text-muted);
-  cursor: not-allowed;
+
 }
 
 .context-menu__icon {
