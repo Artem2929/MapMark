@@ -32,6 +32,16 @@ const photoSchema = new mongoose.Schema({
     maxlength: 500,
     default: '',
   },
+  location: {
+    type: String,
+    maxlength: 100,
+    default: '',
+  },
+  hashtags: {
+    type: String,
+    maxlength: 200,
+    default: '',
+  },
   tags: [{
     type: String,
     maxlength: 50,

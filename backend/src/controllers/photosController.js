@@ -139,10 +139,16 @@ class PhotosController {
 
       const uploadedPhotos = []
 
-      for (const file of files) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
         try {
           const photoId = crypto.randomUUID()
           const filename = `${photoId}.jpg`
+
+          // Отримуємо метадані з форми
+          const description = req.body[`description_${i}`] || ''
+          const location = req.body[`location_${i}`] || ''
+          const hashtags = req.body[`hashtags_${i}`] || ''
 
           // Зберігаємо в БД як Base64
           const photo = new Photo({
@@ -151,7 +157,10 @@ class PhotosController {
             originalName: Buffer.from(file.originalname, 'latin1').toString('utf8').substring(0, 255),
             mimeType: file.mimetype,
             size: file.size,
-            data: file.buffer.toString('base64'), // Зберігаємо файл як Base64
+            data: file.buffer.toString('base64'),
+            description: description.substring(0, 500),
+            location: location.substring(0, 100),
+            hashtags: hashtags.substring(0, 200),
             metadata: {},
           })
 
