@@ -1,6 +1,7 @@
 import { memo, useState, useCallback, useRef, useEffect } from 'react'
 import DeleteConfirmModal from '../../../components/forms/DeleteConfirmModal'
 import EmojiPicker from './EmojiPicker'
+import { parseHashtags } from '../../../shared/utils/parseHashtags'
 import './WallPost.css'
 
 const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onShare, onDelete, onUpdate, onUpdateComment, onDeleteComment, onLikeComment, onDislikeComment }) => {
@@ -337,7 +338,13 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
                 </div>
               </div>
             ) : (
-              post.content
+              parseHashtags(post.content).map((part, index) => 
+                part.type === 'hashtag' ? (
+                  <span key={index} className="wall-post__hashtag">{part.content}</span>
+                ) : (
+                  <span key={index}>{part.content}</span>
+                )
+              )
             )}
           </div>
         )}
@@ -552,7 +559,13 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
                         ) : (
                           <>
                             <div className="wall-post__comment-text">
-                              {comment.content}
+                              {parseHashtags(comment.content).map((part, index) => 
+                                part.type === 'hashtag' ? (
+                                  <span key={index} className="wall-post__hashtag">{part.content}</span>
+                                ) : (
+                                  <span key={index}>{part.content}</span>
+                                )
+                              )}
                             </div>
                             <div className="comment-reactions">
                               <button

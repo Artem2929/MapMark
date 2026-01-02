@@ -109,6 +109,18 @@
   white-space: pre-wrap;
 }
 
+.wall-post__hashtag {
+  color: #3b82f6;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.wall-post__hashtag:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
 .wall-post__edit {
   margin-bottom: var(--space-3);
 }
