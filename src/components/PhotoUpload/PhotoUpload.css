@@ -115,7 +115,6 @@
 
 .photo-remove-btn:hover {
   background: rgba(220, 38, 38, 0.9);
-  transform: scale(1.1);
 }
 
 .photo-count {

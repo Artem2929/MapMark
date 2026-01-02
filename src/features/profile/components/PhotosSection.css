@@ -151,7 +151,7 @@
 
 .photos-section__add-icon-btn:hover {
   background: #1d4ed8;
-  transform: scale(1.1);
+
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
@@ -341,7 +341,11 @@
   border-radius: var(--radius-xl);
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(59, 130, 246, 0.05) 100%
+  );
   color: #3b82f6;
   border: 1px solid rgba(59, 130, 246, 0.2);
 }
@@ -369,7 +373,11 @@
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-full);
   border: none;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(59, 130, 246, 0.05) 100%
+  );
   color: #3b82f6;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
@@ -381,11 +389,15 @@
 }
 
 .photo-empty__btn:hover {
-  background: linear-gradient(135deg, rgba(29, 78, 216, 0.15) 0%, rgba(29, 78, 216, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(29, 78, 216, 0.15) 0%,
+    rgba(29, 78, 216, 0.1) 100%
+  );
 }
 
 .photo-empty__btn:active {
-  transform:scale(0.96);
+  transform: scale(0.96);
 }
 .photo-empty__btn:active {
   transform: scale(0.96);

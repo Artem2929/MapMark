@@ -98,10 +98,10 @@ const PhotoUploadModal = memo(({ onClose, onUpload }) => {
         })
       )
       
-      const limitedFiles = optimizedFiles.slice(0, 5 - selectedFiles.length)
-      setSelectedFiles(prev => [...prev, ...limitedFiles].slice(0, 5))
+      // Тільки одне фото
+      setSelectedFiles([optimizedFiles[0]])
     }
-  }, [selectedFiles.length, validateFiles, optimizeImage])
+  }, [validateFiles, optimizeImage])
 
   const handleSubmit = useCallback(async (retryCount = 0) => {
     if (!selectedFiles.length) return
@@ -158,27 +158,28 @@ const PhotoUploadModal = memo(({ onClose, onUpload }) => {
     const value = e.target.value
     const hashtags = value.split(' ').filter(tag => tag.trim())
     
-    if (hashtags.length <= 10) {
+    if (hashtags.length <= 5) {
       setHashtags(value)
       
-      // Адаптація висоти
-      const input = e.target
-      const lines = Math.ceil(value.length / 50)
+      const textarea = e.target
+      const lines = value.split('\n').length
+      const wrappedLines = Math.ceil(value.length / 50)
+      const totalLines = Math.max(lines, wrappedLines)
       
-      if (lines > 1) {
-        input.style.height = '80px'
-        input.style.overflowY = 'auto'
-        input.style.paddingRight = '12px'
+      if (totalLines > 1) {
+        textarea.style.height = '80px'
+        textarea.style.overflowY = 'auto'
+        textarea.style.paddingRight = '12px'
       } else {
-        input.style.height = '43px'
-        input.style.overflowY = 'hidden'
-        input.style.paddingRight = '16px'
+        textarea.style.height = '48px'
+        textarea.style.overflowY = 'hidden'
+        textarea.style.paddingRight = '16px'
       }
     }
   }, [])
   const handleHashtagSuggestion = useCallback((tag) => {
     const currentHashtags = hashtags.split(' ').filter(t => t.trim())
-    if (currentHashtags.length < 10 && !hashtags.includes(tag)) {
+    if (currentHashtags.length < 5 && !hashtags.includes(tag)) {
       setHashtags(prev => prev ? `${prev} ${tag}` : tag)
     }
   }, [hashtags])
@@ -220,34 +221,22 @@ const PhotoUploadModal = memo(({ onClose, onUpload }) => {
                   </svg>
                 </div>
                 <p>Перетягніть зображення або натисніть кнопку</p>
-              <p className="photo-upload__limit">Максимум 5 фото</p>
                 <button className="photo-empty__btn" onClick={() => fileInputRef.current?.click()}>
                   <span>＋</span> Додати фото
                 </button>
               </div>
             ) : (
-              <div className="photo-preview">
-                {selectedFiles.map((file, index) => (
-                  <div key={index} className="photo-preview__item">
-                    <img 
-                      src={URL.createObjectURL(file)} 
-                      alt={`Preview ${index + 1}`}
-                      className="photo-preview__image"
-                    />
-                    <button 
-                      className="photo-preview__remove"
-                      onClick={() => setSelectedFiles(files => files.filter((_, i) => i !== index))}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
+              <div className="photo-preview photo-preview--full">
+                <img 
+                  src={URL.createObjectURL(selectedFiles[0])} 
+                  alt="Preview"
+                  className="photo-preview__image"
+                />
                 <button 
-                  className="photo-preview__add"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={selectedFiles.length >= 5}
+                  className="photo-preview__remove"
+                  onClick={() => setSelectedFiles([])}
                 >
-                  ＋
+                  ✕
                 </button>
               </div>
             )}
@@ -256,7 +245,6 @@ const PhotoUploadModal = memo(({ onClose, onUpload }) => {
               ref={fileInputRef}
               type="file" 
               accept="image/jpeg,image/png,image/webp,image/gif" 
-              multiple 
               hidden 
               onChange={handleFileSelect}
             />
@@ -273,7 +261,6 @@ const PhotoUploadModal = memo(({ onClose, onUpload }) => {
                   maxLength="500"
                   value={description}
                   onChange={handleTextareaChange}
-                  style={{ minHeight: '48px', resize: 'none', overflow: 'hidden', height: '48px' }}
                   aria-describedby="desc-count"
                 />
                 <div id="desc-count" className="profile-edit-form__char-count">{description.length}/500</div>
@@ -295,18 +282,24 @@ const PhotoUploadModal = memo(({ onClose, onUpload }) => {
               
               <div className="profile-edit-form__field">
                 <label className="profile-edit-form__label">Хештеги</label>
-                <input 
-                  type="text" 
-                  className="profile-edit-form__input" 
+                <textarea 
+                  className="profile-edit-form__textarea" 
                   placeholder="#природа #подорож #фото" 
                   maxLength="200"
                   value={hashtags}
                   onChange={handleHashtagChange}
                   aria-describedby="hash-count"
+                  rows="1"
                 />
-                <div id="hash-count" className="profile-edit-form__char-count">{hashtags.length}/200</div>
+                <div 
+                  id="hash-count" 
+                  className="profile-edit-form__char-count"
+                  style={{ color: hashtags.split(' ').filter(t => t.trim()).length >= 5 ? '#dc2626' : '#6b7280' }}
+                >
+                  {hashtags.split(' ').filter(t => t.trim()).length}/5
+                </div>
                 <div className="hashtag-suggestions">
-                  {POPULAR_HASHTAGS.map(tag => (
+                  {POPULAR_HASHTAGS.filter(tag => !hashtags.includes(tag)).map(tag => (
                     <button 
                       key={tag}
                       type="button"
