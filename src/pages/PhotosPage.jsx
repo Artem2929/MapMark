@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import PhotoUpload from '../components/PhotoUpload/PhotoUpload'
+import PhotoUploadModal from '../components/forms/PhotoUploadModal'
 import { photosService } from '../features/profile/services/photosService'
 import './PhotosPage.css'
 
@@ -10,11 +10,9 @@ const Photos = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null)
   const [currentUserId, setCurrentUserId] = useState(null)
   const [showUploadModal, setShowUploadModal] = useState(false)
-  const [selectedFiles, setSelectedFiles] = useState([])
   const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState('')
   const [loadingComments, setLoadingComments] = useState(false)
-  const photoUploadRef = useRef(null)
   const navigate = useNavigate()
   const { userId } = useParams()
 
@@ -87,21 +85,11 @@ const Photos = () => {
 
   const handleCloseUpload = () => {
     setShowUploadModal(false)
-    setSelectedFiles([])
   }
 
-  const handleFilesChange = (files) => {
-    setSelectedFiles(files)
-  }
 
-  const handleUploadSubmit = async () => {
-    const filesToUpload = photoUploadRef.current?.getFilesForUpload() || []
-
-    if (filesToUpload.length === 0) {
-      return
-    }
-
-    await photosService.uploadPhotos(filesToUpload)
+  const handleUploadSubmit = async (formData) => {
+    await photosService.uploadPhotos(formData)
     await loadPhotos(userId)
     handleCloseUpload()
   }
@@ -336,46 +324,10 @@ const Photos = () => {
       )}
 
       {showUploadModal && (
-        <div className="photo-modal" onClick={handleCloseUpload}>
-          <div className="photo-modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="photo-modal-close" onClick={handleCloseUpload}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-              </svg>
-            </button>
-
-            <div className="upload-modal-content">
-              <div className="upload-modal-header">
-                <h4>Додати фото</h4>
-              </div>
-
-              <div className="upload-modal-body">
-                <PhotoUpload
-                  ref={photoUploadRef}
-                  photos={selectedFiles}
-                  onPhotosChange={handleFilesChange}
-                  maxPhotos={10}
-                />
-              </div>
-
-              <div className="upload-modal-footer">
-                <button
-                  className="upload-cancel-btn"
-                  onClick={handleCloseUpload}
-                >
-                  Скасувати
-                </button>
-                <button
-                  className="upload-submit-btn"
-                  onClick={handleUploadSubmit}
-                  disabled={selectedFiles.length === 0}
-                >
-                  Завантажити ({selectedFiles.length})
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <PhotoUploadModal
+          onClose={handleCloseUpload}
+          onUpload={handleUploadSubmit}
+        />
       )}
     </div>
   )
