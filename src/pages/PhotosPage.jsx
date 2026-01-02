@@ -131,7 +131,9 @@ const Photos = () => {
   const loadComments = async (photoId) => {
     setLoadingComments(true)
     const response = await photosService.getPhotoComments(photoId)
-    setComments(response?.data?.comments || response?.comments || [])
+    const commentsData = response?.data?.comments || response?.comments || []
+    setComments(commentsData)
+    setSelectedPhoto(prev => ({ ...prev, commentsCount: commentsData.length }))
     setLoadingComments(false)
   }
 
@@ -141,6 +143,7 @@ const Photos = () => {
 
     const response = await photosService.addPhotoComment(selectedPhoto._id, newComment.trim())
     setComments(prev => [response.data.comment, ...prev])
+    setSelectedPhoto(prev => ({ ...prev, commentsCount: (prev.commentsCount || 0) + 1 }))
     setNewComment('')
   }
 
@@ -166,6 +169,7 @@ const Photos = () => {
   const handleDeleteComment = async (commentId) => {
     await photosService.deletePhotoComment(selectedPhoto._id, commentId)
     setComments(prev => prev.filter(c => c._id !== commentId))
+    setSelectedPhoto(prev => ({ ...prev, commentsCount: Math.max(0, (prev.commentsCount || 0) - 1) }))
   }
 
   const handleOpenUpload = () => {
@@ -284,6 +288,7 @@ const Photos = () => {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M21.99 4c0-1.1-.89-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
                   </svg>
+                  <span>{photo.commentsCount || 0}</span>
                 </button>
               </div>
             </div>
@@ -334,6 +339,7 @@ const Photos = () => {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M21.99 4c0-1.1-.89-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
                   </svg>
+                  <span>{selectedPhoto.commentsCount || 0}</span>
                 </button>
               </div>
             </div>
@@ -438,7 +444,7 @@ const Photos = () => {
                       <div className="photo-info-item">
                         <span className="photo-info-label">Опис:</span>
                         {selectedPhoto.description}
-                        {currentUserId === userId && (
+                        {currentUserId === selectedPhoto.userId && (
                           <button className="photo-edit-btn" onClick={handleEditPhoto}>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                               <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
@@ -515,6 +521,9 @@ const Photos = () => {
                                 maxLength="1000"
                                 rows="2"
                               />
+                              <div className="comment-char-count">
+                                {editingCommentText.length}/1000
+                              </div>
                               <div className="comment-edit-actions">
                                 <button onClick={handleCancelEditComment} className="btn secondary">Скасувати</button>
                                 <button onClick={() => handleSaveComment(comment._id)} className="btn primary">Зберегти</button>

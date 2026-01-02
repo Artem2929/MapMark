@@ -444,10 +444,19 @@ class PhotosController {
       const cleanComments = comments.map(comment => {
         const commentObj = comment.toObject()
         if (commentObj.userId) {
+          let avatarBase64 = null
+          if (commentObj.userId.avatar) {
+            if (Buffer.isBuffer(commentObj.userId.avatar)) {
+              avatarBase64 = commentObj.userId.avatar.toString('base64')
+            } else if (typeof commentObj.userId.avatar === 'string') {
+              avatarBase64 = commentObj.userId.avatar
+            }
+          }
+          
           commentObj.user = {
             id: commentObj.userId.id,
             name: commentObj.userId.name,
-            avatar: commentObj.userId.avatar
+            avatar: avatarBase64
           }
           delete commentObj.userId
         }
@@ -515,10 +524,20 @@ class PhotosController {
         .select('-__v')
 
       const cleanComment = populatedComment.toObject()
+      
+      let avatarBase64 = null
+      if (cleanComment.userId.avatar) {
+        if (Buffer.isBuffer(cleanComment.userId.avatar)) {
+          avatarBase64 = cleanComment.userId.avatar.toString('base64')
+        } else if (typeof cleanComment.userId.avatar === 'string') {
+          avatarBase64 = cleanComment.userId.avatar
+        }
+      }
+      
       cleanComment.user = {
         id: cleanComment.userId.id,
         name: cleanComment.userId.name,
-        avatar: cleanComment.userId.avatar
+        avatar: avatarBase64
       }
       delete cleanComment.userId
 
@@ -572,10 +591,20 @@ class PhotosController {
         .select('-__v')
 
       const cleanComment = populatedComment.toObject()
+      
+      let avatarBase64 = null
+      if (cleanComment.userId.avatar) {
+        if (Buffer.isBuffer(cleanComment.userId.avatar)) {
+          avatarBase64 = cleanComment.userId.avatar.toString('base64')
+        } else if (typeof cleanComment.userId.avatar === 'string') {
+          avatarBase64 = cleanComment.userId.avatar
+        }
+      }
+      
       cleanComment.user = {
         id: cleanComment.userId.id,
         name: cleanComment.userId.name,
-        avatar: cleanComment.userId.avatar
+        avatar: avatarBase64
       }
       delete cleanComment.userId
 
