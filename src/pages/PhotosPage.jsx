@@ -122,6 +122,8 @@ const Photos = () => {
     setSelectedPhoto(null)
     setComments([])
     setNewComment('')
+    setIsEditing(false)
+    setEditData({ description: '', location: '', hashtags: '' })
   }
 
   const loadComments = async (photoId) => {
@@ -419,6 +421,7 @@ const Photos = () => {
                     )}
                     {selectedPhoto.hashtags && (
                       <div className="photo-info-item">
+                        <span className="photo-info-label">Хештеги:</span>
                         <span className="photo-hashtags">{selectedPhoto.hashtags}</span>
                       </div>
                     )}

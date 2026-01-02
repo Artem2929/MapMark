@@ -392,3 +392,73 @@
   background: #e2e8f0;
   border-color: #94a3b8;
 }
+
+
+/* Override button styles to match photo-edit-actions */
+.photo-upload-modal__actions .btn {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  border: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+}
+
+.photo-upload-modal__actions .btn.primary {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(59, 130, 246, 0.05) 100%
+  );
+  color: #3b82f6;
+}
+
+.photo-upload-modal__actions .btn.primary:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    rgba(29, 78, 216, 0.15) 0%,
+    rgba(29, 78, 216, 0.1) 100%
+  );
+}
+
+.photo-upload-modal__actions .btn.primary:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.photo-upload-modal__actions .btn.primary:disabled {
+  background: linear-gradient(
+    135deg,
+    rgba(203, 213, 225, 0.3) 0%,
+    rgba(203, 213, 225, 0.2) 100%
+  );
+  color: #1e293b;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.photo-upload-modal__actions .btn.secondary {
+  background: linear-gradient(
+    135deg,
+    rgba(107, 114, 128, 0.1) 0%,
+    rgba(107, 114, 128, 0.05) 100%
+  );
+  color: #6b7280;
+}
+
+.photo-upload-modal__actions .btn.secondary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(75, 85, 99, 0.15) 0%,
+    rgba(75, 85, 99, 0.1) 100%
+  );
+}
+
+.photo-upload-modal__actions .btn.secondary:active {
+  transform: scale(0.96);
+}

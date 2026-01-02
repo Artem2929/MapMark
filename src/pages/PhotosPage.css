@@ -708,7 +708,7 @@
 .photo-info-label {
   font-weight: 600;
   margin-right: 8px;
-  color: #8e8e8e;
+  color: #3b82f6;
 }
 
 .photo-hashtags {
@@ -730,9 +730,10 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  margin-bottom: 12px;
+  margin: 0 auto 12px;
   transition: var(--transition-fast);
-  width: 100%;
+  width: auto;
+  min-width: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
