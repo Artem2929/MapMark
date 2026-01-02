@@ -272,8 +272,8 @@
 }
 
 .photo-modal-avatar {
-  width: 32px;
-  height: 32px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: linear-gradient(
     45deg,
@@ -288,7 +288,7 @@
   justify-content: center;
   color: #fff;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 20px;
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -458,8 +458,8 @@
 }
 
 .comment-avatar {
-  width: 32px;
-  height: 32px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: linear-gradient(
     45deg,
@@ -474,8 +474,17 @@
   justify-content: center;
   color: #fff;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 20px;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.comment-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
 }
 
 .comment-content {

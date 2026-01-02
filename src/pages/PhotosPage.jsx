@@ -471,7 +471,19 @@ const Photos = () => {
                     comments.map(comment => (
                       <div key={comment._id} className="comment-item">
                         <div className="comment-avatar">
-                          {comment.user?.name?.[0] || 'U'}
+                          {comment.user?.avatar ? (
+                            <img
+                              src={comment.user.avatar.startsWith('data:') ? comment.user.avatar : `data:image/jpeg;base64,${comment.user.avatar}`}
+                              alt={comment.user.name}
+                              className="comment-avatar-img"
+                              onError={(e) => {
+                                e.target.style.display = 'none'
+                                e.target.parentElement.textContent = comment.user?.name?.[0] || 'U'
+                              }}
+                            />
+                          ) : (
+                            comment.user?.name?.[0] || 'U'
+                          )}
                         </div>
                         <div className="comment-content">
                           <div className="comment-header">

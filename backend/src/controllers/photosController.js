@@ -432,7 +432,7 @@ class PhotosController {
       const limitNum = Math.min(50, Math.max(1, parseInt(limit)))
 
       const comments = await PhotoComment.find({ photoId })
-        .populate('userId', 'name id')
+        .populate('userId', 'name id avatar')
         .sort({ createdAt: -1 })
         .limit(limitNum)
         .skip((pageNum - 1) * limitNum)
@@ -446,7 +446,8 @@ class PhotosController {
         if (commentObj.userId) {
           commentObj.user = {
             id: commentObj.userId.id,
-            name: commentObj.userId.name
+            name: commentObj.userId.name,
+            avatar: commentObj.userId.avatar
           }
           delete commentObj.userId
         }
@@ -510,13 +511,14 @@ class PhotosController {
       })
 
       const populatedComment = await PhotoComment.findById(comment._id)
-        .populate('userId', 'name id')
+        .populate('userId', 'name id avatar')
         .select('-__v')
 
       const cleanComment = populatedComment.toObject()
       cleanComment.user = {
         id: cleanComment.userId.id,
-        name: cleanComment.userId.name
+        name: cleanComment.userId.name,
+        avatar: cleanComment.userId.avatar
       }
       delete cleanComment.userId
 
@@ -566,13 +568,14 @@ class PhotosController {
       await comment.save()
 
       const populatedComment = await PhotoComment.findById(comment._id)
-        .populate('userId', 'name id')
+        .populate('userId', 'name id avatar')
         .select('-__v')
 
       const cleanComment = populatedComment.toObject()
       cleanComment.user = {
         id: cleanComment.userId.id,
-        name: cleanComment.userId.name
+        name: cleanComment.userId.name,
+        avatar: cleanComment.userId.avatar
       }
       delete cleanComment.userId
 
