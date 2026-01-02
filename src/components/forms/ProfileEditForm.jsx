@@ -10,6 +10,9 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
     name: user?.name || '',
     surname: user?.surname || '',
+    birthDate: user?.birthDate || '',
+    email: user?.email || '',
+    position: user?.position || '',
     bio: user?.bio || '',
     location: user?.location || '',
     website: user?.website || ''
@@ -56,6 +59,26 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
       newErrors.name = "Ім'я обов'язкове"
     } else if (formData.name.length < 2) {
       newErrors.name = "Ім'я повинно містити мінімум 2 символи"
+    }
+    
+    if (formData.birthDate) {
+      const date = new Date(formData.birthDate)
+      const today = new Date()
+      const age = today.getFullYear() - date.getFullYear()
+      if (isNaN(date.getTime())) {
+        newErrors.birthDate = 'Некоректна дата'
+      } else if (age < 13) {
+        newErrors.birthDate = 'Вік повинен бути не менше 13 років'
+      } else if (age > 120) {
+        newErrors.birthDate = 'Некоректна дата народження'
+      }
+    }
+    
+    if (formData.email && formData.email.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(formData.email)) {
+        newErrors.email = 'Введіть коректний email'
+      }
     }
     
     if (formData.bio && formData.bio.length > 500) {
@@ -155,6 +178,52 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
             />
             <div className={`profile-edit-form__char-count ${getCharCountClass(formData.surname.length, 50)}`}>
               {formData.surname.length}/50
+            </div>
+          </div>
+
+          <div className="profile-edit-form__field">
+            <label className="profile-edit-form__label">Дата народження</label>
+            <input
+              type="date"
+              value={formData.birthDate}
+              onChange={(e) => handleInputChange('birthDate', e.target.value)}
+              className={`profile-edit-form__input ${errors.birthDate ? 'profile-edit-form__input--error' : ''}`}
+              disabled={isLoading}
+              max={new Date().toISOString().split('T')[0]}
+            />
+            {errors.birthDate && <span className="profile-edit-form__error">{errors.birthDate}</span>}
+          </div>
+
+          <div className="profile-edit-form__field">
+            <label className="profile-edit-form__label">Email</label>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              className={`profile-edit-form__input ${errors.email ? 'profile-edit-form__input--error' : ''}`}
+              placeholder="example@email.com"
+              maxLength="50"
+              disabled={isLoading}
+            />
+            <div className={`profile-edit-form__char-count ${getCharCountClass(formData.email.length, 50)}`}>
+              {formData.email.length}/50
+            </div>
+            {errors.email && <span className="profile-edit-form__error">{errors.email}</span>}
+          </div>
+
+          <div className="profile-edit-form__field">
+            <label className="profile-edit-form__label">Посада</label>
+            <input
+              type="text"
+              value={formData.position}
+              onChange={(e) => handleInputChange('position', e.target.value)}
+              className="profile-edit-form__input"
+              placeholder="Наприклад: Senior Frontend Developer"
+              maxLength="100"
+              disabled={isLoading}
+            />
+            <div className={`profile-edit-form__char-count ${getCharCountClass(formData.position.length, 100)}`}>
+              {formData.position.length}/100
             </div>
           </div>
 

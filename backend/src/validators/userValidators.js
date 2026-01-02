@@ -20,6 +20,42 @@ const userValidation = [
     .withMessage('Ім\'я повинно містити від 2 до 50 символів')
     .matches(/^[a-zA-Zа-яА-ЯіІїЇєЄ\s'-]+$/)
     .withMessage('Ім\'я може містити тільки літери, пробіли, апострофи та дефіси'),
+  
+  body('surname')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Прізвище не може перевищувати 50 символів'),
+  
+  body('birthDate')
+    .optional()
+    .isISO8601()
+    .withMessage('Некоректна дата')
+    .custom((value) => {
+      if (value) {
+        const date = new Date(value)
+        const today = new Date()
+        const age = today.getFullYear() - date.getFullYear()
+        if (age < 13 || age > 120) {
+          throw new Error('Вік повинен бути від 13 до 120 років')
+        }
+      }
+      return true
+    }),
+  
+  body('email')
+    .optional()
+    .trim()
+    .isEmail()
+    .withMessage('Введіть коректний email')
+    .isLength({ max: 50 })
+    .withMessage('Email не може перевищувати 50 символів'),
+  
+  body('position')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Посада не може перевищувати 100 символів'),
     
   body('bio')
     .optional()

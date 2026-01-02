@@ -21,6 +21,14 @@ const userSchema = new mongoose.Schema({
     trim: true,
     maxlength: [50, 'Surname cannot exceed 50 characters']
   },
+  birthDate: {
+    type: Date
+  },
+  position: {
+    type: String,
+    maxlength: [100, 'Position cannot exceed 100 characters'],
+    trim: true
+  },
   email: {
     type: String,
     required: [true, 'Email is required'],
