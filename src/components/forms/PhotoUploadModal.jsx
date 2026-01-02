@@ -143,20 +143,9 @@ const PhotoUploadModal = memo(({ onClose, onUpload }) => {
     const value = e.target.value
     setDescription(value)
     
-    // Підрахунок рядків
-    const lines = value.split('\n').length
-    const wrappedLines = Math.ceil(value.length / 50) // приблизно 50 символів на рядок
-    const totalLines = Math.max(lines, wrappedLines)
-    
-    if (totalLines > 1) {
-      textarea.style.height = '80px' // зменшено з 96px
-      textarea.style.overflowY = 'auto'
-      textarea.style.paddingRight = '12px' // відступ для скролу
-    } else {
-      textarea.style.height = '48px'
-      textarea.style.overflowY = 'hidden'
-      textarea.style.paddingRight = '16px'
-    }
+    // Auto-resize
+    textarea.style.height = 'auto'
+    textarea.style.height = textarea.scrollHeight + 'px'
   }, [])
   const handleHashtagChange = useCallback((e) => {
     const value = e.target.value
@@ -166,19 +155,9 @@ const PhotoUploadModal = memo(({ onClose, onUpload }) => {
       setHashtags(value)
       
       const textarea = e.target
-      const lines = value.split('\n').length
-      const wrappedLines = Math.ceil(value.length / 50)
-      const totalLines = Math.max(lines, wrappedLines)
-      
-      if (totalLines > 1) {
-        textarea.style.height = '80px'
-        textarea.style.overflowY = 'auto'
-        textarea.style.paddingRight = '12px'
-      } else {
-        textarea.style.height = '48px'
-        textarea.style.overflowY = 'hidden'
-        textarea.style.paddingRight = '16px'
-      }
+      // Auto-resize
+      textarea.style.height = 'auto'
+      textarea.style.height = textarea.scrollHeight + 'px'
     }
   }, [])
   const handleHashtagSuggestion = useCallback((tag) => {
@@ -255,80 +234,82 @@ const PhotoUploadModal = memo(({ onClose, onUpload }) => {
           </div>
           
           {selectedFiles.length > 0 && (
-            <div className="photo-upload-form">
-              <div className="profile-edit-form__field">
-                <label className="profile-edit-form__label">Опис</label>
-                <textarea 
-                  className="profile-edit-form__textarea" 
-                  placeholder="Розкажіть про фото"
-                  rows="1"
-                  maxLength="500"
-                  value={description}
-                  onChange={handleTextareaChange}
-                  aria-describedby="desc-count"
-                />
-                <div id="desc-count" className="profile-edit-form__char-count">{description.length}/500</div>
+            <>
+              <div className="photo-upload-form">
+                <div className="profile-edit-form__field">
+                  <label className="profile-edit-form__label">Опис</label>
+                  <textarea 
+                    className="profile-edit-form__textarea" 
+                    placeholder="Розкажіть про фото"
+                    rows="1"
+                    maxLength="500"
+                    value={description}
+                    onChange={handleTextareaChange}
+                    aria-describedby="desc-count"
+                  />
+                  <div id="desc-count" className="profile-edit-form__char-count">{description.length}/500</div>
+                </div>
+                
+                <div className="profile-edit-form__field">
+                  <label className="profile-edit-form__label">Місцезнаходження</label>
+                  <input 
+                    type="text" 
+                    className="profile-edit-form__input" 
+                    placeholder="Місто, країна" 
+                    maxLength="100"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    aria-describedby="loc-count"
+                  />
+                  <div id="loc-count" className="profile-edit-form__char-count">{location.length}/100</div>
+                </div>
+                
+                <div className="profile-edit-form__field">
+                  <label className="profile-edit-form__label">Хештеги</label>
+                  <textarea 
+                    className="profile-edit-form__textarea" 
+                    placeholder="#природа #подорож #фото" 
+                    maxLength="200"
+                    value={hashtags}
+                    onChange={handleHashtagChange}
+                    aria-describedby="hash-count"
+                    rows="1"
+                  />
+                  <div 
+                    id="hash-count" 
+                    className="profile-edit-form__char-count"
+                    style={{ color: hashtags.split(' ').filter(t => t.trim()).length >= 5 ? '#dc2626' : '#6b7280' }}
+                  >
+                    {hashtags.split(' ').filter(t => t.trim()).length}/5
+                  </div>
+                  <div className="hashtag-suggestions">
+                    {POPULAR_HASHTAGS.filter(tag => !hashtags.includes(tag)).map(tag => (
+                      <button 
+                        key={tag}
+                        type="button"
+                        className="hashtag-suggestion"
+                        onClick={() => handleHashtagSuggestion(tag)}
+                      >
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
               
-              <div className="profile-edit-form__field">
-                <label className="profile-edit-form__label">Місцезнаходження</label>
-                <input 
-                  type="text" 
-                  className="profile-edit-form__input" 
-                  placeholder="Місто, країна" 
-                  maxLength="100"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  aria-describedby="loc-count"
-                />
-                <div id="loc-count" className="profile-edit-form__char-count">{location.length}/100</div>
-              </div>
-              
-              <div className="profile-edit-form__field">
-                <label className="profile-edit-form__label">Хештеги</label>
-                <textarea 
-                  className="profile-edit-form__textarea" 
-                  placeholder="#природа #подорож #фото" 
-                  maxLength="200"
-                  value={hashtags}
-                  onChange={handleHashtagChange}
-                  aria-describedby="hash-count"
-                  rows="1"
-                />
-                <div 
-                  id="hash-count" 
-                  className="profile-edit-form__char-count"
-                  style={{ color: hashtags.split(' ').filter(t => t.trim()).length >= 5 ? '#dc2626' : '#6b7280' }}
+              <div className="photo-upload-modal__actions">
+                <button className="btn secondary" onClick={onClose}>Скасувати</button>
+                <button 
+                  className="btn primary" 
+                  disabled={!selectedFiles.length || uploading}
+                  onClick={handleSubmit}
+                  title="Ctrl+Enter для швидкого завантаження"
                 >
-                  {hashtags.split(' ').filter(t => t.trim()).length}/5
-                </div>
-                <div className="hashtag-suggestions">
-                  {POPULAR_HASHTAGS.filter(tag => !hashtags.includes(tag)).map(tag => (
-                    <button 
-                      key={tag}
-                      type="button"
-                      className="hashtag-suggestion"
-                      onClick={() => handleHashtagSuggestion(tag)}
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                </div>
+                  {uploading ? 'Завантаження...' : 'Завантажити'}
+                </button>
               </div>
-            </div>
+            </>
           )}
-          
-          <div className="photo-upload-modal__actions">
-            <button className="btn secondary" onClick={onClose}>Скасувати</button>
-            <button 
-              className="btn primary" 
-              disabled={!selectedFiles.length || uploading}
-              onClick={handleSubmit}
-              title="Ctrl+Enter для швидкого завантаження"
-            >
-              {uploading ? 'Завантаження...' : 'Завантажити'}
-            </button>
-          </div>
         </div>
       </div>
     </div>

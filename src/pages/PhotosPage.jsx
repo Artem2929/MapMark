@@ -27,6 +27,15 @@ const Photos = () => {
       hashtags: selectedPhoto.hashtags || ''
     })
     setIsEditing(true)
+    
+    // Reset textarea heights after state update
+    setTimeout(() => {
+      const textareas = document.querySelectorAll('.photo-upload-form .profile-edit-form__textarea')
+      textareas.forEach(textarea => {
+        textarea.style.height = 'auto'
+        textarea.style.height = textarea.scrollHeight + 'px'
+      })
+    }, 0)
   }
 
   const handleCancelEdit = () => {
@@ -64,19 +73,9 @@ const Photos = () => {
     
     setEditData({ ...editData, [field]: value })
     
-    const lines = value.split('\n').length
-    const wrappedLines = Math.ceil(value.length / 50)
-    const totalLines = Math.max(lines, wrappedLines)
-    
-    if (totalLines > 1) {
-      textarea.style.height = '80px'
-      textarea.style.overflowY = 'auto'
-      textarea.style.paddingRight = '12px'
-    } else {
-      textarea.style.height = '48px'
-      textarea.style.overflowY = 'hidden'
-      textarea.style.paddingRight = '16px'
-    }
+    // Auto-resize
+    textarea.style.height = 'auto'
+    textarea.style.height = textarea.scrollHeight + 'px'
   }
 
   useEffect(() => {

@@ -210,27 +210,9 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
             </div>
           </div>
           
-          <p className="profile-header__bio">{user.bio || 'Опис не додано'}</p>
-          
-          <div className="profile-stats">
-            
-            <div className="stat-card">
-              <span className="stat-number">{user.postsCount || 0}</span>
-              <span className="stat-label">Записів</span>
-            </div>
-
-            <div className="stat-card">
-              <span className="stat-number">{user.followingCount || 0}</span>
-              <span className="stat-label">Підписок</span>
-            </div>
-
-            <div className="stat-card">
-              <span className="stat-number">{user.followersCount || 0}</span>
-              <span className="stat-label">Підписників</span>
-            </div>
-
-
-
+          <div className="profile-header__bio-wrapper">
+            <span className="profile-header__bio-label">Про себе:</span>
+            <span className="profile-header__bio">{user.bio || 'Опис не додано'}</span>
           </div>
           
           <PhotosSection key={user.id} userId={user.id} isOwnProfile={isOwnProfile} />
@@ -255,6 +237,23 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
               </Link>
             </>
           )}
+        </div>
+      </div>
+      
+      <div className="profile-stats">
+        <div className="stat-card">
+          <span className="stat-number">{user.postsCount || 0}</span>
+          <span className="stat-label">Записів</span>
+        </div>
+
+        <div className="stat-card">
+          <span className="stat-number">{user.followingCount || 0}</span>
+          <span className="stat-label">Підписок</span>
+        </div>
+
+        <div className="stat-card">
+          <span className="stat-number">{user.followersCount || 0}</span>
+          <span className="stat-label">Підписників</span>
         </div>
       </div>
       

@@ -884,7 +884,7 @@
   font-size: 14px;
   color: #262626;
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 8px;
 }
 
@@ -988,11 +988,19 @@
 /* Photo Upload Form Override */
 .photo-upload-form .profile-edit-form__input,
 .photo-upload-form .profile-edit-form__textarea {
-  padding: 0.625rem 0.75rem;
-  border: 2px solid var(--form-border);
-  border-radius: var(--form-radius);
-  font-size: 0.875rem;
-  line-height: 1.25;
-  min-height: 2.5rem;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  min-height: 48px;
+  resize: none;
+  transition: border-color 0.2s ease;
+}
+
+.photo-upload-form .profile-edit-form__input:focus,
+.photo-upload-form .profile-edit-form__textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
 }
 
