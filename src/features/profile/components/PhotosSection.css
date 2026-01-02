@@ -69,20 +69,22 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 32px;
-  height: 20px;
-  background: rgba(0, 0, 0, 0.7);
+  height: 32px;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
   color: #fff;
-  border-radius: 4px;
-  backdrop-filter: blur(4px);
+  border-radius: 50%;
+  backdrop-filter: blur(8px);
 }
 
 .photos-section__item:hover .photos-section__overlay {
   opacity: 1;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
 /* Add Photo Buttons */

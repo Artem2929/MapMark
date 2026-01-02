@@ -53,7 +53,6 @@
 }
 
 .photo-card:hover {
-  transform: translateY(-4px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
 }
 
@@ -71,15 +70,12 @@
   transition: transform 0.3s ease;
 }
 
-.photo-card:hover .photo-image img {
-  transform: scale(1.05);
-}
 
 .photo-delete-btn {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: rgba(0, 0, 0, 0.7);
+  background: transparent;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -92,6 +88,7 @@
   opacity: 0;
   transition: all 0.2s ease;
   z-index: 2;
+  backdrop-filter: blur(8px);
 }
 
 .photo-card:hover .photo-delete-btn {
@@ -99,7 +96,12 @@
 }
 
 .photo-delete-btn:hover {
-  background: rgba(220, 38, 38, 0.9);
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.photo-delete-btn:active {
+  transform: scale(0.98);
 }
 
 .photo-actions {

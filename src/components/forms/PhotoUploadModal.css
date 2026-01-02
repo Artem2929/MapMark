@@ -153,26 +153,30 @@
   position: absolute;
   top: 8px;
   right: 8px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: none;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
   transition: all 0.2s ease;
+  color: #fff;
+  backdrop-filter: blur(8px);
+  font-size: 18px;
+  font-weight: 600;
   z-index: 10;
-  backdrop-filter: blur(4px);
 }
 
 .photo-preview__remove:hover {
-  background: rgba(220, 38, 38, 0.9);
+  background: rgba(255, 255, 255, 0.2);
   transform: scale(1.05);
+}
+
+.photo-preview__remove:active {
+  transform: scale(0.98);
 }
 
 .photo-upload-form {
