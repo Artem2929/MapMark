@@ -106,14 +106,14 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
           </div>
         ) : (
           <div className="photos-section__grid">
-            {photos.slice(-3).map((photo) => (
+            {photos.slice(0, 3).reverse().map((photo, index) => (
               <div
-                key={photo._id || photo.id}
+                key={`${photo._id || photo.id}-${index}`}
                 className="photos-section__item"
                 onClick={() => handlePhotoClick(photo)}
               >
                 <img
-                  src={photoUrls[photo.id] || `data:${photo.mimeType};base64,${photo.data}`}
+                  src={`data:${photo.mimeType};base64,${photo.data}`}
                   alt={photo.description || 'Фотографія'}
                   className="photos-section__image"
                   loading="lazy"
@@ -124,7 +124,7 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
                   </svg>
                 </div>
               </div>
-            ))}
+            ))}}
             {isOwnProfile && photos.length === 0 && (
               <div className="photos-section__add-item">
                 <button className="photos-section__add-btn--grid" onClick={handleAddPhoto}>
