@@ -551,7 +551,7 @@
 .comment-edit-input {
   width: 100%;
   border: 1px solid #dbdbdb;
-  border-radius: var(--form-radius);
+  border-radius: 8px;
   padding: 8px 12px;
   font-size: 14px;
   font-family: inherit;
@@ -688,7 +688,7 @@
 .comment-input {
   flex: 1;
   border: 1px solid #dbdbdb;
-  border-radius: var(--form-radius);
+  border-radius: 8px;
   outline: none;
   font-size: 14px;
   font-family: inherit;

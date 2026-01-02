@@ -22,16 +22,18 @@
 
 .dropdown-menu [role="menuitem"] {
   width: 100%;
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-4);
   border: none;
   background: transparent;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   line-height: 1.2;
   text-align: left;
   cursor: pointer;
-  transition: background-color 0.15s ease;
-  height: 32px;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  height: auto;
   min-height: 32px;
   display: flex;
   align-items: center;
@@ -44,9 +46,21 @@
   color: var(--color-success);
 }
 
+.dropdown-menu [role="menuitem"].btn--primary:hover,
+.dropdown-menu [role="menuitem"].btn--primary:focus {
+  background: var(--color-success);
+  color: #ffffff;
+}
+
 .dropdown-menu [role="menuitem"].btn--danger {
-  background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
-  color: var(--color-error);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+  color: #ef4444;
+}
+
+.dropdown-menu [role="menuitem"].btn--danger:hover,
+.dropdown-menu [role="menuitem"].btn--danger:focus {
+  background: #ef4444;
+  color: #ffffff;
 }
 
 .dropdown-menu [role="menuitem"].btn--success {
@@ -59,9 +73,28 @@
   color: var(--color-warning);
 }
 
-.dropdown-menu [role="menuitem"]:hover,
-.dropdown-menu [role="menuitem"]:focus {
-  opacity: 0.9;
+.dropdown-menu [role="menuitem"].btn--primary:hover,
+.dropdown-menu [role="menuitem"].btn--primary:focus {
+  background: var(--color-success);
+  color: #ffffff;
+}
+
+.dropdown-menu [role="menuitem"].btn--danger:hover,
+.dropdown-menu [role="menuitem"].btn--danger:focus {
+  background: var(--color-error);
+  color: #ffffff;
+}
+
+.dropdown-menu [role="menuitem"].btn--success:hover,
+.dropdown-menu [role="menuitem"].btn--success:focus {
+  background: var(--color-primary-dark);
+  color: #ffffff;
+}
+
+.dropdown-menu [role="menuitem"].btn--warning:hover,
+.dropdown-menu [role="menuitem"].btn--warning:focus {
+  background: var(--color-warning);
+  color: #ffffff;
 }
 
 .dropdown-menu [role="menuitem"]:active {

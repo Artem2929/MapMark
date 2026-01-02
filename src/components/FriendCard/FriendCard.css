@@ -68,16 +68,102 @@
 
 .friend-actions {
   display: flex;
-  gap: var(--space-2);
+  gap: 12px;
   align-items: center;
 }
 
+.friend-actions .btn--secondary,
+.friend-actions .btn--danger,
+.friend-actions .btn--primary {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  border: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.friend-actions .btn--primary {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(59, 130, 246, 0.05) 100%
+  );
+  color: #3b82f6;
+}
+
+.friend-actions .btn--primary:hover {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.friend-actions .btn--primary:active {
+  transform: scale(0.96);
+}
+
+.friend-actions .btn--secondary {
+  background: linear-gradient(
+    135deg,
+    rgba(107, 114, 128, 0.1) 0%,
+    rgba(107, 114, 128, 0.05) 100%
+  );
+  color: #6b7280;
+}
+
+.friend-actions .btn--secondary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(75, 85, 99, 0.15) 0%,
+    rgba(75, 85, 99, 0.1) 100%
+  );
+}
+
+.friend-actions .btn--secondary:active {
+  transform: scale(0.96);
+}
+
+.friend-actions .btn--secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.friend-actions .btn--danger {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.1) 0%,
+    rgba(239, 68, 68, 0.05) 100%
+  );
+  color: #ef4444;
+}
+
+.friend-actions .btn--danger:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.friend-actions .btn--danger:active {
+  transform: scale(0.96);
+}
+
 .friend-actions .btn--ghost {
-  width: var(--space-8);
-  height: var(--space-8);
+  width: var(--space-10);
+  height: var(--space-10);
   padding: 0;
   border-radius: var(--radius-full);
   justify-content: center;
+  font-size: var(--font-size-xl);
+  background: var(--color-bg-tertiary);
+  transition: all 0.2s ease;
+}
+
+.friend-actions .btn--ghost:hover {
+  background: var(--color-bg-tertiary);
+  transform: scale(1.05);
 }
 
 @media (max-width: 768px) {

@@ -22,6 +22,7 @@ const Friends = () => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState(TABS.ALL)
   const [dropdownOpen, setDropdownOpen] = useState(null)
+  const [visibleFriendsCount, setVisibleFriendsCount] = useState(20)
 
   const userId = urlUserId || user?.id
 
@@ -95,10 +96,15 @@ const Friends = () => {
 
   const handleTabChange = useCallback((tab) => {
     setActiveTab(tab)
-    if (tab === TABS.SEARCH && randomUsers.length === 0) {
+    setVisibleFriendsCount(20)
+    if (tab === TABS.SEARCH) {
       loadRandomUsers()
     }
-  }, [randomUsers.length, loadRandomUsers])
+  }, [loadRandomUsers])
+
+  const handleLoadMore = useCallback(() => {
+    setVisibleFriendsCount(prev => prev + 20)
+  }, [])
 
   const renderFriendsList = (items, type, loading) => {
     if (loading) return <div className="loading">Завантаження...</div>
@@ -116,31 +122,43 @@ const Friends = () => {
       )
     }
 
+    const visibleItems = type === TABS.ALL ? items.slice(0, visibleFriendsCount) : items
+    const hasMore = type === TABS.ALL && items.length > visibleFriendsCount
+
     return (
-      <div className="friends-list">
-        {items.map(item => {
-          const friend = type === TABS.REQUESTS 
-            ? {...item.requester, requestId: item.id}
-            : item
-            
-          return (
-            <FriendCard
-              key={item.id}
-              friend={friend}
-              type={type === TABS.REQUESTS ? 'request' : 'friend'}
-              dropdownOpen={dropdownOpen}
-              onDropdownToggle={handleDropdownToggle}
-              onDropdownClose={handleDropdownClose}
-              onSendMessage={handleSendMessage}
-              onRemoveFriend={handleRemoveFriend}
-              onBlockUser={handleBlockUser}
-              onAcceptRequest={handleAcceptRequest}
-              onRejectRequest={handleRejectRequest}
-              onSendFriendRequest={handleSendFriendRequestFromRequests}
-            />
-          )
-        })}
-      </div>
+      <>
+        <div className="friends-list">
+          {visibleItems.map(item => {
+            const friend = type === TABS.REQUESTS 
+              ? {...item.requester, requestId: item.id}
+              : item
+              
+            return (
+              <FriendCard
+                key={item.id}
+                friend={friend}
+                type={type === TABS.REQUESTS ? 'request' : 'friend'}
+                dropdownOpen={dropdownOpen}
+                onDropdownToggle={handleDropdownToggle}
+                onDropdownClose={handleDropdownClose}
+                onSendMessage={handleSendMessage}
+                onRemoveFriend={handleRemoveFriend}
+                onBlockUser={handleBlockUser}
+                onAcceptRequest={handleAcceptRequest}
+                onRejectRequest={handleRejectRequest}
+                onSendFriendRequest={handleSendFriendRequestFromRequests}
+              />
+            )
+          })}
+        </div>
+        {hasMore && (
+          <div className="load-more">
+            <button className="btn btn--secondary" onClick={handleLoadMore}>
+              Завантажити ще
+            </button>
+          </div>
+        )}
+      </>
     )
   }
 
@@ -156,17 +174,21 @@ const Friends = () => {
     }
 
     const hasQuery = query.trim()
-    const items = hasQuery ? results : randomUsers
-    const emptyMessage = hasQuery 
-      ? 'Користувачів не знайдено' 
-      : 'Введіть запит для пошуку друзів'
+    const allItems = hasQuery ? results : randomUsers
+    const items = allItems
+      .filter(user => user.relationshipStatus !== 'friends')
+      .slice(0, 20)
 
-    if (items.length === 0) {
+    if (hasQuery && items.length === 0) {
       return (
         <div className="empty-state">
-          <p>{emptyMessage}</p>
+          <p>Користувачів не знайдено</p>
         </div>
       )
+    }
+
+    if (items.length === 0) {
+      return null
     }
 
     return (
@@ -202,9 +224,7 @@ const Friends = () => {
                 className="form-input"
               />
             </div>
-            <div className="search-results">
-              {renderSearchResults()}
-            </div>
+            {renderSearchResults()}
           </div>
         )
       default:

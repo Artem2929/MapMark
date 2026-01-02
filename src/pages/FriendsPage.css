@@ -58,6 +58,16 @@
   min-height: var(--space-20);
 }
 
+.load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-4);
+}
+
+.load-more .btn {
+  min-width: 200px;
+}
+
 .search-section {
   display: flex;
   flex-direction: column;
