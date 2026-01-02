@@ -48,12 +48,6 @@ export const Footer = React.memo(function Footer() {
             </nav>
           </div>
         </div>
-
-        <div className="footer__bottom">
-          <p className="footer__copyright">
-            © {currentYear} MapMark. Всі права захищені.
-          </p>
-        </div>
       </div>
     </footer>
   )
