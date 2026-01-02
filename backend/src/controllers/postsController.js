@@ -23,16 +23,37 @@ const postsController = {
   async createPost(req, res) {
     try {
       const authorId = req.user.id
-      const { content, images = [] } = req.body
+      const { content } = req.body
+      const images = req.files ? req.files.map(file => {
+        const base64 = file.buffer.toString('base64')
+        return `data:${file.mimetype};base64,${base64}`
+      }) : []
       
-      if (!content || !content.trim()) {
+      // Validate content
+      if (!content || typeof content !== 'string') {
         return res.status(400).json({
           status: 'fail',
           message: 'Контент поста обов\'язковий'
         })
       }
       
-      const post = await postsService.createPost(authorId, content, images)
+      const trimmedContent = content.trim()
+      
+      if (!trimmedContent && images.length === 0) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Пост повинен містити текст або фото'
+        })
+      }
+      
+      if (trimmedContent.length > 2000) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Максимальна довжина тексту 2000 символів'
+        })
+      }
+      
+      const post = await postsService.createPost(authorId, trimmedContent, images)
       
       success(res, post, 'Пост створено', 201)
     } catch (error) {
@@ -97,6 +118,120 @@ const postsController = {
       logger.error('Add comment error', { error: error.message, postId: req.params.postId })
       
       if (error.message.includes('не знайдено')) {
+        return res.status(404).json({
+          status: 'fail',
+          message: error.message
+        })
+      }
+      
+      return res.status(500).json({
+        status: 'error',
+        message: error.message
+      })
+    }
+  },
+
+  async updatePost(req, res) {
+    try {
+      const { postId } = req.params
+      const userId = req.user.id
+      const { content } = req.body
+      
+      if (!content || typeof content !== 'string') {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Контент поста обов\'язковий'
+        })
+      }
+      
+      const trimmedContent = content.trim()
+      
+      if (!trimmedContent) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Пост не може бути порожнім'
+        })
+      }
+      
+      if (trimmedContent.length > 2000) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Максимальна довжина тексту 2000 символів'
+        })
+      }
+      
+      const post = await postsService.updatePost(postId, userId, trimmedContent)
+      
+      success(res, post, 'Пост оновлено')
+    } catch (error) {
+      logger.error('Update post error', { error: error.message, postId: req.params.postId })
+      
+      if (error.message.includes('не знайдено') || error.message.includes('не маєте прав')) {
+        return res.status(404).json({
+          status: 'fail',
+          message: error.message
+        })
+      }
+      
+      return res.status(500).json({
+        status: 'error',
+        message: error.message
+      })
+    }
+  },
+
+  async updateComment(req, res) {
+    try {
+      const { postId, commentId } = req.params
+      const userId = req.user.id
+      const { content } = req.body
+      
+      if (!content || !content.trim()) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Контент коментаря обов\'язковий'
+        })
+      }
+      
+      if (content.trim().length > 500) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Максимальна довжина коментаря 500 символів'
+        })
+      }
+      
+      const comment = await postsService.updateComment(postId, commentId, userId, content)
+      
+      success(res, comment, 'Коментар оновлено')
+    } catch (error) {
+      logger.error('Update comment error', { error: error.message, postId: req.params.postId, commentId: req.params.commentId })
+      
+      if (error.message.includes('не знайдено') || error.message.includes('не маєте прав')) {
+        return res.status(404).json({
+          status: 'fail',
+          message: error.message
+        })
+      }
+      
+      return res.status(500).json({
+        status: 'error',
+        message: error.message
+      })
+    }
+  },
+
+  async deleteComment(req, res) {
+    try {
+      const { postId, commentId } = req.params
+      const userId = req.user.id
+      
+      await postsService.deleteComment(postId, commentId, userId)
+      
+      success(res, null, 'Коментар видалено')
+    } catch (error) {
+      logger.error('Delete comment error', { error: error.message, postId: req.params.postId, commentId: req.params.commentId })
+      
+      if (error.message.includes('не знайдено') || error.message.includes('не маєте прав')) {
         return res.status(404).json({
           status: 'fail',
           message: error.message

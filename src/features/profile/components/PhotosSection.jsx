@@ -95,7 +95,7 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
               </svg>
             </div>
 
-         
+
             <p>Перетягніть зображення або натисніть кнопку</p>
 
             {isOwnProfile && (
@@ -124,7 +124,7 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
                   </svg>
                 </div>
               </div>
-            ))}}
+            ))}
             {isOwnProfile && photos.length === 0 && (
               <div className="photos-section__add-item">
                 <button className="photos-section__add-btn--grid" onClick={handleAddPhoto}>

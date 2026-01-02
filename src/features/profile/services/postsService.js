@@ -16,14 +16,31 @@ export const postsService = {
     }
   },
 
-  async createPost(content, images = []) {
-    if (!content || !content.trim()) {
+  async createPost(formData) {
+    if (formData instanceof FormData) {
+      const content = formData.get('content')
+      const hasImages = formData.has('images')
+      
+      if ((!content || !content.trim()) && !hasImages) {
+        throw new Error('Пост повинен містити текст або фото')
+      }
+      
+      const result = await apiClient.secureRequest('/posts', {
+        method: 'POST',
+        body: formData
+      })
+      
+      console.log('Post created:', result)
+      return result
+    }
+    
+    if (!formData || !formData.trim()) {
       throw new Error('Контент поста обов\'язковий')
     }
     
     return await apiClient.secureRequest('/posts', {
       method: 'POST',
-      body: JSON.stringify({ content, images })
+      body: JSON.stringify({ content: formData })
     })
   },
 
@@ -45,6 +62,38 @@ export const postsService = {
     return await apiClient.secureRequest(`/posts/${postId}/comment`, {
       method: 'POST',
       body: JSON.stringify({ content })
+    })
+  },
+
+  async updatePost(postId, content) {
+    if (!postId || !content || !content.trim()) {
+      throw new Error('ID поста та контент обов\'язкові')
+    }
+    
+    return await apiClient.secureRequest(`/posts/${postId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ content })
+    })
+  },
+
+  async updateComment(postId, commentId, content) {
+    if (!postId || !commentId || !content || !content.trim()) {
+      throw new Error('ID поста, ID коментаря та контент обов\'язкові')
+    }
+    
+    return await apiClient.secureRequest(`/posts/${postId}/comment/${commentId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ content })
+    })
+  },
+
+  async deleteComment(postId, commentId) {
+    if (!postId || !commentId) {
+      throw new Error('ID поста та ID коментаря обов\'язкові')
+    }
+    
+    return await apiClient.secureRequest(`/posts/${postId}/comment/${commentId}`, {
+      method: 'DELETE'
     })
   },
 

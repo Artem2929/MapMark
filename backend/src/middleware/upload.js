@@ -2,7 +2,7 @@ const multer = require('multer')
 const AppError = require('../utils/errorHandler').AppError
 
 // Configure multer for memory storage (Base64)
-const avatarStorage = multer.memoryStorage()
+const memoryStorage = multer.memoryStorage()
 
 // File filter for images only
 const imageFilter = (req, file, cb) => {
@@ -13,13 +13,23 @@ const imageFilter = (req, file, cb) => {
   }
 }
 
-// Configure multer
+// Configure multer for avatars
 const uploadAvatarMulter = multer({
-  storage: avatarStorage,
+  storage: memoryStorage,
   fileFilter: imageFilter,
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit
     files: 1
+  }
+})
+
+// Configure multer for post images
+const uploadPostImagesMulter = multer({
+  storage: memoryStorage,
+  fileFilter: imageFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB per file
+    files: 4 // Max 4 images
   }
 })
 
@@ -47,5 +57,6 @@ const uploadAvatar = (req, res, next) => {
 }
 
 module.exports = {
-  uploadAvatar
+  uploadAvatar,
+  upload: uploadPostImagesMulter
 }

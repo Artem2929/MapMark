@@ -60,7 +60,7 @@ class PostsService {
 
     const post = new Post({
       author: authorObjectId,
-      content: content.trim(),
+      content: content || '',
       images
     })
 
@@ -151,6 +151,104 @@ class PostsService {
         avatar: newComment.user.avatar
       }
     }
+  }
+
+  async updatePost(postId, userId, content) {
+    const userObjectId = await this.getUserObjectId(userId)
+    if (!userObjectId) {
+      throw new Error('Користувача не знайдено')
+    }
+
+    const post = await Post.findOne({ _id: postId, author: userObjectId })
+    if (!post) {
+      throw new Error('Пост не знайдено або ви не маєте прав на його редагування')
+    }
+
+    post.content = content.trim()
+    await post.save()
+    await post.populate('author', 'id name avatar')
+    
+    logger.info('Post updated', { postId, userId })
+    
+    return {
+      id: post._id,
+      content: post.content,
+      images: post.images,
+      likesCount: post.likesCount,
+      commentsCount: post.commentsCount,
+      createdAt: post.createdAt,
+      author: {
+        id: post.author.id || post.author._id,
+        name: post.author.name,
+        avatar: post.author.avatar
+      }
+    }
+  }
+
+  async updateComment(postId, commentId, userId, content) {
+    const userObjectId = await this.getUserObjectId(userId)
+    if (!userObjectId) {
+      throw new Error('Користувача не знайдено')
+    }
+
+    const post = await Post.findById(postId)
+    if (!post) {
+      throw new Error('Пост не знайдено')
+    }
+
+    const comment = post.comments.id(commentId)
+    if (!comment) {
+      throw new Error('Коментар не знайдено')
+    }
+
+    if (comment.user.toString() !== userObjectId.toString()) {
+      throw new Error('Ви не маєте прав на редагування цього коментаря')
+    }
+
+    comment.content = content.trim()
+    await post.save()
+    await post.populate('comments.user', 'id name avatar')
+    
+    const updatedComment = post.comments.id(commentId)
+    logger.info('Comment updated', { postId, commentId, userId })
+    
+    return {
+      id: updatedComment._id,
+      content: updatedComment.content,
+      createdAt: updatedComment.createdAt,
+      user: {
+        id: updatedComment.user.id || updatedComment.user._id,
+        name: updatedComment.user.name,
+        avatar: updatedComment.user.avatar
+      }
+    }
+  }
+
+  async deleteComment(postId, commentId, userId) {
+    const userObjectId = await this.getUserObjectId(userId)
+    if (!userObjectId) {
+      throw new Error('Користувача не знайдено')
+    }
+
+    const post = await Post.findById(postId)
+    if (!post) {
+      throw new Error('Пост не знайдено')
+    }
+
+    const comment = post.comments.id(commentId)
+    if (!comment) {
+      throw new Error('Коментар не знайдено')
+    }
+
+    if (comment.user.toString() !== userObjectId.toString()) {
+      throw new Error('Ви не маєте прав на видалення цього коментаря')
+    }
+
+    comment.deleteOne()
+    post.commentsCount = Math.max(0, post.commentsCount - 1)
+    await post.save()
+    
+    logger.info('Comment deleted', { postId, commentId, userId })
   }
 
   async deletePost(postId, userId) {

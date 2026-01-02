@@ -1,13 +1,13 @@
-import { memo, useState, useCallback, useMemo, useEffect } from 'react'
+import { memo, useState, useCallback, useEffect } from 'react'
 import { postsService } from '../services/postsService'
+import WallComposer from './WallComposer'
+import WallPost from './WallPost'
 import './Wall.css'
 
 const Wall = memo(({ userId, isOwnProfile, user }) => {
-  const [postText, setPostText] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState(null)
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -16,7 +16,7 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
       setLoading(true)
       try {
         const result = await postsService.getUserPosts(userId, 1, 10)
-        if (result.success) {
+        if (result.status === 'success' && result.data) {
           setPosts(result.data.posts || [])
         }
       } catch (err) {
@@ -30,36 +30,29 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
     loadPosts()
   }, [userId])
 
-  const handleSubmit = useCallback(async () => {
-    if (!postText.trim() || isSubmitting) return
-    
-    setIsSubmitting(true)
-    setError(null)
-    
+  const handlePostCreated = useCallback(async (formData) => {
     try {
-      const result = await postsService.createPost(postText.trim())
-      if (result.success) {
-        setPosts(prev => [result.data, ...prev])
-        setPostText('')
+      const result = await postsService.createPost(formData)
+      console.log('Post created result:', result)
+      if (result.status === 'success' && result.data) {
+        console.log('Adding post to state:', result.data)
+        setPosts(prev => {
+          console.log('Previous posts:', prev)
+          const newPosts = [result.data, ...prev]
+          console.log('New posts:', newPosts)
+          return newPosts
+        })
       }
     } catch (err) {
       console.error('Failed to create post:', err)
-      setError(err.message || 'Помилка створення посту')
-    } finally {
-      setIsSubmitting(false)
+      throw err
     }
-  }, [postText, isSubmitting])
-
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-      handleSubmit()
-    }
-  }, [handleSubmit])
+  }, [])
 
   const handleLike = useCallback(async (postId) => {
     try {
       const result = await postsService.likePost(postId)
-      if (result.success) {
+      if (result.status === 'success' && result.data) {
         setPosts(prev => prev.map(post => 
           post.id === postId 
             ? { ...post, likesCount: result.data.likesCount, isLiked: result.data.liked }
@@ -72,16 +65,14 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
   }, [])
 
   const handleComment = useCallback(async (postId, content) => {
-    if (!content || !content.trim()) return
-    
     try {
-      const result = await postsService.addComment(postId, content.trim())
-      if (result.success) {
+      const result = await postsService.addComment(postId, content)
+      if (result.status === 'success' && result.data) {
         setPosts(prev => prev.map(post => 
           post.id === postId 
             ? { 
                 ...post, 
-                commentsCount: post.commentsCount + 1,
+                commentsCount: (post.commentsCount || 0) + 1,
                 comments: [...(post.comments || []), result.data]
               }
             : post
@@ -92,131 +83,99 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
     }
   }, [])
 
-  const handleShare = useCallback((postId) => {
-    console.log('Share post:', postId)
-    // TODO: Implement share functionality
+  const handleShare = useCallback(async (postId) => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Поділитися постом',
+          url: `${window.location.origin}/post/${postId}`
+        })
+      } else {
+        await navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`)
+        alert('Посилання скопійовано!')
+      }
+    } catch (err) {
+      console.error('Failed to share:', err)
+    }
   }, [])
 
-  const renderedPosts = useMemo(() => (
-    posts.map(post => (
-      <article key={post.id} className="wall__post">
-        <div className="wall__post-avatar">
-          <img 
-            src={post.author?.avatar || '/default-avatar.svg'} 
-            alt={post.author?.name || 'Аватар'}
-            className="wall__post-avatar-img"
-          />
-        </div>
-        
-        <div className="wall__post-content">
-          <div className="wall__post-header">
-            <span className="wall__post-author">
-              {post.author?.name || 'Невідомий користувач'}
-            </span>
-            <span className="wall__post-date">
-              {post.createdAt ? new Date(post.createdAt).toLocaleDateString('uk-UA', {
-                day: 'numeric',
-                month: 'short',
-                hour: '2-digit',
-                minute: '2-digit'
-              }) : 'Невідома дата'}
-            </span>
-          </div>
-          
-          <div className="wall__post-text">
-            {post.content}
-          </div>
-          
-          <div className="wall__post-actions">
-            <button 
-              className={`wall__action-btn wall__action-btn--like ${post.isLiked ? 'wall__action-btn--active' : ''}`}
-              onClick={() => handleLike(post.id)}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-              </svg>
-              <span>{post.likesCount || 0}</span>
-            </button>
-            
-            <button 
-              className="wall__action-btn wall__action-btn--comment"
-              onClick={() => handleComment(post.id)}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h11c.55 0 1-.45 1-1z"/>
-              </svg>
-              <span>{post.commentsCount || 0}</span>
-            </button>
-            
-            <button 
-              className="wall__action-btn wall__action-btn--share"
-              onClick={() => handleShare(post.id)}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
-              </svg>
-              <span>0</span>
-            </button>
-          </div>
-        </div>
-      </article>
-    ))
-  ), [posts, handleLike, handleComment, handleShare])
+  const handleDelete = useCallback(async (postId) => {
+    if (!confirm('Видалити цей пост?')) return
+    
+    try {
+      const result = await postsService.deletePost(postId)
+      if (result.status === 'success') {
+        setPosts(prev => prev.filter(post => post.id !== postId))
+      }
+    } catch (err) {
+      console.error('Failed to delete post:', err)
+    }
+  }, [])
+
+  const handleUpdate = useCallback(async (postId, content) => {
+    try {
+      const result = await postsService.updatePost(postId, content)
+      if (result.status === 'success' && result.data) {
+        setPosts(prev => prev.map(post => 
+          post.id === postId ? { ...post, content: result.data.content } : post
+        ))
+      }
+    } catch (err) {
+      console.error('Failed to update post:', err)
+      throw err
+    }
+  }, [])
+
+  const handleUpdateComment = useCallback(async (postId, commentId, content) => {
+    try {
+      const result = await postsService.updateComment(postId, commentId, content)
+      if (result.status === 'success' && result.data) {
+        setPosts(prev => prev.map(post => 
+          post.id === postId 
+            ? {
+                ...post,
+                comments: post.comments.map(comment =>
+                  comment.id === commentId ? { ...comment, content: result.data.content } : comment
+                )
+              }
+            : post
+        ))
+      }
+    } catch (err) {
+      console.error('Failed to update comment:', err)
+      throw err
+    }
+  }, [])
+
+  const handleDeleteComment = useCallback(async (postId, commentId) => {
+    try {
+      const result = await postsService.deleteComment(postId, commentId)
+      if (result.status === 'success') {
+        setPosts(prev => prev.map(post => 
+          post.id === postId 
+            ? {
+                ...post,
+                comments: post.comments.filter(comment => comment.id !== commentId),
+                commentsCount: Math.max(0, post.commentsCount - 1)
+              }
+            : post
+        ))
+      }
+    } catch (err) {
+      console.error('Failed to delete comment:', err)
+      throw err
+    }
+  }, [])
+
+
 
   return (
     <div className="wall">
       {isOwnProfile && (
-        <div className="wall__composer">
-          <div className="wall__composer-avatar">
-            <img 
-              src={user?.avatar || '/default-avatar.svg'} 
-              alt={user?.name || 'Ваш аватар'}
-              className="wall__composer-avatar-img"
-            />
-          </div>
-          
-          <div className="wall__composer-content">
-            <textarea 
-              placeholder="Що у вас нового?"
-              className="wall__composer-textarea"
-              value={postText}
-              onChange={(e) => setPostText(e.target.value)}
-              onKeyDown={handleKeyDown}
-              disabled={isSubmitting}
-              rows={3}
-            />
-            
-            {error && (
-              <div className="wall__error">
-                {error}
-              </div>
-            )}
-            
-            <div className="wall__composer-actions">
-              <div className="wall__composer-tools">
-                <button className="wall__composer-tool" title="Додати фото">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
-                  </svg>
-                </button>
-                
-                <button className="wall__composer-tool" title="Додати емодзі">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                  </svg>
-                </button>
-              </div>
-              
-              <button 
-                className="wall__composer-submit"
-                onClick={handleSubmit}
-                disabled={!postText.trim() || isSubmitting}
-              >
-                {isSubmitting ? 'Публікуємо...' : 'Опублікувати'}
-              </button>
-            </div>
-          </div>
-        </div>
+        <WallComposer 
+          user={user}
+          onPostCreated={handlePostCreated}
+        />
       )}
       
       <div className="wall__posts">
@@ -237,7 +196,20 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
             </p>
           </div>
         ) : (
-          renderedPosts
+          posts.map(post => (
+            <WallPost
+              key={post.id}
+              post={post}
+              currentUserId={user?.id}
+              onLike={handleLike}
+              onComment={handleComment}
+              onShare={handleShare}
+              onDelete={handleDelete}
+              onUpdate={handleUpdate}
+              onUpdateComment={handleUpdateComment}
+              onDeleteComment={handleDeleteComment}
+            />
+          ))
         )}
       </div>
     </div>

@@ -2,6 +2,7 @@ const express = require('express')
 const postsController = require('../controllers/postsController')
 const { protect } = require('../middleware/auth')
 const { csrfProtection } = require('../middleware/csrf')
+const { upload } = require('../middleware/upload')
 
 const router = express.Router()
 
@@ -11,14 +12,23 @@ router.use(protect)
 // GET /api/v1/posts/user/:userId - Get user's posts
 router.get('/user/:userId', postsController.getUserPosts)
 
-// POST /api/v1/posts - Create new post
-router.post('/', csrfProtection, postsController.createPost)
+// POST /api/v1/posts - Create new post (with optional images)
+router.post('/', csrfProtection, upload.array('images', 4), postsController.createPost)
 
 // POST /api/v1/posts/:postId/like - Like/unlike post
 router.post('/:postId/like', csrfProtection, postsController.likePost)
 
 // POST /api/v1/posts/:postId/comment - Add comment to post
 router.post('/:postId/comment', csrfProtection, postsController.addComment)
+
+// PUT /api/v1/posts/:postId - Update post
+router.put('/:postId', csrfProtection, postsController.updatePost)
+
+// PUT /api/v1/posts/:postId/comment/:commentId - Update comment
+router.put('/:postId/comment/:commentId', csrfProtection, postsController.updateComment)
+
+// DELETE /api/v1/posts/:postId/comment/:commentId - Delete comment
+router.delete('/:postId/comment/:commentId', csrfProtection, postsController.deleteComment)
 
 // DELETE /api/v1/posts/:postId - Delete post
 router.delete('/:postId', csrfProtection, postsController.deletePost)

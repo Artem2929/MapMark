@@ -49,7 +49,7 @@ const UserProfileContent = () => {
         {!isEditing && (
           <div className="profile-main-content">
             <div className="profile-center-column">
-              <Wall userId={targetUserId} isOwnProfile={isOwnProfile} posts={user?.posts || []} user={user} />
+              <Wall userId={targetUserId} isOwnProfile={isOwnProfile} user={user} />
             </div>
           </div>
         )}

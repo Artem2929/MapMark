@@ -48,3 +48,10 @@ build:
 health:
 	curl -f http://localhost:3002/health || exit 1
 	curl -f http://localhost:5173 || exit 1
+
+# Git commit with message
+commit:
+	@read -p "Commit message: " msg; \
+	git add . && \
+	git commit -m "$$msg" && \
+	git push

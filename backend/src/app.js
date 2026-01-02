@@ -27,6 +27,14 @@ app.set('trust proxy', 1)
 app.use(requestId)
 app.use(responseTime)
 
+// Static files для фотографій та завантажень (before security middleware)
+app.use('/uploads', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:5173')
+  res.header('Access-Control-Allow-Methods', 'GET')
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin')
+  next()
+}, express.static(path.join(__dirname, '../uploads')))
+
 // Security middleware - skip rate limiting for photo uploads
 app.use((req, res, next) => {
   if (req.path.includes('/photos/upload')) {
@@ -86,7 +94,6 @@ app.use(`${API_VERSION}/follows`, followsRoutes)
 app.use(`${API_VERSION}/dev`, devRoutes)
 app.use('/health', healthRoutes)
 
-// Static files для фотографій
 // API info endpoint
 app.get('/api', (req, res) => {
   res.json({
