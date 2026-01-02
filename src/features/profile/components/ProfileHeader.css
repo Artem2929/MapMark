@@ -61,7 +61,6 @@
 
 .profile-header__edit-avatar:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
 }
 
 .profile-header__edit-avatar:active {
@@ -147,7 +146,6 @@
   text-align: center;
   transition: all 0.25s ease;
 }
-
 
 .stat-number {
   font-size: 16px;

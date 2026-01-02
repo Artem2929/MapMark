@@ -13,8 +13,69 @@ const Photos = () => {
   const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState('')
   const [loadingComments, setLoadingComments] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editData, setEditData] = useState({ description: '', location: '', hashtags: '' })
   const navigate = useNavigate()
   const { userId } = useParams()
+
+  const handleEditPhoto = () => {
+    setEditData({
+      description: selectedPhoto.description || '',
+      location: selectedPhoto.location || '',
+      hashtags: selectedPhoto.hashtags || ''
+    })
+    setIsEditing(true)
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditing(false)
+    setEditData({ description: '', location: '', hashtags: '' })
+  }
+
+  const handleSaveEdit = async () => {
+    await photosService.updatePhoto(selectedPhoto._id, editData)
+    await loadPhotos(userId)
+    const updatedPhotos = await photosService.getUserPhotos(userId)
+    const updatedPhoto = updatedPhotos.find(p => p._id === selectedPhoto._id)
+    if (updatedPhoto) {
+      setSelectedPhoto(updatedPhoto)
+    }
+    setIsEditing(false)
+  }
+
+  const handleAddHashtag = (tag) => {
+    const currentTags = editData.hashtags.split(' ').filter(t => t.trim())
+    if (currentTags.length < 5 && !editData.hashtags.includes(tag)) {
+      const newTags = editData.hashtags ? `${editData.hashtags} ${tag}` : tag
+      setEditData({ ...editData, hashtags: newTags.substring(0, 200) })
+    }
+  }
+
+  const handleTextareaChange = (e, field) => {
+    const textarea = e.target
+    const value = e.target.value
+    
+    if (field === 'hashtags') {
+      const hashtags = value.split(' ').filter(tag => tag.trim())
+      if (hashtags.length > 5) return
+    }
+    
+    setEditData({ ...editData, [field]: value })
+    
+    const lines = value.split('\n').length
+    const wrappedLines = Math.ceil(value.length / 50)
+    const totalLines = Math.max(lines, wrappedLines)
+    
+    if (totalLines > 1) {
+      textarea.style.height = '80px'
+      textarea.style.overflowY = 'auto'
+      textarea.style.paddingRight = '12px'
+    } else {
+      textarea.style.height = '48px'
+      textarea.style.overflowY = 'hidden'
+      textarea.style.paddingRight = '16px'
+    }
+  }
 
   useEffect(() => {
     const initializePhotos = async () => {
@@ -253,18 +314,22 @@ const Photos = () => {
               <div className="photo-modal-header">
                 <div className="photo-modal-user">
                   <div className="photo-modal-avatar">
-                    <img
-                      src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEhUSExIVFhUXFxgYFxcXFxUYFRgXFRUXGhkXFxUYHSggGB"
-                      alt="Artem Polishchuk"
-                      className="photo-modal-avatar-img"
-                      onError={(e) => {
-                        e.target.style.display = 'none'
-                        e.target.parentElement.textContent = 'A'
-                      }}
-                    />
+                    {selectedPhoto.user?.avatar ? (
+                      <img
+                        src={selectedPhoto.user.avatar.startsWith('data:') ? selectedPhoto.user.avatar : `data:image/jpeg;base64,${selectedPhoto.user.avatar}`}
+                        alt={selectedPhoto.user.name}
+                        className="photo-modal-avatar-img"
+                        onError={(e) => {
+                          e.target.style.display = 'none'
+                          e.target.parentElement.textContent = selectedPhoto.user?.name?.[0] || 'U'
+                        }}
+                      />
+                    ) : (
+                      selectedPhoto.user?.name?.[0]?.toUpperCase() || 'U'
+                    )}
                   </div>
                   <div className="photo-modal-user-info">
-                    <h4>Artem Polishchuk</h4>
+                    <h4>{selectedPhoto.user?.name || 'Користувач'}</h4>
                     <div className="photo-modal-date">
                       {new Date(selectedPhoto.createdAt).toLocaleDateString('uk-UA')}
                     </div>
@@ -273,21 +338,93 @@ const Photos = () => {
                 <button className="photo-modal-menu">⋯</button>
               </div>
 
-              {selectedPhoto.description && (
-                <div className="photo-modal-description">
-                  <div className="photo-modal-description-content">
-                    <div className="photo-modal-description-avatar">
-                      {selectedPhoto.user?.name?.[0] || 'U'}
+              <div className="photo-info">
+                {currentUserId === userId && !isEditing && (
+                  <button className="photo-edit-btn" onClick={handleEditPhoto}>
+                    Редагувати
+                  </button>
+                )}
+                {isEditing ? (
+                  <div className="photo-upload-form">
+                    <div className="profile-edit-form__field">
+                      <label className="profile-edit-form__label">Опис</label>
+                      <textarea
+                        className="profile-edit-form__textarea"
+                        placeholder="Розкажіть про фото"
+                        rows="1"
+                        maxLength="500"
+                        value={editData.description}
+                        onChange={(e) => handleTextareaChange(e, 'description')}
+                        aria-describedby="desc-count"
+                      />
+                      <div id="desc-count" className="profile-edit-form__char-count">
+                        {editData.description.length}/500
+                      </div>
                     </div>
-                    <div className="photo-modal-description-text">
-                      <p>
-                        <span className="username">{selectedPhoto.user?.name || 'Користувач'}</span>
-                        {selectedPhoto.description}
-                      </p>
+                    <div className="profile-edit-form__field">
+                      <label className="profile-edit-form__label">Місцезнаходження</label>
+                      <input
+                        type="text"
+                        className="profile-edit-form__input"
+                        placeholder="Місто, країна"
+                        maxLength="100"
+                        value={editData.location}
+                        onChange={(e) => setEditData({ ...editData, location: e.target.value })}
+                        aria-describedby="loc-count"
+                      />
+                      <div id="loc-count" className="profile-edit-form__char-count">
+                        {editData.location.length}/100
+                      </div>
+                    </div>
+                    <div className="profile-edit-form__field">
+                      <label className="profile-edit-form__label">Хештеги</label>
+                      <textarea
+                        className="profile-edit-form__textarea"
+                        placeholder="#природа #подорож #фото"
+                        maxLength="200"
+                        rows="1"
+                        value={editData.hashtags}
+                        onChange={(e) => handleTextareaChange(e, 'hashtags')}
+                        aria-describedby="hash-count"
+                      />
+                      <div id="hash-count" className="profile-edit-form__char-count" style={{ color: editData.hashtags.split(' ').filter(t => t.startsWith('#')).length >= 5 ? '#dc2626' : '#6b7280' }}>
+                        {editData.hashtags.split(' ').filter(t => t.startsWith('#')).length}/5
+                      </div>
+                      <div className="hashtag-suggestions">
+                        {['#природа', '#подорож', '#фото', '#україна', '#життя', '#друзі', '#сім\'я', '#відпочинок']
+                          .filter(tag => !editData.hashtags.includes(tag))
+                          .map(tag => (
+                            <button key={tag} type="button" className="hashtag-suggestion" onClick={() => handleAddHashtag(tag)}>{tag}</button>
+                          ))}
+                      </div>
+                    </div>
+                    <div className="photo-edit-actions">
+                      <button className="btn secondary" onClick={handleCancelEdit}>Скасувати</button>
+                      <button className="btn primary" onClick={handleSaveEdit}>Зберегти</button>
                     </div>
                   </div>
-                </div>
-              )}
+                ) : (
+                  <>
+                    {selectedPhoto.description && (
+                      <div className="photo-info-item">
+                        <span className="photo-info-label">Опис:</span>
+                        {selectedPhoto.description}
+                      </div>
+                    )}
+                    {selectedPhoto.location && (
+                      <div className="photo-info-item">
+                        <span className="photo-info-label">Місце:</span>
+                        {selectedPhoto.location}
+                      </div>
+                    )}
+                    {selectedPhoto.hashtags && (
+                      <div className="photo-info-item">
+                        <span className="photo-hashtags">{selectedPhoto.hashtags}</span>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
               
               <div className="photo-modal-comments">
                 <div className="comments-list">

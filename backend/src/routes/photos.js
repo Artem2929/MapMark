@@ -2,6 +2,7 @@ const express = require('express')
 const { photosController, upload } = require('../controllers/photosController')
 const { protect } = require('../middleware/auth')
 const { validatePhotoUpload, validatePhotoUpdate, validatePhotoId } = require('../middleware/photoValidation')
+const { uploadLimiter } = require('../middleware/security')
 
 const router = express.Router()
 
@@ -13,6 +14,7 @@ router.get('/:photoId', validatePhotoId, photosController.getPhoto)
 router.use(protect)
 
 router.post('/upload', 
+  uploadLimiter,
   upload.array('photos', 10),
   validatePhotoUpload,
   photosController.uploadPhotos

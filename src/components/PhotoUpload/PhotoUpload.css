@@ -85,7 +85,6 @@
 }
 
 .photo-carousel-item:hover .photo-carousel-img {
-  transform: scale(1.05);
 }
 
 .photo-remove-btn {

@@ -27,8 +27,24 @@ app.set('trust proxy', 1)
 app.use(requestId)
 app.use(responseTime)
 
-// Security middleware
-app.use(securityMiddleware)
+// Security middleware - skip rate limiting for photo uploads
+app.use((req, res, next) => {
+  if (req.path.includes('/photos/upload')) {
+    const [helmet, cors, , mongoSanitize, xss, hpp] = securityMiddleware
+    helmet(req, res, () => {
+      cors(req, res, () => {
+        mongoSanitize(req, res, () => {
+          xss(req, res, () => {
+            hpp(req, res, next)
+          })
+        })
+      })
+    })
+  } else {
+    securityMiddleware.forEach(middleware => middleware(req, res, () => {}))
+    next()
+  }
+})
 
 // Request logging
 app.use(requestLogger)

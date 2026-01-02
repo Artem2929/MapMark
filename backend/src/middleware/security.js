@@ -27,6 +27,9 @@ const authLimiter = createRateLimiter(15 * 60 * 1000, 5) // 5 requests per 15 mi
 // General rate limiting
 const generalLimiter = createRateLimiter()
 
+// Upload rate limiting (more permissive)
+const uploadLimiter = createRateLimiter(60 * 60 * 1000, 50) // 50 requests per hour
+
 // CORS configuration
 const corsOptions = {
   origin: function (origin, callback) {
@@ -78,5 +81,6 @@ module.exports = {
   securityMiddleware,
   authLimiter,
   generalLimiter,
+  uploadLimiter,
   corsOptions
 }

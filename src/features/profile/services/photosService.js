@@ -7,8 +7,11 @@ export const photosService = {
     }
     
     const data = await apiClient.request(`/photos/users/${userId}`, { params })
-    console.log('Photos API response:', data)
-    return data.data?.photos || data.photos || []
+    const photos = data.data?.photos || data.photos || []
+    return photos.map(photo => ({
+      ...photo,
+      _id: photo._id || photo.id
+    }))
   },
 
   async uploadPhotos(files) {

@@ -70,7 +70,6 @@
   transition: transform 0.3s ease;
 }
 
-
 .photo-delete-btn {
   position: absolute;
   top: 12px;
@@ -97,7 +96,6 @@
 
 .photo-delete-btn:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
 }
 
 .photo-delete-btn:active {
@@ -144,7 +142,6 @@
 .photo-dislike-btn:hover,
 .photo-comment-btn:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
 }
 
 .photo-like-btn.active {
@@ -174,11 +171,11 @@
 
 .photo-modal-content {
   display: flex;
-  flex-direction: column;
-  width: 60%;
-  max-width: 800px;
-  height: 55vh;
-  max-height: 490px;
+  flex-direction: row;
+  width: 90%;
+  max-width: 1200px;
+  height: 85vh;
+  max-height: 800px;
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
@@ -190,8 +187,8 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #262626;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
   border: none;
   border-radius: 50%;
   width: 32px;
@@ -204,22 +201,26 @@
   transition: all 0.2s ease;
   font-size: 16px;
   font-weight: 600;
+  backdrop-filter: blur(8px);
 }
 
 .photo-modal-close:hover {
-  background: #fff;
-  transform: scale(1.05);
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.photo-modal-close:active {
+  transform: scale(0.98);
 }
 
 .photo-modal-image {
-  flex: 1;
+  flex: 1.2;
   background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  min-height: 300px;
-  width: 100%;
+  min-width: 0;
+  height: 100%;
 }
 
 .photo-modal-image .photo-actions {
@@ -244,14 +245,14 @@
 }
 
 .photo-modal-sidebar {
-  width: 100%;
-  height: auto;
+  width: 400px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background: #fff;
-  border-left: none;
-  border-top: 1px solid #dbdbdb;
+  border-left: 1px solid #dbdbdb;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 /* Header */
@@ -689,4 +690,139 @@
   .photos-header h1 {
     font-size: 20px;
   }
+}
+
+/* Photo Info Section */
+.photo-info {
+  padding: 16px;
+  border-bottom: 1px solid #efefef;
+  flex-shrink: 0;
+}
+
+.photo-info-item {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #262626;
+}
+
+.photo-info-label {
+  font-weight: 600;
+  margin-right: 8px;
+  color: #8e8e8e;
+}
+
+.photo-hashtags {
+  color: #00376b;
+  font-weight: 500;
+}
+
+/* Photo Edit */
+.photo-edit-btn {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(59, 130, 246, 0.05) 100%
+  );
+  color: #3b82f6;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: var(--transition-fast);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+}
+
+.photo-edit-btn:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(29, 78, 216, 0.15) 0%,
+    rgba(29, 78, 216, 0.1) 100%
+  );
+}
+
+.photo-edit-btn:active {
+  transform: scale(0.96);
+}
+
+.photo-edit-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  justify-content: center;
+}
+
+/* Button styles */
+.photo-edit-actions .btn {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  border: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+}
+
+.photo-edit-actions .btn.primary {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(59, 130, 246, 0.05) 100%
+  );
+  color: #3b82f6;
+}
+
+.photo-edit-actions .btn.primary:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    rgba(29, 78, 216, 0.15) 0%,
+    rgba(29, 78, 216, 0.1) 100%
+  );
+}
+
+.photo-edit-actions .btn.primary:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.photo-edit-actions .btn.secondary {
+  background: linear-gradient(
+    135deg,
+    rgba(107, 114, 128, 0.1) 0%,
+    rgba(107, 114, 128, 0.05) 100%
+  );
+  color: #6b7280;
+}
+
+.photo-edit-actions .btn.secondary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(75, 85, 99, 0.15) 0%,
+    rgba(75, 85, 99, 0.1) 100%
+  );
+}
+
+.photo-edit-actions .btn.secondary:active {
+  transform: scale(0.96);
+}
+
+/* Photo Upload Form Override */
+.photo-upload-form .profile-edit-form__input,
+.photo-upload-form .profile-edit-form__textarea {
+  padding: 0.625rem 0.75rem;
+  border: 2px solid var(--form-border);
+  border-radius: var(--form-radius);
+  font-size: 0.875rem;
+  line-height: 1.25;
+  min-height: 2.5rem;
 }

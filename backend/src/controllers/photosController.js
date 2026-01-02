@@ -59,14 +59,29 @@ class PhotosController {
         .sort({ createdAt: -1 })
         .limit(limitNum)
         .skip((pageNum - 1) * limitNum)
-        .populate('userId', 'name id')
+        .populate('userId', 'name id avatar')
         .select('-__v')
 
       // Очищаємо відповідь від зайвих полів
       const cleanPhotos = photos.map(photo => {
         const photoObj = photo.toObject()
-        if (photoObj.userId) {
-          photoObj.userId = photoObj.userId.id // залишаємо тільки кастомний id
+        const userData = photoObj.userId
+        photoObj.userId = userData?.id || photoObj.userId
+        
+        // Конвертуємо avatar Buffer в base64 якщо потрібно
+        let avatarBase64 = null
+        if (userData?.avatar) {
+          if (Buffer.isBuffer(userData.avatar)) {
+            avatarBase64 = userData.avatar.toString('base64')
+          } else if (typeof userData.avatar === 'string') {
+            avatarBase64 = userData.avatar
+          }
+        }
+        
+        photoObj.user = {
+          id: userData?.id,
+          name: userData?.name,
+          avatar: avatarBase64
         }
         return photoObj
       })
@@ -119,6 +134,9 @@ class PhotosController {
       const userId = req.user._id
       const files = req.files
 
+      console.log('Upload request body:', req.body)
+      console.log('Upload files:', files?.length)
+
       if (!files || files.length === 0) {
         return res.status(400).json({
           status: 'fail',
@@ -145,10 +163,24 @@ class PhotosController {
           const photoId = crypto.randomUUID()
           const filename = `${photoId}.jpg`
 
-          // Отримуємо метадані з форми
-          const description = req.body[`description_${i}`] || ''
-          const location = req.body[`location_${i}`] || ''
-          const hashtags = req.body[`hashtags_${i}`] || ''
+          // Отримуємо метадані з форми - вони можуть бути в різних форматах
+          let description = ''
+          let location = ''
+          let hashtags = ''
+          
+          // Перевіряємо всі можливі варіанти
+          if (req.body.description) description = req.body.description
+          if (req.body.location) location = req.body.location
+          if (req.body.hashtags) hashtags = req.body.hashtags
+          
+          // Якщо дані в масиві (multer bug)
+          if (Array.isArray(req.body.photos)) {
+            if (req.body.photos[0]) description = req.body.photos[0]
+            if (req.body.photos[1]) location = req.body.photos[1]
+            if (req.body.photos[2]) hashtags = req.body.photos[2]
+          }
+
+          console.log('Photo metadata:', { description, location, hashtags })
 
           // Зберігаємо в БД як Base64
           const photo = new Photo({
@@ -179,10 +211,26 @@ class PhotosController {
         })
       }
 
+      // Форматуємо відповідь так само, як у getUserPhotos
+      const user = await User.findById(userId).select('name id avatar')
+      const formattedPhotos = uploadedPhotos.map(photo => {
+        const photoObj = photo.toObject()
+        return {
+          ...photoObj,
+          _id: photoObj._id,
+          userId: user.id,
+          user: {
+            id: user.id,
+            name: user.name,
+            avatar: user.avatar
+          }
+        }
+      })
+
       res.status(201).json({
         status: 'success',
         data: {
-          photos: uploadedPhotos,
+          photos: formattedPhotos,
         },
         message: `Успішно завантажено ${uploadedPhotos.length} фото`,
       })
@@ -278,12 +326,13 @@ class PhotosController {
   async updatePhoto(req, res) {
     try {
       const { photoId } = req.params
-      const { description, tags, isPublic } = req.body
+      const { description, location, hashtags, isPublic } = req.body
       const userId = req.user._id
 
       const updateData = {}
-      if (description !== undefined) updateData.description = description
-      if (tags !== undefined) updateData.tags = tags
+      if (description !== undefined) updateData.description = description.substring(0, 500)
+      if (location !== undefined) updateData.location = location.substring(0, 100)
+      if (hashtags !== undefined) updateData.hashtags = hashtags.substring(0, 200)
       if (isPublic !== undefined) updateData.isPublic = isPublic
 
       const photo = await Photo.findOneAndUpdate(

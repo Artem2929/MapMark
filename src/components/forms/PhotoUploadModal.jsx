@@ -111,12 +111,16 @@ const PhotoUploadModal = memo(({ onClose, onUpload }) => {
       setErrors([])
       
       const formData = new FormData()
+      formData.append('photos', selectedFiles[0])
+      formData.append('description', description)
+      formData.append('location', location)
+      formData.append('hashtags', hashtags)
       
-      selectedFiles.forEach((file, index) => {
-        formData.append('photos', file)
-        formData.append(`description_${index}`, description)
-        formData.append(`location_${index}`, location)
-        formData.append(`hashtags_${index}`, hashtags)
+      console.log('Sending FormData:', {
+        description,
+        location,
+        hashtags,
+        file: selectedFiles[0].name
       })
       
       await onUpload(formData)

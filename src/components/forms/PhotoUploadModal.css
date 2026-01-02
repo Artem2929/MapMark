@@ -12,7 +12,7 @@
   position: relative;
   width: 480px;
   max-width: 90vw;
-  border-radius: 24px;
+  border-radius: var(--radius-2xl);
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.9),
@@ -101,40 +101,78 @@
 }
 
 .btn {
-  padding: 10px 20px;
-  border-radius: 12px;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
   border: none;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-fast);
   min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
 }
 
 .btn.primary {
-  background: #3b82f6;
-  color: #fff;
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(59, 130, 246, 0.05) 100%
+  );
+  color: #3b82f6;
 }
 
 .btn.primary:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: linear-gradient(
+    135deg,
+    rgba(29, 78, 216, 0.15) 0%,
+    rgba(29, 78, 216, 0.1) 100%
+  );
+}
+
+.btn.primary:active:not(:disabled) {
+  transform: scale(0.96);
 }
 
 .btn.primary:disabled {
-  background: #94a3b8;
+  background: linear-gradient(
+    135deg,
+    rgba(203, 213, 225, 0.3) 0%,
+    rgba(203, 213, 225, 0.2) 100%
+  );
+  color: #1e293b;
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .btn.secondary {
-  background: #e2e8f0;
-  color: #1e293b;
+  background: linear-gradient(
+    135deg,
+    rgba(107, 114, 128, 0.1) 0%,
+    rgba(107, 114, 128, 0.05) 100%
+  );
+  color: #6b7280;
+}
+
+.btn.secondary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(75, 85, 99, 0.15) 0%,
+    rgba(75, 85, 99, 0.1) 100%
+  );
+}
+
+.btn.secondary:active {
+  transform: scale(0.96);
 }
 
 .photo-preview {
   position: relative;
   width: 100%;
   aspect-ratio: 4/3;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   background: #f8fafc;
 }
@@ -172,7 +210,6 @@
 
 .photo-preview__remove:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
 }
 
 .photo-preview__remove:active {
@@ -208,7 +245,7 @@
 .photo-upload-modal__content .profile-edit-form__input {
   padding: 10px;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 14px;
   transition: border-color 0.2s ease;
   width: 100%;

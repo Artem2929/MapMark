@@ -44,7 +44,6 @@
 
 .new-chat-button:hover:not(:disabled) {
   background: var(--color-primary-dark);
-  transform: scale(1.05);
 }
 
 .new-chat-button:disabled {
@@ -225,7 +224,11 @@
 .sidebar-header {
   padding: var(--space-4) var(--space-5);
   border-bottom: 1px solid var(--color-border-light);
-  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-secondary) 0%,
+    var(--color-bg-primary) 100%
+  );
   display: flex;
   align-items: center;
   gap: var(--space-4);
@@ -404,7 +407,6 @@
 
 .new-chat-btn:disabled {
   background: var(--color-gray-300);
-
 }
 
 .conversations-list {
@@ -860,9 +862,15 @@
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(0.95); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .send-btn {
@@ -886,7 +894,6 @@
 
 .send-btn:disabled {
   background: var(--color-gray-300);
-
 }
 
 .file-input {
@@ -1199,7 +1206,9 @@
 }
 
 @keyframes typing {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: scale(0.8);
     opacity: 0.5;
   }
@@ -1247,7 +1256,6 @@
 
 .context-menu__item:disabled {
   color: var(--color-text-muted);
-
 }
 
 .context-menu__icon {
