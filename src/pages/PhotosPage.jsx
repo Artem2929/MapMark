@@ -448,7 +448,6 @@ const Photos = () => {
                             <span className="comment-date">
                               {new Date(comment.createdAt).toLocaleDateString('uk-UA')}
                             </span>
-                            <button className="comment-like">Подобається</button>
                           </div>
                         </div>
                       </div>
@@ -457,6 +456,25 @@ const Photos = () => {
                     <div className="comments-empty">Коментарів немає</div>
                   )}
                 </div>
+                <form className="comment-form" onSubmit={handleAddComment}>
+                  <div className="comment-input-container">
+                    <textarea
+                      className="comment-input"
+                      placeholder="Додати коментар..."
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      maxLength="500"
+                      rows="1"
+                    />
+                    <button
+                      type="submit"
+                      className="comment-submit"
+                      disabled={!newComment.trim()}
+                    >
+                      Надіслати
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
