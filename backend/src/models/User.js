@@ -105,6 +105,10 @@ const userSchema = new mongoose.Schema({
   lastLogin: {
     type: Date
   },
+  lastActivity: {
+    type: Date,
+    default: Date.now
+  },
   passwordChangedAt: {
     type: Date
   },
@@ -176,6 +180,13 @@ userSchema.virtual('profile').get(function() {
     emailVerified: this.emailVerified,
     createdAt: this.createdAt
   }
+})
+
+// Virtual for online status (online if active within last 5 minutes)
+userSchema.virtual('isOnline').get(function() {
+  if (!this.lastActivity) return false
+  const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
+  return this.lastActivity > fiveMinutesAgo
 })
 
 const User = mongoose.model('User', userSchema)

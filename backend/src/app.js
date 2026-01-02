@@ -7,6 +7,7 @@ const logger = require('./utils/logger')
 const { globalErrorHandler } = require('./utils/errorHandler')
 const { securityMiddleware } = require('./middleware/security')
 const { requestLogger, requestId, responseTime } = require('./middleware/logging')
+const updateActivity = require('./middleware/updateActivity')
 const authRoutes = require('./routes/authRoutes')
 const userRoutes = require('./routes/userRoutes')
 const healthRoutes = require('./routes/healthRoutes')
@@ -81,6 +82,9 @@ app.use(session({
 
 // API versioning
 const API_VERSION = '/api/v1'
+
+// Update user activity for authenticated requests
+app.use(updateActivity)
 
 // Routes
 app.use(`${API_VERSION}/auth`, authRoutes)

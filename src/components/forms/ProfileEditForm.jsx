@@ -133,8 +133,8 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
   }, [onCancel, navigate, user.id])
 
   return (
-    <div className="profile-edit-modal" onClick={handleCancel}>
-      <div className="profile-edit-modal__content" onClick={(e) => e.stopPropagation()}>
+    <div className="profile-edit-modal">
+      <div className="profile-edit-modal__content">
         <header className="profile-edit-modal__header">
           <h2>Редагувати профіль</h2>
           <button className="profile-edit-modal__close" onClick={handleCancel} aria-label="Закрити">✕</button>

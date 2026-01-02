@@ -65,8 +65,9 @@ class AuthService {
       throw new AppError('Невірні дані для входу', 401, 'INVALID_CREDENTIALS')
     }
 
-    // Update last login
+    // Update last login and activity
     user.lastLogin = new Date()
+    user.lastActivity = new Date()
     await user.save({ validateBeforeSave: false })
 
     // Remove password from response

@@ -31,7 +31,8 @@ const getUserById = async (userId, currentUserId = null) => {
     ...user.toObject(),
     postsCount,
     followersCount,
-    followingCount
+    followingCount,
+    isOnline: user.isOnline
   }
   
   // Додаємо статус підписки, якщо є currentUserId

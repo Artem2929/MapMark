@@ -149,7 +149,10 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
         </div>
         
         <div className="profile-header__info">
-          <h1 className="profile-header__name">{user.name}{user.surname ? ` ${user.surname}` : ''}</h1>
+          <div className="profile-header__name-wrapper">
+            <h1 className="profile-header__name">{user.name}{user.surname ? ` ${user.surname}` : ''}</h1>
+            {user.isOnline && <span className="profile-header__online">online</span>}
+          </div>
           
           <div className="profile-header__details">
             {user.position && (
