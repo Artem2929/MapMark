@@ -488,6 +488,13 @@ class PhotosController {
         })
       }
 
+      if (text.length > 1000) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Коментар не може перевищувати 1000 символів'
+        })
+      }
+
       const photo = await Photo.findById(photoId)
       if (!photo) {
         return res.status(404).json({
@@ -522,6 +529,91 @@ class PhotosController {
       res.status(500).json({
         status: 'error',
         message: 'Помилка при додаванні коментаря'
+      })
+    }
+  }
+
+  // Оновити коментар
+  async updatePhotoComment(req, res) {
+    try {
+      const { photoId, commentId } = req.params
+      const { text } = req.body
+      const userId = req.user._id
+
+      if (!text || text.trim().length === 0) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Текст коментаря не може бути порожнім'
+        })
+      }
+
+      if (text.length > 1000) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Коментар не може перевищувати 1000 символів'
+        })
+      }
+
+      const comment = await PhotoComment.findOne({ _id: commentId, photoId, userId })
+      if (!comment) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Коментар не знайдено або немає прав доступу'
+        })
+      }
+
+      comment.text = text.trim()
+      await comment.save()
+
+      const populatedComment = await PhotoComment.findById(comment._id)
+        .populate('userId', 'name id')
+        .select('-__v')
+
+      const cleanComment = populatedComment.toObject()
+      cleanComment.user = {
+        id: cleanComment.userId.id,
+        name: cleanComment.userId.name
+      }
+      delete cleanComment.userId
+
+      res.json({
+        status: 'success',
+        data: { comment: cleanComment }
+      })
+    } catch (error) {
+      console.error('Error updating comment:', error)
+      res.status(500).json({
+        status: 'error',
+        message: 'Помилка при оновленні коментаря'
+      })
+    }
+  }
+
+  // Видалити коментар
+  async deletePhotoComment(req, res) {
+    try {
+      const { photoId, commentId } = req.params
+      const userId = req.user._id
+
+      const comment = await PhotoComment.findOne({ _id: commentId, photoId, userId })
+      if (!comment) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Коментар не знайдено або немає прав доступу'
+        })
+      }
+
+      await PhotoComment.deleteOne({ _id: commentId })
+
+      res.json({
+        status: 'success',
+        message: 'Коментар видалено'
+      })
+    } catch (error) {
+      console.error('Error deleting comment:', error)
+      res.status(500).json({
+        status: 'error',
+        message: 'Помилка при видаленні коментаря'
       })
     }
   }

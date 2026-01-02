@@ -90,5 +90,26 @@ export const photosService = {
       method: 'POST',
       body: JSON.stringify({ text })
     })
+  },
+
+  async updatePhotoComment(photoId, commentId, text) {
+    if (!photoId || !commentId || !text) {
+      throw new Error('ID фото, ID коментаря та текст обов\'язкові')
+    }
+    
+    return apiClient.secureRequest(`/photos/${photoId}/comments/${commentId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ text })
+    })
+  },
+
+  async deletePhotoComment(photoId, commentId) {
+    if (!photoId || !commentId) {
+      throw new Error('ID фото та ID коментаря обов\'язкові')
+    }
+    
+    return apiClient.secureRequest(`/photos/${photoId}/comments/${commentId}`, {
+      method: 'DELETE'
+    })
   }
 }

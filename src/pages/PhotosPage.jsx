@@ -13,6 +13,8 @@ const Photos = () => {
   const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState('')
   const [loadingComments, setLoadingComments] = useState(false)
+  const [editingCommentId, setEditingCommentId] = useState(null)
+  const [editingCommentText, setEditingCommentText] = useState('')
   const [isEditing, setIsEditing] = useState(false)
   const [editData, setEditData] = useState({ description: '', location: '', hashtags: '' })
   const navigate = useNavigate()
@@ -140,6 +142,30 @@ const Photos = () => {
     const response = await photosService.addPhotoComment(selectedPhoto._id, newComment.trim())
     setComments(prev => [response.data.comment, ...prev])
     setNewComment('')
+  }
+
+  const handleEditComment = (comment) => {
+    setEditingCommentId(comment._id)
+    setEditingCommentText(comment.text)
+  }
+
+  const handleSaveComment = async (commentId) => {
+    if (!editingCommentText.trim()) return
+    
+    const response = await photosService.updatePhotoComment(selectedPhoto._id, commentId, editingCommentText.trim())
+    setComments(prev => prev.map(c => c._id === commentId ? response.data.comment : c))
+    setEditingCommentId(null)
+    setEditingCommentText('')
+  }
+
+  const handleCancelEditComment = () => {
+    setEditingCommentId(null)
+    setEditingCommentText('')
+  }
+
+  const handleDeleteComment = async (commentId) => {
+    await photosService.deletePhotoComment(selectedPhoto._id, commentId)
+    setComments(prev => prev.filter(c => c._id !== commentId))
   }
 
   const handleOpenUpload = () => {
@@ -440,15 +466,45 @@ const Photos = () => {
                           {comment.user?.name?.[0] || 'U'}
                         </div>
                         <div className="comment-content">
-                          <div className="comment-text">
+                          <div className="comment-header">
                             <span className="username">{comment.user?.name || 'Користувач'}</span>
-                            {comment.text}
-                          </div>
-                          <div className="comment-meta">
                             <span className="comment-date">
                               {new Date(comment.createdAt).toLocaleDateString('uk-UA')}
                             </span>
+                            {comment.user?.id === currentUserId && (
+                              <div className="comment-actions">
+                                <button onClick={() => handleEditComment(comment)} className="comment-action-btn">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                  </svg>
+                                </button>
+                                <button onClick={() => handleDeleteComment(comment._id)} className="comment-action-btn">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                  </svg>
+                                </button>
+                              </div>
+                            )}
                           </div>
+                          {editingCommentId === comment._id ? (
+                            <div className="comment-edit-form">
+                              <textarea
+                                className="comment-edit-input"
+                                value={editingCommentText}
+                                onChange={(e) => setEditingCommentText(e.target.value)}
+                                maxLength="1000"
+                                rows="2"
+                              />
+                              <div className="comment-edit-actions">
+                                <button onClick={handleCancelEditComment} className="btn secondary">Скасувати</button>
+                                <button onClick={() => handleSaveComment(comment._id)} className="btn primary">Зберегти</button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="comment-text">
+                              {comment.text}
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))
@@ -463,7 +519,7 @@ const Photos = () => {
                       placeholder="Додати коментар..."
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
-                      maxLength="500"
+                      maxLength="1000"
                       rows="1"
                     />
                     <button
@@ -473,6 +529,9 @@ const Photos = () => {
                     >
                       Надіслати
                     </button>
+                  </div>
+                  <div className="comment-char-count">
+                    {newComment.length}/1000
                   </div>
                 </form>
               </div>

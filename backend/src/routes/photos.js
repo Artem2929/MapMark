@@ -45,4 +45,14 @@ router.post('/:photoId/comments',
   photosController.addPhotoComment
 )
 
+router.put('/:photoId/comments/:commentId',
+  validatePhotoId,
+  photosController.updatePhotoComment
+)
+
+router.delete('/:photoId/comments/:commentId',
+  validatePhotoId,
+  photosController.deletePhotoComment
+)
+
 module.exports = router

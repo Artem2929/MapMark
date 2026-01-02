@@ -14,7 +14,7 @@ const photoCommentSchema = new mongoose.Schema({
   text: {
     type: String,
     required: true,
-    maxlength: 500
+    maxlength: 1000
   }
 }, {
   timestamps: true
