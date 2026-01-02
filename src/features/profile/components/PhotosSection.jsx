@@ -1,6 +1,6 @@
-import React, { memo, useState, useCallback, useEffect, useRef, useMemo } from 'react'
+import React, { memo, useState, useCallback, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import PhotoUpload from '../../../components/PhotoUpload/PhotoUpload'
+import PhotoUploadModal from '../../../components/forms/PhotoUploadModal'
 import { photosService } from '../services/photosService'
 import { useAuth } from '../../../hooks/useAuth'
 import './PhotosSection.css'
@@ -9,9 +9,6 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
   const [photos, setPhotos] = useState([])
   const [loading, setLoading] = useState(true)
   const [showUploadModal, setShowUploadModal] = useState(false)
-  const [selectedFiles, setSelectedFiles] = useState([])
-  const [uploading, setUploading] = useState(false)
-  const photoUploadRef = useRef(null)
   const navigate = useNavigate()
   const { user } = useAuth()
 
@@ -51,36 +48,7 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
 
   const handleCloseUpload = useCallback(() => {
     setShowUploadModal(false)
-    setSelectedFiles([])
   }, [])
-
-  const handleFilesChange = useCallback((files) => {
-    setSelectedFiles(files)
-  }, [])
-
-  const handleUploadSubmit = useCallback(async () => {
-    if (selectedFiles.length === 0 || uploading) return
-
-    try {
-      setUploading(true)
-      // Отримуємо оригінальні файли для завантаження
-      const filesToUpload = photoUploadRef.current?.getFilesForUpload() || []
-
-      if (filesToUpload.length === 0) {
-        console.error('No files to upload')
-        return
-      }
-
-      await photosService.uploadPhotos(filesToUpload)
-      await loadPhotos() // Перезавантажуємо фото після успішного завантаження
-      handleCloseUpload()
-    } catch (error) {
-      console.error('Upload error:', error)
-      // TODO: Показати повідомлення про помилку
-    } finally {
-      setUploading(false)
-    }
-  }, [selectedFiles, uploading, loadPhotos, handleCloseUpload])
 
   // Мемоізовані URL для фото
   const photoUrls = useMemo(() => {
@@ -171,47 +139,13 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
       </div>
 
       {showUploadModal && (
-        <div className="avatar-modal" onClick={handleCloseUpload}>
-          <div className="avatar-modal" onClick={(e) => e.stopPropagation()}>
-            
-            <header className="avatar-header">
-              <h2>Додати фото</h2>
-              <button className="avatar-close" onClick={handleCloseUpload}>
-                ✕
-              </button>
-            </header>
-
-            <div className="avatar-body">
-              
-              <PhotoUpload
-                ref={photoUploadRef}
-                photos={selectedFiles}
-                onPhotosChange={handleFilesChange}
-                maxPhotos={10}
-              />
-
-              <div className="avatar-actions">
-                <button 
-                  className="btn secondary" 
-                  onClick={handleCloseUpload}
-                  disabled={uploading}
-                >
-                  Скасувати
-                </button>
-                <button 
-                  className="btn primary" 
-                  onClick={handleUploadSubmit}
-                  disabled={selectedFiles.length === 0 || uploading}
-                >
-                  {uploading ? 'Завантаження...' : `Завантажити (${selectedFiles.length})`}
-                </button>
-              </div>
-
-            </div>
-
-            <input type="file" accept="image/*" hidden />
-          </div>
-        </div>
+        <PhotoUploadModal
+          onClose={handleCloseUpload}
+          onUpload={async (files) => {
+            await photosService.uploadPhotos(files)
+            await loadPhotos()
+          }}
+        />
       )}
     </div>
   )

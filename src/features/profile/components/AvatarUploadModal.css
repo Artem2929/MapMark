@@ -4,12 +4,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.65);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: rgba(15, 23, 42, .65);
+  backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
   z-index: 1000;
-  backdrop-filter: blur(4px);
 }
 
 .avatar-modal {

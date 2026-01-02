@@ -96,12 +96,20 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 14px;
+  font-size: 16px;
   color: #656565;
 }
 
 .profile-header__detail svg {
-  color: #99a2ad;
+  color: #f97316;
+}
+
+.profile-header__detail:nth-child(2) svg {
+  color: #2787f5;
+}
+
+.profile-header__detail:nth-child(3) svg {
+  color: #22c55e;
 }
 
 .profile-header__detail a {
@@ -136,7 +144,7 @@
 
 
 .stat-number {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
   display: block;
 }
