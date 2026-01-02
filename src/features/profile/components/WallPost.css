@@ -13,6 +13,15 @@
   box-shadow: var(--shadow-md);
 }
 
+@keyframes highlight {
+  0%, 100% {
+    box-shadow: var(--shadow-sm);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+  }
+}
+
 .wall-post__avatar {
   flex-shrink: 0;
 }
@@ -388,6 +397,24 @@
 
 .wall-post__action-btn--comment.wall-post__action-btn--has-comments {
   color: var(--color-primary);
+}
+
+.wall-post__action-btn--share:hover {
+  color: var(--color-primary);
+}
+
+.wall-post__action-btn--share.wall-post__action-btn--copied {
+  color: var(--color-success);
+  animation: pulse 0.3s ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .wall-post__comments {

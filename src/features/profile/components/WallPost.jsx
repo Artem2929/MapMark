@@ -17,6 +17,7 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
   const [editImages, setEditImages] = useState([])
   const [newImages, setNewImages] = useState([])
   const [removedImages, setRemovedImages] = useState([])
+  const [isCopied, setIsCopied] = useState(false)
   const textareaRef = useRef(null)
   const fileInputRef = useRef(null)
 
@@ -191,6 +192,18 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
     setShowDeleteModal(false)
   }, [])
 
+  const handleShare = useCallback(async () => {
+    const postUrl = `${window.location.origin}/profile/${post.author?.id}#post-${post.id}`
+    
+    try {
+      await navigator.clipboard.writeText(postUrl)
+      setIsCopied(true)
+      setTimeout(() => setIsCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy link:', err)
+    }
+  }, [post.id, post.author?.id])
+
   useEffect(() => {
     if (isEditing && textareaRef.current) {
       const textarea = textareaRef.current
@@ -221,7 +234,7 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
   }
 
   return (
-    <article className="wall-post">
+    <article className="wall-post" id={`post-${post.id}`}>
       <div className="wall-post__avatar">
         <img 
           src={post.author?.avatar || '/default-avatar.svg'} 
@@ -441,6 +454,22 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
               <path d="M21.99 4c0-1.1-.89-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
             </svg>
             <span>{post.commentsCount || 0}</span>
+          </button>
+          
+          <button 
+            className={`wall-post__action-btn wall-post__action-btn--share ${isCopied ? 'wall-post__action-btn--copied' : ''}`}
+            onClick={handleShare}
+            title={isCopied ? 'Скопійовано!' : 'Копіювати посилання'}
+          >
+            {isCopied ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+              </svg>
+            )}
           </button>
         </div>
         

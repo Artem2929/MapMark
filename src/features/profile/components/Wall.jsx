@@ -8,16 +8,22 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
 
   useEffect(() => {
     const loadPosts = async () => {
       if (!userId) return
       
       setLoading(true)
+      setPage(1)
       try {
         const result = await postsService.getUserPosts(userId, 1, 10)
         if (result.status === 'success' && result.data) {
-          setPosts(result.data.posts || [])
+          const newPosts = result.data.posts || []
+          setPosts(newPosts)
+          setHasMore(newPosts.length === 10)
         }
       } catch (err) {
         console.error('Failed to load posts:', err)
@@ -29,6 +35,18 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
     
     loadPosts()
   }, [userId])
+
+  useEffect(() => {
+    if (!loading && posts.length > 0 && window.location.hash) {
+      setTimeout(() => {
+        const element = document.querySelector(window.location.hash)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          element.style.animation = 'highlight 2s ease-in-out'
+        }
+      }, 100)
+    }
+  }, [loading, posts])
 
   const handlePostCreated = useCallback(async (formData) => {
     try {
@@ -224,6 +242,26 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
     }
   }, [])
 
+  const handleLoadMore = useCallback(async () => {
+    if (loadingMore || !hasMore) return
+    
+    setLoadingMore(true)
+    try {
+      const nextPage = page + 1
+      const result = await postsService.getUserPosts(userId, nextPage, 10)
+      if (result.status === 'success' && result.data) {
+        const newPosts = result.data.posts || []
+        setPosts(prev => [...prev, ...newPosts])
+        setPage(nextPage)
+        setHasMore(newPosts.length === 10)
+      }
+    } catch (err) {
+      console.error('Failed to load more posts:', err)
+    } finally {
+      setLoadingMore(false)
+    }
+  }, [userId, page, loadingMore, hasMore])
+
 
 
   return (
@@ -253,23 +291,35 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
             </p>
           </div>
         ) : (
-          posts.map(post => (
-            <WallPost
-              key={post.id}
-              post={post}
-              currentUserId={user?.id}
-              onLike={handleLike}
-              onDislike={handleDislike}
-              onComment={handleComment}
-              onShare={handleShare}
-              onDelete={handleDelete}
-              onUpdate={handleUpdate}
-              onUpdateComment={handleUpdateComment}
-              onDeleteComment={handleDeleteComment}
-              onLikeComment={handleLikeComment}
-              onDislikeComment={handleDislikeComment}
-            />
-          ))
+          <>
+            {posts.map(post => (
+              <WallPost
+                key={post.id}
+                post={post}
+                currentUserId={user?.id}
+                onLike={handleLike}
+                onDislike={handleDislike}
+                onComment={handleComment}
+                onShare={handleShare}
+                onDelete={handleDelete}
+                onUpdate={handleUpdate}
+                onUpdateComment={handleUpdateComment}
+                onDeleteComment={handleDeleteComment}
+                onLikeComment={handleLikeComment}
+                onDislikeComment={handleDislikeComment}
+              />
+            ))}
+            
+            {hasMore && (
+              <button 
+                className="wall__load-more"
+                onClick={handleLoadMore}
+                disabled={loadingMore}
+              >
+                {loadingMore ? 'Завантаження...' : 'Завантажити ще'}
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>
