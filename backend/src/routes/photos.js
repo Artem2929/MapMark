@@ -55,4 +55,9 @@ router.delete('/:photoId/comments/:commentId',
   photosController.deletePhotoComment
 )
 
+router.post('/:photoId/comments/:commentId/like',
+  validatePhotoId,
+  photosController.toggleCommentLike
+)
+
 module.exports = router

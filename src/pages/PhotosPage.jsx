@@ -150,6 +150,12 @@ const Photos = () => {
   const handleEditComment = (comment) => {
     setEditingCommentId(comment._id)
     setEditingCommentText(comment.text)
+    setTimeout(() => {
+      const textarea = document.querySelector('.comment-edit-input')
+      if (textarea) {
+        textarea.style.height = '90px'
+      }
+    }, 0)
   }
 
   const handleSaveComment = async (commentId) => {
@@ -170,6 +176,11 @@ const Photos = () => {
     await photosService.deletePhotoComment(selectedPhoto._id, commentId)
     setComments(prev => prev.filter(c => c._id !== commentId))
     setSelectedPhoto(prev => ({ ...prev, commentsCount: Math.max(0, (prev.commentsCount || 0) - 1) }))
+  }
+
+  const handleToggleCommentLike = async (commentId, type) => {
+    const response = await photosService.toggleCommentLike(selectedPhoto._id, commentId, type)
+    setComments(prev => prev.map(c => c._id === commentId ? { ...c, likesCount: response.data.likes, dislikesCount: response.data.dislikes, userReaction: response.data.userReaction } : c))
   }
 
   const handleOpenUpload = () => {
@@ -530,9 +541,31 @@ const Photos = () => {
                               </div>
                             </div>
                           ) : (
-                            <div className="comment-text">
-                              {comment.text}
-                            </div>
+                            <>
+                              <div className="comment-text">
+                                {comment.text}
+                              </div>
+                              <div className="comment-reactions">
+                                <button
+                                  className={`comment-like-btn ${comment.userReaction === 'like' ? 'active' : ''}`}
+                                  onClick={() => handleToggleCommentLike(comment._id, 'like')}
+                                >
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                                  </svg>
+                                  <span>{comment.likesCount || 0}</span>
+                                </button>
+                                <button
+                                  className={`comment-dislike-btn ${comment.userReaction === 'dislike' ? 'active' : ''}`}
+                                  onClick={() => handleToggleCommentLike(comment._id, 'dislike')}
+                                >
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                                  </svg>
+                                  <span>{comment.dislikesCount || 0}</span>
+                                </button>
+                              </div>
+                            </>
                           )}
                         </div>
                       </div>

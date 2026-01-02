@@ -460,6 +460,13 @@ class PhotosController {
           }
           delete commentObj.userId
         }
+        
+        commentObj.likesCount = commentObj.likes?.length || 0
+        commentObj.dislikesCount = commentObj.dislikes?.length || 0
+        commentObj.userReaction = commentObj.likes?.includes(req.user?._id) ? 'like' : commentObj.dislikes?.includes(req.user?._id) ? 'dislike' : null
+        delete commentObj.likes
+        delete commentObj.dislikes
+        
         return commentObj
       })
 
@@ -540,6 +547,12 @@ class PhotosController {
         avatar: avatarBase64
       }
       delete cleanComment.userId
+      
+      cleanComment.likesCount = 0
+      cleanComment.dislikesCount = 0
+      cleanComment.userReaction = null
+      delete cleanComment.likes
+      delete cleanComment.dislikes
 
       res.status(201).json({
         status: 'success',
@@ -607,6 +620,12 @@ class PhotosController {
         avatar: avatarBase64
       }
       delete cleanComment.userId
+      
+      cleanComment.likesCount = cleanComment.likes?.length || 0
+      cleanComment.dislikesCount = cleanComment.dislikes?.length || 0
+      cleanComment.userReaction = cleanComment.likes?.includes(userId) ? 'like' : cleanComment.dislikes?.includes(userId) ? 'dislike' : null
+      delete cleanComment.likes
+      delete cleanComment.dislikes
 
       res.json({
         status: 'success',
@@ -646,6 +665,66 @@ class PhotosController {
       res.status(500).json({
         status: 'error',
         message: 'Помилка при видаленні коментаря'
+      })
+    }
+  }
+
+  // Лайкнути або дізлайкнути коментар
+  async toggleCommentLike(req, res) {
+    try {
+      const { photoId, commentId } = req.params
+      const { type } = req.body
+      const userId = req.user._id
+
+      if (!['like', 'dislike'].includes(type)) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Невірний тип реакції'
+        })
+      }
+
+      const comment = await PhotoComment.findOne({ _id: commentId, photoId })
+      if (!comment) {
+        return res.status(404).json({
+          status: 'fail',
+          message: 'Коментар не знайдено'
+        })
+      }
+
+      const hasLike = comment.likes.includes(userId)
+      const hasDislike = comment.dislikes.includes(userId)
+
+      if (type === 'like') {
+        if (hasLike) {
+          comment.likes.pull(userId)
+        } else {
+          comment.likes.push(userId)
+          if (hasDislike) comment.dislikes.pull(userId)
+        }
+      } else {
+        if (hasDislike) {
+          comment.dislikes.pull(userId)
+        } else {
+          comment.dislikes.push(userId)
+          if (hasLike) comment.likes.pull(userId)
+        }
+      }
+
+      await comment.save()
+
+      res.json({
+        status: 'success',
+        data: {
+          likes: comment.likes.length,
+          dislikes: comment.dislikes.length,
+          userReaction: comment.likes.includes(userId) ? 'like' : comment.dislikes.includes(userId) ? 'dislike' : null
+        }
+      })
+    } catch (error) {
+      console.error('Error toggling comment like:', error)
+      res.status(500).json({
+        status: 'error',
+        message: 'Помилка при обробці реакції'
       })
     }
   }

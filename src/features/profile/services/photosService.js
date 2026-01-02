@@ -111,5 +111,16 @@ export const photosService = {
     return apiClient.secureRequest(`/photos/${photoId}/comments/${commentId}`, {
       method: 'DELETE'
     })
+  },
+
+  async toggleCommentLike(photoId, commentId, type) {
+    if (!photoId || !commentId || !type) {
+      throw new Error('ID фото, ID коментаря та тип обов\'язкові')
+    }
+    
+    return apiClient.secureRequest(`/photos/${photoId}/comments/${commentId}/like`, {
+      method: 'POST',
+      body: JSON.stringify({ type })
+    })
   }
 }

@@ -15,7 +15,15 @@ const photoCommentSchema = new mongoose.Schema({
     type: String,
     required: true,
     maxlength: 1000
-  }
+  },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  dislikes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 }, {
   timestamps: true
 });
