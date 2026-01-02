@@ -363,15 +363,16 @@ const Photos = () => {
                     </div>
                   </div>
                 </div>
-                <button className="photo-modal-menu">⋯</button>
+                {currentUserId === userId && !isEditing && (
+                  <button className="photo-edit-btn" onClick={handleEditPhoto}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                    </svg>
+                  </button>
+                )}
               </div>
 
               <div className="photo-info">
-                {currentUserId === userId && !isEditing && (
-                  <button className="photo-edit-btn" onClick={handleEditPhoto}>
-                    Редагувати
-                  </button>
-                )}
                 {isEditing ? (
                   <div className="photo-upload-form">
                     <div className="profile-edit-form__field">
@@ -437,6 +438,13 @@ const Photos = () => {
                       <div className="photo-info-item">
                         <span className="photo-info-label">Опис:</span>
                         {selectedPhoto.description}
+                        {currentUserId === userId && (
+                          <button className="photo-edit-btn" onClick={handleEditPhoto}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                            </svg>
+                          </button>
+                        )}
                       </div>
                     )}
                     {selectedPhoto.location && (
@@ -513,23 +521,23 @@ const Photos = () => {
                   )}
                 </div>
                 <form className="comment-form" onSubmit={handleAddComment}>
-                  <div className="comment-input-container">
-                    <textarea
-                      className="comment-input"
-                      placeholder="Додати коментар..."
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      maxLength="1000"
-                      rows="1"
-                    />
-                    <button
-                      type="submit"
-                      className="comment-submit"
-                      disabled={!newComment.trim()}
-                    >
-                      Надіслати
-                    </button>
-                  </div>
+                  <textarea
+                    className="comment-input"
+                    placeholder="Додати коментар..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    maxLength="1000"
+                    rows="1"
+                  />
+                  <button
+                    type="submit"
+                    className="comment-submit"
+                    disabled={!newComment.trim()}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2L3 12h6v10h6V12h6z"/>
+                    </svg>
+                  </button>
                   <div className="comment-char-count">
                     {newComment.length}/1000
                   </div>
