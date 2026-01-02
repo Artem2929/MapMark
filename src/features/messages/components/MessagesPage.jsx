@@ -40,6 +40,12 @@ const MessagesPage = () => {
   // Автоматично відкриваємо чат з користувачем, якщо передано userId
   useEffect(() => {
     if (userId && currentUser && !loading) {
+      // Якщо userId в URL це поточний користувач, перенаправляємо на /messages
+      if (userId === currentUser.id) {
+        navigate('/messages', { replace: true })
+        return
+      }
+
       const existingConversation = conversations.find(conv => 
         conv.participant?.id === userId || conv.participant?._id === userId
       )
@@ -55,7 +61,7 @@ const MessagesPage = () => {
         })
       }
     }
-  }, [userId, currentUser, conversations, loading, selectChat, markAsRead, createOrFindConversation])
+  }, [userId, currentUser, conversations, loading, selectChat, markAsRead, createOrFindConversation, navigate])
 
   const { sendTyping } = useMessagesSocket({
     activeChat,
