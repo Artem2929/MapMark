@@ -29,6 +29,10 @@
   font-size: 32px;
   font-weight: 700;
   color: #262626;
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .photos-grid {
@@ -991,3 +995,4 @@
   line-height: 1.25;
   min-height: 2.5rem;
 }
+
