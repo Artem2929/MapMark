@@ -103,22 +103,22 @@
   margin-bottom: var(--space-3);
 }
 
-.wall-post__edit-input-wrapper {
-  position: relative;
+.wall-post__edit-tools {
   display: flex;
   gap: var(--space-2);
-  align-items: flex-start;
+  align-items: center;
+  margin-top: var(--space-2);
+  position: relative;
 }
 
 .wall-post__edit-emoji-wrapper {
   position: relative;
-  flex-shrink: 0;
 }
 
+.wall-post__edit-photo-btn,
 .wall-post__edit-emoji-btn {
   width: 36px;
   height: 36px;
-  flex-shrink: 0;
   border: none;
   background: transparent;
   color: var(--color-primary);
@@ -130,14 +130,10 @@
   transition: var(--transition-all);
 }
 
-.wall-post__edit-emoji-btn:hover {
-  background: var(--color-primary-100);
-  transform: scale(1.1);
-}
-
+.wall-post__edit-photo-btn:hover,
 .wall-post__edit-emoji-btn:hover {
   background: var(--color-bg-tertiary);
-  color: var(--color-primary);
+  transform: scale(1.1);
 }
 
 .wall-post__edit-textarea {
@@ -163,20 +159,15 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.wall-post__edit-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-}
-
 .wall-post__edit-buttons {
   display: flex;
   gap: 12px;
+  justify-content: flex-end;
+  margin-top: var(--space-3);
+  margin-bottom: 5px;
 }
 
-.wall-post__edit-actions .btn {
+.wall-post__edit-buttons .btn {
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-full);
   border: none;
@@ -190,7 +181,7 @@
   justify-content: center;
 }
 
-.wall-post__edit-actions .btn.primary {
+.wall-post__edit-buttons .btn.primary {
   background: linear-gradient(
     135deg,
     rgba(59, 130, 246, 0.1) 0%,
@@ -199,7 +190,7 @@
   color: #3b82f6;
 }
 
-.wall-post__edit-actions .btn.primary:hover:not(:disabled) {
+.wall-post__edit-buttons .btn.primary:hover:not(:disabled) {
   background: linear-gradient(
     135deg,
     rgba(29, 78, 216, 0.15) 0%,
@@ -207,16 +198,16 @@
   );
 }
 
-.wall-post__edit-actions .btn.primary:active:not(:disabled) {
+.wall-post__edit-buttons .btn.primary:active:not(:disabled) {
   transform: scale(0.96);
 }
 
-.wall-post__edit-actions .btn.primary:disabled {
+.wall-post__edit-buttons .btn.primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.wall-post__edit-actions .btn.secondary {
+.wall-post__edit-buttons .btn.secondary {
   background: linear-gradient(
     135deg,
     rgba(107, 114, 128, 0.1) 0%,
@@ -225,7 +216,7 @@
   color: #6b7280;
 }
 
-.wall-post__edit-actions .btn.secondary:hover {
+.wall-post__edit-buttons .btn.secondary:hover {
   background: linear-gradient(
     135deg,
     rgba(75, 85, 99, 0.15) 0%,
@@ -233,8 +224,63 @@
   );
 }
 
-.wall-post__edit-actions .btn.secondary:active {
+.wall-post__edit-buttons .btn.secondary:active {
   transform: scale(0.96);
+}
+
+.wall-post__edit-tools {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.wall-post__edit-photo-btn,
+.wall-post__edit-emoji-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-all);
+}
+
+.wall-post__edit-photo-btn:hover,
+.wall-post__edit-emoji-btn:hover {
+  background: var(--color-bg-tertiary);
+  transform: scale(1.1);
+}
+
+.photo-delete-btn {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-all);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+}
+
+.wall-post__image-wrapper:hover .photo-delete-btn {
+  opacity: 1;
+}
+
+.photo-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.9);
+  transform: scale(1.1);
 }
 
 .wall-post__images {

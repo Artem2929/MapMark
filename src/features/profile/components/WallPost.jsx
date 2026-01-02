@@ -16,10 +16,17 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [editImages, setEditImages] = useState([])
   const [newImages, setNewImages] = useState([])
+  const [removedImages, setRemovedImages] = useState([])
   const textareaRef = useRef(null)
   const fileInputRef = useRef(null)
 
   const isOwner = currentUserId === post.author?.id
+
+  useEffect(() => {
+    if (isEditing && post.images) {
+      setEditImages([...post.images])
+    }
+  }, [isEditing, post.images])
 
   const handleCommentSubmit = useCallback(async () => {
     if (!commentText.trim() || isCommenting) return
@@ -41,26 +48,50 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
   }, [])
 
   const handleEditSave = useCallback(async () => {
-    if (editContent.trim() === post.content) {
+    const hasContentChanged = editContent.trim() !== (post.content || '')
+    const hasImagesChanged = removedImages.length > 0 || newImages.length > 0
+    
+    if (!hasContentChanged && !hasImagesChanged) {
       setIsEditing(false)
       return
     }
     
     try {
-      await onUpdate(post.id, editContent.trim())
+      const formData = new FormData()
+      
+      if (hasContentChanged) {
+        formData.append('content', editContent.trim())
+      }
+      
+      if (removedImages.length > 0) {
+        formData.append('removedImages', JSON.stringify(removedImages))
+      }
+      
+      newImages.forEach((img) => {
+        formData.append('images', img.file)
+      })
+      
+      await onUpdate(post.id, formData)
+      
+      newImages.forEach(img => URL.revokeObjectURL(img.preview))
+      setNewImages([])
+      setRemovedImages([])
+      setEditImages([])
       setIsEditing(false)
     } catch (error) {
       console.error('Failed to update post:', error)
     }
-  }, [editContent, post.content, post.id, onUpdate])
+  }, [editContent, post.content, post.id, onUpdate, removedImages, newImages])
 
   const handleEditCancel = useCallback(() => {
     setEditContent(post.content || '')
     setEditImages([])
+    newImages.forEach(img => URL.revokeObjectURL(img.preview))
     setNewImages([])
+    setRemovedImages([])
     setShowEmojiPicker(false)
     setIsEditing(false)
-  }, [post.content])
+  }, [post.content, newImages])
 
   const handleCommentEdit = useCallback((commentId, content) => {
     setEditingCommentId(commentId)
@@ -106,8 +137,9 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
     setNewImages(prev => [...prev, ...images])
   }, [editImages, newImages])
 
-  const handleRemoveExistingImage = useCallback((index) => {
-    setEditImages(prev => prev.filter((_, i) => i !== index))
+  const handleRemoveExistingImage = useCallback((imageUrl) => {
+    setEditImages(prev => prev.filter(img => img !== imageUrl))
+    setRemovedImages(prev => [...prev, imageUrl])
   }, [])
 
   const handleRemoveNewImage = useCallback((imageId) => {
@@ -245,7 +277,29 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
                   onChange={(e) => setEditContent(e.target.value)}
                   maxLength={2000}
                 />
-                <div className="wall-post__edit-actions">
+                <div className="wall-post__edit-tools">
+                  {(editImages.length + newImages.length) < 2 && (
+                    <>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleImageSelect}
+                        style={{ display: 'none' }}
+                      />
+                      <button
+                        type="button"
+                        className="wall-post__edit-photo-btn"
+                        onClick={() => fileInputRef.current?.click()}
+                        title="Додати фото"
+                      >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                        </svg>
+                      </button>
+                    </>
+                  )}
                   <div className="wall-post__edit-emoji-wrapper">
                     <button
                       type="button"
@@ -267,21 +321,6 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
                       />
                     )}
                   </div>
-                  <div className="wall-post__edit-buttons">
-                    <button
-                      className="btn secondary"
-                      onClick={handleEditCancel}
-                    >
-                      Скасувати
-                    </button>
-                    <button
-                      className="btn primary"
-                      onClick={handleEditSave}
-                      disabled={!editContent.trim()}
-                    >
-                      Зберегти
-                    </button>
-                  </div>
                 </div>
               </div>
             ) : (
@@ -290,18 +329,86 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
           </div>
         )}
         
-        {post.images && post.images.length > 0 && (
-          <div className={`wall-post__images wall-post__images--${post.images.length}`}>
-            {post.images.map((image, index) => (
-              <div key={index} className="wall-post__image-wrapper">
-                <img 
-                  src={image}
-                  alt={`Фото ${index + 1}`}
-                  className="wall-post__image"
-                />
+        {isEditing ? (
+          <>
+            {(editImages.length > 0 || newImages.length > 0) && (
+              <div className={`wall-post__images wall-post__images--${editImages.length + newImages.length}`}>
+                {editImages.map((image, index) => (
+                  <div key={`edit-img-${index}`} className="wall-post__image-wrapper">
+                    <img 
+                      src={image}
+                      alt="Фото"
+                      className="wall-post__image"
+                    />
+                    <button
+                      type="button"
+                      className="photo-delete-btn"
+                      onMouseDown={(e) => {
+                        e.stopPropagation()
+                        handleRemoveExistingImage(image)
+                      }}
+                      title="Видалити фото"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+                {newImages.map((img, index) => (
+                  <div key={`new-img-${img.id}`} className="wall-post__image-wrapper">
+                    <img 
+                      src={img.preview}
+                      alt="Нове фото"
+                      className="wall-post__image"
+                    />
+                    <button
+                      type="button"
+                      className="photo-delete-btn"
+                      onMouseDown={(e) => {
+                        e.stopPropagation()
+                        handleRemoveNewImage(img.id)
+                      }}
+                      title="Видалити фото"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                      </svg>
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+            <div className="wall-post__edit-buttons">
+              <button
+                className="btn secondary"
+                onClick={handleEditCancel}
+              >
+                Скасувати
+              </button>
+              <button
+                className="btn primary"
+                onClick={handleEditSave}
+                disabled={!editContent.trim()}
+              >
+                Зберегти
+              </button>
+            </div>
+          </>
+        ) : (
+          post.images && post.images.length > 0 && (
+            <div className={`wall-post__images wall-post__images--${post.images.length}`}>
+              {post.images.map((image, index) => (
+                <div key={index} className="wall-post__image-wrapper">
+                  <img 
+                    src={image}
+                    alt={`Фото ${index + 1}`}
+                    className="wall-post__image"
+                  />
+                </div>
+              ))}
+            </div>
+          )
         )}
         
         <div className="wall-post__actions">

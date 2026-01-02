@@ -75,14 +75,25 @@ export const postsService = {
     })
   },
 
-  async updatePost(postId, content) {
-    if (!postId || !content || !content.trim()) {
-      throw new Error('ID поста та контент обов\'язкові')
+  async updatePost(postId, data) {
+    if (!postId) {
+      throw new Error('ID поста обов\'язковий')
+    }
+    
+    if (data instanceof FormData) {
+      return await apiClient.secureRequest(`/posts/${postId}`, {
+        method: 'PUT',
+        body: data
+      })
+    }
+    
+    if (!data || !data.trim()) {
+      throw new Error('Контент обов\'язковий')
     }
     
     return await apiClient.secureRequest(`/posts/${postId}`, {
       method: 'PUT',
-      body: JSON.stringify({ content })
+      body: JSON.stringify({ content: data })
     })
   },
 

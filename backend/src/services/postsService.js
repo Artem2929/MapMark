@@ -212,7 +212,7 @@ class PostsService {
     }
   }
 
-  async updatePost(postId, userId, content) {
+  async updatePost(postId, userId, content, newImages = [], removedImages = []) {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) {
       throw new Error('Користувача не знайдено')
@@ -223,7 +223,18 @@ class PostsService {
       throw new Error('Пост не знайдено або ви не маєте прав на його редагування')
     }
 
-    post.content = content.trim()
+    if (content) {
+      post.content = content.trim()
+    }
+    
+    if (removedImages.length > 0) {
+      post.images = post.images.filter(img => !removedImages.includes(img))
+    }
+    
+    if (newImages.length > 0) {
+      post.images = [...post.images, ...newImages]
+    }
+    
     await post.save()
     await post.populate('author', 'id name avatar')
     
@@ -234,6 +245,7 @@ class PostsService {
       content: post.content,
       images: post.images,
       likesCount: post.likesCount,
+      dislikesCount: post.dislikesCount || 0,
       commentsCount: post.commentsCount,
       createdAt: post.createdAt,
       author: {

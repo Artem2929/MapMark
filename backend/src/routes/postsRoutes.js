@@ -25,7 +25,7 @@ router.post('/:postId/dislike', csrfProtection, postsController.dislikePost)
 router.post('/:postId/comment', csrfProtection, postsController.addComment)
 
 // PUT /api/v1/posts/:postId - Update post
-router.put('/:postId', csrfProtection, postsController.updatePost)
+router.put('/:postId', csrfProtection, upload.array('images', 4), postsController.updatePost)
 
 // PUT /api/v1/posts/:postId/comment/:commentId - Update comment
 router.put('/:postId/comment/:commentId', csrfProtection, postsController.updateComment)

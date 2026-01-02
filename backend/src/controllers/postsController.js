@@ -160,32 +160,16 @@ const postsController = {
     try {
       const { postId } = req.params
       const userId = req.user.id
-      const { content } = req.body
+      const { content, removedImages } = req.body
+      const newImages = req.files ? req.files.map(file => {
+        const base64 = file.buffer.toString('base64')
+        return `data:${file.mimetype};base64,${base64}`
+      }) : []
       
-      if (!content || typeof content !== 'string') {
-        return res.status(400).json({
-          status: 'fail',
-          message: 'Контент поста обов\'язковий'
-        })
-      }
+      const trimmedContent = content ? content.trim() : ''
+      const parsedRemovedImages = removedImages ? JSON.parse(removedImages) : []
       
-      const trimmedContent = content.trim()
-      
-      if (!trimmedContent) {
-        return res.status(400).json({
-          status: 'fail',
-          message: 'Пост не може бути порожнім'
-        })
-      }
-      
-      if (trimmedContent.length > 2000) {
-        return res.status(400).json({
-          status: 'fail',
-          message: 'Максимальна довжина тексту 2000 символів'
-        })
-      }
-      
-      const post = await postsService.updatePost(postId, userId, trimmedContent)
+      const post = await postsService.updatePost(postId, userId, trimmedContent, newImages, parsedRemovedImages)
       
       success(res, post, 'Пост оновлено')
     } catch (error) {

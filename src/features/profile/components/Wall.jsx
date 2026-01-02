@@ -125,12 +125,12 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
     }
   }, [])
 
-  const handleUpdate = useCallback(async (postId, content) => {
+  const handleUpdate = useCallback(async (postId, data) => {
     try {
-      const result = await postsService.updatePost(postId, content)
+      const result = await postsService.updatePost(postId, data)
       if (result.status === 'success' && result.data) {
         setPosts(prev => prev.map(post => 
-          post.id === postId ? { ...post, content: result.data.content } : post
+          post.id === postId ? { ...post, ...result.data } : post
         ))
       }
     } catch (err) {
