@@ -1,5 +1,6 @@
 import { memo, useState, useCallback, useRef, useEffect } from 'react'
 import DeleteConfirmModal from '../../../components/forms/DeleteConfirmModal'
+import EmojiPicker from './EmojiPicker'
 import './WallPost.css'
 
 const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onShare, onDelete, onUpdate, onUpdateComment, onDeleteComment, onLikeComment, onDislikeComment }) => {
@@ -12,7 +13,11 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
   const [editingCommentId, setEditingCommentId] = useState(null)
   const [editCommentText, setEditCommentText] = useState('')
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+  const [editImages, setEditImages] = useState([])
+  const [newImages, setNewImages] = useState([])
   const textareaRef = useRef(null)
+  const fileInputRef = useRef(null)
 
   const isOwner = currentUserId === post.author?.id
 
@@ -51,12 +56,69 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
 
   const handleEditCancel = useCallback(() => {
     setEditContent(post.content || '')
+    setEditImages([])
+    setNewImages([])
+    setShowEmojiPicker(false)
     setIsEditing(false)
   }, [post.content])
 
   const handleCommentEdit = useCallback((commentId, content) => {
     setEditingCommentId(commentId)
     setEditCommentText(content)
+    setTimeout(() => {
+      const textarea = document.querySelector('.wall-post__comment-edit-input')
+      if (textarea) {
+        textarea.style.height = 'auto'
+        textarea.style.height = `${textarea.scrollHeight}px`
+      }
+    }, 0)
+  }, [])
+
+  const handleEmojiSelect = useCallback((emoji) => {
+    const textarea = textareaRef.current
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const newContent = editContent.slice(0, start) + emoji + editContent.slice(end)
+    
+    if (newContent.length <= 2000) {
+      setEditContent(newContent)
+      setTimeout(() => {
+        textarea.focus()
+        textarea.setSelectionRange(start + emoji.length, start + emoji.length)
+      }, 0)
+    }
+  }, [editContent])
+
+  const handleImageSelect = useCallback((e) => {
+    const files = Array.from(e.target.files)
+    const imageFiles = files.filter(file => file.type.startsWith('image/'))
+    
+    if (editImages.length + newImages.length + imageFiles.length > 2) {
+      return
+    }
+
+    const images = imageFiles.map(file => ({
+      file,
+      preview: URL.createObjectURL(file),
+      id: Math.random().toString(36)
+    }))
+
+    setNewImages(prev => [...prev, ...images])
+  }, [editImages, newImages])
+
+  const handleRemoveExistingImage = useCallback((index) => {
+    setEditImages(prev => prev.filter((_, i) => i !== index))
+  }, [])
+
+  const handleRemoveNewImage = useCallback((imageId) => {
+    setNewImages(prev => {
+      const updated = prev.filter(img => img.id !== imageId)
+      const removed = prev.find(img => img.id === imageId)
+      if (removed) {
+        URL.revokeObjectURL(removed.preview)
+      }
+      return updated
+    })
   }, [])
 
   const handleCommentEditSave = useCallback(async (commentId) => {
@@ -150,7 +212,7 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
           {isOwner && (
             <div className="wall-post__menu">
               <button 
-                className="wall-post__menu-btn"
+                className={`wall-post__menu-btn ${isEditing ? 'active' : ''}`}
                 onClick={() => setIsEditing(true)}
                 title="Редагувати"
               >
@@ -184,19 +246,42 @@ const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onSh
                   maxLength={2000}
                 />
                 <div className="wall-post__edit-actions">
-                  <button
-                    className="btn secondary"
-                    onClick={handleEditCancel}
-                  >
-                    Скасувати
-                  </button>
-                  <button
-                    className="btn primary"
-                    onClick={handleEditSave}
-                    disabled={!editContent.trim()}
-                  >
-                    Зберегти
-                  </button>
+                  <div className="wall-post__edit-emoji-wrapper">
+                    <button
+                      type="button"
+                      className="wall-post__edit-emoji-btn"
+                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                      title="Додати емодзі"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                        <line x1="9" y1="9" x2="9.01" y2="9"/>
+                        <line x1="15" y1="9" x2="15.01" y2="9"/>
+                      </svg>
+                    </button>
+                    {showEmojiPicker && (
+                      <EmojiPicker 
+                        onSelect={handleEmojiSelect}
+                        onClose={() => setShowEmojiPicker(false)}
+                      />
+                    )}
+                  </div>
+                  <div className="wall-post__edit-buttons">
+                    <button
+                      className="btn secondary"
+                      onClick={handleEditCancel}
+                    >
+                      Скасувати
+                    </button>
+                    <button
+                      className="btn primary"
+                      onClick={handleEditSave}
+                      disabled={!editContent.trim()}
+                    >
+                      Зберегти
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (

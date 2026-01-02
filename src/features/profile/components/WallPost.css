@@ -76,11 +76,17 @@
   background: var(--color-bg-tertiary);
 }
 
-.wall-post__menu-btn:hover:first-child {
+.wall-post__menu-btn.active {
+  background: var(--color-bg-tertiary);
+}
+
+.wall-post__menu-btn:hover:first-child,
+.wall-post__menu-btn.active:first-child {
   color: var(--color-primary);
 }
 
-.wall-post__menu-btn:hover:last-child {
+.wall-post__menu-btn:hover:last-child,
+.wall-post__menu-btn.active:last-child {
   color: var(--color-error);
 }
 
@@ -95,6 +101,43 @@
 
 .wall-post__edit {
   margin-bottom: var(--space-3);
+}
+
+.wall-post__edit-input-wrapper {
+  position: relative;
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.wall-post__edit-emoji-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.wall-post__edit-emoji-btn {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-all);
+}
+
+.wall-post__edit-emoji-btn:hover {
+  background: var(--color-primary-100);
+  transform: scale(1.1);
+}
+
+.wall-post__edit-emoji-btn:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-primary);
 }
 
 .wall-post__edit-textarea {
@@ -123,8 +166,14 @@
 .wall-post__edit-actions {
   display: flex;
   gap: 12px;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 12px;
+}
+
+.wall-post__edit-buttons {
+  display: flex;
+  gap: 12px;
 }
 
 .wall-post__edit-actions .btn {
@@ -406,11 +455,13 @@
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   font-family: var(--font-family);
+  line-height: var(--line-height-normal);
   color: var(--color-text-primary);
   background: var(--color-bg-primary);
   outline: none;
   transition: var(--transition-all);
   resize: none;
+  overflow-y: hidden;
   min-height: 60px;
 }
 
