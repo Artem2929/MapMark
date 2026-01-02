@@ -264,10 +264,26 @@
 }
 
 .wall-post__action-btn--like:hover {
-  color: var(--color-error);
+  color: var(--color-primary);
 }
 
 .wall-post__action-btn--like.wall-post__action-btn--active {
+  color: var(--color-primary);
+}
+
+.wall-post__action-btn--like.wall-post__action-btn--winning {
+  color: var(--color-error);
+}
+
+.wall-post__action-btn--dislike:hover {
+  color: var(--color-error);
+}
+
+.wall-post__action-btn--dislike.wall-post__action-btn--active {
+  color: var(--color-error);
+}
+
+.wall-post__action-btn--dislike.wall-post__action-btn--winning {
   color: var(--color-error);
 }
 
@@ -275,8 +291,8 @@
   color: var(--color-primary);
 }
 
-.wall-post__action-btn--share:hover {
-  color: var(--color-success);
+.wall-post__action-btn--comment.wall-post__action-btn--has-comments {
+  color: var(--color-primary);
 }
 
 .wall-post__comments {
@@ -339,13 +355,13 @@
 }
 
 .wall-post__comment-menu-btn {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border: none;
   background: transparent;
   color: var(--color-text-tertiary);
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -404,28 +420,44 @@
 
 .wall-post__comment-edit-actions {
   display: flex;
-  gap: var(--space-2);
+  gap: 12px;
   justify-content: flex-end;
-  margin-top: var(--space-2);
+  margin-top: 12px;
 }
 
 .wall-post__comment-edit-actions .btn {
-  padding: 4px 12px;
-  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
   border: none;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: var(--transition-fast);
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .wall-post__comment-edit-actions .btn.primary {
-  background: var(--color-primary);
-  color: var(--color-text-inverse);
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(59, 130, 246, 0.05) 100%
+  );
+  color: #3b82f6;
 }
 
 .wall-post__comment-edit-actions .btn.primary:hover:not(:disabled) {
-  background: var(--color-primary-dark);
+  background: linear-gradient(
+    135deg,
+    rgba(29, 78, 216, 0.15) 0%,
+    rgba(29, 78, 216, 0.1) 100%
+  );
+}
+
+.wall-post__comment-edit-actions .btn.primary:active:not(:disabled) {
+  transform: scale(0.96);
 }
 
 .wall-post__comment-edit-actions .btn.primary:disabled {
@@ -434,31 +466,95 @@
 }
 
 .wall-post__comment-edit-actions .btn.secondary {
-  background: var(--color-bg-tertiary);
-  color: var(--color-text-secondary);
+  background: linear-gradient(
+    135deg,
+    rgba(107, 114, 128, 0.1) 0%,
+    rgba(107, 114, 128, 0.05) 100%
+  );
+  color: #6b7280;
 }
 
 .wall-post__comment-edit-actions .btn.secondary:hover {
-  background: var(--color-bg-quaternary);
+  background: linear-gradient(
+    135deg,
+    rgba(75, 85, 99, 0.15) 0%,
+    rgba(75, 85, 99, 0.1) 100%
+  );
+}
+
+.wall-post__comment-edit-actions .btn.secondary:active {
+  transform: scale(0.96);
+}
+
+.comment-reactions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.comment-like-btn,
+.comment-dislike-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  transition: var(--transition-all);
+}
+
+.comment-like-btn:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--color-primary);
+}
+
+.comment-like-btn.active {
+  color: var(--color-primary);
+}
+
+.comment-like-btn.winning {
+  color: var(--color-error);
+}
+
+.comment-dislike-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+}
+
+.comment-dislike-btn.active {
+  color: var(--color-error);
+}
+
+.comment-dislike-btn.winning {
+  color: var(--color-error);
 }
 
 .wall-post__comment-form {
   display: flex;
   gap: var(--space-2);
-  align-items: center;
+  align-items: flex-end;
 }
 
 .wall-post__comment-input {
   flex: 1;
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--color-border-medium);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-lg);
   font-size: var(--font-size-sm);
   font-family: var(--font-family);
+  line-height: var(--line-height-normal);
   color: var(--color-text-primary);
   background: var(--color-bg-secondary);
   outline: none;
   transition: var(--transition-all);
+  resize: none;
+  overflow-y: hidden;
+  min-height: 36px;
+  max-height: 120px;
 }
 
 .wall-post__comment-input:focus {

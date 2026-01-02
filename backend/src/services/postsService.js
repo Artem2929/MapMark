@@ -30,6 +30,7 @@ class PostsService {
         content: post.content,
         images: post.images,
         likesCount: post.likesCount,
+        dislikesCount: post.dislikesCount || 0,
         commentsCount: post.commentsCount,
         createdAt: post.createdAt,
         author: {
@@ -40,6 +41,8 @@ class PostsService {
         comments: post.comments.map(comment => ({
           id: comment._id,
           content: comment.content,
+          likesCount: comment.likesCount || 0,
+          dislikesCount: comment.dislikesCount || 0,
           createdAt: comment.createdAt,
           user: {
             id: comment.user.id || comment.user._id,
@@ -74,6 +77,7 @@ class PostsService {
       content: post.content,
       images: post.images,
       likesCount: post.likesCount,
+      dislikesCount: post.dislikesCount || 0,
       commentsCount: post.commentsCount,
       createdAt: post.createdAt,
       author: {
@@ -96,6 +100,17 @@ class PostsService {
       throw new Error('Пост не знайдено')
     }
 
+    // Remove dislike if exists
+    const existingDislike = post.dislikes.find(dislike => 
+      dislike.user.toString() === userObjectId.toString()
+    )
+    if (existingDislike) {
+      post.dislikes = post.dislikes.filter(dislike => 
+        dislike.user.toString() !== userObjectId.toString()
+      )
+      post.dislikesCount = Math.max(0, post.dislikesCount - 1)
+    }
+
     const existingLike = post.likes.find(like => 
       like.user.toString() === userObjectId.toString()
     )
@@ -113,7 +128,49 @@ class PostsService {
     await post.save()
     logger.info('Post like toggled', { postId, userId, liked: !existingLike })
     
-    return { liked: !existingLike, likesCount: post.likesCount }
+    return { liked: !existingLike, likesCount: post.likesCount, dislikesCount: post.dislikesCount }
+  }
+
+  async dislikePost(postId, userId) {
+    const userObjectId = await this.getUserObjectId(userId)
+    if (!userObjectId) {
+      throw new Error('Користувача не знайдено')
+    }
+
+    const post = await Post.findById(postId)
+    if (!post) {
+      throw new Error('Пост не знайдено')
+    }
+
+    // Remove like if exists
+    const existingLike = post.likes.find(like => 
+      like.user.toString() === userObjectId.toString()
+    )
+    if (existingLike) {
+      post.likes = post.likes.filter(like => 
+        like.user.toString() !== userObjectId.toString()
+      )
+      post.likesCount = Math.max(0, post.likesCount - 1)
+    }
+
+    const existingDislike = post.dislikes.find(dislike => 
+      dislike.user.toString() === userObjectId.toString()
+    )
+
+    if (existingDislike) {
+      post.dislikes = post.dislikes.filter(dislike => 
+        dislike.user.toString() !== userObjectId.toString()
+      )
+      post.dislikesCount = Math.max(0, post.dislikesCount - 1)
+    } else {
+      post.dislikes.push({ user: userObjectId })
+      post.dislikesCount += 1
+    }
+
+    await post.save()
+    logger.info('Post dislike toggled', { postId, userId, disliked: !existingDislike })
+    
+    return { disliked: !existingDislike, likesCount: post.likesCount, dislikesCount: post.dislikesCount }
   }
 
   async addComment(postId, userId, content) {
@@ -144,6 +201,8 @@ class PostsService {
     return {
       id: newComment._id,
       content: newComment.content,
+      likesCount: newComment.likesCount || 0,
+      dislikesCount: newComment.dislikesCount || 0,
       createdAt: newComment.createdAt,
       user: {
         id: newComment.user.id || newComment.user._id,
@@ -249,6 +308,98 @@ class PostsService {
     await post.save()
     
     logger.info('Comment deleted', { postId, commentId, userId })
+  }
+
+  async likeComment(postId, commentId, userId) {
+    const userObjectId = await this.getUserObjectId(userId)
+    if (!userObjectId) {
+      throw new Error('Користувача не знайдено')
+    }
+
+    const post = await Post.findById(postId)
+    if (!post) {
+      throw new Error('Пост не знайдено')
+    }
+
+    const comment = post.comments.id(commentId)
+    if (!comment) {
+      throw new Error('Коментар не знайдено')
+    }
+
+    const existingDislike = comment.dislikes.find(dislike => 
+      dislike.user.toString() === userObjectId.toString()
+    )
+    if (existingDislike) {
+      comment.dislikes = comment.dislikes.filter(dislike => 
+        dislike.user.toString() !== userObjectId.toString()
+      )
+      comment.dislikesCount = Math.max(0, comment.dislikesCount - 1)
+    }
+
+    const existingLike = comment.likes.find(like => 
+      like.user.toString() === userObjectId.toString()
+    )
+
+    if (existingLike) {
+      comment.likes = comment.likes.filter(like => 
+        like.user.toString() !== userObjectId.toString()
+      )
+      comment.likesCount = Math.max(0, comment.likesCount - 1)
+    } else {
+      comment.likes.push({ user: userObjectId })
+      comment.likesCount += 1
+    }
+
+    await post.save()
+    logger.info('Comment like toggled', { postId, commentId, userId, liked: !existingLike })
+    
+    return { liked: !existingLike, likesCount: comment.likesCount, dislikesCount: comment.dislikesCount }
+  }
+
+  async dislikeComment(postId, commentId, userId) {
+    const userObjectId = await this.getUserObjectId(userId)
+    if (!userObjectId) {
+      throw new Error('Користувача не знайдено')
+    }
+
+    const post = await Post.findById(postId)
+    if (!post) {
+      throw new Error('Пост не знайдено')
+    }
+
+    const comment = post.comments.id(commentId)
+    if (!comment) {
+      throw new Error('Коментар не знайдено')
+    }
+
+    const existingLike = comment.likes.find(like => 
+      like.user.toString() === userObjectId.toString()
+    )
+    if (existingLike) {
+      comment.likes = comment.likes.filter(like => 
+        like.user.toString() !== userObjectId.toString()
+      )
+      comment.likesCount = Math.max(0, comment.likesCount - 1)
+    }
+
+    const existingDislike = comment.dislikes.find(dislike => 
+      dislike.user.toString() === userObjectId.toString()
+    )
+
+    if (existingDislike) {
+      comment.dislikes = comment.dislikes.filter(dislike => 
+        dislike.user.toString() !== userObjectId.toString()
+      )
+      comment.dislikesCount = Math.max(0, comment.dislikesCount - 1)
+    } else {
+      comment.dislikes.push({ user: userObjectId })
+      comment.dislikesCount += 1
+    }
+
+    await post.save()
+    logger.info('Comment dislike toggled', { postId, commentId, userId, disliked: !existingDislike })
+    
+    return { disliked: !existingDislike, likesCount: comment.likesCount, dislikesCount: comment.dislikesCount }
   }
 
   async deletePost(postId, userId) {

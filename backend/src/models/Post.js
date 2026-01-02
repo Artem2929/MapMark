@@ -25,6 +25,16 @@ const postSchema = new mongoose.Schema({
       default: Date.now
     }
   }],
+  dislikes: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   comments: [{
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -37,12 +47,44 @@ const postSchema = new mongoose.Schema({
       trim: true,
       maxlength: 500
     },
+    likes: [{
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now
+      }
+    }],
+    dislikes: [{
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now
+      }
+    }],
+    likesCount: {
+      type: Number,
+      default: 0
+    },
+    dislikesCount: {
+      type: Number,
+      default: 0
+    },
     createdAt: {
       type: Date,
       default: Date.now
     }
   }],
   likesCount: {
+    type: Number,
+    default: 0
+  },
+  dislikesCount: {
     type: Number,
     default: 0
   },

@@ -1,14 +1,17 @@
 import { memo, useState, useCallback, useRef, useEffect } from 'react'
+import DeleteConfirmModal from '../../../components/forms/DeleteConfirmModal'
 import './WallPost.css'
 
-const WallPost = memo(({ post, currentUserId, onLike, onComment, onShare, onDelete, onUpdate, onUpdateComment, onDeleteComment }) => {
+const WallPost = memo(({ post, currentUserId, onLike, onDislike, onComment, onShare, onDelete, onUpdate, onUpdateComment, onDeleteComment, onLikeComment, onDislikeComment }) => {
   const [showComments, setShowComments] = useState(false)
   const [commentText, setCommentText] = useState('')
   const [isCommenting, setIsCommenting] = useState(false)
+  const commentTextareaRef = useRef(null)
   const [isEditing, setIsEditing] = useState(false)
   const [editContent, setEditContent] = useState(post.content || '')
   const [editingCommentId, setEditingCommentId] = useState(null)
   const [editCommentText, setEditCommentText] = useState('')
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const textareaRef = useRef(null)
 
   const isOwner = currentUserId === post.author?.id
@@ -25,11 +28,12 @@ const WallPost = memo(({ post, currentUserId, onLike, onComment, onShare, onDele
     }
   }, [commentText, isCommenting, onComment, post.id])
 
-  const handleCommentKeyDown = useCallback((e) => {
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-      handleCommentSubmit()
-    }
-  }, [handleCommentSubmit])
+  const handleCommentChange = useCallback((e) => {
+    setCommentText(e.target.value)
+    const textarea = e.target
+    textarea.style.height = 'auto'
+    textarea.style.height = `${textarea.scrollHeight}px`
+  }, [])
 
   const handleEditSave = useCallback(async () => {
     if (editContent.trim() === post.content) {
@@ -73,14 +77,25 @@ const WallPost = memo(({ post, currentUserId, onLike, onComment, onShare, onDele
   }, [])
 
   const handleCommentDelete = useCallback(async (commentId) => {
-    if (!confirm('Видалити коментар?')) return
-    
     try {
       await onDeleteComment(post.id, commentId)
     } catch (error) {
       console.error('Failed to delete comment:', error)
     }
   }, [onDeleteComment, post.id])
+
+  const handleDeleteClick = useCallback(() => {
+    setShowDeleteModal(true)
+  }, [])
+
+  const handleDeleteConfirm = useCallback(async () => {
+    setShowDeleteModal(false)
+    await onDelete(post.id)
+  }, [onDelete, post.id])
+
+  const handleDeleteCancel = useCallback(() => {
+    setShowDeleteModal(false)
+  }, [])
 
   useEffect(() => {
     if (isEditing && textareaRef.current) {
@@ -146,7 +161,7 @@ const WallPost = memo(({ post, currentUserId, onLike, onComment, onShare, onDele
               
               <button 
                 className="wall-post__menu-btn"
-                onClick={() => onDelete(post.id)}
+                onClick={handleDeleteClick}
                 title="Видалити"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -206,34 +221,34 @@ const WallPost = memo(({ post, currentUserId, onLike, onComment, onShare, onDele
         
         <div className="wall-post__actions">
           <button 
-            className={`wall-post__action-btn wall-post__action-btn--like ${post.isLiked ? 'wall-post__action-btn--active' : ''}`}
+            className={`wall-post__action-btn wall-post__action-btn--like ${post.isLiked ? 'wall-post__action-btn--active' : ''} ${(post.likesCount || 0) > (post.dislikesCount || 0) && (post.likesCount || 0) > 0 ? 'wall-post__action-btn--winning' : ''}`}
             onClick={() => onLike(post.id)}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill={post.isLiked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
             </svg>
-            {post.likesCount > 0 && <span>{post.likesCount}</span>}
+            <span>{post.likesCount || 0}</span>
           </button>
           
           <button 
-            className="wall-post__action-btn wall-post__action-btn--comment"
+            className={`wall-post__action-btn wall-post__action-btn--dislike ${post.isDisliked ? 'wall-post__action-btn--active' : ''} ${(post.dislikesCount || 0) > (post.likesCount || 0) && (post.dislikesCount || 0) > 0 ? 'wall-post__action-btn--winning' : ''}`}
+            onClick={() => onDislike(post.id)}
+            title="Дизлайк"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+            </svg>
+            <span>{post.dislikesCount || 0}</span>
+          </button>
+          
+          <button 
+            className={`wall-post__action-btn wall-post__action-btn--comment ${(post.commentsCount || 0) > 0 ? 'wall-post__action-btn--has-comments' : ''}`}
             onClick={() => setShowComments(!showComments)}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21.99 4c0-1.1-.89-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
             </svg>
-            {post.commentsCount > 0 && <span>{post.commentsCount}</span>}
-          </button>
-          
-          <button 
-            className="wall-post__action-btn wall-post__action-btn--share"
-            onClick={() => onShare(post.id)}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-              <polyline points="16 6 12 2 8 6"/>
-              <line x1="12" y1="2" x2="12" y2="15"/>
-            </svg>
+            <span>{post.commentsCount || 0}</span>
           </button>
         </div>
         
@@ -270,7 +285,7 @@ const WallPost = memo(({ post, currentUserId, onLike, onComment, onShare, onDele
                                 onClick={() => handleCommentEdit(comment.id, comment.content)}
                                 title="Редагувати"
                               >
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                   <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
                                 </svg>
                               </button>
@@ -280,7 +295,7 @@ const WallPost = memo(({ post, currentUserId, onLike, onComment, onShare, onDele
                                 onClick={() => handleCommentDelete(comment.id)}
                                 title="Видалити"
                               >
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                   <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
                                 </svg>
                               </button>
@@ -314,9 +329,33 @@ const WallPost = memo(({ post, currentUserId, onLike, onComment, onShare, onDele
                             </div>
                           </div>
                         ) : (
-                          <div className="wall-post__comment-text">
-                            {comment.content}
-                          </div>
+                          <>
+                            <div className="wall-post__comment-text">
+                              {comment.content}
+                            </div>
+                            <div className="comment-reactions">
+                              <button
+                                type="button"
+                                className={`comment-like-btn ${comment.isLiked ? 'active' : ''} ${(comment.likesCount || 0) > (comment.dislikesCount || 0) && (comment.likesCount || 0) > 0 ? 'winning' : ''}`}
+                                onClick={() => onLikeComment(post.id, comment.id)}
+                              >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                                </svg>
+                                <span>{comment.likesCount || 0}</span>
+                              </button>
+                              <button
+                                type="button"
+                                className={`comment-dislike-btn ${comment.isDisliked ? 'active' : ''} ${(comment.dislikesCount || 0) > (comment.likesCount || 0) && (comment.dislikesCount || 0) > 0 ? 'winning' : ''}`}
+                                onClick={() => onDislikeComment(post.id, comment.id)}
+                              >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                  <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                                </svg>
+                                <span>{comment.dislikesCount || 0}</span>
+                              </button>
+                            </div>
+                          </>
                         )}
                       </div>
                     </div>
@@ -326,15 +365,15 @@ const WallPost = memo(({ post, currentUserId, onLike, onComment, onShare, onDele
             )}
             
             <div className="wall-post__comment-form">
-              <input
-                type="text"
+              <textarea
+                ref={commentTextareaRef}
                 placeholder="Напишіть коментар..."
                 className="wall-post__comment-input"
                 value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                onKeyDown={handleCommentKeyDown}
+                onChange={handleCommentChange}
                 disabled={isCommenting}
                 maxLength={500}
+                rows={1}
               />
               <button
                 type="button"
@@ -350,6 +389,15 @@ const WallPost = memo(({ post, currentUserId, onLike, onComment, onShare, onDele
           </div>
         )}
       </div>
+      
+      {showDeleteModal && (
+        <DeleteConfirmModal
+          title="Видалення поста"
+          message="Ви дійсно бажаєте видалити даний пост?"
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
+        />
+      )}
     </article>
   )
 })

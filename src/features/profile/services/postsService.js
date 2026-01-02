@@ -54,6 +54,16 @@ export const postsService = {
     })
   },
 
+  async dislikePost(postId) {
+    if (!postId) {
+      throw new Error('ID поста обов\'язковий')
+    }
+    
+    return await apiClient.secureRequest(`/posts/${postId}/dislike`, {
+      method: 'POST'
+    })
+  },
+
   async addComment(postId, content) {
     if (!postId || !content || !content.trim()) {
       throw new Error('ID поста та контент коментаря обов\'язкові')
@@ -94,6 +104,26 @@ export const postsService = {
     
     return await apiClient.secureRequest(`/posts/${postId}/comment/${commentId}`, {
       method: 'DELETE'
+    })
+  },
+
+  async likeComment(postId, commentId) {
+    if (!postId || !commentId) {
+      throw new Error('ID поста та ID коментаря обов\'язкові')
+    }
+    
+    return await apiClient.secureRequest(`/posts/${postId}/comment/${commentId}/like`, {
+      method: 'POST'
+    })
+  },
+
+  async dislikeComment(postId, commentId) {
+    if (!postId || !commentId) {
+      throw new Error('ID поста та ID коментаря обов\'язкові')
+    }
+    
+    return await apiClient.secureRequest(`/posts/${postId}/comment/${commentId}/dislike`, {
+      method: 'POST'
     })
   },
 

@@ -547,7 +547,7 @@ const Photos = () => {
                               </div>
                               <div className="comment-reactions">
                                 <button
-                                  className={`comment-like-btn ${comment.userReaction === 'like' ? 'active' : ''}`}
+                                  className={`comment-like-btn ${comment.userReaction === 'like' ? 'active' : ''} ${(comment.likesCount || 0) > (comment.dislikesCount || 0) && (comment.likesCount || 0) > 0 ? 'winning' : ''}`}
                                   onClick={() => handleToggleCommentLike(comment._id, 'like')}
                                 >
                                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -556,7 +556,7 @@ const Photos = () => {
                                   <span>{comment.likesCount || 0}</span>
                                 </button>
                                 <button
-                                  className={`comment-dislike-btn ${comment.userReaction === 'dislike' ? 'active' : ''}`}
+                                  className={`comment-dislike-btn ${comment.userReaction === 'dislike' ? 'active' : ''} ${(comment.dislikesCount || 0) > (comment.likesCount || 0) && (comment.dislikesCount || 0) > 0 ? 'winning' : ''}`}
                                   onClick={() => handleToggleCommentLike(comment._id, 'dislike')}
                                 >
                                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">

@@ -1,0 +1,104 @@
+.delete-confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-4);
+}
+
+.delete-confirm-modal__content {
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+}
+
+.delete-confirm-modal__title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-3);
+}
+
+.delete-confirm-modal__message {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-6);
+  line-height: var(--line-height-normal);
+}
+
+.delete-confirm-modal__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.delete-confirm-modal__actions .btn {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  border: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-confirm-modal__actions .btn.primary {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(59, 130, 246, 0.05) 100%
+  );
+  color: #3b82f6;
+}
+
+.delete-confirm-modal__actions .btn.primary:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    rgba(29, 78, 216, 0.15) 0%,
+    rgba(29, 78, 216, 0.1) 100%
+  );
+}
+
+.delete-confirm-modal__actions .btn.primary:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.delete-confirm-modal__actions .btn.primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.delete-confirm-modal__actions .btn.secondary {
+  background: linear-gradient(
+    135deg,
+    rgba(107, 114, 128, 0.1) 0%,
+    rgba(107, 114, 128, 0.05) 100%
+  );
+  color: #6b7280;
+}
+
+.delete-confirm-modal__actions .btn.secondary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(75, 85, 99, 0.15) 0%,
+    rgba(75, 85, 99, 0.1) 100%
+  );
+}
+
+.delete-confirm-modal__actions .btn.secondary:active {
+  transform: scale(0.96);
+}

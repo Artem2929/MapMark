@@ -55,12 +55,27 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
       if (result.status === 'success' && result.data) {
         setPosts(prev => prev.map(post => 
           post.id === postId 
-            ? { ...post, likesCount: result.data.likesCount, isLiked: result.data.liked }
+            ? { ...post, likesCount: result.data.likesCount, dislikesCount: result.data.dislikesCount, isLiked: result.data.liked, isDisliked: false }
             : post
         ))
       }
     } catch (err) {
       console.error('Failed to like post:', err)
+    }
+  }, [])
+
+  const handleDislike = useCallback(async (postId) => {
+    try {
+      const result = await postsService.dislikePost(postId)
+      if (result.status === 'success' && result.data) {
+        setPosts(prev => prev.map(post => 
+          post.id === postId 
+            ? { ...post, likesCount: result.data.likesCount, dislikesCount: result.data.dislikesCount, isDisliked: result.data.disliked, isLiked: false }
+            : post
+        ))
+      }
+    } catch (err) {
+      console.error('Failed to dislike post:', err)
     }
   }, [])
 
@@ -100,8 +115,6 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
   }, [])
 
   const handleDelete = useCallback(async (postId) => {
-    if (!confirm('Видалити цей пост?')) return
-    
     try {
       const result = await postsService.deletePost(postId)
       if (result.status === 'success') {
@@ -167,6 +180,50 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
     }
   }, [])
 
+  const handleLikeComment = useCallback(async (postId, commentId) => {
+    try {
+      const result = await postsService.likeComment(postId, commentId)
+      if (result.status === 'success' && result.data) {
+        setPosts(prev => prev.map(post => 
+          post.id === postId 
+            ? {
+                ...post,
+                comments: post.comments.map(comment =>
+                  comment.id === commentId 
+                    ? { ...comment, likesCount: result.data.likesCount, dislikesCount: result.data.dislikesCount, isLiked: result.data.liked, isDisliked: false }
+                    : comment
+                )
+              }
+            : post
+        ))
+      }
+    } catch (err) {
+      console.error('Failed to like comment:', err)
+    }
+  }, [])
+
+  const handleDislikeComment = useCallback(async (postId, commentId) => {
+    try {
+      const result = await postsService.dislikeComment(postId, commentId)
+      if (result.status === 'success' && result.data) {
+        setPosts(prev => prev.map(post => 
+          post.id === postId 
+            ? {
+                ...post,
+                comments: post.comments.map(comment =>
+                  comment.id === commentId 
+                    ? { ...comment, likesCount: result.data.likesCount, dislikesCount: result.data.dislikesCount, isDisliked: result.data.disliked, isLiked: false }
+                    : comment
+                )
+              }
+            : post
+        ))
+      }
+    } catch (err) {
+      console.error('Failed to dislike comment:', err)
+    }
+  }, [])
+
 
 
   return (
@@ -202,12 +259,15 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
               post={post}
               currentUserId={user?.id}
               onLike={handleLike}
+              onDislike={handleDislike}
               onComment={handleComment}
               onShare={handleShare}
               onDelete={handleDelete}
               onUpdate={handleUpdate}
               onUpdateComment={handleUpdateComment}
               onDeleteComment={handleDeleteComment}
+              onLikeComment={handleLikeComment}
+              onDislikeComment={handleDislikeComment}
             />
           ))
         )}

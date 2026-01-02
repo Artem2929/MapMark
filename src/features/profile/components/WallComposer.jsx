@@ -3,7 +3,7 @@ import EmojiPicker from './EmojiPicker'
 import './WallComposer.css'
 
 const MAX_CHARS = 2000
-const MAX_IMAGES = 4
+const MAX_IMAGES = 2
 
 const WallComposer = memo(({ user, onPostCreated }) => {
   const [content, setContent] = useState('')

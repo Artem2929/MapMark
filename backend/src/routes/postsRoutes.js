@@ -18,6 +18,9 @@ router.post('/', csrfProtection, upload.array('images', 4), postsController.crea
 // POST /api/v1/posts/:postId/like - Like/unlike post
 router.post('/:postId/like', csrfProtection, postsController.likePost)
 
+// POST /api/v1/posts/:postId/dislike - Dislike/undislike post
+router.post('/:postId/dislike', csrfProtection, postsController.dislikePost)
+
 // POST /api/v1/posts/:postId/comment - Add comment to post
 router.post('/:postId/comment', csrfProtection, postsController.addComment)
 
@@ -29,6 +32,12 @@ router.put('/:postId/comment/:commentId', csrfProtection, postsController.update
 
 // DELETE /api/v1/posts/:postId/comment/:commentId - Delete comment
 router.delete('/:postId/comment/:commentId', csrfProtection, postsController.deleteComment)
+
+// POST /api/v1/posts/:postId/comment/:commentId/like - Like/unlike comment
+router.post('/:postId/comment/:commentId/like', csrfProtection, postsController.likeComment)
+
+// POST /api/v1/posts/:postId/comment/:commentId/dislike - Dislike/undislike comment
+router.post('/:postId/comment/:commentId/dislike', csrfProtection, postsController.dislikeComment)
 
 // DELETE /api/v1/posts/:postId - Delete post
 router.delete('/:postId', csrfProtection, postsController.deletePost)

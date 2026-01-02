@@ -98,6 +98,31 @@ const postsController = {
     }
   },
 
+  async dislikePost(req, res) {
+    try {
+      const { postId } = req.params
+      const userId = req.user.id
+      
+      const result = await postsService.dislikePost(postId, userId)
+      
+      success(res, result, result.disliked ? 'Дізлайк поставлено' : 'Дізлайк знято')
+    } catch (error) {
+      logger.error('Dislike post error', { error: error.message, postId: req.params.postId })
+      
+      if (error.message.includes('не знайдено')) {
+        return res.status(404).json({
+          status: 'fail',
+          message: error.message
+        })
+      }
+      
+      return res.status(500).json({
+        status: 'error',
+        message: error.message
+      })
+    }
+  },
+
   async addComment(req, res) {
     try {
       const { postId } = req.params
@@ -232,6 +257,56 @@ const postsController = {
       logger.error('Delete comment error', { error: error.message, postId: req.params.postId, commentId: req.params.commentId })
       
       if (error.message.includes('не знайдено') || error.message.includes('не маєте прав')) {
+        return res.status(404).json({
+          status: 'fail',
+          message: error.message
+        })
+      }
+      
+      return res.status(500).json({
+        status: 'error',
+        message: error.message
+      })
+    }
+  },
+
+  async likeComment(req, res) {
+    try {
+      const { postId, commentId } = req.params
+      const userId = req.user.id
+      
+      const result = await postsService.likeComment(postId, commentId, userId)
+      
+      success(res, result, result.liked ? 'Коментар вподобано' : 'Вподобання знято')
+    } catch (error) {
+      logger.error('Like comment error', { error: error.message, postId: req.params.postId, commentId: req.params.commentId })
+      
+      if (error.message.includes('не знайдено')) {
+        return res.status(404).json({
+          status: 'fail',
+          message: error.message
+        })
+      }
+      
+      return res.status(500).json({
+        status: 'error',
+        message: error.message
+      })
+    }
+  },
+
+  async dislikeComment(req, res) {
+    try {
+      const { postId, commentId } = req.params
+      const userId = req.user.id
+      
+      const result = await postsService.dislikeComment(postId, commentId, userId)
+      
+      success(res, result, result.disliked ? 'Дізлайк поставлено' : 'Дізлайк знято')
+    } catch (error) {
+      logger.error('Dislike comment error', { error: error.message, postId: req.params.postId, commentId: req.params.commentId })
+      
+      if (error.message.includes('не знайдено')) {
         return res.status(404).json({
           status: 'fail',
           message: error.message
