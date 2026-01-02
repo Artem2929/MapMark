@@ -1,9 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useAuthStore } from '../../../app/store'
 import './Footer.css'
 
 export const Footer = React.memo(function Footer() {
   const currentYear = new Date().getFullYear()
+  const { user } = useAuthStore()
 
   return (
     <footer className="footer">
@@ -30,7 +32,7 @@ export const Footer = React.memo(function Footer() {
               <Link to="/photos" className="footer__link">
                 Фото
               </Link>
-              <Link to="/messages" className="footer__link">
+              <Link to={user ? `/messages/${user.id}` : '/login'} className="footer__link">
                 Повідомлення
               </Link>
             </nav>

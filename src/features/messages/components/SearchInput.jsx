@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { messagesService } from '../services/messagesService'
+import { friendsService } from '../../friends/services/friendsService'
 
-const SearchInput = ({ onSearch, onCreateChat, placeholder = "Пошук...", disabled = false }) => {
+const SearchInput = ({ onSearch, onCreateChat, placeholder = "Пошук друзів...", disabled = false, userId }) => {
   const [value, setValue] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [showResults, setShowResults] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const searchUsers = useCallback(async (query) => {
+  const searchFriends = useCallback(async (query) => {
     if (!query.trim() || query.length < 2) {
       setSearchResults([])
       setShowResults(false)
@@ -16,9 +16,15 @@ const SearchInput = ({ onSearch, onCreateChat, placeholder = "Пошук...", di
 
     setLoading(true)
     try {
-      const results = await messagesService.searchUsers(query)
-      setSearchResults(results)
-      setShowResults(true)
+      const result = await friendsService.getFriends(userId)
+      if (result.success) {
+        const filtered = result.data.filter(friend => {
+          const name = friend.name || `${friend.firstName} ${friend.lastName}`
+          return name.toLowerCase().includes(query.toLowerCase())
+        })
+        setSearchResults(filtered)
+        setShowResults(true)
+      }
     } catch (error) {
       console.error('Помилка пошуку:', error)
       setSearchResults([])
@@ -27,11 +33,11 @@ const SearchInput = ({ onSearch, onCreateChat, placeholder = "Пошук...", di
     }
   }, [])
 
-  const debouncedSearch = useCallback((searchValue) => {
+  useEffect(() => {
     const timeoutId = setTimeout(() => {
-      onSearch(searchValue)
-      if (searchValue.trim().length >= 2) {
-        searchUsers(searchValue)
+      onSearch(value)
+      if (value.trim().length >= 2) {
+        searchFriends(value)
       } else {
         setSearchResults([])
         setShowResults(false)
@@ -39,12 +45,7 @@ const SearchInput = ({ onSearch, onCreateChat, placeholder = "Пошук...", di
     }, 300)
 
     return () => clearTimeout(timeoutId)
-  }, [onSearch, searchUsers])
-
-  useEffect(() => {
-    const cleanup = debouncedSearch(value)
-    return cleanup
-  }, [value, debouncedSearch])
+  }, [value, onSearch, searchFriends])
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && searchResults.length > 0) {
@@ -118,7 +119,7 @@ const SearchInput = ({ onSearch, onCreateChat, placeholder = "Пошук...", di
             ))
           ) : (
             <div className="search-result-item empty">
-              Користувачів не знайдено
+              Друзів не знайдено
             </div>
           )}
         </div>

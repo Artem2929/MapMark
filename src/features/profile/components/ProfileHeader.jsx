@@ -142,7 +142,7 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
             <div className="profile-header__menu">
               <button onClick={handleEditProfile} className="profile-header__menu-item profile-header__menu-item--button">Редагувати профіль</button>
               <Link to="/friends" className="profile-header__menu-item">Мої друзі</Link>
-              <Link to="/messages" className="profile-header__menu-item">Мої повідомлення</Link>
+              <Link to={`/messages/${user.id}`} className="profile-header__menu-item">Мої повідомлення</Link>
               <Link to="/photos" className="profile-header__menu-item">Мої фото</Link>
             </div>
           )}

@@ -13,7 +13,8 @@ const ConversationsSidebar = memo(({
   onConversationDelete,
   onSearchChange,
   onNewChatClick,
-  onCreateChat
+  onCreateChat,
+  userId
 }) => {
   if (loading) {
     return (
@@ -39,7 +40,8 @@ const ConversationsSidebar = memo(({
         <SearchInput 
           onSearch={onSearchChange}
           onCreateChat={onCreateChat}
-          placeholder="Пошук розмов..."
+          placeholder="Пошук друзів..."
+          userId={userId}
         />
         <NewChatButton onClick={onNewChatClick} />
       </div>

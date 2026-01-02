@@ -30,7 +30,6 @@ export function App() {
                 <Route path="/friends/:userId" element={<Friends />} />
                 <Route path="/friends" element={<Friends />} />
                 <Route path="/messages/:userId" element={<Messages />} />
-                <Route path="/messages" element={<Messages />} />
                 <Route path="/photos/:userId" element={<Photos />} />
                 <Route path="/photos" element={<Photos />} />
                 <Route path="/terms" element={<TermsOfService />} />

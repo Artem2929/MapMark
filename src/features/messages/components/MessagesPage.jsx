@@ -13,7 +13,7 @@ import './MessagesPage.css'
 const MessagesPage = () => {
   const navigate = useNavigate()
   const { userId } = useParams()
-  const { user: currentUser, isAuthenticated } = useAuthStore()
+  const { user: currentUser, isAuthenticated, isLoading } = useAuthStore()
   const { activeChat, selectChat, clearChat } = useActiveChat()
   const [showNewChatModal, setShowNewChatModal] = React.useState(false)
   const [searchQuery, setSearchQuery] = React.useState('')
@@ -32,20 +32,14 @@ const MessagesPage = () => {
 
   // Перевірка автентифікації
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isLoading && !isAuthenticated) {
       navigate('/login')
     }
-  }, [isAuthenticated, navigate])
+  }, [isLoading, isAuthenticated, navigate])
 
   // Автоматично відкриваємо чат з користувачем, якщо передано userId
   useEffect(() => {
-    if (userId && currentUser && !loading) {
-      // Якщо userId в URL це поточний користувач, перенаправляємо на /messages
-      if (userId === currentUser.id) {
-        navigate('/messages', { replace: true })
-        return
-      }
-
+    if (userId && currentUser && !loading && userId !== currentUser.id) {
       const existingConversation = conversations.find(conv => 
         conv.participant?.id === userId || conv.participant?._id === userId
       )
@@ -61,7 +55,7 @@ const MessagesPage = () => {
         })
       }
     }
-  }, [userId, currentUser, conversations, loading, selectChat, markAsRead, createOrFindConversation, navigate])
+  }, [userId, currentUser, conversations, loading, selectChat, markAsRead, createOrFindConversation])
 
   const { sendTyping } = useMessagesSocket({
     activeChat,
@@ -147,6 +141,10 @@ const MessagesPage = () => {
     }
   }
 
+  if (isLoading) {
+    return null
+  }
+
   if (!isAuthenticated || !currentUser) {
     return null
   }
@@ -169,6 +167,7 @@ const MessagesPage = () => {
             onSearchChange={setSearchQuery}
             onNewChatClick={() => setShowNewChatModal(true)}
             onCreateChat={handleCreateChatFromSearch}
+            userId={currentUser?.id}
           />
 
           <ChatArea
