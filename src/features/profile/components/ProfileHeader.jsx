@@ -1,7 +1,7 @@
 import { memo, useState, useCallback, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PhotosSection from './PhotosSection'
-import ProfileEditForm from './ProfileEditForm'
+import ProfileEditForm from '../../../components/forms/ProfileEditForm'
 import AvatarUploadModal from '../../../components/forms/AvatarUploadModal'
 import { useProfileEdit } from '../hooks/useProfileEdit'
 import { profileService } from '../services/profileService'

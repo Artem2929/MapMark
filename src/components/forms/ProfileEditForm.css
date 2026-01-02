@@ -1,0 +1,137 @@
+/* Profile Edit Modal - використовує стилі з PhotoUploadModal.css */
+.profile-edit-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+}
+
+.profile-edit-modal__content {
+  position: relative;
+  width: 600px;
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: var(--radius-2xl);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(241, 245, 249, 0.95)
+  );
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+  animation: modalIn 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-edit-modal__header {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-edit-modal__header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.profile-edit-modal__close {
+  position: absolute;
+  right: 24px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.6;
+  color: #1e293b;
+  transition: opacity 0.2s ease;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.profile-edit-modal__close:hover {
+  opacity: 1;
+  background: rgba(148, 163, 184, 0.1);
+}
+
+.profile-edit-modal__body {
+  padding: 22px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Використовуємо стилі wall-post__edit-buttons */
+.profile-edit-modal__body .wall-post__edit-buttons {
+  padding-top: 20px;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  margin-top: auto;
+  margin-bottom: 0;
+  justify-content: center;
+}
+
+.profile-edit-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.profile-edit-form__char-count {
+  font-size: 12px;
+  color: #6b7280;
+  text-align: right;
+}
+
+.profile-edit-form__char-count--warning {
+  color: #f59e0b;
+}
+
+.profile-edit-form__char-count--error {
+  color: #dc2626;
+}
+
+.profile-edit-form__error {
+  font-size: 12px;
+  color: #dc2626;
+  margin-top: 4px;
+}
+
+/* Зменшена висота інпутів */
+.profile-edit-modal__body .profile-edit-form__input,
+.profile-edit-modal__body .profile-edit-form__textarea {
+  padding: 10px 12px;
+}
+
+@media (max-width: 768px) {
+  .profile-edit-modal__content {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .profile-edit-modal__body .wall-post__edit-buttons {
+    flex-direction: column-reverse;
+  }
+
+  .profile-edit-modal__body .wall-post__edit-buttons .btn {
+    width: 100%;
+  }
+}
