@@ -2,8 +2,8 @@ const rateLimit = require('express-rate-limit')
 
 // Rate limiter для auth endpoints
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 хвилин
-  max: 5, // максимум 5 спроб
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: {
     status: 'fail',
     message: 'Забагато спроб входу. Спробуйте через 15 хвилин'
