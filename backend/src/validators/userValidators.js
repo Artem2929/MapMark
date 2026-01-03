@@ -67,19 +67,7 @@ const userValidation = [
     .optional()
     .trim()
     .isLength({ max: 100 })
-    .withMessage('Місцезнаходження не може перевищувати 100 символів'),
-    
-  body('website')
-    .optional()
-    .trim()
-    .isLength({ max: 100 })
-    .withMessage('Веб-сайт не може перевищувати 100 символів')
-    .custom((value) => {
-      if (value && !value.match(/^https?:\/\/.+/)) {
-        throw new Error('Веб-сайт повинен починатися з http:// або https://')
-      }
-      return true
-    })
+    .withMessage('Місцезнаходження не може перевищувати 100 символів')
 ]
 
 module.exports = {

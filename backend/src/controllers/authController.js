@@ -79,7 +79,6 @@ const getMe = catchAsync(async (req, res, next) => {
     avatar: user.avatar,
     bio: user.bio,
     location: user.location,
-    website: user.website,
     country: user.country,
     role: user.role,
     emailVerified: user.emailVerified,

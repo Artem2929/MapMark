@@ -5,15 +5,12 @@ const VALIDATION_RULES = {
   BIO_MAX_LENGTH: 500,
   POSITION_MAX_LENGTH: 100,
   LOCATION_MAX_LENGTH: 100,
-  WEBSITE_MAX_LENGTH: 100,
   MIN_AGE: 13,
   MAX_AGE: 120
 }
 
 const REGEX = {
-  EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-  WEBSITE: /^(https?:\/\/)?[\w.-]+\.[a-z]{2,}(\/.*)?$/i,
-  URL_PROTOCOL: /^https?:\/\//
+  EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 }
 
 export const validateName = (name) => {
@@ -81,18 +78,6 @@ export const validateBio = (bio) => {
   return { valid: true }
 }
 
-export const validateWebsite = (website) => {
-  if (!website || !website.trim()) {
-    return { valid: true } // Optional
-  }
-  
-  if (!REGEX.WEBSITE.test(website)) {
-    return { valid: false, error: 'Введіть коректний веб-сайт (наприклад: example.com або https://example.com)' }
-  }
-  
-  return { valid: true }
-}
-
 export const validatePosition = (position) => {
   if (!position) {
     return { valid: true } // Optional
@@ -117,14 +102,6 @@ export const validateLocation = (location) => {
   return { valid: true }
 }
 
-export const normalizeWebsite = (website) => {
-  if (!website || !website.trim()) {
-    return ''
-  }
-  
-  return REGEX.URL_PROTOCOL.test(website) ? website : `https://${website}`
-}
-
 export const validateProfileForm = (formData) => {
   const errors = {}
   
@@ -146,11 +123,6 @@ export const validateProfileForm = (formData) => {
   const bioValidation = validateBio(formData.bio)
   if (!bioValidation.valid) {
     errors.bio = bioValidation.error
-  }
-  
-  const websiteValidation = validateWebsite(formData.website)
-  if (!websiteValidation.valid) {
-    errors.website = websiteValidation.error
   }
   
   const positionValidation = validatePosition(formData.position)

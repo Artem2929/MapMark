@@ -9,7 +9,6 @@ const mapUserToResponse = (user, stats = {}) => {
     avatar: user.avatar,
     bio: user.bio,
     location: user.location,
-    website: user.website,
     birthDate: user.birthDate,
     position: user.position,
     visibility: user.visibility,

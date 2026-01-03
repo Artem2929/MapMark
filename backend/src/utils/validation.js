@@ -6,7 +6,6 @@ const VALIDATION_RULES = {
   BIO_MAX: 500,
   POSITION_MAX: 100,
   LOCATION_MAX: 100,
-  WEBSITE_MAX: 100,
   PASSWORD_MIN: 6,
   MIN_AGE: 13,
   MAX_AGE: 120
@@ -66,20 +65,6 @@ const validateBirthDate = (birthDate) => {
   return { valid: true }
 }
 
-const validateWebsite = (website) => {
-  if (!website) return { valid: true }
-  
-  if (!validator.isURL(website, { require_protocol: false })) {
-    return { valid: false, error: 'Некоректний веб-сайт' }
-  }
-  
-  if (!validator.isLength(website, { max: VALIDATION_RULES.WEBSITE_MAX })) {
-    return { valid: false, error: `Веб-сайт не може перевищувати ${VALIDATION_RULES.WEBSITE_MAX} символів` }
-  }
-  
-  return { valid: true }
-}
-
 const validateBio = (bio) => {
   if (!bio) return { valid: true }
   
@@ -128,11 +113,6 @@ const validateProfileUpdate = (data) => {
     if (!result.valid) errors.birthDate = result.error
   }
   
-  if (data.website !== undefined) {
-    const result = validateWebsite(data.website)
-    if (!result.valid) errors.website = result.error
-  }
-  
   if (data.bio !== undefined) {
     const result = validateBio(data.bio)
     if (!result.valid) errors.bio = result.error
@@ -161,7 +141,6 @@ module.exports = {
   validateEmail,
   validatePassword,
   validateBirthDate,
-  validateWebsite,
   validateBio,
   validatePosition,
   validateLocation,

@@ -97,23 +97,11 @@ const userSchema = new mongoose.Schema({
     maxlength: [100, 'Location cannot exceed 100 characters'],
     trim: true
   },
-  website: {
-    type: String,
-    maxlength: [100, 'Website cannot exceed 100 characters'],
-    trim: true,
-    validate: {
-      validator: function(v) {
-        return !v || /^(https?:\/\/)?[\w.-]+\.[a-z]{2,}(\/.*)?$/i.test(v)
-      },
-      message: 'Website must be a valid URL (e.g., example.com or https://example.com)'
-    }
-  },
   visibility: {
     birthDate: { type: Boolean, default: true },
     email: { type: Boolean, default: true },
     position: { type: Boolean, default: true },
-    location: { type: Boolean, default: true },
-    website: { type: Boolean, default: true }
+    location: { type: Boolean, default: true }
   },
   avatar: {
     type: String

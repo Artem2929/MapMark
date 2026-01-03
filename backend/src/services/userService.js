@@ -61,7 +61,7 @@ const updateProfile = async (userId, updateData, currentUserId) => {
     throw new AppError('Ви можете редагувати тільки свій профіль', 403)
   }
   
-  const allowedFields = ['name', 'surname', 'birthDate', 'position', 'bio', 'location', 'website', 'visibility']
+  const allowedFields = ['name', 'surname', 'birthDate', 'position', 'bio', 'location', 'visibility']
   const filteredData = {}
   
   Object.keys(updateData).forEach(key => {

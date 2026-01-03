@@ -1,6 +1,6 @@
 import { memo, useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { validateProfileForm, normalizeWebsite } from '../../shared/utils/validation'
+import { validateProfileForm } from '../../shared/utils/validation'
 import './ProfileEditForm.css'
 import './PhotoUploadModal.css'
 import '../../features/profile/components/WallPost.css'
@@ -11,18 +11,16 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
     name: user?.name || '',
     surname: user?.surname || '',
-    birthDate: user?.birthDate || '',
+    birthDate: user?.birthDate ? new Date(user.birthDate).toISOString().split('T')[0] : '',
     email: user?.email || '',
     position: user?.position || '',
     bio: user?.bio || '',
     location: user?.location || '',
-    website: user?.website || '',
     visibility: {
       birthDate: user?.visibility?.birthDate ?? true,
       email: user?.visibility?.email ?? true,
       position: user?.visibility?.position ?? true,
-      location: user?.visibility?.location ?? true,
-      website: user?.visibility?.website ?? true
+      location: user?.visibility?.location ?? true
     }
   })
   const [isLoading, setIsLoading] = useState(false)
@@ -84,15 +82,12 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
       return
     }
     
-    const processedFormData = {
-      ...formData,
-      website: normalizeWebsite(formData.website)
-    }
+    const processedFormData = formData
     
     setIsLoading(true)
     setShowSuccess(false)
     try {
-      await onSave(processedFormData)
+      await onSave(formData)
       setShowSuccess(true)
       setTimeout(() => {
         navigate(`/profile/${user.id}`)
@@ -284,34 +279,6 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
             <div className={`profile-edit-form__char-count ${getCharCountClass(formData.location.length, 100)}`}>
               {formData.location.length}/100
             </div>
-          </div>
-
-          <div className="profile-edit-form__field">
-            <div className="profile-edit-form__field-header">
-              <label className="profile-edit-form__label">Веб-сайт</label>
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={formData.visibility.website}
-                  onChange={() => handleVisibilityChange('website')}
-                  disabled={isLoading}
-                />
-                <span>Відображати в профілі</span>
-              </label>
-            </div>
-            <input
-              type="text"
-              value={formData.website}
-              onChange={(e) => handleInputChange('website', e.target.value)}
-              className={`profile-edit-form__input ${errors.website ? 'profile-edit-form__input--error' : ''}`}
-              placeholder="example.com"
-              maxLength="100"
-              disabled={isLoading}
-            />
-            <div className={`profile-edit-form__char-count ${getCharCountClass(formData.website.length, 100)}`}>
-              {formData.website.length}/100
-            </div>
-            {errors.website && <span className="profile-edit-form__error">{errors.website}</span>}
           </div>
 
           <div className="wall-post__edit-buttons">
