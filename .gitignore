@@ -102,4 +102,4 @@ tmp/
 temp/
 
 # Local development
-.local
+.localtesting/

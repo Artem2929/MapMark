@@ -211,7 +211,6 @@ export function RegisterForm() {
           onBlur={handleFieldBlur('name')}
           error={touched.name ? fieldErrors.name : null}
           disabled={loading}
-          autoFocus
         />
         
         <Input
