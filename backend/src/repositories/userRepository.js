@@ -20,7 +20,15 @@ class UserRepository {
   }
 
   async findById(userId) {
-    return User.findById(userId)
+    // Спочатку шукаємо по полю id (CUID)
+    let user = await User.findOne({ id: userId })
+    
+    // Якщо не знайдено і це схоже на ObjectId, шукаємо по _id
+    if (!user && userId.match(/^[0-9a-fA-F]{24}$/)) {
+      user = await User.findById(userId)
+    }
+    
+    return user
   }
 
   async create(userData) {

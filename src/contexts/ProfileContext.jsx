@@ -24,12 +24,10 @@ export const ProfileProvider = ({ children, userId }) => {
         return
       }
 
-      // Перевіряємо чи вже виконується запит
       if (fetchingRef.current) {
         return
       }
 
-      // Перевіряємо кеш
       const cacheKey = `${userId}-${currentUser?.id || 'anonymous'}`
       if (profileCache.has(cacheKey)) {
         const cachedData = profileCache.get(cacheKey)
@@ -43,13 +41,15 @@ export const ProfileProvider = ({ children, userId }) => {
         setLoading(true)
         setError(null)
         
-        // Додаємо мінімальну затримку для показу skeleton
         await new Promise(resolve => setTimeout(resolve, 200))
         
-        const profileData = await profileService.getUserProfile(userId)
+        // Використовуємо /auth/me для власного профілю
+        const profileData = isOwnProfile 
+          ? await profileService.getUserProfile(userId, true)
+          : await profileService.getUserProfile(userId, false)
+        
         const userData = profileData.data?.user || profileData
         
-        // Зберігаємо в кеш
         profileCache.set(cacheKey, userData)
         setUser(userData)
       } catch (err) {
@@ -61,11 +61,10 @@ export const ProfileProvider = ({ children, userId }) => {
       }
     }
 
-    // Перевіряємо чи є всі необхідні дані перед викликом
     if (userId) {
       fetchProfile()
     }
-  }, [userId, currentUser?.id]) // Додали currentUser?.id для правильного кешування
+  }, [userId, currentUser?.id, isOwnProfile]) // Додали currentUser?.id для правильного кешування
 
   const updateUser = useCallback((updatedUserData) => {
     const newUserData = { ...user, ...updatedUserData }
