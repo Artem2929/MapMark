@@ -56,11 +56,11 @@ const getUserById = async (userId, currentUserId = null) => {
 }
 
 const updateProfile = async (userId, updateData) => {
-  const allowedFields = ['name', 'surname', 'birthDate', 'email', 'position', 'bio', 'location', 'website', 'visibility']
+  const allowedFields = ['name', 'surname', 'birthDate', 'position', 'bio', 'location', 'website', 'visibility']
   const filteredData = {}
   
   Object.keys(updateData).forEach(key => {
-    if (allowedFields.includes(key)) {
+    if (allowedFields.includes(key) && updateData[key] !== '') {
       filteredData[key] = updateData[key]
     }
   })

@@ -8,16 +8,22 @@ let csrfToken = null
 
 const getCSRFToken = async (forceRefresh = false) => {
   if (!csrfToken || forceRefresh) {
-    const response = await fetch(`${API_BASE_URL}/auth/csrf-token`, {
-      credentials: 'include'
-    })
-    
-    if (!response.ok) {
-      throw new Error('Не вдалося отримати CSRF токен')
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/csrf-token`, {
+        credentials: 'include'
+      })
+      
+      if (!response.ok) {
+        throw new Error('Не вдалося отримати CSRF токен')
+      }
+      
+      const data = await response.json()
+      csrfToken = data.data?.csrfToken || data.csrfToken
+      console.log('CSRF token obtained:', csrfToken ? '✓' : '✗')
+    } catch (error) {
+      console.error('Failed to get CSRF token:', error)
+      throw error
     }
-    
-    const data = await response.json()
-    csrfToken = data.csrfToken
   }
   return csrfToken
 }

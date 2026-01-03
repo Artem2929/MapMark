@@ -6,7 +6,8 @@ const csrfProtection = csrf({
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict'
-  }
+  },
+  ignoreMethods: ['GET', 'HEAD', 'OPTIONS']
 })
 
 // Middleware для додавання CSRF токену в response
