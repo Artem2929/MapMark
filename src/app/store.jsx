@@ -42,9 +42,9 @@ export function AuthProvider({ children }) {
   const setAuth = useCallback((authData) => {
     if (!authData) return
     
-    const token = authData.token || authData.accessToken
+    const token = authData.data?.token || authData.token || authData.accessToken
     const user = authData.data?.user || authData.user
-    const refreshToken = authData.refreshToken
+    const refreshToken = authData.data?.refreshToken || authData.refreshToken
     
     setState(prev => ({
       ...prev,
