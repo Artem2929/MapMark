@@ -135,4 +135,17 @@
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1536px;
+
+  /* Profile Specific */
+  --profile-avatar-size: 325px;
+  --profile-avatar-size-mobile: 100px;
+  --profile-menu-width: 325px;
+  --profile-bio-min-height: 140px;
+  --profile-empty-height: 150px;
+  --profile-icon-size: 64px;
+  --profile-icon-size-sm: 48px;
+  --profile-svg-size: 32px;
+  --profile-svg-size-sm: 16px;
+  --profile-edit-btn-size: 32px;
+  --profile-online-dot: 8px;
 }
