@@ -1,23 +1,24 @@
-import React, { memo, useMemo } from 'react'
+import { memo } from 'react'
 
-const ProfileStats = memo(({ photos = [], following = [], followers = [], posts = [] }) => {
-  const stats = useMemo(() => [
-    { label: 'Фото', count: photos.length },
-    { label: 'Підписки', count: following.length },
-    { label: 'Підписники', count: followers.length },
-    { label: 'Пости', count: posts.length }
-  ], [photos.length, following.length, followers.length, posts.length])
+const ProfileStats = memo(({ postsCount, followingCount, followersCount }) => {
+  const stats = [
+    { label: 'Записів', value: postsCount || 0 },
+    { label: 'Підписок', value: followingCount || 0 },
+    { label: 'Підписників', value: followersCount || 0 }
+  ]
 
   return (
     <div className="profile-stats">
-      <div className="profile-stats__grid">
-        {stats.map(stat => (
-          <div key={stat.label} className="profile-stats__item">
-            <span className="profile-stats__count">{stat.count}</span>
-            <span className="profile-stats__label">{stat.label}</span>
-          </div>
-        ))}
-      </div>
+      {stats.map((stat, index) => (
+        <button 
+          key={stat.label} 
+          className="stat-card"
+          aria-label={`${stat.value} ${stat.label}`}
+        >
+          <span className="stat-number">{stat.value}</span>
+          <span className="stat-label">{stat.label}</span>
+        </button>
+      ))}
     </div>
   )
 })
