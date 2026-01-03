@@ -400,7 +400,7 @@
   padding: 12px 16px;
   background: #f8fafc;
   border-radius: 24px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border-light);
 }
 
 .message-input input {

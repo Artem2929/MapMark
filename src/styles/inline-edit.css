@@ -28,7 +28,7 @@
 }
 
 .editable-field--editing {
-  background-color: #fff;
+  background-color: var(--color-bg-primary);
   border: 1px solid var(--vk-blue);
   cursor: text;
   padding: 3px 5px;
@@ -36,7 +36,7 @@
 }
 
 .editable-field--editing:hover {
-  background-color: #fff;
+  background-color: var(--color-bg-primary);
 }
 
 /* Content */
@@ -108,7 +108,7 @@
 .edit-save-btn {
   background: var(--vk-blue);
   border-color: var(--vk-blue);
-  color: #fff;
+  color: white;
 }
 
 .edit-save-btn:hover:not(:disabled) {
@@ -140,7 +140,7 @@
 /* Error State - VK Style */
 .edit-error {
   border-color: var(--vk-error);
-  background-color: #fff;
+  background-color: var(--color-bg-primary);
 }
 
 .edit-error-message {

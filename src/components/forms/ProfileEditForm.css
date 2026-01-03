@@ -142,7 +142,7 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-border-medium);
   background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
   font-size: var(--font-size-sm);
   color: #1e293b;

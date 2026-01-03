@@ -10,6 +10,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: inherit;
 }
 
 html {
@@ -106,9 +107,48 @@ li {
   margin-bottom: var(--space-2);
 }
 
-/* Apply Inter to all elements */
-*, *::before, *::after {
-  font-family: inherit;
+/* Common utility patterns */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-center-y {
+  display: flex;
+  align-items: center;
+}
+
+.flex-center-x {
+  display: flex;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-col-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flex-gap-2 {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.flex-gap-3 {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.flex-gap-4 {
+  display: flex;
+  gap: var(--space-4);
 }
 
 /* Specific font applications */
@@ -193,7 +233,7 @@ input[type='url'],
 textarea,
 select {
   appearance: none;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-border-medium);
   border-radius: var(--radius-md);
   padding: var(--space-2) var(--space-4);
   font-size: var(--font-size-base);
@@ -231,8 +271,8 @@ select:disabled {
 
 input::placeholder,
 textarea::placeholder {
-  color: #6b7280;
-  opacity: 1;
+  color: var(--color-text-primary);
+  opacity: 0.5;
 }
 
 /* Checkbox and radio */
@@ -264,13 +304,13 @@ input[type='radio']:disabled {
   gap: 8px;
   cursor: pointer;
   font-size: var(--font-size-sm); /* 14px */
-  color: #64748b;
+  color: var(--color-text-secondary);
   user-select: none;
   transition: color 0.2s ease;
 }
 
 .checkbox-label:hover {
-  color: #475569;
+  color: var(--color-gray-600);
 }
 
 .checkbox-label input[type='checkbox'] {

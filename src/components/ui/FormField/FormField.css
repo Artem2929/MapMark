@@ -31,7 +31,8 @@
 }
 
 .form-field::placeholder {
-  color: var(--color-text-muted);
+  color: var(--color-text-primary);
+  opacity: 0.5;
 }
 
 textarea.form-field {
