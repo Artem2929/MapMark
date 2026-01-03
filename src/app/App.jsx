@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from '../shared/api/queryClient'
 import { AuthProvider } from './store'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { ProtectedRoute } from '../components/ProtectedRoute'
@@ -25,8 +27,9 @@ const LoadingFallback = () => (
 export function App() {
   return (
     <ErrorBoundary>
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <AuthProvider>
           <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <Header />
             <main style={{ flex: 1 }}>
@@ -51,8 +54,9 @@ export function App() {
             </main>
             <Footer />
           </div>
-        </AuthProvider>
-      </BrowserRouter>
+          </AuthProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
     </ErrorBoundary>
   )
 }

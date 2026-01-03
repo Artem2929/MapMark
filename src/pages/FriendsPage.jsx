@@ -330,7 +330,6 @@ const Friends = () => {
   }, [removeFriend])
 
   const handleBlockUser = useCallback((friendId) => {
-    console.log('Block user:', friendId)
     setDropdownOpen(null)
   }, [])
 

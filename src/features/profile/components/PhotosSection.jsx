@@ -15,7 +15,6 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
   // Завантаження фотографій
   const loadPhotos = useCallback(async () => {
     if (!userId) {
-      console.warn('userId is undefined, skipping photo load')
       setLoading(false)
       return
     }

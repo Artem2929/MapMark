@@ -1,142 +1,87 @@
-// Validation utilities
-const VALIDATION_RULES = {
-  NAME_MIN_LENGTH: 2,
-  NAME_MAX_LENGTH: 50,
-  BIO_MAX_LENGTH: 500,
-  POSITION_MAX_LENGTH: 100,
-  LOCATION_MAX_LENGTH: 100,
-  MIN_AGE: 13,
-  MAX_AGE: 120
+// Validation utilities for forms
+
+export const validators = {
+  email: (value) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(value) ? null : 'Невірний формат email'
+  },
+
+  password: (value) => {
+    if (!value || value.length < 8) {
+      return 'Пароль має містити мінімум 8 символів'
+    }
+    if (!/[A-Z]/.test(value)) {
+      return 'Пароль має містити велику літеру'
+    }
+    if (!/[a-z]/.test(value)) {
+      return 'Пароль має містити малу літеру'
+    }
+    if (!/[0-9]/.test(value)) {
+      return 'Пароль має містити цифру'
+    }
+    return null
+  },
+
+  username: (value) => {
+    if (!value || value.length < 3) {
+      return 'Ім\'я користувача має містити мінімум 3 символи'
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+      return 'Тільки літери, цифри та підкреслення'
+    }
+    return null
+  },
+
+  required: (value) => {
+    return value && value.trim() ? null : 'Це поле обов\'язкове'
+  },
+
+  minLength: (min) => (value) => {
+    return value && value.length >= min ? null : `Мінімум ${min} символів`
+  },
+
+  maxLength: (max) => (value) => {
+    return value && value.length <= max ? null : `Максимум ${max} символів`
+  },
+
+  phone: (value) => {
+    const phoneRegex = /^\+?[0-9]{10,15}$/
+    return phoneRegex.test(value) ? null : 'Невірний формат телефону'
+  },
+
+  url: (value) => {
+    try {
+      new URL(value)
+      return null
+    } catch {
+      return 'Невірний формат URL'
+    }
+  }
 }
 
-const REGEX = {
-  EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-}
-
-export const validateName = (name) => {
-  if (!name || !name.trim()) {
-    return { valid: false, error: "Ім'я обов'язкове" }
-  }
-  
-  if (name.length < VALIDATION_RULES.NAME_MIN_LENGTH) {
-    return { valid: false, error: `Ім'я повинно містити мінімум ${VALIDATION_RULES.NAME_MIN_LENGTH} символи` }
-  }
-  
-  if (name.length > VALIDATION_RULES.NAME_MAX_LENGTH) {
-    return { valid: false, error: `Ім'я не може перевищувати ${VALIDATION_RULES.NAME_MAX_LENGTH} символів` }
-  }
-  
-  return { valid: true }
-}
-
-export const validateEmail = (email) => {
-  if (!email || !email.trim()) {
-    return { valid: true } // Email optional
-  }
-  
-  if (!REGEX.EMAIL.test(email)) {
-    return { valid: false, error: 'Введіть коректний email' }
-  }
-  
-  return { valid: true }
-}
-
-export const validateBirthDate = (birthDate) => {
-  if (!birthDate) {
-    return { valid: true } // Optional
-  }
-  
-  const date = new Date(birthDate)
-  const today = new Date()
-  
-  if (isNaN(date.getTime())) {
-    return { valid: false, error: 'Некоректна дата' }
-  }
-  
-  const age = today.getFullYear() - date.getFullYear()
-  
-  if (age < VALIDATION_RULES.MIN_AGE) {
-    return { valid: false, error: `Вік повинен бути не менше ${VALIDATION_RULES.MIN_AGE} років` }
-  }
-  
-  if (age > VALIDATION_RULES.MAX_AGE) {
-    return { valid: false, error: 'Некоректна дата народження' }
-  }
-  
-  return { valid: true }
-}
-
-export const validateBio = (bio) => {
-  if (!bio) {
-    return { valid: true } // Optional
-  }
-  
-  if (bio.length > VALIDATION_RULES.BIO_MAX_LENGTH) {
-    return { valid: false, error: `Опис не може перевищувати ${VALIDATION_RULES.BIO_MAX_LENGTH} символів` }
-  }
-  
-  return { valid: true }
-}
-
-export const validatePosition = (position) => {
-  if (!position) {
-    return { valid: true } // Optional
-  }
-  
-  if (position.length > VALIDATION_RULES.POSITION_MAX_LENGTH) {
-    return { valid: false, error: `Посада не може перевищувати ${VALIDATION_RULES.POSITION_MAX_LENGTH} символів` }
-  }
-  
-  return { valid: true }
-}
-
-export const validateLocation = (location) => {
-  if (!location) {
-    return { valid: true } // Optional
-  }
-  
-  if (location.length > VALIDATION_RULES.LOCATION_MAX_LENGTH) {
-    return { valid: false, error: `Місцезнаходження не може перевищувати ${VALIDATION_RULES.LOCATION_MAX_LENGTH} символів` }
-  }
-  
-  return { valid: true }
-}
-
-export const validateProfileForm = (formData) => {
+export const validateForm = (values, rules) => {
   const errors = {}
   
-  const nameValidation = validateName(formData.name)
-  if (!nameValidation.valid) {
-    errors.name = nameValidation.error
-  }
+  Object.keys(rules).forEach(field => {
+    const fieldRules = Array.isArray(rules[field]) ? rules[field] : [rules[field]]
+    
+    for (const rule of fieldRules) {
+      const error = rule(values[field])
+      if (error) {
+        errors[field] = error
+        break
+      }
+    }
+  })
   
-  const emailValidation = validateEmail(formData.email)
-  if (!emailValidation.valid) {
-    errors.email = emailValidation.error
-  }
+  return errors
+}
+
+export const sanitizeInput = (input) => {
+  if (typeof input !== 'string') return input
   
-  const birthDateValidation = validateBirthDate(formData.birthDate)
-  if (!birthDateValidation.valid) {
-    errors.birthDate = birthDateValidation.error
-  }
-  
-  const bioValidation = validateBio(formData.bio)
-  if (!bioValidation.valid) {
-    errors.bio = bioValidation.error
-  }
-  
-  const positionValidation = validatePosition(formData.position)
-  if (!positionValidation.valid) {
-    errors.position = positionValidation.error
-  }
-  
-  const locationValidation = validateLocation(formData.location)
-  if (!locationValidation.valid) {
-    errors.location = locationValidation.error
-  }
-  
-  return {
-    valid: Object.keys(errors).length === 0,
-    errors
-  }
+  return input
+    .trim()
+    .replace(/[<>]/g, '') // Remove < and >
+    .slice(0, 1000) // Limit length
 }

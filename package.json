@@ -17,6 +17,7 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.16",
     "axios": "^1.13.2",
     "lucide-react": "^0.562.0",
     "react": "^18.2.0",
