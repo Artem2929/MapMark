@@ -21,19 +21,38 @@ html {
 }
 
 body {
-  font-family: var(--font-family);
+  font-family: var(--font-family); /* Inter font from Google Fonts */
   color: var(--color-text-primary);
   background-color: var(--color-bg-secondary);
   padding-top: 80px;
   min-height: 100vh;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11'; /* Inter font features */
+  text-rendering: optimizeLegibility;
 }
 
-/* Gradient headings */
+/* Gradient headings with Inter font */
 h1, h2, h3 {
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
+}
+
+/* Apply Inter to all elements */
+*, *::before, *::after {
+  font-family: inherit;
+}
+
+/* Specific font applications */
+input, textarea, select, button {
+  font-family: var(--font-family); /* Inter for form elements */
+}
+
+code, pre, kbd, samp {
+  font-family: var(--font-family-mono); /* JetBrains Mono for code */
 }
 
 #root {
