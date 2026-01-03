@@ -19,6 +19,59 @@ class FriendRepository {
     }).populate('requester', 'id name email country avatar')
   }
 
+  async findSentRequests(userObjectId) {
+    return Friend.find({
+      requester: userObjectId,
+      status: 'pending'
+    }).populate('recipient', 'id name email country avatar')
+  }
+
+  async searchFriends(userObjectId, query) {
+    return Friend.find({
+      $or: [
+        { requester: userObjectId, status: 'accepted' },
+        { recipient: userObjectId, status: 'accepted' }
+      ]
+    })
+    .populate({
+      path: 'requester',
+      match: { name: { $regex: query, $options: 'i' } },
+      select: 'id name email country avatar'
+    })
+    .populate({
+      path: 'recipient',
+      match: { name: { $regex: query, $options: 'i' } },
+      select: 'id name email country avatar'
+    })
+    .then(results => results.filter(r => r.requester || r.recipient))
+  }
+
+  async searchPendingRequests(userObjectId, query) {
+    return Friend.find({
+      recipient: userObjectId,
+      status: 'pending'
+    })
+    .populate({
+      path: 'requester',
+      match: { name: { $regex: query, $options: 'i' } },
+      select: 'id name email country avatar'
+    })
+    .then(results => results.filter(r => r.requester))
+  }
+
+  async searchSentRequests(userObjectId, query) {
+    return Friend.find({
+      requester: userObjectId,
+      status: 'pending'
+    })
+    .populate({
+      path: 'recipient',
+      match: { name: { $regex: query, $options: 'i' } },
+      select: 'id name email country avatar'
+    })
+    .then(results => results.filter(r => r.recipient))
+  }
+
   async findFriendship(user1Id, user2Id, status = 'accepted') {
     return Friend.findOne({
       $or: [

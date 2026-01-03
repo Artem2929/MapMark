@@ -123,17 +123,14 @@ export const messagesService = {
     try {
       const currentUser = getCurrentUser()
       if (!currentUser) {
-        console.log('Користувач не авторизований')
         return []
       }
       
       const result = await apiClient.request(`/friends/${currentUser.id}`)
-      console.log('API response:', result)
       
       if (!result.success) return []
       
       const friends = result.data || []
-      console.log('Friends data:', friends)
       
       const filteredFriends = friends.filter(friend => {
         const matchName = friend.name?.toLowerCase().includes(query.toLowerCase())
@@ -142,14 +139,9 @@ export const messagesService = {
         const matchLastName = friend.lastName?.toLowerCase().includes(query.toLowerCase())
         const matchUsername = friend.username?.toLowerCase().includes(query.toLowerCase())
         
-        console.log(`Checking friend:`, friend, `Query: ${query}`, {
-          matchName, matchEmail, matchFirstName, matchLastName, matchUsername
-        })
-        
         return matchName || matchEmail || matchFirstName || matchLastName || matchUsername
       })
       
-      console.log('Filtered friends:', filteredFriends)
       return filteredFriends
     } catch (error) {
       console.error('Помилка пошуку друзів:', error)

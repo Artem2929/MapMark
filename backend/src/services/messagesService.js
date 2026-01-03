@@ -11,7 +11,7 @@ class MessagesService {
       if (user) {
         return user._id
       }
-      
+
       // Якщо не знайшли, перевіряємо чи це вже ObjectId
       if (userId.match(/^[0-9a-fA-F]{24}$/)) {
         user = await User.findById(userId)
@@ -19,8 +19,6 @@ class MessagesService {
           return user._id
         }
       }
-      
-      console.log(`User not found for userId: ${userId}`)
       return null
     } catch (error) {
       console.error('Error in getUserObjectId:', error)
@@ -40,13 +38,13 @@ class MessagesService {
   async getMessages(userId, otherUserId, page = 1, limit = 50) {
     const userObjectId = await this.getUserObjectId(userId)
     const otherUserObjectId = await this.getUserObjectId(otherUserId)
-    
+
     if (!userObjectId || !otherUserObjectId) {
       throw new Error('Користувача не знайдено')
     }
 
     const conversationId = this.generateConversationId(userObjectId.toString(), otherUserObjectId.toString())
-    
+
     const messages = await Message.find({ conversationId })
       .populate('sender', 'id name avatar')
       .populate('recipient', 'id name avatar')
@@ -71,13 +69,13 @@ class MessagesService {
   async sendMessage(senderId, recipientId, content) {
     const senderObjectId = await this.getUserObjectId(senderId)
     const recipientObjectId = await this.getUserObjectId(recipientId)
-    
+
     if (!senderObjectId || !recipientObjectId) {
       throw new Error('Користувача не знайдено')
     }
 
     const conversationId = this.generateConversationId(senderObjectId.toString(), recipientObjectId.toString())
-    
+
     const message = new Message({
       sender: senderObjectId,
       recipient: recipientObjectId,
@@ -88,9 +86,9 @@ class MessagesService {
     await message.save()
     await message.populate('sender', 'id name avatar')
     await message.populate('recipient', 'id name avatar')
-    
+
     logger.info('Message sent', { senderId, recipientId, conversationId })
-    
+
     return {
       id: message._id,
       content: message.content,
@@ -112,7 +110,7 @@ class MessagesService {
     }
 
     await Message.updateMany(
-      { 
+      {
         conversationId,
         recipient: userObjectId,
         read: false
@@ -126,16 +124,16 @@ class MessagesService {
   async createOrFindConversation(userId, otherUserId) {
     const userObjectId = await this.getUserObjectId(userId)
     const otherUserObjectId = await this.getUserObjectId(otherUserId)
-    
+
     if (!userObjectId || !otherUserObjectId) {
       throw new Error('Користувача не знайдено')
     }
 
     // Створюємо новий ObjectId для conversationId
     const conversationId = new mongoose.Types.ObjectId()
-    
+
     const otherUser = await User.findById(otherUserObjectId)
-    
+
     return {
       _id: conversationId,
       participant: {
@@ -165,7 +163,7 @@ class MessagesService {
 
     await Message.deleteMany({ conversationId })
     logger.info('Conversation deleted', { userId, conversationId })
-    
+
     return { success: true }
   }
 }

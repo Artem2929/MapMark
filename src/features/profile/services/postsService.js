@@ -30,7 +30,6 @@ export const postsService = {
         body: formData
       })
       
-      console.log('Post created:', result)
       return result
     }
     

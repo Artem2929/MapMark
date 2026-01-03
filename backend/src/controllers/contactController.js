@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator')
 const contactService = require('../services/contactService')
-const { createSuccessResponse, createErrorResponse } = require('../utils/response')
+const { success, created, error: errorResponse, badRequest } = require('../utils/response')
 const logger = require('../utils/logger')
 
 class ContactController {
@@ -8,7 +8,7 @@ class ContactController {
     try {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
-        return createErrorResponse(res, 'Помилка валідації', 400, errors.array())
+        return badRequest(res, 'Помилка валідації', errors.array())
       }
 
       const { name, email, message } = req.body
@@ -26,15 +26,12 @@ class ContactController {
         ip: req.ip 
       })
 
-      return createSuccessResponse(res, {
-        message: 'Повідомлення надіслано успішно',
-        contact: {
-          id: contact._id,
-          name: contact.name,
-          email: contact.email,
-          createdAt: contact.createdAt
-        }
-      }, 201)
+      return created(res, {
+        id: contact._id,
+        name: contact.name,
+        email: contact.email,
+        createdAt: contact.createdAt
+      }, 'Повідомлення надіслано успішно')
 
     } catch (error) {
       logger.error('Error sending contact message', { 
@@ -44,10 +41,10 @@ class ContactController {
       })
 
       if (error.name === 'ValidationError') {
-        return createErrorResponse(res, 'Помилка валідації даних', 400, error.errors)
+        return badRequest(res, 'Помилка валідації даних', error.errors)
       }
 
-      return createErrorResponse(res, 'Помилка надсилання повідомлення', 500)
+      return errorResponse(res, 'Помилка надсилання повідомлення')
     }
   }
 
@@ -61,7 +58,7 @@ class ContactController {
         status
       })
 
-      return createSuccessResponse(res, result)
+      return success(res, result)
 
     } catch (error) {
       logger.error('Error fetching contact messages', { 
@@ -69,7 +66,7 @@ class ContactController {
         query: req.query 
       })
 
-      return createErrorResponse(res, 'Помилка отримання повідомлень', 500)
+      return errorResponse(res, 'Помилка отримання повідомлень')
     }
   }
 
@@ -79,18 +76,15 @@ class ContactController {
       const { status } = req.body
 
       if (!['new', 'read', 'replied'].includes(status)) {
-        return createErrorResponse(res, 'Невірний статус повідомлення', 400)
+        return badRequest(res, 'Невірний статус повідомлення')
       }
 
       const contact = await contactService.updateMessageStatus(id, status)
 
-      return createSuccessResponse(res, {
-        message: 'Статус повідомлення оновлено',
-        contact: {
-          id: contact._id,
-          status: contact.status
-        }
-      })
+      return success(res, {
+        id: contact._id,
+        status: contact.status
+      }, 'Статус повідомлення оновлено')
 
     } catch (error) {
       logger.error('Error updating contact message status', { 
@@ -100,10 +94,10 @@ class ContactController {
       })
 
       if (error.message === 'Повідомлення не знайдено') {
-        return createErrorResponse(res, error.message, 404)
+        return errorResponse(res, error.message, 404)
       }
 
-      return createErrorResponse(res, 'Помилка оновлення статусу', 500)
+      return errorResponse(res, 'Помилка оновлення статусу')
     }
   }
 }

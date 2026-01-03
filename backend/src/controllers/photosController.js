@@ -49,7 +49,7 @@ class PhotosController {
         })
       }
 
-      const photos = await Photo.find({ 
+      const photos = await Photo.find({
         userId: user._id,
         $or: [
           { isPublic: true },
@@ -67,7 +67,7 @@ class PhotosController {
         const photoObj = photo.toObject()
         const userData = photoObj.userId
         photoObj.userId = userData?.id || photoObj.userId
-        
+
         // Конвертуємо avatar Buffer в base64 якщо потрібно
         let avatarBase64 = null
         if (userData?.avatar) {
@@ -77,7 +77,7 @@ class PhotosController {
             avatarBase64 = userData.avatar
           }
         }
-        
+
         photoObj.user = {
           id: userData?.id,
           name: userData?.name,
@@ -92,14 +92,14 @@ class PhotosController {
         const dislikes = await PhotoLike.countDocuments({ photoId: photo._id, type: 'dislike' })
         const userLike = req.user ? await PhotoLike.findOne({ photoId: photo._id, userId: req.user._id }) : null
         const commentsCount = await PhotoComment.countDocuments({ photoId: photo._id })
-        
+
         photo.likes = likes
         photo.dislikes = dislikes
         photo.userReaction = userLike?.type || null
         photo.commentsCount = commentsCount
       }
 
-      const total = await Photo.countDocuments({ 
+      const total = await Photo.countDocuments({
         userId: user._id,
         $or: [
           { isPublic: true },
@@ -134,9 +134,6 @@ class PhotosController {
       const userId = req.user._id
       const files = req.files
 
-      console.log('Upload request body:', req.body)
-      console.log('Upload files:', files?.length)
-
       if (!files || files.length === 0) {
         return res.status(400).json({
           status: 'fail',
@@ -147,7 +144,7 @@ class PhotosController {
       // Перевіряємо ліміт користувача
       const userPhotoCount = await Photo.countDocuments({ userId })
       const maxPhotosPerUser = 1000
-      
+
       if (userPhotoCount + files.length > maxPhotosPerUser) {
         return res.status(400).json({
           status: 'fail',
@@ -167,20 +164,18 @@ class PhotosController {
           let description = ''
           let location = ''
           let hashtags = ''
-          
+
           // Перевіряємо всі можливі варіанти
           if (req.body.description) description = req.body.description
           if (req.body.location) location = req.body.location
           if (req.body.hashtags) hashtags = req.body.hashtags
-          
+
           // Якщо дані в масиві (multer bug)
           if (Array.isArray(req.body.photos)) {
             if (req.body.photos[0]) description = req.body.photos[0]
             if (req.body.photos[1]) location = req.body.photos[1]
             if (req.body.photos[2]) hashtags = req.body.photos[2]
           }
-
-          console.log('Photo metadata:', { description, location, hashtags })
 
           // Зберігаємо в БД як Base64
           const photo = new Photo({
@@ -452,7 +447,7 @@ class PhotosController {
               avatarBase64 = commentObj.userId.avatar
             }
           }
-          
+
           commentObj.user = {
             id: commentObj.userId.id,
             name: commentObj.userId.name,
@@ -460,13 +455,13 @@ class PhotosController {
           }
           delete commentObj.userId
         }
-        
+
         commentObj.likesCount = commentObj.likes?.length || 0
         commentObj.dislikesCount = commentObj.dislikes?.length || 0
         commentObj.userReaction = commentObj.likes?.includes(req.user?._id) ? 'like' : commentObj.dislikes?.includes(req.user?._id) ? 'dislike' : null
         delete commentObj.likes
         delete commentObj.dislikes
-        
+
         return commentObj
       })
 
@@ -531,7 +526,7 @@ class PhotosController {
         .select('-__v')
 
       const cleanComment = populatedComment.toObject()
-      
+
       let avatarBase64 = null
       if (cleanComment.userId.avatar) {
         if (Buffer.isBuffer(cleanComment.userId.avatar)) {
@@ -540,14 +535,14 @@ class PhotosController {
           avatarBase64 = cleanComment.userId.avatar
         }
       }
-      
+
       cleanComment.user = {
         id: cleanComment.userId.id,
         name: cleanComment.userId.name,
         avatar: avatarBase64
       }
       delete cleanComment.userId
-      
+
       cleanComment.likesCount = 0
       cleanComment.dislikesCount = 0
       cleanComment.userReaction = null
@@ -604,7 +599,7 @@ class PhotosController {
         .select('-__v')
 
       const cleanComment = populatedComment.toObject()
-      
+
       let avatarBase64 = null
       if (cleanComment.userId.avatar) {
         if (Buffer.isBuffer(cleanComment.userId.avatar)) {
@@ -613,14 +608,14 @@ class PhotosController {
           avatarBase64 = cleanComment.userId.avatar
         }
       }
-      
+
       cleanComment.user = {
         id: cleanComment.userId.id,
         name: cleanComment.userId.name,
         avatar: avatarBase64
       }
       delete cleanComment.userId
-      
+
       cleanComment.likesCount = cleanComment.likes?.length || 0
       cleanComment.dislikesCount = cleanComment.dislikes?.length || 0
       cleanComment.userReaction = cleanComment.likes?.includes(userId) ? 'like' : cleanComment.dislikes?.includes(userId) ? 'dislike' : null

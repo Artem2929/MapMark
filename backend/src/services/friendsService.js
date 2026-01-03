@@ -34,6 +34,7 @@ class FriendsService {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) return []
 
+    // Вхідні заявки - ті, що надіслали мені
     const requests = await friendRepository.findPendingRequests(userObjectId)
 
     return requests.map(request => ({
@@ -44,6 +45,91 @@ class FriendsService {
         email: request.requester.email,
         country: request.requester.country,
         avatar: request.requester.avatar
+      },
+      createdAt: request.createdAt
+    }))
+  }
+
+  async getSentFriendRequests(userId) {
+    const userObjectId = await this.getUserObjectId(userId)
+    if (!userObjectId) return []
+
+    // Вихідні заявки - ті, що я надіслав
+    const requests = await friendRepository.findSentRequests(userObjectId)
+
+    return requests.map(request => ({
+      id: request._id,
+      recipient: {
+        id: request.recipient.id || request.recipient._id,
+        name: request.recipient.name,
+        email: request.recipient.email,
+        country: request.recipient.country,
+        avatar: request.recipient.avatar
+      },
+      createdAt: request.createdAt
+    }))
+  }
+
+  async searchFriends(userId, query) {
+    if (!query) return this.getFriends(userId)
+    
+    const userObjectId = await this.getUserObjectId(userId)
+    if (!userObjectId) return []
+
+    const friends = await friendRepository.searchFriends(userObjectId, query)
+
+    return friends.map(friend => {
+      const friendUser = friend.requester._id.toString() === userObjectId.toString() 
+        ? friend.recipient 
+        : friend.requester
+      return {
+        id: friendUser.id || friendUser._id,
+        name: friendUser.name,
+        email: friendUser.email,
+        country: friendUser.country,
+        avatar: friendUser.avatar,
+        friendshipId: friend._id
+      }
+    })
+  }
+
+  async searchFriendRequests(userId, query) {
+    if (!query) return this.getFriendRequests(userId)
+    
+    const userObjectId = await this.getUserObjectId(userId)
+    if (!userObjectId) return []
+
+    const requests = await friendRepository.searchPendingRequests(userObjectId, query)
+
+    return requests.map(request => ({
+      id: request._id,
+      requester: {
+        id: request.requester.id || request.requester._id,
+        name: request.requester.name,
+        email: request.requester.email,
+        country: request.requester.country,
+        avatar: request.requester.avatar
+      },
+      createdAt: request.createdAt
+    }))
+  }
+
+  async searchSentFriendRequests(userId, query) {
+    if (!query) return this.getSentFriendRequests(userId)
+    
+    const userObjectId = await this.getUserObjectId(userId)
+    if (!userObjectId) return []
+
+    const requests = await friendRepository.searchSentRequests(userObjectId, query)
+
+    return requests.map(request => ({
+      id: request._id,
+      recipient: {
+        id: request.recipient.id || request.recipient._id,
+        name: request.recipient.name,
+        email: request.recipient.email,
+        country: request.recipient.country,
+        avatar: request.recipient.avatar
       },
       createdAt: request.createdAt
     }))

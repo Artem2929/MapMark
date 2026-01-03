@@ -8,11 +8,13 @@ import FriendCardSkeleton from '../components/ui/FriendCardSkeleton'
 import { useFriends } from '../hooks/useFriends'
 import { useFriendRequests } from '../hooks/useFriendRequests'
 import { useUserSearch } from '../hooks/useUserSearch'
+import { useEffect, useRef } from 'react'
 import './FriendsPage.css'
 
 const TABS = {
   ALL: 'all',
   REQUESTS: 'requests',
+  MY_REQUESTS: 'my-requests',
   SEARCH: 'search'
 }
 
@@ -23,6 +25,12 @@ const Friends = () => {
   const [activeTab, setActiveTab] = useState(TABS.ALL)
   const [dropdownOpen, setDropdownOpen] = useState(null)
   const [visibleFriendsCount, setVisibleFriendsCount] = useState(20)
+  const [visibleRequestsCount, setVisibleRequestsCount] = useState(20)
+  const [sentRequests, setSentRequests] = useState([])
+  const [sentRequestsLoading, setSentRequestsLoading] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
+  const searchTimeoutRef = useRef(null)
 
   const userId = urlUserId || user?.id
 
@@ -39,80 +47,73 @@ const Friends = () => {
     cancelFriendRequest
   } = useUserSearch()
 
-  const handleDropdownToggle = useCallback((friendId) => {
-    setDropdownOpen(prev => prev === friendId ? null : friendId)
-  }, [])
-
-  const handleDropdownClose = useCallback(() => {
-    setDropdownOpen(null)
-  }, [])
-
-  const handleRemoveFriend = useCallback(async (friendId) => {
-    await removeFriend(friendId)
-  }, [removeFriend])
-
-  const handleBlockUser = useCallback(async (friendId) => {
+  const loadSentRequests = useCallback(async () => {
+    setSentRequestsLoading(true)
     try {
-      const result = await friendsService.blockUser(friendId)
-      if (result.success || result.status === 'success') {
-        setFriends(prev => prev.filter(friend => friend.id !== friendId))
-      }
+      const result = await friendsService.getSentFriendRequests(userId)
+      setSentRequests(result.data || [])
     } catch (error) {
-      console.error('Помилка блокування:', error)
+      console.error('Error loading sent requests:', error)
+      setSentRequests([])
+    } finally {
+      setSentRequestsLoading(false)
     }
-  }, [setFriends])
+  }, [userId])
 
-  const handleSendMessage = useCallback((friendId) => {
-    navigate(`/messages/${friendId}`)
-  }, [navigate])
-
-  const handleAcceptRequest = useCallback(async (requestId) => {
-    const success = await acceptRequest(requestId)
-    if (success) {
-      reloadFriends()
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current)
     }
-  }, [acceptRequest, reloadFriends])
 
-  const handleRejectRequest = useCallback(async (requestId) => {
-    await rejectRequest(requestId)
-  }, [rejectRequest])
-
-  const handleSendFriendRequestFromRequests = useCallback(async (userId) => {
-    const success = await sendFriendRequest(userId)
-    if (success) {
-      const userRequest = requests.find(request => 
-        request.requester?.id === userId || request.id === userId
-      )
-      
-      if (userRequest) {
-        const newFriend = userRequest.requester || userRequest
-        setFriends(prev => [...prev, newFriend])
-        setRequests(prev => prev.filter(request => 
-          request.requester?.id !== userId && request.id !== userId
-        ))
+    if (searchQuery) {
+      setIsSearching(true)
+      searchTimeoutRef.current = setTimeout(async () => {
+        try {
+          if (activeTab === TABS.ALL) {
+            const result = await friendsService.searchFriends(userId, searchQuery)
+            setFriends(result.data || [])
+          } else if (activeTab === TABS.REQUESTS) {
+            const result = await friendsService.searchFriendRequests(userId, searchQuery)
+            setRequests(result.data || [])
+          } else if (activeTab === TABS.MY_REQUESTS) {
+            const result = await friendsService.searchSentFriendRequests(userId, searchQuery)
+            setSentRequests(result.data || [])
+          }
+        } catch (error) {
+          console.error('Search error:', error)
+        } finally {
+          setIsSearching(false)
+        }
+      }, 500)
+    } else {
+      setIsSearching(false)
+      if (activeTab === TABS.ALL) {
+        reloadFriends()
+      } else if (activeTab === TABS.REQUESTS) {
+        friendsService.getFriendRequests(userId).then(r => setRequests(r.data || []))
       }
     }
-  }, [sendFriendRequest, setRequests, setFriends, requests])
 
-  const handleTabChange = useCallback((tab) => {
-    setActiveTab(tab)
-    setVisibleFriendsCount(20)
-    if (tab === TABS.SEARCH) {
-      loadRandomUsers()
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current)
+      }
     }
-  }, [loadRandomUsers])
+  }, [searchQuery, activeTab, userId, reloadFriends, setFriends, setRequests])
 
   const handleLoadMore = useCallback(() => {
     setVisibleFriendsCount(prev => prev + 20)
   }, [])
 
   const renderFriendsList = (items, type, loading) => {
-    if (loading) return <div className="loading">Завантаження...</div>
+    if (loading || isSearching) return <div className="loading">Завантаження...</div>
     
-    if (items.length === 0) {
+    const filteredItems = items
+    
+    if (filteredItems.length === 0) {
       const emptyMessages = {
-        [TABS.ALL]: 'Друзів не знайдено',
-        [TABS.REQUESTS]: 'Немає нових заявок'
+        [TABS.ALL]: searchQuery ? 'Нічого не знайдено' : 'Друзів не знайдено',
+        [TABS.REQUESTS]: searchQuery ? 'Нічого не знайдено' : 'Немає нових заявок'
       }
       
       return (
@@ -122,8 +123,9 @@ const Friends = () => {
       )
     }
 
-    const visibleItems = type === TABS.ALL ? items.slice(0, visibleFriendsCount) : items
-    const hasMore = type === TABS.ALL && items.length > visibleFriendsCount
+    const visibleCount = type === TABS.ALL ? visibleFriendsCount : visibleRequestsCount
+    const visibleItems = filteredItems.slice(0, visibleCount)
+    const hasMore = filteredItems.length > visibleCount
 
     return (
       <>
@@ -153,7 +155,7 @@ const Friends = () => {
         </div>
         {hasMore && (
           <div className="load-more">
-            <button className="btn btn--secondary" onClick={handleLoadMore}>
+            <button className="btn btn--secondary" onClick={() => type === TABS.ALL ? handleLoadMore() : setVisibleRequestsCount(prev => prev + 20)}>
               Завантажити ще
             </button>
           </div>
@@ -206,12 +208,90 @@ const Friends = () => {
     )
   }
 
+  const renderSentRequests = () => {
+    if (sentRequestsLoading) {
+      return <div className="loading">Завантаження...</div>
+    }
+
+    const filteredRequests = searchQuery
+      ? sentRequests.filter(request => {
+          const name = request.recipient.name || ''
+          return name.toLowerCase().includes(searchQuery.toLowerCase())
+        })
+      : sentRequests
+
+    if (filteredRequests.length === 0) {
+      return (
+        <div className="empty-state">
+          <p>{searchQuery ? 'Нічого не знайдено' : 'Немає вихідних заявок'}</p>
+        </div>
+      )
+    }
+
+    return (
+      <div className="friends-list">
+        {filteredRequests.map(request => (
+          <FriendCard
+            key={request.id}
+            friend={{...request.recipient, requestId: request.id}}
+            type="sent-request"
+            onCancelRequest={async (userId) => {
+              await cancelFriendRequest(userId)
+              setSentRequests(prev => prev.filter(r => r.recipient.id !== userId))
+            }}
+          />
+        ))}
+      </div>
+    )
+  }
+
   const renderContent = () => {
     switch (activeTab) {
       case TABS.ALL:
-        return renderFriendsList(friends, TABS.ALL, friendsLoading)
+        return (
+          <>
+            <div className="search-form">
+              <input
+                type="text"
+                placeholder="Пошук друзів..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="form-input"
+              />
+            </div>
+            {renderFriendsList(friends, TABS.ALL, friendsLoading)}
+          </>
+        )
       case TABS.REQUESTS:
-        return renderFriendsList(requests, TABS.REQUESTS, requestsLoading)
+        return (
+          <>
+            <div className="search-form">
+              <input
+                type="text"
+                placeholder="Пошук заявок..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="form-input"
+              />
+            </div>
+            {renderFriendsList(requests, TABS.REQUESTS, requestsLoading)}
+          </>
+        )
+      case TABS.MY_REQUESTS:
+        return (
+          <>
+            <div className="search-form">
+              <input
+                type="text"
+                placeholder="Пошук заявок..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="form-input"
+              />
+            </div>
+            {renderSentRequests()}
+          </>
+        )
       case TABS.SEARCH:
         return (
           <div className="search-section">
@@ -232,9 +312,54 @@ const Friends = () => {
     }
   }
 
+  const handleDropdownToggle = useCallback((friendId) => {
+    setDropdownOpen(prev => prev === friendId ? null : friendId)
+  }, [])
+
+  const handleDropdownClose = useCallback(() => {
+    setDropdownOpen(null)
+  }, [])
+
+  const handleSendMessage = useCallback((friendId) => {
+    navigate(`/messages/${friendId}`)
+  }, [navigate])
+
+  const handleRemoveFriend = useCallback(async (friendId) => {
+    await removeFriend(friendId)
+    setDropdownOpen(null)
+  }, [removeFriend])
+
+  const handleBlockUser = useCallback((friendId) => {
+    console.log('Block user:', friendId)
+    setDropdownOpen(null)
+  }, [])
+
+  const handleAcceptRequest = useCallback(async (requestId) => {
+    await acceptRequest(requestId)
+  }, [acceptRequest])
+
+  const handleRejectRequest = useCallback(async (requestId) => {
+    await rejectRequest(requestId)
+  }, [rejectRequest])
+
+  const handleSendFriendRequestFromRequests = useCallback(async (userId) => {
+    await sendFriendRequest(userId)
+  }, [sendFriendRequest])
+
+  const handleTabChange = useCallback((tab) => {
+    setActiveTab(tab)
+    setSearchQuery('')
+    if (tab === TABS.MY_REQUESTS) {
+      loadSentRequests()
+    } else if (tab === TABS.SEARCH) {
+      loadRandomUsers()
+    }
+  }, [loadSentRequests, loadRandomUsers])
+
   const tabs = [
-    { key: TABS.ALL, label: `Всі друзі (${friends.length})` },
-    { key: TABS.REQUESTS, label: `Заявки (${requests.length})` },
+    { key: TABS.ALL, label: 'Всі друзі' },
+    { key: TABS.REQUESTS, label: 'Вхідні заявки' },
+    { key: TABS.MY_REQUESTS, label: 'Вихідні заявки' },
     { key: TABS.SEARCH, label: 'Пошук друзів' }
   ]
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { friendsService } from '../features/friends/services/friendsService'
 
 export const useFriends = (userId) => {
@@ -6,7 +6,8 @@ export const useFriends = (userId) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const loadFriends = async () => {
+  // Мемоізована функція завантаження друзів (запобігає нескінченному циклу)
+  const loadFriends = useCallback(async () => {
     if (!userId) {
       setLoading(false)
       return
@@ -21,7 +22,7 @@ export const useFriends = (userId) => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [userId])
 
   const removeFriend = async (friendId) => {
     try {
@@ -41,7 +42,7 @@ export const useFriends = (userId) => {
 
   useEffect(() => {
     loadFriends()
-  }, [userId])
+  }, [loadFriends])
 
   return {
     friends,

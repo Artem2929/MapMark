@@ -28,6 +28,14 @@ body {
   min-height: 100vh;
 }
 
+/* Gradient headings */
+h1, h2, h3 {
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 #root {
   min-height: 100vh;
 }

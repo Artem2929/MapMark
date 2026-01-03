@@ -26,6 +26,18 @@ const mutationLimiter = rateLimit({
   skip: (req) => req.method === 'GET'
 })
 
+// Rate limiter для всіх API запитів (включно з GET)
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 1000,
+  message: {
+    status: 'fail',
+    message: 'Забагато запитів. Спробуйте пізніше'
+  },
+  standardHeaders: true,
+  legacyHeaders: false
+})
+
 // Rate limiter для upload endpoints
 const uploadLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 година
@@ -53,6 +65,7 @@ const strictLimiter = rateLimit({
 module.exports = {
   authLimiter,
   mutationLimiter,
+  apiLimiter,
   uploadLimiter,
   strictLimiter
 }

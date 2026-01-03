@@ -51,13 +51,9 @@ const Wall = memo(({ userId, isOwnProfile, user }) => {
   const handlePostCreated = useCallback(async (formData) => {
     try {
       const result = await postsService.createPost(formData)
-      console.log('Post created result:', result)
       if (result.status === 'success' && result.data) {
-        console.log('Adding post to state:', result.data)
         setPosts(prev => {
-          console.log('Previous posts:', prev)
           const newPosts = [result.data, ...prev]
-          console.log('New posts:', newPosts)
           return newPosts
         })
       }

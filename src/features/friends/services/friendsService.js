@@ -48,7 +48,82 @@ export const friendsService = {
         data: result.data || []
       }
     } catch (error) {
-      // Return empty result if endpoint doesn't exist
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: true, data: [] }
+      }
+      throw error
+    }
+  },
+
+  async getSentFriendRequests(userId) {
+    if (!userId) {
+      throw new Error('ID користувача обов\'язковий')
+    }
+    
+    try {
+      const result = await apiClient.request(`/friends/${userId}/sent-requests`)
+      return {
+        success: true,
+        data: result.data || []
+      }
+    } catch (error) {
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: true, data: [] }
+      }
+      throw error
+    }
+  },
+
+  async searchFriends(userId, query) {
+    if (!userId) {
+      throw new Error('ID користувача обов\'язковий')
+    }
+    
+    try {
+      const result = await apiClient.request(`/friends/${userId}/search?query=${encodeURIComponent(query)}`)
+      return {
+        success: true,
+        data: result.data || []
+      }
+    } catch (error) {
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: true, data: [] }
+      }
+      throw error
+    }
+  },
+
+  async searchFriendRequests(userId, query) {
+    if (!userId) {
+      throw new Error('ID користувача обов\'язковий')
+    }
+    
+    try {
+      const result = await apiClient.request(`/friends/${userId}/requests/search?query=${encodeURIComponent(query)}`)
+      return {
+        success: true,
+        data: result.data || []
+      }
+    } catch (error) {
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: true, data: [] }
+      }
+      throw error
+    }
+  },
+
+  async searchSentFriendRequests(userId, query) {
+    if (!userId) {
+      throw new Error('ID користувача обов\'язковий')
+    }
+    
+    try {
+      const result = await apiClient.request(`/friends/${userId}/sent-requests/search?query=${encodeURIComponent(query)}`)
+      return {
+        success: true,
+        data: result.data || []
+      }
+    } catch (error) {
       if (error.message.includes('404') || error.message.includes("Can't find")) {
         return { success: true, data: [] }
       }

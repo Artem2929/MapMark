@@ -22,7 +22,38 @@ const friendsController = {
     const { userId } = req.params
     const requests = await friendsService.getFriendRequests(userId)
     
-    success(res, requests, 'Заявки в друзі отримано')
+    success(res, requests, 'Вхідні заявки отримано')
+  }),
+
+  getSentFriendRequests: catchAsync(async (req, res) => {
+    const { userId } = req.params
+    const requests = await friendsService.getSentFriendRequests(userId)
+    
+    success(res, requests, 'Вихідні заявки отримано')
+  }),
+
+  searchFriends: catchAsync(async (req, res) => {
+    const { userId } = req.params
+    const { query } = req.query
+    const friends = await friendsService.searchFriends(userId, query)
+    
+    success(res, friends, 'Пошук друзів виконано')
+  }),
+
+  searchFriendRequests: catchAsync(async (req, res) => {
+    const { userId } = req.params
+    const { query } = req.query
+    const requests = await friendsService.searchFriendRequests(userId, query)
+    
+    success(res, requests, 'Пошук заявок виконано')
+  }),
+
+  searchSentFriendRequests: catchAsync(async (req, res) => {
+    const { userId } = req.params
+    const { query } = req.query
+    const requests = await friendsService.searchSentFriendRequests(userId, query)
+    
+    success(res, requests, 'Пошук заявок виконано')
   }),
 
   sendFriendRequest: catchAsync(async (req, res) => {

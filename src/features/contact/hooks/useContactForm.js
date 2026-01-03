@@ -42,10 +42,7 @@ export const useContactForm = () => {
   const handleChange = useCallback((field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }))
     if (toast) setToast(null)
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: null }))
-    }
-  }, [toast, errors])
+  }, [toast])
 
   const resetForm = useCallback(() => {
     setFormData({ name: '', email: '', message: '' })
@@ -68,7 +65,6 @@ export const useContactForm = () => {
 
     // Перевірка валідації
     if (Object.keys(validation).length > 0) {
-      setErrors(validation)
       showToast('Виправте помилки у формі', 'error')
       return
     }
@@ -94,7 +90,7 @@ export const useContactForm = () => {
     formData,
     isSubmitting,
     toast,
-    errors,
+    errors: validation,
     handleChange,
     handleSubmit
   }

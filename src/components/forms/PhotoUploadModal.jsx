@@ -116,13 +116,6 @@ const PhotoUploadModal = memo(({ onClose, onUpload }) => {
       formData.append('location', location)
       formData.append('hashtags', hashtags)
       
-      console.log('Sending FormData:', {
-        description,
-        location,
-        hashtags,
-        file: selectedFiles[0].name
-      })
-      
       await onUpload(formData)
       onClose()
     } catch (error) {

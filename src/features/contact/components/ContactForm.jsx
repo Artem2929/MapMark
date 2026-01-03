@@ -4,7 +4,12 @@ import { Toast } from '../../../components/ui/Toast'
 import { FormField } from '../../../components/ui/FormField'
 
 const ContactForm = () => {
-  const { formData, isSubmitting, toast, errors, handleChange, handleSubmit } = useContactForm()
+  const { formData, isSubmitting, toast, errors, handleChange, handleSubmit, resetForm } = useContactForm()
+
+  // Обробник скасування форми
+  const handleReset = () => {
+    resetForm()
+  }
 
   return (
     <form className="about-contact-form" onSubmit={handleSubmit}>
@@ -50,9 +55,14 @@ const ContactForm = () => {
         autoResize
       />
       
-      <button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Надсилання...' : 'Надіслати'}
-      </button>
+      <div className="about-contact-form__actions">
+        <button type="button" className="btn secondary" onClick={handleReset} disabled={isSubmitting}>
+          Скасувати
+        </button>
+        <button type="submit" className="btn primary" disabled={isSubmitting}>
+          {isSubmitting ? 'Надсилання...' : 'Надіслати'}
+        </button>
+      </div>
     </form>
   )
 }

@@ -14,8 +14,20 @@ router.get('/', friendsController.getMyFriends)
 // GET /api/v1/friends/:userId - Get user's friends
 router.get('/:userId', friendsController.getFriends)
 
-// GET /api/v1/friends/:userId/requests - Get friend requests for user
+// GET /api/v1/friends/:userId/search - Search user's friends
+router.get('/:userId/search', friendsController.searchFriends)
+
+// GET /api/v1/friends/:userId/requests - Get incoming friend requests (вхідні заявки)
 router.get('/:userId/requests', friendsController.getFriendRequests)
+
+// GET /api/v1/friends/:userId/requests/search - Search incoming requests
+router.get('/:userId/requests/search', friendsController.searchFriendRequests)
+
+// GET /api/v1/friends/:userId/sent-requests - Get sent friend requests (вихідні заявки)
+router.get('/:userId/sent-requests', friendsController.getSentFriendRequests)
+
+// GET /api/v1/friends/:userId/sent-requests/search - Search sent requests
+router.get('/:userId/sent-requests/search', friendsController.searchSentFriendRequests)
 
 // POST /api/v1/friends/request - Send friend request
 router.post('/request', csrfProtection, friendsController.sendFriendRequest)

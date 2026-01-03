@@ -19,7 +19,6 @@ const getCSRFToken = async (forceRefresh = false) => {
       
       const data = await response.json()
       csrfToken = data.data?.csrfToken || data.csrfToken
-      console.log('CSRF token obtained:', csrfToken ? '✓' : '✗')
     } catch (error) {
       console.error('Failed to get CSRF token:', error)
       throw error

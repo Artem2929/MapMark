@@ -157,7 +157,38 @@ const FriendCard = memo(({
       </div>
 
       <div className="friend-actions">
-        {(type === 'friend' || type === 'request') && (
+        {type === 'request' ? (
+          <>
+            <button 
+              className="btn btn--primary" 
+              onClick={(e) => {
+                e.stopPropagation()
+                onAcceptRequest && onAcceptRequest(friend.requestId)
+              }}
+            >
+              Прийняти
+            </button>
+            <button 
+              className="btn btn--danger" 
+              onClick={(e) => {
+                e.stopPropagation()
+                onRejectRequest && onRejectRequest(friend.requestId)
+              }}
+            >
+              Скасувати
+            </button>
+          </>
+        ) : type === 'sent-request' ? (
+          <button 
+            className="btn btn--danger" 
+            onClick={(e) => {
+              e.stopPropagation()
+              onCancelRequest && onCancelRequest(friend.id)
+            }}
+          >
+            Скасувати
+          </button>
+        ) : type === 'friend' ? (
           <>
             <button
               ref={menuButtonRef}
@@ -167,11 +198,9 @@ const FriendCard = memo(({
             >
               ⋯
             </button>
-            {type === 'friend' ? renderFriendMenu() : renderRequestMenu()}
+            {renderFriendMenu()}
           </>
-        )}
-        
-        {type === 'search' && (
+        ) : type === 'search' ? (
           <>
             {friend.relationshipStatus === 'following' ? (
               <>
@@ -197,7 +226,7 @@ const FriendCard = memo(({
               </button>
             )}
           </>
-        )}
+        ) : null}
       </div>
     </article>
   )

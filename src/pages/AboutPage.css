@@ -160,23 +160,10 @@
   border: 1px solid var(--color-border-light);
 }
 
-.about-contact-form button {
-  padding: var(--space-3) var(--space-6);
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-}
-
-.about-contact-form button:hover:not(:disabled) {
-  background: var(--color-primary-dark);
-}
-
-.about-contact-form button:disabled {
-  background: var(--color-border-medium);
+.about-contact-form__actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
 }
 
 @media (max-width: 768px) {

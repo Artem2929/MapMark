@@ -38,7 +38,6 @@ const ProfileHeader = memo(({ user, isOwnProfile, onUserUpdate, onEditingStateCh
 
   const handleSaveProfile = useCallback(async (profileData) => {
     const updatedUser = await saveProfile(profileData)
-    console.log('Updated user data:', updatedUser)
     if (onUserUpdate) {
       onUserUpdate(updatedUser.data.user)
     }
