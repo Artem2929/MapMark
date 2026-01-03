@@ -56,7 +56,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition-normal);
-  color: #fff;
+  color: var(--color-text-inverse);
   backdrop-filter: blur(8px);
 }
 
@@ -191,7 +191,7 @@
 }
 
 .profile-header__detail:nth-child(3) svg {
-  color: #22c55e;
+  color: var(--color-success);
 }
 
 .profile-header__detail a {
@@ -208,7 +208,7 @@
   grid-template-columns: repeat(3, 1fr);
   border-top: 1px solid #e2e8f0;
   border-bottom: 1px solid #e2e8f0;
-  background: #fff;
+  background: var(--color-bg-primary);
 }
 
 .stat-card {
@@ -271,7 +271,7 @@
 
 .profile-header__follow-btn {
   background: #2787f5;
-  color: #fff;
+  color: var(--color-text-inverse);
   margin-right: 8px;
   text-decoration: none;
   display: inline-flex;
@@ -289,7 +289,7 @@
 
 .profile-header__follow-btn--following {
   background: rgba(239, 68, 68, 0.1);
-  color: #dc2626;
+  color: var(--color-error);
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 

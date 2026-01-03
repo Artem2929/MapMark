@@ -1,15 +1,5 @@
 /* VK 2009 Style Inline Edit System */
 
-:root {
-  --vk-blue: #5181b8;
-  --vk-blue-hover: #4a76a8;
-  --vk-gray: #656565;
-  --vk-light-gray: #f7f8fa;
-  --vk-border: #e1e8ed;
-  --vk-success: #4bb34b;
-  --vk-error: #e64646;
-}
-
 /* Base Editable Field - VK Style */
 .editable-field {
   position: relative;
@@ -24,12 +14,12 @@
 }
 
 .editable-field:hover {
-  background-color: var(--vk-light-gray);
+  background-color: var(--color-bg-tertiary);
 }
 
 .editable-field--editing {
   background-color: var(--color-bg-primary);
-  border: 1px solid var(--vk-blue);
+  border: 1px solid var(--color-primary);
   cursor: text;
   padding: 3px 5px;
   margin: -4px -6px;
@@ -52,7 +42,7 @@
 }
 
 .editable-field__text--empty {
-  color: var(--vk-gray);
+  color: var(--color-text-secondary);
   font-style: italic;
 }
 
@@ -106,24 +96,24 @@
 }
 
 .edit-save-btn {
-  background: var(--vk-blue);
-  border-color: var(--vk-blue);
-  color: white;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-text-inverse);
 }
 
 .edit-save-btn:hover:not(:disabled) {
-  background: var(--vk-blue-hover);
-  border-color: var(--vk-blue-hover);
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
 }
 
 .edit-cancel-btn {
-  background: #fff;
-  border-color: var(--vk-border);
-  color: var(--vk-gray);
+  background: var(--color-bg-primary);
+  border-color: var(--color-border-medium);
+  color: var(--color-text-secondary);
 }
 
 .edit-cancel-btn:hover:not(:disabled) {
-  background: var(--vk-light-gray);
+  background: var(--color-bg-tertiary);
 }
 
 .edit-save-btn:disabled,
@@ -139,12 +129,12 @@
 
 /* Error State - VK Style */
 .edit-error {
-  border-color: var(--vk-error);
+  border-color: var(--color-error);
   background-color: var(--color-bg-primary);
 }
 
 .edit-error-message {
-  color: var(--vk-error);
+  color: var(--color-error);
   font-size: var(--font-size-xs);
   margin-top: 2px;
   line-height: 1.2;
@@ -152,13 +142,13 @@
 
 /* Success State */
 .edit-success {
-  background-color: rgba(75, 179, 75, 0.1);
+  background-color: rgba(16, 185, 129, 0.1);
   animation: vkSuccess 1s ease-out;
 }
 
 @keyframes vkSuccess {
   0% {
-    background-color: rgba(75, 179, 75, 0.2);
+    background-color: rgba(16, 185, 129, 0.2);
   }
   100% {
     background-color: transparent;
@@ -169,7 +159,7 @@
 .editable-field--title {
   font-size: var(--font-size-base);
   font-weight: bold;
-  color: #2a5885;
+  color: var(--color-primary-dark);
   padding: 3px 5px;
   margin: -3px -5px;
 }

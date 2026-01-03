@@ -76,7 +76,7 @@
   justify-content: center;
   opacity: 0;
   transition: var(--transition-normal);
-  color: #fff;
+  color: var(--color-text-inverse);
   border-radius: 50%;
   backdrop-filter: blur(8px);
 }
@@ -169,7 +169,7 @@
   padding: 8px;
   margin-top: 8px;
   border: 1px solid #e1e8ed;
-  background: #fff;
+  background: var(--color-bg-primary);
   color: #656565;
   border-radius: var(--radius-2xl);
   font-size: var(--font-size-sm);
@@ -274,7 +274,7 @@
 .upload-cancel-btn {
   padding: 10px 20px;
   border: 1px solid #e0e0e0;
-  background: #ffffff;
+  background: var(--color-bg-primary);
   color: #666;
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);

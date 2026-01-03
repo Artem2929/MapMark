@@ -26,9 +26,9 @@
 .profile-avatar-container:has(.profile-avatar-menu:hover) .profile-avatar-upload-overlay,
 .profile-avatar-section:has(.profile-avatar-menu:hover) .profile-avatar-upload-overlay,
 .profile-avatar-container:has(.profile-avatar-menu__link:hover) .profile-avatar-upload-overlay {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .profile-avatar-input {
