@@ -16,11 +16,11 @@ const signRefreshToken = (id) => {
 }
 
 const createSendToken = (user, statusCode, res) => {
-  const token = signToken(user.id || user._id)
-  const refreshToken = signRefreshToken(user.id || user._id)
+  const token = signToken(user.id)
+  const refreshToken = signRefreshToken(user.id)
   
   const cookieOptions = {
-    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     httpOnly: true,
     secure: config.NODE_ENV === 'production',
     sameSite: 'strict'
@@ -29,26 +29,15 @@ const createSendToken = (user, statusCode, res) => {
   res.cookie('jwt', token, cookieOptions)
   res.cookie('refreshToken', refreshToken, {
     ...cookieOptions,
-    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
   })
-
-  // Очищені дані користувача
-  const userData = {
-    id: user.id || user._id,
-    name: user.name,
-    email: user.email,
-    country: user.country,
-    role: user.role,
-    emailVerified: user.emailVerified,
-    createdAt: user.createdAt
-  }
 
   res.status(statusCode).json({
     status: 'success',
-    token,
-    refreshToken,
     data: {
-      user: userData
+      token,
+      refreshToken,
+      expiresIn: 604800
     }
   })
 }

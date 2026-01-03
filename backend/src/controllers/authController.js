@@ -69,7 +69,25 @@ const logout = (req, res) => {
 
 const getMe = catchAsync(async (req, res, next) => {
   const user = await authService.getUserProfile(req.user.id)
-  success(res, { user }, 'Profile retrieved successfully')
+  
+  const userData = {
+    id: user.id,
+    username: user.username,
+    displayName: user.displayName,
+    name: user.name,
+    surname: user.surname,
+    avatar: user.avatar,
+    bio: user.bio,
+    location: user.location,
+    website: user.website,
+    country: user.country,
+    role: user.role,
+    emailVerified: user.emailVerified,
+    stats: user.stats,
+    meta: user.meta
+  }
+  
+  success(res, { user: userData }, 'Profile retrieved successfully')
 })
 
 module.exports = {

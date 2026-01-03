@@ -13,10 +13,10 @@ export function useAuth() {
     try {
       setLoading(true)
       
-      const userData = await authService.login(credentials)
-      setError(null) // Очищаємо тільки при успіху
-      setAuth(userData)
-      navigate(`/profile/${userData.data.user.id}`, { replace: true })
+      const response = await authService.login(credentials)
+      setError(null)
+      setAuth(response)
+      navigate('/profile', { replace: true })
       
       return { success: true }
     } catch (err) {
@@ -32,9 +32,9 @@ export function useAuth() {
       setLoading(true)
       setError(null)
       
-      const user = await authService.register(userData)
-      setAuth(user)
-      navigate(`/profile/${user.data.user.id}`, { replace: true })
+      const response = await authService.register(userData)
+      setAuth(response)
+      navigate('/profile', { replace: true })
       
       return { success: true }
     } catch (err) {

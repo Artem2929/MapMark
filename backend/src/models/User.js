@@ -2,12 +2,28 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const validator = require('validator')
 const config = require('../config')
+const { generateUserId } = require('../utils/idGenerator')
 
 const userSchema = new mongoose.Schema({
   id: {
     type: String,
     unique: true,
-    required: true
+    required: true,
+    default: generateUserId,
+    immutable: true
+  },
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+    match: [/^@[a-z0-9]{3,20}$/, 'Username must start with @ and contain 3-20 lowercase alphanumeric characters'],
+    index: true
+  },
+  displayName: {
+    type: String,
+    required: true,
+    trim: true,
+    maxlength: [100, 'Display name cannot exceed 100 characters']
   },
   name: {
     type: String,
@@ -127,11 +143,26 @@ const userSchema = new mongoose.Schema({
   emailVerificationExpires: Date
 }, {
   timestamps: true,
-  toJSON: { virtuals: true },
+  toJSON: {
+    virtuals: true,
+    transform: function(doc, ret) {
+      delete ret._id
+      delete ret.__v
+      delete ret.password
+      delete ret.passwordConfirm
+      delete ret.passwordResetToken
+      delete ret.passwordResetExpires
+      delete ret.emailVerificationToken
+      delete ret.emailVerificationExpires
+      return ret
+    }
+  },
   toObject: { virtuals: true }
 })
 
 // Indexes for performance
+userSchema.index({ id: 1 })
+userSchema.index({ username: 1 })
 userSchema.index({ email: 1 })
 userSchema.index({ createdAt: -1 })
 userSchema.index({ isActive: 1 })
@@ -178,16 +209,21 @@ userSchema.pre(/^find/, function(next) {
   next()
 })
 
-// Virtual for user's full profile
-userSchema.virtual('profile').get(function() {
+// Virtual for stats
+userSchema.virtual('stats').get(function() {
   return {
-    id: this.id,
-    name: this.name,
-    email: this.email,
-    country: this.country,
-    role: this.role,
-    emailVerified: this.emailVerified,
-    createdAt: this.createdAt
+    posts: 0,
+    followers: 0,
+    following: 0
+  }
+})
+
+// Virtual for meta
+userSchema.virtual('meta').get(function() {
+  return {
+    isOnline: this.isOnline,
+    createdAt: this.createdAt,
+    lastActivity: this.lastActivity
   }
 })
 

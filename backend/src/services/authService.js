@@ -3,6 +3,8 @@ const { AppError } = require('../utils/errorHandler')
 const { verifyToken } = require('../utils/jwt')
 const { HTTP_STATUS, ERROR_CODES } = require('../constants/httpStatus')
 const logger = require('../utils/logger')
+const { generateUsername } = require('../utils/idGenerator')
+const User = require('../models/User')
 
 class AuthService {
   async register(userData) {
@@ -31,16 +33,14 @@ class AuthService {
       throw new AppError('Invalid name format', HTTP_STATUS.BAD_REQUEST, ERROR_CODES.VALIDATION_ERROR)
     }
 
-    // Generate custom user ID
-    const userCount = await userRepository.countDocuments()
-    const incrementalId = userCount + 1
-    const country = userData.country.toLowerCase()
-    const name = userData.name.toLowerCase().replace(/[^a-z0-9]/g, '')
-    const customId = `${country}-${name}-${incrementalId}`
+    // Generate username
+    const username = await generateUsername(userData.name, userData.country, User)
+    const displayName = `${userData.name} ${userData.surname}`.trim()
 
     // Create new user
     return userRepository.create({
-      id: customId,
+      username,
+      displayName,
       name: userData.name,
       surname: userData.surname,
       email: userData.email,
