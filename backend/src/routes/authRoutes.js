@@ -11,7 +11,7 @@ const router = express.Router()
 router.get('/csrf-token', generateCSRFToken)
 
 // Public routes with rate limiting (without CSRF)
-router.post('/register', strictLimiter, registerValidation, authController.register)
+router.post('/register', authLimiter, registerValidation, authController.register)
 router.post('/login', authLimiter, loginValidation, authController.login)
 router.post('/refresh-token', authLimiter, authController.refreshToken)
 router.post('/forgot-password', strictLimiter, authController.forgotPassword)
