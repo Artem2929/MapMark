@@ -12,7 +12,7 @@ const logFormat = winston.format.combine(
 const logger = winston.createLogger({
   level: config.LOG_LEVEL,
   format: logFormat,
-  defaultMeta: { service: 'mapmark-backend' },
+  defaultMeta: { service: 'pinPointt-backend' },
   transports: [
     // Write all logs with importance level of `error` or less to `error.log`
     new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),

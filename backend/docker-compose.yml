@@ -5,18 +5,18 @@ services:
     build:
       context: ./mongodb
       dockerfile: Dockerfile
-    container_name: mapmark-mongodb-dev
+    container_name: pinPointt-mongodb-dev
     restart: unless-stopped
     ports:
-      - "27017:27017"
+      - '27017:27017'
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME:-admin}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-password}
-      MONGO_INITDB_DATABASE: ${MONGO_DATABASE:-mapmark}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE:-pinPointt}
     volumes:
       - ./mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     networks:
-      - mapmark-network
+      - pinPointt-network
     develop:
       watch:
         - action: rebuild
@@ -28,14 +28,14 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: mapmark-server-dev
+    container_name: pinPointt-server-dev
     restart: unless-stopped
     ports:
-      - "3001:3001"
+      - '3001:3001'
     environment:
       NODE_ENV: development
       PORT: 3001
-      DB_URL: mongodb://admin:password@mongodb:27017/mapmark?authSource=admin
+      DB_URL: mongodb://admin:password@mongodb:27017/pinPointt?authSource=admin
       JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET:-your-refresh-token-secret}
       R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
@@ -49,7 +49,7 @@ services:
     depends_on:
       - mongodb
     networks:
-      - mapmark-network
+      - pinPointt-network
     develop:
       watch:
         - action: sync
@@ -60,5 +60,5 @@ services:
             - .git/
 
 networks:
-  mapmark-network:
+  pinPointt-network:
     driver: bridge

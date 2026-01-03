@@ -21,21 +21,25 @@ const registerValidation = [
     .matches(/^[a-zA-Zа-яА-ЯіІїЇєЄ'\-\s]+$/)
     .withMessage('Ім\'я може містити тільки літери, пробіли, дефіси та апострофи')
     .custom((value) => {
-      // Check for consecutive spaces
       if (/\s{2,}/.test(value)) {
         throw new Error('Name cannot contain consecutive spaces')
       }
-      // Check for leading/trailing spaces
       if (value !== value.trim()) {
         throw new Error('Name cannot start or end with spaces')
       }
-      // Check for suspicious patterns
       const suspiciousPatterns = /^(admin|root|test|user|null|undefined)$/i
       if (suspiciousPatterns.test(value.trim())) {
         throw new Error('Invalid name format')
       }
       return true
     }),
+  
+  body('surname')
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Surname must be between 2 and 50 characters')
+    .matches(/^[a-zA-Zа-яА-ЯіІїЇєЄ'\-\s]+$/)
+    .withMessage('Прізвище може містити тільки літери, пробіли, дефіси та апострофи'),
     
   body('email')
     .isEmail()
@@ -63,7 +67,8 @@ const registerValidation = [
     .withMessage('Country must be UA (Ukraine)'),
     
   body('role')
-    .optional()
+    .notEmpty()
+    .withMessage('Role is required')
     .isIn(['user', 'seller'])
     .withMessage('Role must be either user or seller'),
     

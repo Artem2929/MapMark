@@ -18,7 +18,9 @@ const userSchema = new mongoose.Schema({
   },
   surname: {
     type: String,
+    required: [true, 'Surname is required'],
     trim: true,
+    minlength: [2, 'Surname must be at least 2 characters long'],
     maxlength: [50, 'Surname cannot exceed 50 characters']
   },
   birthDate: {
@@ -63,11 +65,11 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
+    required: [true, 'Role is required'],
     enum: {
       values: ['user', 'seller', 'admin'],
       message: 'Role must be either user, seller, or admin'
-    },
-    default: 'user'
+    }
   },
   bio: {
     type: String,

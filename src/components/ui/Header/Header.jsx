@@ -19,7 +19,7 @@ export const Header = React.memo(function Header() {
     <header className="header">
       <div className="header__container">
         <Link to={ROUTES.HOME} className="header__logo">
-          MapMark
+          pinPoint
         </Link>
         
         <nav className="header__nav header__nav--desktop">

@@ -182,16 +182,6 @@ input[type='radio']:disabled {
   line-height: 1.5;
 }
 
-.checkbox-label a {
-  color: var(--color-primary);
-  text-decoration: underline;
-  font-weight: var(--font-weight-medium);
-}
-
-.checkbox-label a:hover {
-  color: var(--color-primary-dark);
-}
-
 /* Animations */
 @keyframes slideIn {
   from {

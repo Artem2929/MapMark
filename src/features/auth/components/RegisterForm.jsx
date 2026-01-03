@@ -12,6 +12,7 @@ import './LoginForm.css'
 export function RegisterForm() {
   const [formData, setFormData] = useState({
     name: '',
+    surname: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -28,6 +29,13 @@ export function RegisterForm() {
     return validateField(value, [
       validators.required,
       validators.minLength(2, "Ім'я має бути мінімум 2 символи")
+    ])
+  }
+
+  const validateSurname = (value) => {
+    return validateField(value, [
+      validators.required,
+      validators.minLength(2, "Прізвище має бути мінімум 2 символи")
     ])
   }
 
@@ -60,6 +68,10 @@ export function RegisterForm() {
     return !value ? 'Оберіть країну' : null
   }
 
+  const validateRole = (value) => {
+    return !value ? 'Оберіть роль' : null
+  }
+
   const validateTerms = (value) => {
     return !value ? 'Прийміть умови використання' : null
   }
@@ -81,10 +93,12 @@ export function RegisterForm() {
       let fieldError = null
       switch (field) {
         case 'name': fieldError = validateName(value); break
+        case 'surname': fieldError = validateSurname(value); break
         case 'email': fieldError = validateEmail(value); break
         case 'password': fieldError = validatePassword(value); break
         case 'confirmPassword': fieldError = validateConfirmPassword(value); break
         case 'country': fieldError = validateCountry(value); break
+        case 'role': fieldError = validateRole(value); break
         case 'acceptTerms': fieldError = validateTerms(value); break
         case 'acceptPrivacy': fieldError = validatePrivacy(value); break
       }
@@ -98,10 +112,12 @@ export function RegisterForm() {
     const value = formData[field]
     switch (field) {
       case 'name': fieldError = validateName(value); break
+      case 'surname': fieldError = validateSurname(value); break
       case 'email': fieldError = validateEmail(value); break
       case 'password': fieldError = validatePassword(value); break
       case 'confirmPassword': fieldError = validateConfirmPassword(value); break
       case 'country': fieldError = validateCountry(value); break
+      case 'role': fieldError = validateRole(value); break
     }
     setFieldErrors(prev => ({ ...prev, [field]: fieldError }))
   }, [formData])
@@ -109,10 +125,12 @@ export function RegisterForm() {
   const validateAllFields = useCallback((data) => {
     return {
       name: validateName(data.name),
+      surname: validateSurname(data.surname),
       email: validateEmail(data.email),
       password: validatePassword(data.password),
       confirmPassword: data.confirmPassword !== data.password ? 'Паролі не співпадають' : (!data.confirmPassword ? 'Підтвердіть пароль' : null),
       country: validateCountry(data.country),
+      role: validateRole(data.role),
       acceptTerms: validateTerms(data.acceptTerms),
       acceptPrivacy: validatePrivacy(data.acceptPrivacy)
     }
@@ -129,8 +147,8 @@ export function RegisterForm() {
     const errors = validateAllFields(formData)
     setFieldErrors(errors)
     setTouched({ 
-      name: true, email: true, password: true, confirmPassword: true, 
-      country: true, acceptTerms: true, acceptPrivacy: true 
+      name: true, surname: true, email: true, password: true, confirmPassword: true, 
+      country: true, role: true, acceptTerms: true, acceptPrivacy: true 
     })
     
     if (Object.values(errors).some(error => error)) {
@@ -172,7 +190,7 @@ export function RegisterForm() {
   return (
     <div className="auth-form">
       <div className="auth-form__header">
-        <h1 className="auth-form__title">Реєстрація в MapMark</h1>
+        <h1 className="auth-form__title">Реєстрація в pinPoint</h1>
         <p className="auth-form__subtitle">Створіть новий акаунт</p>
       </div>
       
@@ -194,6 +212,16 @@ export function RegisterForm() {
           error={touched.name ? fieldErrors.name : null}
           disabled={loading}
           autoFocus
+        />
+        
+        <Input
+          type="text"
+          placeholder="Прізвище"
+          value={formData.surname}
+          onChange={handleFieldChange('surname')}
+          onBlur={handleFieldBlur('surname')}
+          error={touched.surname ? fieldErrors.surname : null}
+          disabled={loading}
         />
         
         <Input
@@ -240,8 +268,10 @@ export function RegisterForm() {
         <CustomSelect
           value={formData.role}
           onChange={handleFieldChange('role')}
+          onBlur={handleFieldBlur('role')}
           options={roles}
           placeholder="Оберіть роль"
+          error={touched.role ? fieldErrors.role : null}
           disabled={loading}
         />
         

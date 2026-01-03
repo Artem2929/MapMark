@@ -78,7 +78,7 @@ export function LoginForm() {
   return (
     <div className="auth-form">
       <div className="auth-form__header">
-        <h1 className="auth-form__title">Вхід до MapMark</h1>
+        <h1 className="auth-form__title">Вхід до pinPoint</h1>
         <p className="auth-form__subtitle">Увійдіть до свого акаунту</p>
       </div>
       

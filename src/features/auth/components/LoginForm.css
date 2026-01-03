@@ -72,10 +72,22 @@
 .auth-form__footer a {
   color: var(--color-primary);
   font-weight: var(--font-weight-semibold);
+  text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 .auth-form__footer a:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+.checkbox-group .checkbox-label a {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+}
+
+.checkbox-group .checkbox-label a:hover {
   color: var(--color-primary-dark);
 }
 

@@ -42,11 +42,12 @@ class AuthService {
     return userRepository.create({
       id: customId,
       name: userData.name,
+      surname: userData.surname,
       email: userData.email,
       password: userData.password,
       passwordConfirm: userData.passwordConfirm || userData.password,
       country: userData.country,
-      role: userData.role || 'user'
+      role: userData.role
     })
   }
 

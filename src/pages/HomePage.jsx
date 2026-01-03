@@ -9,7 +9,7 @@ export function HomePage() {
     <div className="home-page">
       <div className="home-container">
         <header className="home-header">
-          <h1>MapMark</h1>
+          <h1>pinPoint</h1>
           <p className="home-subtitle">Платформа для обміну враженнями та спогадами</p>
         </header>
         
@@ -17,7 +17,7 @@ export function HomePage() {
           {isAuthenticated ? (
             <div className="home-welcome">
               <h2>Привіт, {user?.name || user?.email}!</h2>
-              <p>Ласкаво просимо до MapMark. Почніть ділитися своїми спогадами!</p>
+              <p>Ласкаво просимо до pinPoint. Почніть ділитися своїми спогадами!</p>
               <div className="home-actions">
                 <Link to={`/profile/${user?.id}`} className="btn btn--primary">
                   Мій профіль
@@ -40,7 +40,7 @@ export function HomePage() {
                 </Link>
               </div>
               <Link to="/about" className="home-about-link">
-                Дізнатись більше про MapMark
+                Дізнатись більше про pinPoint
               </Link>
             </div>
           )}

@@ -13,7 +13,7 @@ export const Footer = React.memo(function Footer() {
         <div className="footer__content">
           <div className="footer__section">
             <Link to="/" className="footer__logo">
-              MapMark
+              pinPoint
             </Link>
             <p className="footer__description">
               Соціальна мережа для обміну враженнями та спогадами
