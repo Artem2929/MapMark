@@ -25,6 +25,8 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0;
+  line-height: 1;
+  letter-spacing: normal;
 }
 
 .photos-section__content {

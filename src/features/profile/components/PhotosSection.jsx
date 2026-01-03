@@ -77,13 +77,14 @@ const PhotosSection = memo(({ userId, isOwnProfile }) => {
     <div className="photos-section">
       <div className="photos-section__header">
         <h3 className="photos-section__title">Фотографії</h3>
-        <button
-          className="photos-section__show-all"
-          onClick={openPhotosPage}
-          disabled={photos.length === 0}
-        >
-          Показати всі фотографії {photos.length}
-        </button>
+        {photos.length > 0 && (
+          <button
+            className="photos-section__show-all"
+            onClick={openPhotosPage}
+          >
+            Показати всі фотографії {photos.length}
+          </button>
+        )}
       </div>
 
       <div className="photos-section__content">
