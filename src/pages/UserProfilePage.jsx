@@ -61,7 +61,7 @@ const UserProfileContent = () => {
 const UserProfile = () => {
   const { userId } = useParams()
   const { user: currentUser, isAuthenticated, isLoading } = useAuthStore()
-  const targetUserId = userId
+  const targetUserId = userId || currentUser?.id
 
   if (isLoading) {
     return <div className="loading-screen">Завантаження...</div>
@@ -72,8 +72,7 @@ const UserProfile = () => {
   }
 
   if (!targetUserId) {
-    // Якщо немає userId в URL, перенаправляємо на власний профіль
-    return <Navigate to={`/profile/${currentUser?.id}`} replace />
+    return <div className="loading-screen">Завантаження профілю...</div>
   }
 
   return (

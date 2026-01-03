@@ -15,7 +15,14 @@ export function useAuth() {
       
       const response = await authService.login(credentials)
       setError(null)
+      
+      // Зберігаємо tokens
       setAuth(response)
+      
+      // Завантажуємо профіль користувача
+      const userProfile = await authService.getProfile()
+      setAuth({ ...response, user: userProfile.data.user })
+      
       navigate('/profile', { replace: true })
       
       return { success: true }
@@ -33,7 +40,14 @@ export function useAuth() {
       setError(null)
       
       const response = await authService.register(userData)
+      
+      // Зберігаємо tokens
       setAuth(response)
+      
+      // Завантажуємо профіль користувача
+      const userProfile = await authService.getProfile()
+      setAuth({ ...response, user: userProfile.data.user })
+      
       navigate('/profile', { replace: true })
       
       return { success: true }
