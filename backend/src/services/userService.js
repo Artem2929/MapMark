@@ -55,7 +55,12 @@ const getUserById = async (userId, currentUserId = null) => {
   return userResult
 }
 
-const updateProfile = async (userId, updateData) => {
+const updateProfile = async (userId, updateData, currentUserId) => {
+  // Перевірка: користувач може редагувати тільки свій профіль
+  if (currentUserId !== userId) {
+    throw new AppError('Ви можете редагувати тільки свій профіль', 403)
+  }
+  
   const allowedFields = ['name', 'surname', 'birthDate', 'position', 'bio', 'location', 'website', 'visibility']
   const filteredData = {}
   
@@ -74,7 +79,12 @@ const updateProfile = async (userId, updateData) => {
   return user
 }
 
-const uploadAvatar = async (userId, file) => {
+const uploadAvatar = async (userId, file, currentUserId) => {
+  // Перевірка: користувач може змінювати тільки свій аватар
+  if (currentUserId !== userId) {
+    throw new AppError('Ви можете змінювати тільки свій аватар', 403)
+  }
+  
   const base64Data = file.buffer.toString('base64')
   const avatarData = `data:${file.mimetype};base64,${base64Data}`
   

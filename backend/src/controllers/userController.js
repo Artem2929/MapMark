@@ -27,7 +27,7 @@ const updateProfile = catchAsync(async (req, res, next) => {
     })
   }
   
-  const updatedUser = await userService.updateProfile(userId, req.body)
+  const updatedUser = await userService.updateProfile(userId, req.body, req.user.id)
   
   logger.info('Profile updated successfully', {
     userId: updatedUser._id,
@@ -47,7 +47,7 @@ const uploadAvatar = catchAsync(async (req, res, next) => {
     })
   }
   
-  const updatedUser = await userService.uploadAvatar(userId, req.file)
+  const updatedUser = await userService.uploadAvatar(userId, req.file, req.user.id)
   
   logger.info('Avatar uploaded successfully', {
     userId: updatedUser._id,
