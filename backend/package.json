@@ -1,10 +1,11 @@
 {
-  "name": "mapmark-backend",
+  "name": "pinPointt-backend",
   "version": "1.0.0",
-  "description": "MapMark Backend API",
+  "description": "pinPointt Backend API",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
+    "predev": "lsof -ti:3001 | xargs kill -9 2>/dev/null || true",
     "dev": "nodemon src/server.js",
     "test": "jest",
     "test:watch": "jest --watch",
