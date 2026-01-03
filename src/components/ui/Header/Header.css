@@ -39,7 +39,7 @@
   background-clip: text;
   text-decoration: none;
   letter-spacing: -0.02em;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   display: block;
 }
@@ -62,7 +62,7 @@
 
 .header__link {
   padding: 0 16px;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   border: none;
   background: rgba(0, 0, 0, 0.04);
   color: #1d1d1f;
@@ -153,7 +153,7 @@
   border: none;
   cursor: pointer;
   padding: 8px;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   transition: background-color 0.2s ease;
 }
 
@@ -167,7 +167,7 @@
   height: 2px;
   background-color: #4a5568;
   position: relative;
-  transition: all 0.3s ease;
+  transition: var(--transition-slow);
 }
 
 .header__hamburger::before,
@@ -177,7 +177,7 @@
   width: 24px;
   height: 2px;
   background-color: #4a5568;
-  transition: all 0.3s ease;
+  transition: var(--transition-slow);
 }
 
 .header__hamburger::before {
@@ -217,7 +217,7 @@
   opacity: 0;
   transform: translateY(-10px);
   visibility: hidden;
-  transition: all 0.3s ease;
+  transition: var(--transition-slow);
 }
 
 .header__nav--mobile-open {
@@ -232,8 +232,8 @@
   font-weight: 400;
   font-size: var(--font-size-sm);
   padding: 12px 16px;
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  border-radius: var(--radius-xl);
+  transition: var(--transition-normal);
   text-align: center;
   background: rgba(0, 0, 0, 0.04);
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui,

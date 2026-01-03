@@ -46,10 +46,10 @@
 
 .photo-card {
   aspect-ratio: 1;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition-slow);
   background: #fff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   position: relative;
@@ -89,7 +89,7 @@
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   z-index: 2;
   backdrop-filter: blur(8px);
 }
@@ -132,12 +132,12 @@
   gap: 6px;
   background: transparent;
   border: none;
-  border-radius: 20px;
+  border-radius: var(--radius-2xl);
   padding: 6px 12px;
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   color: #fff;
   backdrop-filter: blur(8px);
 }
@@ -181,7 +181,7 @@
   height: 85vh;
   max-height: 800px;
   background: #fff;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   position: relative;
@@ -202,7 +202,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   font-size: var(--font-size-base);
   font-weight: 600;
   backdrop-filter: blur(8px);
@@ -398,7 +398,7 @@
   background: #f0f2f5;
   color: #262626;
   border: 1px solid #ccd0d5;
-  border-radius: 20px;
+  border-radius: var(--radius-2xl);
   padding: 8px 16px;
   font-size: var(--font-size-sm);
   backdrop-filter: none;
@@ -535,8 +535,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s ease;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-normal);
 }
 
 .comment-action-btn:hover {
@@ -551,7 +551,7 @@
 .comment-edit-input {
   width: 100%;
   border: 1px solid #dbdbdb;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   padding: 8px 12px;
   font-size: var(--font-size-sm);
   font-family: inherit;
@@ -647,9 +647,9 @@
   font-size: var(--font-size-xs);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   color: #8e8e8e;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
 }
 
 .comment-like-btn:hover,
@@ -688,7 +688,7 @@
 .comment-input {
   flex: 1;
   border: 1px solid #dbdbdb;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   outline: none;
   font-size: var(--font-size-sm);
   font-family: inherit;
@@ -758,10 +758,10 @@
 /* Add Photo Button */
 .add-photo-card {
   aspect-ratio: 1;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  transition: var(--transition-slow);
   background: #fff;
   border: 2px solid #3b82f6;
 }
@@ -781,7 +781,7 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #3b82f6;
 }
@@ -909,8 +909,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s ease;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-normal);
   margin-left: auto;
   flex-shrink: 0;
 }
@@ -990,7 +990,7 @@
 .photo-upload-form .profile-edit-form__textarea {
   padding: 10px 12px;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   font-size: var(--font-size-sm);
   line-height: 1.4;
   min-height: 48px;

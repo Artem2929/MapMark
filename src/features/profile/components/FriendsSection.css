@@ -1,6 +1,6 @@
 .friends-section {
   background: #fff;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   padding: 20px;
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -27,7 +27,7 @@
   color: #657786;
   background: #f7f9fa;
   padding: 4px 8px;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
 }
 
 .friends-section__content {
@@ -64,7 +64,7 @@
   align-items: center;
   gap: 12px;
   padding: 8px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -104,11 +104,11 @@
   border: 1px solid #e1e8ed;
   background: #fff;
   color: #1da1f2;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   font-size: var(--font-size-sm);
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
 }
 
 .friends-section__show-all:hover {

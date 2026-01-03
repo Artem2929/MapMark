@@ -132,12 +132,12 @@
 .profile-edit-modal__body .profile-edit-form__input,
 .profile-edit-modal__body .profile-edit-form__textarea {
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
 }
 
 /* Стилі для date input */
 .profile-edit-modal__body input[type='date'].profile-edit-form__input {
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   cursor: pointer;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -147,7 +147,7 @@
   font-size: var(--font-size-sm);
   color: #1e293b;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   position: relative;
   padding-right: 40px;
 }
@@ -180,7 +180,7 @@
   width: 20px;
   height: 20px;
   opacity: 0.6;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   filter: invert(0.5) sepia(1) saturate(5) hue-rotate(175deg);
 }
 

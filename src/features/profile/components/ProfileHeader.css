@@ -55,7 +55,7 @@
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   color: #fff;
   backdrop-filter: blur(8px);
 }
@@ -251,11 +251,11 @@
 .profile-header__follow-btn,
 .profile-header__message-btn {
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   border: none;
   white-space: nowrap;
 }
@@ -321,9 +321,9 @@
   font-size: var(--font-size-sm);
   color: #2787f5;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   background: #f7f9fa;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   font-weight: 500;
   border: none;
   cursor: pointer;

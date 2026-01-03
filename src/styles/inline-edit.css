@@ -15,7 +15,7 @@
   position: relative;
   display: block;
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   transition: background-color 0.1s ease;
   padding: 2px 4px;
   margin: -2px -4px;
@@ -101,7 +101,7 @@
   text-decoration: none;
   display: inline-block;
   line-height: 1;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   transition: all 0.1s ease;
 }
 

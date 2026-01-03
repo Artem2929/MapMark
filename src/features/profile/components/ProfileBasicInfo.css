@@ -32,12 +32,12 @@
   justify-content: center;
   gap: 6px;
   padding: 6px 12px;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   font-size: var(--font-size-xs);
   font-weight: 500;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   outline: none;
   text-decoration: none;
 }
@@ -66,7 +66,7 @@
   display: flex;
   align-items: center;
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   transition: background-color 0.15s ease;
 }
 
@@ -135,12 +135,12 @@
   justify-content: center;
   gap: 6px;
   padding: 12px 20px;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   font-size: var(--font-size-sm);
   font-weight: 500;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   outline: none;
   text-decoration: none;
   letter-spacing: -0.01em;
@@ -166,7 +166,7 @@
 @media (max-width: 768px) {
   .profile-basic-info {
     margin-bottom: 16px;
-    border-radius: 12px;
+    border-radius: var(--radius-xl);
   }
 
   .profile-basic-info__header {

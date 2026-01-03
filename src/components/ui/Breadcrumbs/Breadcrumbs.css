@@ -19,7 +19,7 @@
   text-decoration: none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 8px 12px;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -57,7 +57,7 @@
   align-items: center;
   gap: 8px;
   background: rgba(59, 130, 246, 0.05);
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   border: 1px solid rgba(59, 130, 246, 0.25);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -106,14 +106,14 @@
     padding: 4px 8px;
     white-space: nowrap;
     font-size: var(--font-size-xs);
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
   }
 
   .breadcrumb-current {
     padding: 4px 8px;
     white-space: nowrap;
     font-size: var(--font-size-xs);
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
     max-width: 120px;
     overflow: hidden;
     text-overflow: ellipsis;

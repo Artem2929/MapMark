@@ -3,7 +3,7 @@
   align-items: center;
   padding: 16px;
   background: white;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   margin-bottom: 12px;
   border: 1px solid #e5e7eb;
 }
@@ -28,7 +28,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   margin-bottom: 8px;
 }
 
@@ -38,7 +38,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .skeleton-actions {
@@ -52,7 +52,7 @@
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 @keyframes loading {

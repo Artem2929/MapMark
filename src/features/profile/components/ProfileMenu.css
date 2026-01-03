@@ -3,7 +3,7 @@
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(59, 130, 246, 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(59, 130, 246, 0.06), 0 4px 16px rgba(59, 130, 246, 0.04), 0 2px 8px rgba(0, 0, 0, 0.03);
   margin-bottom: 20px;
@@ -19,13 +19,13 @@
   justify-content: center;
   gap: 8px;
   padding: 12px 16px;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   text-decoration: none;
   color: #64748b;
   font-size: var(--font-size-sm);
   font-weight: 500;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-  transition: all 0.2s ease;
+  transition: var(--transition-normal);
   position: relative;
   min-height: 44px;
 }
@@ -63,7 +63,7 @@
   font-size: var(--font-size-xs);
   font-weight: 600;
   padding: 2px 6px;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   min-width: 18px;
   height: 18px;
   display: flex;
