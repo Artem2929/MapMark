@@ -26,6 +26,7 @@ export function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/about" element={<AboutPage />} />
+                <Route path="/profile" element={<UserProfile />} />
                 <Route path="/profile/:userId" element={<UserProfile />} />
                 <Route path="/friends/:userId" element={<Friends />} />
                 <Route path="/friends" element={<Friends />} />
