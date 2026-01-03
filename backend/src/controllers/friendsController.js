@@ -3,6 +3,21 @@ const { success } = require('../utils/response')
 const logger = require('../utils/logger')
 
 const friendsController = {
+  async getMyFriends(req, res) {
+    try {
+      const userId = req.user.id
+      const friends = await friendsService.getFriends(userId)
+      
+      success(res, friends, 'Список друзів отримано')
+    } catch (error) {
+      logger.error('Get my friends error', { error: error.message, userId: req.user.id })
+      return res.status(500).json({
+        status: 'error',
+        message: error.message
+      })
+    }
+  },
+
   async getFriends(req, res) {
     try {
       const { userId } = req.params

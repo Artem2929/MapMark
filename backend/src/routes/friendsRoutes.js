@@ -8,6 +8,9 @@ const router = express.Router()
 // All friends routes require authentication
 router.use(protect)
 
+// GET /api/v1/friends - Get current user's friends
+router.get('/', friendsController.getMyFriends)
+
 // GET /api/v1/friends/:userId - Get user's friends
 router.get('/:userId', friendsController.getFriends)
 

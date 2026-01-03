@@ -1,6 +1,21 @@
 import { apiClient } from '../../../shared/api/client.js'
 
 export const friendsService = {
+  async getMyFriends() {
+    try {
+      const result = await apiClient.secureRequest('/friends')
+      return {
+        success: true,
+        data: result.data || []
+      }
+    } catch (error) {
+      if (error.message.includes('404') || error.message.includes("Can't find")) {
+        return { success: true, data: [] }
+      }
+      throw error
+    }
+  },
+
   async getFriends(userId) {
     if (!userId) {
       throw new Error('ID користувача обов\'язковий')

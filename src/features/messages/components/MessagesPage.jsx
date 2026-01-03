@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useAuthStore } from '../../../app/store'
 import { useConversations } from '../hooks/useConversations'
 import { useActiveChat } from '../hooks/useActiveChat'
@@ -11,7 +11,6 @@ import NewChatModal from './NewChatModal'
 import './MessagesPage.css'
 
 const MessagesPage = () => {
-  const navigate = useNavigate()
   const { userId } = useParams()
   const { user: currentUser, isAuthenticated, isLoading } = useAuthStore()
   const { activeChat, selectChat, clearChat } = useActiveChat()
@@ -29,13 +28,6 @@ const MessagesPage = () => {
     incrementUnread,
     createOrFindConversation
   } = useConversations()
-
-  // Перевірка автентифікації
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      navigate('/login')
-    }
-  }, [isLoading, isAuthenticated, navigate])
 
   // Автоматично відкриваємо чат з користувачем, якщо передано userId
   useEffect(() => {

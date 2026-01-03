@@ -16,7 +16,7 @@ const SearchInput = ({ onSearch, onCreateChat, placeholder = "Пошук дру�
 
     setLoading(true)
     try {
-      const result = await friendsService.getFriends(userId)
+      const result = await friendsService.getMyFriends()
       if (result.success) {
         const filtered = result.data.filter(friend => {
           const name = friend.name || `${friend.firstName} ${friend.lastName}`
@@ -101,8 +101,8 @@ const SearchInput = ({ onSearch, onCreateChat, placeholder = "Пошук дру�
                 onClick={() => handleCreateChat(user)}
               >
                 <div className="search-result-avatar">
-                  {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} />
+                  {user.avatar && !user.avatar.startsWith('data:') && user.avatar.startsWith('http') ? (
+                    <img src={user.avatar} alt={user.name} onError={(e) => e.target.style.display = 'none'} />
                   ) : (
                     user.name?.charAt(0) || user.firstName?.charAt(0) || '?'
                   )}
