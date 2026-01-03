@@ -37,7 +37,12 @@ const createSendToken = (user, statusCode, res) => {
     data: {
       token,
       refreshToken,
-      expiresIn: 604800
+      expiresIn: 604800,
+      user: {
+        id: user.id,
+        username: user.username,
+        displayName: user.displayName
+      }
     }
   })
 }
