@@ -16,6 +16,13 @@ build/
 .env.test.local
 .env.production.local
 
+# Sensitive data
+cookies.txt
+*.pem
+*.key
+*.cert
+*.crt
+
 # IDE and editor files
 .vscode/
 .idea/
