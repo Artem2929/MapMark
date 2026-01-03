@@ -37,8 +37,16 @@ const conditionalCsrf = (req, res, next) => {
   return csrfProtection(req, res, next)
 }
 
+const generateCSRFToken = [csrfProtection, (req, res) => {
+  res.json({
+    status: 'success',
+    data: { csrfToken: req.csrfToken() }
+  })
+}]
+
 module.exports = {
   csrfProtection,
   addCsrfToken,
-  conditionalCsrf
+  conditionalCsrf,
+  generateCSRFToken
 }

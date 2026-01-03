@@ -10,11 +10,11 @@ const router = express.Router()
 // CSRF token endpoint
 router.get('/csrf-token', generateCSRFToken)
 
-// Public routes with rate limiting
-router.post('/register', strictLimiter, csrfProtection, registerValidation, authController.register)
-router.post('/login', authLimiter, csrfProtection, loginValidation, authController.login)
-router.post('/refresh-token', authLimiter, csrfProtection, authController.refreshToken)
-router.post('/forgot-password', strictLimiter, csrfProtection, authController.forgotPassword)
+// Public routes with rate limiting (without CSRF)
+router.post('/register', strictLimiter, registerValidation, authController.register)
+router.post('/login', authLimiter, loginValidation, authController.login)
+router.post('/refresh-token', authLimiter, authController.refreshToken)
+router.post('/forgot-password', strictLimiter, authController.forgotPassword)
 
 // Protected routes
 router.use(protect) // All routes after this middleware are protected

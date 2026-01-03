@@ -17,7 +17,6 @@ const photosRoutes = require('./routes/photos')
 const friendsRoutes = require('./routes/friendsRoutes')
 const messagesRoutes = require('./routes/messagesRoutes')
 const postsRoutes = require('./routes/postsRoutes')
-const followsRoutes = require('./routes/followsRoutes')
 const devRoutes = require('./routes/devRoutes')
 
 const app = express()
@@ -98,7 +97,6 @@ app.use(`${API_VERSION}/photos`, photosRoutes)
 app.use(`${API_VERSION}/friends`, friendsRoutes)
 app.use(`${API_VERSION}/messages`, messagesRoutes)
 app.use(`${API_VERSION}/posts`, postsRoutes)
-app.use(`${API_VERSION}/follows`, followsRoutes)
 app.use(`${API_VERSION}/dev`, devRoutes)
 app.use('/health', healthRoutes)
 
@@ -116,7 +114,6 @@ app.get('/api', (req, res) => {
       friends: `${API_VERSION}/friends`,
       messages: `${API_VERSION}/messages`,
       posts: `${API_VERSION}/posts`,
-      follows: `${API_VERSION}/follows`,
       health: '/health'
     },
     documentation: '/api/docs' // Future Swagger endpoint

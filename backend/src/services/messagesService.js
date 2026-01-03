@@ -152,6 +152,22 @@ class MessagesService {
       lastActivity: new Date()
     }
   }
+
+  async createConversation(userId, otherUserId) {
+    return this.createOrFindConversation(userId, otherUserId)
+  }
+
+  async deleteConversation(userId, conversationId) {
+    const userObjectId = await this.getUserObjectId(userId)
+    if (!userObjectId) {
+      throw new Error('Користувача не знайдено')
+    }
+
+    await Message.deleteMany({ conversationId })
+    logger.info('Conversation deleted', { userId, conversationId })
+    
+    return { success: true }
+  }
 }
 
 module.exports = new MessagesService()
