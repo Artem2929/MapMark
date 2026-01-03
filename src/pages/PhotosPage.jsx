@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import PhotoUploadModal from '../components/forms/PhotoUploadModal'
 import { photosService } from '../features/profile/services/photosService'
 import './PhotosPage.css'
+import '../components/forms/DeleteConfirmModal.css'
 
 const Photos = () => {
   const [photos, setPhotos] = useState([])
@@ -10,6 +11,8 @@ const Photos = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null)
   const [currentUserId, setCurrentUserId] = useState(null)
   const [showUploadModal, setShowUploadModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [photoToDelete, setPhotoToDelete] = useState(null)
   const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState('')
   const [loadingComments, setLoadingComments] = useState(false)
@@ -199,8 +202,21 @@ const Photos = () => {
 
   const handleDeletePhoto = async (photoId, e) => {
     e.stopPropagation()
-    await photosService.deletePhoto(photoId)
+    setPhotoToDelete(photoId)
+    setShowDeleteModal(true)
+  }
+
+  const confirmDeletePhoto = async () => {
+    if (!photoToDelete) return
+    await photosService.deletePhoto(photoToDelete)
     await loadPhotos(userId)
+    setShowDeleteModal(false)
+    setPhotoToDelete(null)
+  }
+
+  const cancelDeletePhoto = () => {
+    setShowDeleteModal(false)
+    setPhotoToDelete(null)
   }
 
   const handleToggleLike = async (photoId, type, e) => {
@@ -268,7 +284,7 @@ const Photos = () => {
                   onClick={(e) => handleDeletePhoto(photo._id, e)}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
                   </svg>
                 </button>
               )}
@@ -606,6 +622,19 @@ const Photos = () => {
           onClose={handleCloseUpload}
           onUpload={handleUploadSubmit}
         />
+      )}
+
+      {showDeleteModal && (
+        <div className="photo-upload-modal" role="dialog" aria-modal="true">
+          <div className="delete-confirm-modal__content" onClick={(e) => e.stopPropagation()}>
+            <h3 className="delete-confirm-modal__title">Видалення фото</h3>
+            <p className="delete-confirm-modal__message">Ви дійсно бажаєте видалити дане фото?</p>
+            <div className="delete-confirm-modal__actions">
+              <button type="button" className="btn secondary" onClick={cancelDeletePhoto}>Скасувати</button>
+              <button type="button" className="btn primary" onClick={confirmDeletePhoto}>Так</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

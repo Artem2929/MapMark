@@ -1,28 +1,29 @@
 const rateLimit = require('express-rate-limit')
 
-// Rate limiter для auth endpoints
+// Rate limiter для login/register
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
+  windowMs: 30 * 60 * 1000,
+  max: 10,
   message: {
     status: 'fail',
-    message: 'Забагато спроб входу. Спробуйте через 15 хвилин'
+    message: 'Забагато спроб входу. Спробуйте через 30 хвилин'
   },
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: false
 })
 
-// Rate limiter для API endpoints
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 хвилин
-  max: 100, // максимум 100 запитів
+// Rate limiter для POST/PUT/DELETE запитів
+const mutationLimiter = rateLimit({
+  windowMs: 30 * 60 * 1000,
+  max: 100,
   message: {
     status: 'fail',
     message: 'Забагато запитів. Спробуйте пізніше'
   },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  skip: (req) => req.method === 'GET'
 })
 
 // Rate limiter для upload endpoints
@@ -51,7 +52,7 @@ const strictLimiter = rateLimit({
 
 module.exports = {
   authLimiter,
-  apiLimiter,
+  mutationLimiter,
   uploadLimiter,
   strictLimiter
 }

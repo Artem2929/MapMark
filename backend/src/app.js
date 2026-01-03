@@ -11,7 +11,7 @@ const {
   requestId,
   responseTime,
 } = require('./middleware/logging');
-const { apiLimiter } = require('./middleware/rateLimiter');
+const { mutationLimiter } = require('./middleware/rateLimiter');
 const updateActivity = require('./middleware/updateActivity');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -96,8 +96,8 @@ app.use(
 // API versioning
 const API_VERSION = '/api/v1';
 
-// Apply rate limiting to API routes
-app.use(API_VERSION, apiLimiter);
+// Apply rate limiting to mutation requests (POST/PUT/DELETE)
+app.use(API_VERSION, mutationLimiter);
 
 // Update user activity for authenticated requests
 app.use(updateActivity);
