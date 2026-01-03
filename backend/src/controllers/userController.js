@@ -14,6 +14,12 @@ const getUserProfile = catchAsync(async (req, res, next) => {
 const updateProfile = catchAsync(async (req, res, next) => {
   const { userId } = req.params
   
+  logger.info('Update profile attempt', {
+    requestUserId: userId,
+    authenticatedUserId: req.user.id,
+    match: req.user.id === userId
+  })
+  
   if (req.user.id !== userId) {
     return res.status(403).json({
       status: 'fail',
