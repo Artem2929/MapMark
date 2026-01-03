@@ -1,34 +1,44 @@
-const csrf = require('csrf')
-const { AppError } = require('../utils/errorHandler')
+const csrf = require('csurf')
 
-const tokens = new csrf()
-const globalSecret = tokens.secretSync() // Глобальний секрет для спрощення
-
-const csrfProtection = (req, res, next) => {
-  // Skip CSRF for GET requests
-  if (req.method === 'GET') {
-    return next()
+// CSRF protection для форм
+const csrfProtection = csrf({
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
   }
+})
 
-  const token = req.headers['x-csrf-token'] || req.body._csrf
-
-  if (!token) {
-    return next(new AppError('Недійсний CSRF токен', 403, 'CSRF_TOKEN_MISSING'))
-  }
-
-  if (!tokens.verify(globalSecret, token)) {
-    return next(new AppError('Недійсний CSRF токен', 403, 'INVALID_CSRF_TOKEN'))
-  }
-
+// Middleware для додавання CSRF токену в response
+const addCsrfToken = (req, res, next) => {
+  res.locals.csrfToken = req.csrfToken()
   next()
 }
 
-const generateCSRFToken = (req, res) => {
-  const token = tokens.create(globalSecret)
-  res.json({ csrfToken: token })
+// Виключення CSRF для певних роутів (API з JWT)
+const csrfExceptions = [
+  '/api/v1/auth/login',
+  '/api/v1/auth/register',
+  '/api/v1/auth/refresh'
+]
+
+const conditionalCsrf = (req, res, next) => {
+  // Пропускаємо CSRF для виключених роутів
+  if (csrfExceptions.some(path => req.path.startsWith(path))) {
+    return next()
+  }
+  
+  // Пропускаємо CSRF для GET, HEAD, OPTIONS
+  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+    return next()
+  }
+  
+  // Застосовуємо CSRF для інших запитів
+  return csrfProtection(req, res, next)
 }
 
 module.exports = {
   csrfProtection,
-  generateCSRFToken
+  addCsrfToken,
+  conditionalCsrf
 }

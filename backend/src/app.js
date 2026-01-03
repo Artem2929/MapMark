@@ -7,6 +7,7 @@ const logger = require('./utils/logger')
 const { globalErrorHandler } = require('./utils/errorHandler')
 const { securityMiddleware } = require('./middleware/security')
 const { requestLogger, requestId, responseTime } = require('./middleware/logging')
+const { apiLimiter } = require('./middleware/rateLimiter')
 const updateActivity = require('./middleware/updateActivity')
 const authRoutes = require('./routes/authRoutes')
 const userRoutes = require('./routes/userRoutes')
@@ -82,6 +83,9 @@ app.use(session({
 
 // API versioning
 const API_VERSION = '/api/v1'
+
+// Apply rate limiting to API routes
+app.use(API_VERSION, apiLimiter)
 
 // Update user activity for authenticated requests
 app.use(updateActivity)

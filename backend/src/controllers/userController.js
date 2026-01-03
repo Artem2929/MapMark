@@ -1,6 +1,7 @@
 const userService = require('../services/userService')
 const { catchAsync } = require('../utils/errorHandler')
 const { success } = require('../utils/response')
+const { validateProfileUpdate, sanitizeInput } = require('../utils/validation')
 const logger = require('../utils/logger')
 
 const getUserProfile = catchAsync(async (req, res, next) => {
@@ -13,7 +14,7 @@ const getUserProfile = catchAsync(async (req, res, next) => {
 
 const updateProfile = catchAsync(async (req, res, next) => {
   const { userId } = req.params
-  const updateData = req.body
+  let updateData = req.body
   
   logger.info('Profile update attempt', {
     requestUserId: userId,
@@ -29,11 +30,31 @@ const updateProfile = catchAsync(async (req, res, next) => {
     })
   }
   
-  const updatedUser = await userService.updateProfile(userId, updateData)
+  // Validate input
+  const validation = validateProfileUpdate(updateData)
+  if (!validation.valid) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Помилка валідації',
+      errors: validation.errors
+    })
+  }
+  
+  // Sanitize string inputs
+  const sanitizedData = {}
+  Object.keys(updateData).forEach(key => {
+    if (typeof updateData[key] === 'string') {
+      sanitizedData[key] = sanitizeInput(updateData[key])
+    } else {
+      sanitizedData[key] = updateData[key]
+    }
+  })
+  
+  const updatedUser = await userService.updateProfile(userId, sanitizedData)
   
   logger.info('Profile updated successfully', {
     userId: updatedUser._id,
-    updatedFields: Object.keys(updateData)
+    updatedFields: Object.keys(sanitizedData)
   })
   
   success(res, { user: updatedUser }, 'Профіль оновлено успішно')
