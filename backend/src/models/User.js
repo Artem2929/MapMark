@@ -90,6 +90,13 @@ const userSchema = new mongoose.Schema({
       message: 'Website must be a valid URL (e.g., example.com or https://example.com)'
     }
   },
+  visibility: {
+    birthDate: { type: Boolean, default: true },
+    email: { type: Boolean, default: true },
+    position: { type: Boolean, default: true },
+    location: { type: Boolean, default: true },
+    website: { type: Boolean, default: true }
+  },
   avatar: {
     type: String
   },

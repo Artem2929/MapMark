@@ -67,7 +67,7 @@ const getUserById = async (userId, currentUserId = null) => {
 
 const updateProfile = async (userId, updateData) => {
   // Validate allowed fields
-  const allowedFields = ['name', 'surname', 'birthDate', 'email', 'position', 'bio', 'location', 'website']
+  const allowedFields = ['name', 'surname', 'birthDate', 'email', 'position', 'bio', 'location', 'website', 'visibility']
   const filteredData = {}
   
   Object.keys(updateData).forEach(key => {

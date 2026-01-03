@@ -15,7 +15,14 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
     position: user?.position || '',
     bio: user?.bio || '',
     location: user?.location || '',
-    website: user?.website || ''
+    website: user?.website || '',
+    visibility: {
+      birthDate: user?.visibility?.birthDate ?? true,
+      email: user?.visibility?.email ?? true,
+      position: user?.visibility?.position ?? true,
+      location: user?.visibility?.location ?? true,
+      website: user?.visibility?.website ?? true
+    }
   })
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState({})
@@ -35,6 +42,16 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
       setErrors(prev => ({ ...prev, [field]: '' }))
     }
   }, [errors])
+
+  const handleVisibilityChange = useCallback((field) => {
+    setFormData(prev => ({
+      ...prev,
+      visibility: {
+        ...prev.visibility,
+        [field]: !prev.visibility[field]
+      }
+    }))
+  }, [])
 
   const handleTextareaChange = useCallback((e) => {
     const value = e.target.value
@@ -182,7 +199,18 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
           </div>
 
           <div className="profile-edit-form__field">
-            <label className="profile-edit-form__label">Дата народження</label>
+            <div className="profile-edit-form__field-header">
+              <label className="profile-edit-form__label">Дата народження</label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.visibility.birthDate}
+                  onChange={() => handleVisibilityChange('birthDate')}
+                  disabled={isLoading}
+                />
+                <span>Відображати в профілі</span>
+              </label>
+            </div>
             <input
               type="date"
               value={formData.birthDate}
@@ -195,7 +223,18 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
           </div>
 
           <div className="profile-edit-form__field">
-            <label className="profile-edit-form__label">Email</label>
+            <div className="profile-edit-form__field-header">
+              <label className="profile-edit-form__label">Email</label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.visibility.email}
+                  onChange={() => handleVisibilityChange('email')}
+                  disabled={isLoading}
+                />
+                <span>Відображати в профілі</span>
+              </label>
+            </div>
             <input
               type="email"
               value={formData.email}
@@ -212,7 +251,18 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
           </div>
 
           <div className="profile-edit-form__field">
-            <label className="profile-edit-form__label">Посада</label>
+            <div className="profile-edit-form__field-header">
+              <label className="profile-edit-form__label">Посада</label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.visibility.position}
+                  onChange={() => handleVisibilityChange('position')}
+                  disabled={isLoading}
+                />
+                <span>Відображати в профілі</span>
+              </label>
+            </div>
             <input
               type="text"
               value={formData.position}
@@ -247,7 +297,18 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
           </div>
 
           <div className="profile-edit-form__field">
-            <label className="profile-edit-form__label">Місцезнаходження</label>
+            <div className="profile-edit-form__field-header">
+              <label className="profile-edit-form__label">Місцезнаходження</label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.visibility.location}
+                  onChange={() => handleVisibilityChange('location')}
+                  disabled={isLoading}
+                />
+                <span>Відображати в профілі</span>
+              </label>
+            </div>
             <input
               type="text"
               value={formData.location}
@@ -263,7 +324,18 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
           </div>
 
           <div className="profile-edit-form__field">
-            <label className="profile-edit-form__label">Веб-сайт</label>
+            <div className="profile-edit-form__field-header">
+              <label className="profile-edit-form__label">Веб-сайт</label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.visibility.website}
+                  onChange={() => handleVisibilityChange('website')}
+                  disabled={isLoading}
+                />
+                <span>Відображати в профілі</span>
+              </label>
+            </div>
             <input
               type="text"
               value={formData.website}
