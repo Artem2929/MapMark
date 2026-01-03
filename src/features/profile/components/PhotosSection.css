@@ -18,7 +18,7 @@
 }
 
 .photos-section__title {
-  font-size: 16px;
+  font-size: var(--font-size-base);
   font-weight: 600;
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
   -webkit-background-clip: text;
@@ -36,7 +36,7 @@
   text-align: center;
   padding: 20px;
   color: #64748b;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
 }
 
 /* Grid Layout */
@@ -159,7 +159,7 @@
 
 .photos-section__empty-text {
   color: #64748b;
-  font-size: 15px;
+  font-size: var(--font-size-base);
   font-weight: 500;
   margin: 0;
 }
@@ -172,7 +172,7 @@
   background: #fff;
   color: #656565;
   border-radius: 20px;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -257,7 +257,7 @@
 
 .upload-modal-header h4 {
   margin: 0;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-weight: 600;
   color: #1e293b;
 }
@@ -277,7 +277,7 @@
   background: #ffffff;
   color: #666;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -297,7 +297,7 @@
   background: #0095f6;
   color: white;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -365,7 +365,7 @@
 }
 
 .photo-empty p {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: #94a3b8;
   margin: 0;
 }
@@ -381,7 +381,7 @@
     rgba(59, 130, 246, 0.05) 100%
   );
   color: #3b82f6;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   cursor: pointer;
   display: flex;

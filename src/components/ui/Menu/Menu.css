@@ -30,7 +30,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 14px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   color: #1e293b;
   text-decoration: none;
@@ -50,7 +50,7 @@
 }
 
 .menu__count {
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   color: #64748b;
   background: rgba(59, 130, 246, 0.08);
@@ -71,11 +71,11 @@
 
 @media (max-width: 480px) {
   .menu__link {
-    font-size: 13px;
+    font-size: var(--font-size-sm);
     padding: 8px 12px;
   }
 
   .menu__count {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 }

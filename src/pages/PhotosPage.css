@@ -11,7 +11,7 @@
   text-align: center;
   padding: 40px;
   color: #8e8e8e;
-  font-size: 16px;
+  font-size: var(--font-size-base);
 }
 
 .photos-header {
@@ -26,7 +26,7 @@
 
 .photos-header h1 {
   margin: 0;
-  font-size: 32px;
+  font-size: var(--font-size-3xl);
   font-weight: 700;
   color: #262626;
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
@@ -134,7 +134,7 @@
   border: none;
   border-radius: 20px;
   padding: 6px 12px;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -203,7 +203,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  font-size: 16px;
+  font-size: var(--font-size-base);
   font-weight: 600;
   backdrop-filter: blur(8px);
 }
@@ -292,7 +292,7 @@
   justify-content: center;
   color: #fff;
   font-weight: 600;
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -307,13 +307,13 @@
 
 .photo-modal-user-info h4 {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   color: #262626;
 }
 
 .photo-modal-date {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: #8e8e8e;
   margin: 2px 0 0 0;
 }
@@ -324,7 +324,7 @@
   cursor: pointer;
   padding: 8px;
   color: #262626;
-  font-size: 16px;
+  font-size: var(--font-size-base);
 }
 
 /* Description */
@@ -356,7 +356,7 @@
   justify-content: center;
   color: #fff;
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   flex-shrink: 0;
 }
 
@@ -367,7 +367,7 @@
 .photo-modal-description-text p {
   margin: 0;
   color: #262626;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   line-height: 1.4;
 }
 
@@ -400,7 +400,7 @@
   border: 1px solid #ccd0d5;
   border-radius: 20px;
   padding: 8px 16px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   backdrop-filter: none;
 }
 
@@ -425,7 +425,7 @@
 
 .photo-modal-likes {
   padding: 0 16px 8px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   color: #262626;
   flex-shrink: 0;
@@ -451,7 +451,7 @@
   text-align: center;
   padding: 40px 16px;
   color: #8e8e8e;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
 }
 
 .comment-item {
@@ -478,7 +478,7 @@
   justify-content: center;
   color: #fff;
   font-weight: 600;
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -506,11 +506,11 @@
 .comment-header .username {
   font-weight: 600;
   color: #262626;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
 }
 
 .comment-header .comment-date {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: #8e8e8e;
 }
 
@@ -553,7 +553,7 @@
   border: 1px solid #dbdbdb;
   border-radius: 8px;
   padding: 8px 12px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-family: inherit;
   resize: vertical;
   height: 90px;
@@ -566,7 +566,7 @@
 }
 
 .comment-edit-form .comment-char-count {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: #8e8e8e;
   text-align: right;
   margin-bottom: 8px;
@@ -582,7 +582,7 @@
   padding: 6px 16px;
   border-radius: var(--radius-full);
   border: none;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition-fast);
@@ -624,7 +624,7 @@
 
 .comment-text {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: #262626;
   line-height: 1.4;
   word-wrap: break-word;
@@ -644,7 +644,7 @@
   background: transparent;
   border: none;
   padding: 4px 8px;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -670,7 +670,7 @@
   text-align: center;
   padding: 40px 16px;
   color: #8e8e8e;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
 }
 
 /* Comment Form */
@@ -690,7 +690,7 @@
   border: 1px solid #dbdbdb;
   border-radius: 8px;
   outline: none;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-family: inherit;
   resize: none;
   background: #fafafa;
@@ -712,7 +712,7 @@
 }
 
 .comment-char-count {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: #8e8e8e;
   width: 100%;
   text-align: right;
@@ -792,13 +792,13 @@
 }
 
 .add-photo-grid-btn span:first-child {
-  font-size: 48px;
+  font-size: var(--font-size-4xl);
   font-weight: 300;
   line-height: 1;
 }
 
 .add-photo-grid-btn span:last-child {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
 }
 
@@ -824,7 +824,7 @@
   }
 
   .photos-header h1 {
-    font-size: 24px;
+    font-size: var(--font-size-2xl);
   }
 
   .photo-modal-content {
@@ -868,7 +868,7 @@
   }
 
   .photos-header h1 {
-    font-size: 20px;
+    font-size: var(--font-size-xl);
   }
 }
 
@@ -881,7 +881,7 @@
 
 .photo-info-item {
   margin-bottom: 12px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: #262626;
   display: flex;
   align-items: start;
@@ -991,7 +991,7 @@
   padding: 10px 12px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   line-height: 1.4;
   min-height: 48px;
   resize: none;

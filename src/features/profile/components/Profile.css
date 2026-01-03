@@ -46,7 +46,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   color: #657786;
 }
 

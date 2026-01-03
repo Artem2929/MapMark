@@ -23,7 +23,7 @@
 }
 
 .footer__logo {
-  font-size: 24px;
+  font-size: var(--font-size-2xl);
   font-weight: 700;
   letter-spacing: -0.02em;
   background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
@@ -38,14 +38,14 @@
 .footer__description {
   margin-top: 12px;
   max-width: 360px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   line-height: 1.6;
   color: var(--color-text-secondary);
   font-weight: 400;
 }
 
 .footer__title {
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -65,7 +65,7 @@
 }
 
 .footer__link {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   text-decoration: none;
   transition: color 0.2s ease, transform 0.2s ease;

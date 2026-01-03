@@ -38,7 +38,7 @@
 }
 
 .custom-select-arrow {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: var(--color-text-muted);
   transition: transform var(--transition-fast);
   margin-left: var(--space-2);
