@@ -13,7 +13,7 @@ export const authService = {
   },
 
   async register(userData) {
-    if (!userData?.email || !userData?.password || !userData?.confirmPassword || !userData?.name || !userData?.country) {
+    if (!userData?.email || !userData?.password || !userData?.confirmPassword || !userData?.name || !userData?.surname || !userData?.country || !userData?.role) {
       throw new Error('Всі поля обов\'язкові')
     }
     
@@ -24,8 +24,9 @@ export const authService = {
         password: userData.password,
         confirmPassword: userData.confirmPassword,
         name: userData.name,
+        surname: userData.surname,
         country: userData.country,
-        role: userData.role || 'user'
+        role: userData.role
       })
     })
   },

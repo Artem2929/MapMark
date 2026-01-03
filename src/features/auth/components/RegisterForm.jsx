@@ -16,7 +16,7 @@ export function RegisterForm() {
     email: '',
     password: '',
     confirmPassword: '',
-    country: '',
+    country: 'UA',
     role: '',
     acceptTerms: false,
     acceptPrivacy: false

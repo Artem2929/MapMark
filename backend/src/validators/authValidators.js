@@ -36,6 +36,8 @@ const registerValidation = [
   
   body('surname')
     .trim()
+    .notEmpty()
+    .withMessage('Surname is required')
     .isLength({ min: 2, max: 50 })
     .withMessage('Surname must be between 2 and 50 characters')
     .matches(/^[a-zA-Zа-яА-ЯіІїЇєЄ'\-\s]+$/)
