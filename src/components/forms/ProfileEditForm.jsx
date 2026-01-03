@@ -1,5 +1,6 @@
 import { memo, useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { validateProfileForm, normalizeWebsite } from '../../shared/utils/validation'
 import './ProfileEditForm.css'
 import './PhotoUploadModal.css'
 import '../../features/profile/components/WallPost.css'
@@ -70,43 +71,8 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
   }, [])
 
   const validateForm = useMemo(() => {
-    const newErrors = {}
-    
-    if (!formData.name.trim()) {
-      newErrors.name = "Ім'я обов'язкове"
-    } else if (formData.name.length < 2) {
-      newErrors.name = "Ім'я повинно містити мінімум 2 символи"
-    }
-    
-    if (formData.birthDate) {
-      const date = new Date(formData.birthDate)
-      const today = new Date()
-      const age = today.getFullYear() - date.getFullYear()
-      if (isNaN(date.getTime())) {
-        newErrors.birthDate = 'Некоректна дата'
-      } else if (age < 13) {
-        newErrors.birthDate = 'Вік повинен бути не менше 13 років'
-      } else if (age > 120) {
-        newErrors.birthDate = 'Некоректна дата народження'
-      }
-    }
-    
-    if (formData.email && formData.email.trim()) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(formData.email)) {
-        newErrors.email = 'Введіть коректний email'
-      }
-    }
-    
-    if (formData.bio && formData.bio.length > 500) {
-      newErrors.bio = 'Опис не може перевищувати 500 символів'
-    }
-    
-    if (formData.website && formData.website.trim() && !formData.website.match(/^(https?:\/\/)?[\w.-]+\.[a-z]{2,}(\/.*)?$/i)) {
-      newErrors.website = 'Введіть коректний веб-сайт (наприклад: example.com або https://example.com)'
-    }
-    
-    return newErrors
+    const validation = validateProfileForm(formData)
+    return validation.errors
   }, [formData])
 
   const handleSubmit = useCallback(async (e) => {
@@ -118,12 +84,9 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
       return
     }
     
-    // Автоматично додаємо https:// до website якщо протокол не вказано
     const processedFormData = {
       ...formData,
-      website: formData.website && !formData.website.match(/^https?:\/\//) 
-        ? `https://${formData.website}` 
-        : formData.website
+      website: normalizeWebsite(formData.website)
     }
     
     setIsLoading(true)
@@ -139,7 +102,7 @@ const ProfileEditForm = memo(({ user, onSave, onCancel }) => {
     } finally {
       setIsLoading(false)
     }
-  }, [formData, validateForm, onSave, navigate])
+  }, [formData, validateForm, onSave, navigate, user.id])
 
   const handleCancel = useCallback(() => {
     if (onCancel) {

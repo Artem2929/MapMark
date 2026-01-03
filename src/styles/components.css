@@ -19,7 +19,7 @@
 
 .btn:disabled {
   opacity: 0.5;
-
+  cursor: not-allowed;
 }
 
 .btn--primary {
@@ -130,7 +130,7 @@
 .form-input:disabled {
   background: var(--color-bg-tertiary);
   color: var(--color-text-tertiary);
-
+  cursor: not-allowed;
 }
 
 /* Card Components */

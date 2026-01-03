@@ -1,13 +1,11 @@
-const Post = require('../models/Post')
-const User = require('../models/User')
+const postRepository = require('../repositories/postRepository')
+const userRepository = require('../repositories/userRepository')
+const { AppError } = require('../utils/errorHandler')
 const logger = require('../utils/logger')
 
 class PostsService {
   async getUserObjectId(userId) {
-    let user = await User.findOne({ id: userId })
-    if (!user && userId.match(/^[0-9a-fA-F]{24}$/)) {
-      user = await User.findById(userId)
-    }
+    const user = await userRepository.findByIdOrCustomId(userId)
     return user ? user._id : null
   }
 
@@ -15,14 +13,8 @@ class PostsService {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) return { posts: [], total: 0 }
 
-    const posts = await Post.find({ author: userObjectId })
-      .populate('author', 'id name avatar')
-      .populate('comments.user', 'id name avatar')
-      .sort({ createdAt: -1 })
-      .limit(limit * page)
-      .skip((page - 1) * limit)
-
-    const total = await Post.countDocuments({ author: userObjectId })
+    const posts = await postRepository.findByAuthor(userObjectId, page, limit)
+    const total = await postRepository.countByAuthor(userObjectId)
 
     return {
       posts: posts.map(post => ({
@@ -58,16 +50,22 @@ class PostsService {
   async createPost(authorId, content, images = []) {
     const authorObjectId = await this.getUserObjectId(authorId)
     if (!authorObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const post = new Post({
+    if (!content && images.length === 0) {
+      throw new AppError('Пост повинен містити текст або фото', 400)
+    }
+
+    if (content && content.length > 2000) {
+      throw new AppError('Максимальна довжина тексту 2000 символів', 400)
+    }
+
+    const post = await postRepository.create({
       author: authorObjectId,
       content: content || '',
       images
     })
-
-    await post.save()
     await post.populate('author', 'id name avatar')
     
     logger.info('Post created', { authorId, postId: post._id })
@@ -92,12 +90,12 @@ class PostsService {
   async likePost(postId, userId) {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const post = await Post.findById(postId)
+    const post = await postRepository.findById(postId)
     if (!post) {
-      throw new Error('Пост не знайдено')
+      throw new AppError('Пост не знайдено', 404)
     }
 
     // Remove dislike if exists
@@ -134,12 +132,12 @@ class PostsService {
   async dislikePost(postId, userId) {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const post = await Post.findById(postId)
+    const post = await postRepository.findById(postId)
     if (!post) {
-      throw new Error('Пост не знайдено')
+      throw new AppError('Пост не знайдено', 404)
     }
 
     // Remove like if exists
@@ -176,12 +174,16 @@ class PostsService {
   async addComment(postId, userId, content) {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const post = await Post.findById(postId)
+    if (!content || !content.trim()) {
+      throw new AppError('Контент коментаря обов\'язковий', 400)
+    }
+
+    const post = await postRepository.findById(postId)
     if (!post) {
-      throw new Error('Пост не знайдено')
+      throw new AppError('Пост не знайдено', 404)
     }
 
     const comment = {
@@ -215,12 +217,12 @@ class PostsService {
   async updatePost(postId, userId, content, newImages = [], removedImages = []) {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const post = await Post.findOne({ _id: postId, author: userObjectId })
+    const post = await postRepository.findByIdAndAuthor(postId, userObjectId)
     if (!post) {
-      throw new Error('Пост не знайдено або ви не маєте прав на його редагування')
+      throw new AppError('Пост не знайдено або ви не маєте прав на його редагування', 403)
     }
 
     if (content) {
@@ -259,12 +261,20 @@ class PostsService {
   async updateComment(postId, commentId, userId, content) {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const post = await Post.findById(postId)
+    if (!content || !content.trim()) {
+      throw new AppError('Контент коментаря обов\'язковий', 400)
+    }
+
+    if (content.trim().length > 500) {
+      throw new AppError('Максимальна довжина коментаря 500 символів', 400)
+    }
+
+    const post = await postRepository.findById(postId)
     if (!post) {
-      throw new Error('Пост не знайдено')
+      throw new AppError('Пост не знайдено', 404)
     }
 
     const comment = post.comments.id(commentId)
@@ -273,7 +283,7 @@ class PostsService {
     }
 
     if (comment.user.toString() !== userObjectId.toString()) {
-      throw new Error('Ви не маєте прав на редагування цього коментаря')
+      throw new AppError('Ви не маєте прав на редагування цього коментаря', 403)
     }
 
     comment.content = content.trim()
@@ -298,12 +308,12 @@ class PostsService {
   async deleteComment(postId, commentId, userId) {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const post = await Post.findById(postId)
+    const post = await postRepository.findById(postId)
     if (!post) {
-      throw new Error('Пост не знайдено')
+      throw new AppError('Пост не знайдено', 404)
     }
 
     const comment = post.comments.id(commentId)
@@ -312,7 +322,7 @@ class PostsService {
     }
 
     if (comment.user.toString() !== userObjectId.toString()) {
-      throw new Error('Ви не маєте прав на видалення цього коментаря')
+      throw new AppError('Ви не маєте прав на видалення цього коментаря', 403)
     }
 
     comment.deleteOne()
@@ -325,12 +335,12 @@ class PostsService {
   async likeComment(postId, commentId, userId) {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const post = await Post.findById(postId)
+    const post = await postRepository.findById(postId)
     if (!post) {
-      throw new Error('Пост не знайдено')
+      throw new AppError('Пост не знайдено', 404)
     }
 
     const comment = post.comments.id(commentId)
@@ -371,12 +381,12 @@ class PostsService {
   async dislikeComment(postId, commentId, userId) {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const post = await Post.findById(postId)
+    const post = await postRepository.findById(postId)
     if (!post) {
-      throw new Error('Пост не знайдено')
+      throw new AppError('Пост не знайдено', 404)
     }
 
     const comment = post.comments.id(commentId)
@@ -417,15 +427,15 @@ class PostsService {
   async deletePost(postId, userId) {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const post = await Post.findOne({ _id: postId, author: userObjectId })
+    const post = await postRepository.findByIdAndAuthor(postId, userObjectId)
     if (!post) {
-      throw new Error('Пост не знайдено або ви не маєте прав на його видалення')
+      throw new AppError('Пост не знайдено або ви не маєте прав на його видалення', 403)
     }
 
-    await Post.deleteOne({ _id: postId })
+    await postRepository.deleteById(postId)
     logger.info('Post deleted', { postId, userId })
   }
 }

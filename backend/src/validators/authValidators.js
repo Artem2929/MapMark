@@ -1,12 +1,13 @@
 const { body, validationResult } = require('express-validator')
 const { AppError } = require('../utils/errorHandler')
+const { HTTP_STATUS, ERROR_CODES } = require('../constants/httpStatus')
 
 // Validation error handler
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     const errorMessages = errors.array().map(error => error.msg).join('. ')
-    return next(new AppError(errorMessages, 400, 'VALIDATION_ERROR'))
+    return next(new AppError(errorMessages, HTTP_STATUS.BAD_REQUEST, ERROR_CODES.VALIDATION_ERROR))
   }
   next()
 }

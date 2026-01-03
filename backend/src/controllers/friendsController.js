@@ -1,202 +1,83 @@
 const friendsService = require('../services/friendsService')
 const { success } = require('../utils/response')
+const { catchAsync } = require('../utils/errorHandler')
 const logger = require('../utils/logger')
 
 const friendsController = {
-  async getMyFriends(req, res) {
-    try {
-      const userId = req.user.id
-      const friends = await friendsService.getFriends(userId)
-      
-      success(res, friends, 'Список друзів отримано')
-    } catch (error) {
-      logger.error('Get my friends error', { error: error.message, userId: req.user.id })
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
-    }
-  },
+  getMyFriends: catchAsync(async (req, res) => {
+    const userId = req.user.id
+    const friends = await friendsService.getFriends(userId)
+    
+    success(res, friends, 'Список друзів отримано')
+  }),
 
-  async getFriends(req, res) {
-    try {
-      const { userId } = req.params
-      const friends = await friendsService.getFriends(userId)
-      
-      success(res, friends, 'Список друзів отримано')
-    } catch (error) {
-      logger.error('Get friends error', { error: error.message, userId: req.params.userId })
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
-    }
-  },
+  getFriends: catchAsync(async (req, res) => {
+    const { userId } = req.params
+    const friends = await friendsService.getFriends(userId)
+    
+    success(res, friends, 'Список друзів отримано')
+  }),
 
-  async getFriendRequests(req, res) {
-    try {
-      const { userId } = req.params
-      const requests = await friendsService.getFriendRequests(userId)
-      
-      success(res, requests, 'Заявки в друзі отримано')
-    } catch (error) {
-      logger.error('Get friend requests error', { error: error.message, userId: req.params.userId })
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
-    }
-  },
+  getFriendRequests: catchAsync(async (req, res) => {
+    const { userId } = req.params
+    const requests = await friendsService.getFriendRequests(userId)
+    
+    success(res, requests, 'Заявки в друзі отримано')
+  }),
 
-  async sendFriendRequest(req, res) {
-    try {
-      const { userId } = req.body
-      const requesterId = req.user.id
-      
-      await friendsService.sendFriendRequest(requesterId, userId)
-      
-      success(res, null, 'Заявку в друзі надіслано', 201)
-    } catch (error) {
-      logger.error('Send friend request error', { error: error.message, requesterId: req.user.id })
-      
-      if (error.message.includes('не знайдено') || error.message.includes('вже друзі') || error.message.includes('надіслана')) {
-        return res.status(400).json({
-          status: 'fail',
-          message: error.message
-        })
-      }
-      
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
-    }
-  },
+  sendFriendRequest: catchAsync(async (req, res) => {
+    const { userId } = req.body
+    const requesterId = req.user.id
+    
+    await friendsService.sendFriendRequest(requesterId, userId)
+    
+    success(res, null, 'Заявку в друзі надіслано', 201)
+  }),
 
-  async acceptFriendRequest(req, res) {
-    try {
-      const { requestId } = req.params
-      const userId = req.user.id
-      
-      await friendsService.acceptFriendRequest(requestId, userId)
-      
-      success(res, null, 'Заявку прийнято')
-    } catch (error) {
-      logger.error('Accept friend request error', { error: error.message, requestId: req.params.requestId })
-      
-      if (error.message.includes('не знайдено')) {
-        return res.status(404).json({
-          status: 'fail',
-          message: error.message
-        })
-      }
-      
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
-    }
-  },
+  acceptFriendRequest: catchAsync(async (req, res) => {
+    const { requestId } = req.params
+    const userId = req.user.id
+    
+    await friendsService.acceptFriendRequest(requestId, userId)
+    
+    success(res, null, 'Заявку прийнято')
+  }),
 
-  async rejectFriendRequest(req, res) {
-    try {
-      const { requestId } = req.params
-      const userId = req.user.id
-      
-      await friendsService.rejectFriendRequest(requestId, userId)
-      
-      success(res, null, 'Заявку відхилено')
-    } catch (error) {
-      logger.error('Reject friend request error', { error: error.message, requestId: req.params.requestId })
-      
-      if (error.message.includes('не знайдено')) {
-        return res.status(404).json({
-          status: 'fail',
-          message: error.message
-        })
-      }
-      
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
-    }
-  },
+  rejectFriendRequest: catchAsync(async (req, res) => {
+    const { requestId } = req.params
+    const userId = req.user.id
+    
+    await friendsService.rejectFriendRequest(requestId, userId)
+    
+    success(res, null, 'Заявку відхилено')
+  }),
 
-  async cancelFriendRequest(req, res) {
-    try {
-      const { userId } = req.body
-      const requesterId = req.user.id
-      
-      await friendsService.cancelFriendRequest(requesterId, userId)
-      
-      success(res, null, 'Заявку скасовано')
-    } catch (error) {
-      logger.error('Cancel friend request error', { error: error.message, requesterId: req.user.id })
-      
-      if (error.message.includes('не знайдено')) {
-        return res.status(404).json({
-          status: 'fail',
-          message: error.message
-        })
-      }
-      
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
-    }
-  },
+  cancelFriendRequest: catchAsync(async (req, res) => {
+    const { userId } = req.body
+    const requesterId = req.user.id
+    
+    await friendsService.cancelFriendRequest(requesterId, userId)
+    
+    success(res, null, 'Заявку скасовано')
+  }),
 
-  async removeFriend(req, res) {
-    try {
-      const { userId: friendId } = req.params
-      const userId = req.user.id
-      
-      await friendsService.removeFriend(userId, friendId)
-      
-      success(res, null, 'Друга видалено')
-    } catch (error) {
-      logger.error('Remove friend error', { error: error.message, friendId: req.params.userId })
-      
-      if (error.message.includes('не знайдено')) {
-        return res.status(404).json({
-          status: 'fail',
-          message: error.message
-        })
-      }
-      
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
-    }
-  },
+  removeFriend: catchAsync(async (req, res) => {
+    const { userId: friendId } = req.params
+    const userId = req.user.id
+    
+    await friendsService.removeFriend(userId, friendId)
+    
+    success(res, null, 'Друга видалено')
+  }),
 
-  async removeFollower(req, res) {
-    try {
-      const { userId: followerId } = req.body
-      const userId = req.user.id
-      
-      await friendsService.removeFollower(userId, followerId)
-      
-      success(res, null, 'Підписника видалено')
-    } catch (error) {
-      logger.error('Remove follower error', { error: error.message, followerId: req.body.userId })
-      
-      if (error.message.includes('не знайдено')) {
-        return res.status(404).json({
-          status: 'fail',
-          message: error.message
-        })
-      }
-      
-      return res.status(500).json({
-        status: 'error',
-        message: error.message
-      })
-    }
-  }
+  removeFollower: catchAsync(async (req, res) => {
+    const { userId: followerId } = req.body
+    const userId = req.user.id
+    
+    await friendsService.removeFollower(userId, followerId)
+    
+    success(res, null, 'Підписника видалено')
+  })
 }
 
 module.exports = friendsController

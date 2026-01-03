@@ -1,14 +1,12 @@
 const Message = require('../models/Message')
 const Conversation = require('../models/Conversation')
-const User = require('../models/User')
-const mongoose = require('mongoose')
+const { AppError } = require('../utils/errorHandler')
 
 class MessageService {
   async getMessages(conversationId, userId, page = 1, limit = 50) {
-    // Перевіряємо доступ до розмови
     const conversation = await Conversation.findById(conversationId)
     if (!conversation || !conversation.hasParticipant(userId)) {
-      throw new Error('Розмову не знайдено або доступ заборонено')
+      throw new AppError('Розмову не знайдено або доступ заборонено', 403)
     }
 
     const messages = await Message.find({ conversationId })
@@ -38,10 +36,13 @@ class MessageService {
   }
 
   async sendMessage(conversationId, senderId, text) {
-    // Перевіряємо доступ до розмови
+    if (!text || !text.trim()) {
+      throw new AppError('Повідомлення не може бути порожнім', 400)
+    }
+
     const conversation = await Conversation.findById(conversationId)
     if (!conversation || !conversation.hasParticipant(senderId)) {
-      throw new Error('Розмову не знайдено або доступ заборонено')
+      throw new AppError('Розмову не знайдено або доступ заборонено', 403)
     }
 
     // Створюємо повідомлення
@@ -95,10 +96,9 @@ class MessageService {
   }
 
   async markAsRead(conversationId, userId) {
-    // Перевіряємо доступ до розмови
     const conversation = await Conversation.findById(conversationId)
     if (!conversation || !conversation.hasParticipant(userId)) {
-      throw new Error('Розмову не знайдено або доступ заборонено')
+      throw new AppError('Розмову не знайдено або доступ заборонено', 403)
     }
 
     // Позначаємо повідомлення як прочитані
@@ -125,11 +125,11 @@ class MessageService {
     const message = await Message.findById(messageId)
     
     if (!message) {
-      throw new Error('Повідомлення не знайдено')
+      throw new AppError('Повідомлення не знайдено', 404)
     }
 
     if (message.senderId.toString() !== userId.toString()) {
-      throw new Error('Ви можете видаляти тільки свої повідомлення')
+      throw new AppError('Ви можете видаляти тільки свої повідомлення', 403)
     }
 
     await Message.findByIdAndDelete(messageId)

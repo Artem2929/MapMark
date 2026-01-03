@@ -1,13 +1,11 @@
-const Friend = require('../models/Friend')
-const User = require('../models/User')
+const friendRepository = require('../repositories/friendRepository')
+const userRepository = require('../repositories/userRepository')
+const { AppError } = require('../utils/errorHandler')
 const logger = require('../utils/logger')
 
 class FriendsService {
   async getUserObjectId(userId) {
-    let user = await User.findOne({ id: userId })
-    if (!user && userId.match(/^[0-9a-fA-F]{24}$/)) {
-      user = await User.findById(userId)
-    }
+    const user = await userRepository.findByIdOrCustomId(userId)
     return user ? user._id : null
   }
 
@@ -15,14 +13,7 @@ class FriendsService {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) return []
 
-    const friends = await Friend.find({
-      $or: [
-        { requester: userObjectId, status: 'accepted' },
-        { recipient: userObjectId, status: 'accepted' }
-      ]
-    })
-    .populate('requester', 'id name email country avatar')
-    .populate('recipient', 'id name email country avatar')
+    const friends = await friendRepository.findFriends(userObjectId)
 
     return friends.map(friend => {
       const friendUser = friend.requester._id.toString() === userObjectId.toString() 
@@ -43,10 +34,7 @@ class FriendsService {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) return []
 
-    const requests = await Friend.find({
-      recipient: userObjectId,
-      status: 'pending'
-    }).populate('requester', 'id name email country avatar')
+    const requests = await friendRepository.findPendingRequests(userObjectId)
 
     return requests.map(request => ({
       id: request._id,
@@ -66,80 +54,50 @@ class FriendsService {
     const recipientObjectId = await this.getUserObjectId(recipientId)
     
     if (!requesterObjectId || !recipientObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
     
     if (requesterObjectId.toString() === recipientObjectId.toString()) {
-      throw new Error('Не можна надіслати заявку самому собі')
+      throw new AppError('Не можна надіслати заявку самому собі', 400)
     }
 
-    // Перевіряємо чи вже друзі
-    const existingFriendship = await Friend.findOne({
-      $or: [
-        { requester: requesterObjectId, recipient: recipientObjectId, status: 'accepted' },
-        { requester: recipientObjectId, recipient: requesterObjectId, status: 'accepted' }
-      ]
-    })
+    const existingFriendship = await friendRepository.findFriendship(requesterObjectId, recipientObjectId)
 
     if (existingFriendship) {
-      throw new Error('Ви вже друзі')
+      throw new AppError('Ви вже друзі', 400)
     }
 
-    // Перевіряємо чи вже є заявка від цього користувача
-    const existingRequest = await Friend.findOne({
-      requester: requesterObjectId,
-      recipient: recipientObjectId,
-      status: 'pending'
-    })
+    const existingRequest = await friendRepository.findRequest(requesterObjectId, recipientObjectId)
 
     if (existingRequest) {
-      throw new Error('Заявка вже надіслана')
+      throw new AppError('Заявка вже надіслана', 400)
     }
 
-    // Перевіряємо чи є зворотна заявка (тоді автоматично приймаємо)
-    const reverseRequest = await Friend.findOne({
-      requester: recipientObjectId,
-      recipient: requesterObjectId,
-      status: 'pending'
-    })
+    const reverseRequest = await friendRepository.findRequest(recipientObjectId, requesterObjectId)
 
     if (reverseRequest) {
-      // Автоматично приймаємо зворотну заявку
       reverseRequest.status = 'accepted'
       await reverseRequest.save()
       logger.info('Mutual friend request accepted', { requesterId, recipientId })
       return reverseRequest
     }
 
-    const friendRequest = new Friend({
+    return friendRepository.create({
       requester: requesterObjectId,
       recipient: recipientObjectId
     })
-
-    await friendRequest.save()
-    logger.info('Friend request sent', { requesterId, recipientId })
-    
-    return friendRequest
   }
 
   async acceptFriendRequest(requestId, userId) {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    logger.info('Accepting friend request', { requestId, userId, userObjectId }) // Debug
-
-    const request = await Friend.findOne({
-      _id: requestId,
-      recipient: userObjectId,
-      status: 'pending'
-    })
-
-    logger.info('Found request', { request }) // Debug
+    const request = await friendRepository.findByIdAndRecipient(requestId, userObjectId)
 
     if (!request) {
-      throw new Error('Заявку не знайдено')
+      throw new AppError('Заявку не знайдено', 404)
     }
 
     request.status = 'accepted'
@@ -152,20 +110,16 @@ class FriendsService {
   async rejectFriendRequest(requestId, userId) {
     const userObjectId = await this.getUserObjectId(userId)
     if (!userObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const request = await Friend.findOne({
-      _id: requestId,
-      recipient: userObjectId,
-      status: 'pending'
-    })
+    const request = await friendRepository.findByIdAndRecipient(requestId, userObjectId)
 
     if (!request) {
-      throw new Error('Заявку не знайдено')
+      throw new AppError('Заявку не знайдено', 404)
     }
 
-    await Friend.deleteOne({ _id: requestId })
+    await friendRepository.deleteById(requestId)
     logger.info('Friend request rejected', { requestId, userId })
   }
 
@@ -174,21 +128,16 @@ class FriendsService {
     const friendObjectId = await this.getUserObjectId(friendId)
     
     if (!userObjectId || !friendObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const friendship = await Friend.findOne({
-      $or: [
-        { requester: userObjectId, recipient: friendObjectId, status: 'accepted' },
-        { requester: friendObjectId, recipient: userObjectId, status: 'accepted' }
-      ]
-    })
+    const friendship = await friendRepository.findFriendship(userObjectId, friendObjectId)
 
     if (!friendship) {
-      throw new Error('Дружбу не знайдено')
+      throw new AppError('Дружбу не знайдено', 404)
     }
 
-    await Friend.deleteOne({ _id: friendship._id })
+    await friendRepository.deleteById(friendship._id)
     logger.info('Friendship removed', { userId, friendId })
   }
 
@@ -197,20 +146,16 @@ class FriendsService {
     const recipientObjectId = await this.getUserObjectId(recipientId)
     
     if (!requesterObjectId || !recipientObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    const request = await Friend.findOne({
-      requester: requesterObjectId,
-      recipient: recipientObjectId,
-      status: 'pending'
-    })
+    const request = await friendRepository.findRequest(requesterObjectId, recipientObjectId)
 
     if (!request) {
-      throw new Error('Заявку не знайдено')
+      throw new AppError('Заявку не знайдено', 404)
     }
 
-    await Friend.deleteOne({ _id: request._id })
+    await friendRepository.deleteById(request._id)
     logger.info('Friend request cancelled', { requesterId, recipientId })
   }
 
@@ -219,21 +164,16 @@ class FriendsService {
     const followerObjectId = await this.getUserObjectId(followerId)
     
     if (!userObjectId || !followerObjectId) {
-      throw new Error('Користувача не знайдено')
+      throw new AppError('Користувача не знайдено', 404)
     }
 
-    // Шукаємо заявку, де follower підписаний на user
-    const request = await Friend.findOne({
-      requester: followerObjectId,
-      recipient: userObjectId,
-      status: 'pending'
-    })
+    const request = await friendRepository.findRequest(followerObjectId, userObjectId)
 
     if (!request) {
-      throw new Error('Підписку не знайдено')
+      throw new AppError('Підписку не знайдено', 404)
     }
 
-    await Friend.deleteOne({ _id: request._id })
+    await friendRepository.deleteById(request._id)
     logger.info('Follower removed', { userId, followerId })
   }
 }
